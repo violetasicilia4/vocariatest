@@ -54,7 +54,4 @@ body {
   animation: marquee 45s linear infinite;
 }
 
-/* Pause scroll of both tracks on container hover for a synchronized pause */
-.marquee-container:hover .animate-slow-marquee {
-  animation-play-state: paused;
-}
+/* Marquee siempre corriendo, sin pausa en hover */

@@ -72,7 +72,7 @@ export default function HeroSection({ version, setVersion, onGetStartedClick }: 
     return (
       <section
         id="home"
-        className="relative pt-16 pb-14 lg:pt-24 lg:pb-16 overflow-hidden rounded-b-[56px] md:rounded-b-[80px] flex flex-col justify-start lg:justify-center text-slate-900 bg-sky-50"
+        className="relative pt-16 pb-14 lg:pt-28 lg:pb-24 overflow-hidden rounded-b-[56px] md:rounded-b-[80px] flex flex-col justify-start lg:justify-center text-slate-900 bg-sky-50"
         style={{
           backgroundImage: `linear-gradient(to bottom, rgba(111,159,202,0.97) 0%, rgba(159,210,241,0.93) 52%, rgba(221,247,255,0.90) 100%), url(${IMAGES.heroClouds})`,
           backgroundSize: 'cover',
@@ -230,7 +230,7 @@ export default function HeroSection({ version, setVersion, onGetStartedClick }: 
               {/* Headline */}
               <motion.h1
                 variants={itemVariants}
-                className="font-display text-3xl xl:text-4xl text-white font-black tracking-tight leading-[1.1] mb-5 max-w-md"
+                className="font-display text-4xl xl:text-5xl text-white font-black tracking-tight leading-[1.08] mb-5 max-w-xl"
                 style={{ textShadow: '0 2px 20px rgba(10,30,60,0.35), 0 1px 4px rgba(10,30,60,0.25)' }}
               >
                 Descubrí qué carreras encajan con tu{' '}

@@ -253,7 +253,7 @@ export default function LogoBanner() {
                 {logos.map((logo, index) => (
                   <div
                     key={`${logo.id}-t1-${index}`}
-                    className="flex items-center shrink-0 max-w-[280px] pointer-events-auto cursor-help"
+                    className="flex items-center shrink-0 max-w-[280px] pointer-events-none select-none"
                     title={logo.name}
                   >
                     {logo.element}
@@ -265,7 +265,7 @@ export default function LogoBanner() {
                 {logos.map((logo, index) => (
                   <div
                     key={`${logo.id}-t2-${index}`}
-                    className="flex items-center shrink-0 max-w-[280px] pointer-events-auto cursor-help"
+                    className="flex items-center shrink-0 max-w-[280px] pointer-events-none select-none"
                     title={logo.name}
                   >
                     {logo.element}
