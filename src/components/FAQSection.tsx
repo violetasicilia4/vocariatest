@@ -33,15 +33,20 @@ export default function FAQSection() {
     <section id="faq" aria-labelledby="faq-heading" className="py-14 sm:py-24" style={{ background: '#F7FAFB' }}>
       <div className="max-w-2xl mx-auto px-6">
 
-        <motion.h2
+        <motion.div
           initial={{ opacity: 0, y: 12 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
-          id="faq-heading"
-          className="font-display font-extrabold text-2xl sm:text-3xl text-[#0e1118] tracking-tight mb-8"
+          transition={{ duration: 0.45 }}
+          className="mb-10"
         >
-          Preguntas frecuentes
-        </motion.h2>
+          <h2
+            id="faq-heading"
+            className="font-display font-black text-3xl sm:text-[40px] text-[#0e1118] tracking-tight leading-tight"
+          >
+            Preguntas<br className="sm:hidden" />{' '}frecuentes.
+          </h2>
+        </motion.div>
 
         {/* Structured data para FAQPage (Google rich results) */}
         <script

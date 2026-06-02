@@ -19,22 +19,31 @@ export default function MuestraTest({ onGetStartedClick }: MuestraTestProps) {
     <section id="preview" aria-labelledby="muestra-heading" className="py-14 sm:py-24" style={{ background: '#EEF5FB' }}>
       <div className="max-w-xl mx-auto px-6">
 
-        {/* Label superior */}
-        <motion.h2
-          initial={{ opacity: 0, y: 10 }}
+        {/* ── HEADING EDITORIAL ────────────────────────── */}
+        <motion.div
+          initial={{ opacity: 0, y: 12 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
-          className="text-center text-[10px] font-bold tracking-widest uppercase text-slate-400 mb-4"
+          transition={{ duration: 0.45 }}
+          className="text-center mb-8"
         >
-          Probá una pregunta real
-        </motion.h2>
+          <span className="text-[10px] font-bold tracking-widest uppercase text-sky-500/70 block mb-2">
+            Preview
+          </span>
+          <h2
+            id="muestra-heading"
+            className="font-display font-black text-2xl sm:text-3xl text-[#0e1118] tracking-tight leading-tight"
+          >
+            Probá una pregunta real.
+          </h2>
+        </motion.div>
 
-        {/* Card */}
+        {/* ── CARD ─────────────────────────────────────── */}
         <motion.div
           initial={{ opacity: 0, y: 16 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
-          transition={{ duration: 0.45 }}
+          transition={{ duration: 0.45, delay: 0.08 }}
           className="bg-white rounded-[20px] border border-white/80 p-6 sm:p-8"
           style={{ boxShadow: '0 4px 24px rgba(20,60,100,0.10)' }}
         >
