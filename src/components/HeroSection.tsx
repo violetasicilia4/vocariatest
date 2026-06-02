@@ -261,6 +261,22 @@ export default function HeroSection({ onGetStartedClick }: HeroSectionProps) {
                   </div>
                 </div>
 
+                <div className="px-4 py-3">
+                  <span className="text-slate-400 font-sans text-[9px] font-bold tracking-widest uppercase block mb-1.5">Contexto laboral</span>
+                  <p className="text-[11px] text-slate-700 font-medium mb-1.5">
+                    Entrada: <strong>~ARS 1.8M</strong> &nbsp;/&nbsp; Senior: <strong>~ARS 2.5M / mes</strong>
+                  </p>
+                  <div className="flex items-center gap-3 mb-2.5">
+                    <span className="inline-flex items-center gap-1 text-emerald-600 text-[9.5px] font-semibold">
+                      <span className="w-1.5 h-1.5 bg-emerald-500 rounded-full" />Alta demanda
+                    </span>
+                    <span className="text-slate-500 text-[9.5px] font-medium">Teletrabajo ✓</span>
+                  </div>
+                  <span className="inline-flex items-center gap-1 bg-slate-50 border border-slate-200 text-slate-500 text-[9px] font-medium px-2.5 py-1 rounded-full">
+                    ⊙ Metodología Integrada
+                  </span>
+                </div>
+
               </div>
             </motion.div>
           </div>
