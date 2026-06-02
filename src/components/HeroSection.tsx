@@ -131,7 +131,7 @@ export default function HeroSection({ onGetStartedClick }: HeroSectionProps) {
                         </div>
                         <span className="text-[9px] font-bold text-brand-sky shrink-0 mt-0.5">{c.pct}% Afinidad</span>
                       </div>
-                      <div className="w-full h-[2.5px] bg-slate-100 rounded-full overflow-hidden">
+                      <div className="w-full h-[2px] bg-slate-100 rounded-full overflow-hidden">
                         <div className="bg-slate-300 h-full rounded-full" style={{ width: `${c.pct}%` }} />
                       </div>
                     </div>
@@ -257,7 +257,7 @@ export default function HeroSection({ onGetStartedClick }: HeroSectionProps) {
                           </div>
                           <span className="text-slate-500 font-mono text-[11px] shrink-0 mt-0.5">{c.pct}%</span>
                         </div>
-                        <div className="w-full h-[2.5px] bg-slate-100 rounded-full overflow-hidden">
+                        <div className="w-full h-[2px] bg-slate-100 rounded-full overflow-hidden">
                           <div className="bg-slate-300 h-full rounded-full" style={{ width: `${c.pct}%` }} />
                         </div>
                       </div>
