@@ -242,7 +242,7 @@ export default function LogoBanner() {
   ];
 
   return (
-    <section id="carreras" className="py-7 md:py-10 overflow-hidden select-none relative" style={{ background: 'linear-gradient(to bottom, #E4F1FA 0%, #EEF6FB 60%, #F3F8FC 100%)' }}>
+    <section id="carreras" className="py-7 md:py-10 overflow-hidden select-none relative" style={{ background: 'linear-gradient(to bottom, #EEF9FF 0%, #F8FEFF 60%, #ffffff 100%)' }}>
       {/* Shared SVG Defs to avoid ID duplication in the DOM slider */}
       <svg className="absolute w-0 h-0 pointer-events-none" aria-hidden="true">
         <defs>
@@ -253,8 +253,8 @@ export default function LogoBanner() {
       </svg>
 
       {/* Visual fading masks on edges for high-end look */}
-      <div className="absolute top-0 bottom-0 left-0 w-20 sm:w-36 z-10 pointer-events-none" style={{ background: 'linear-gradient(to right, #EEF6FB, transparent)' }} />
-      <div className="absolute top-0 bottom-0 right-0 w-20 sm:w-36 z-10 pointer-events-none" style={{ background: 'linear-gradient(to left, #F3F8FC, transparent)' }} />
+      <div className="absolute top-0 bottom-0 left-0 w-20 sm:w-36 bg-gradient-to-r from-white to-transparent z-10 pointer-events-none" />
+      <div className="absolute top-0 bottom-0 right-0 w-20 sm:w-36 bg-gradient-to-l from-white to-transparent z-10 pointer-events-none" />
 
       <div className="max-w-7xl mx-auto px-6">
         <div className="flex flex-col items-center">
