@@ -16,7 +16,7 @@ export default function MuestraTest({ onGetStartedClick }: MuestraTestProps) {
   const [seleccionada, setSeleccionada] = useState<string | null>(null);
 
   return (
-    <section id="preview" aria-labelledby="muestra-heading" className="py-12 sm:py-20 bg-white border-t border-slate-100">
+    <section id="preview" aria-labelledby="muestra-heading" className="py-14 sm:py-24" style={{ background: '#EEF5FB' }}>
       <div className="max-w-xl mx-auto px-6">
 
         {/* Label superior */}
@@ -35,8 +35,8 @@ export default function MuestraTest({ onGetStartedClick }: MuestraTestProps) {
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
           transition={{ duration: 0.45 }}
-          className="bg-slate-50/60 rounded-[20px] border border-slate-100 p-6 sm:p-8"
-          style={{ boxShadow: '0 2px 16px rgba(30,50,80,0.06)' }}
+          className="bg-white rounded-[20px] border border-white/80 p-6 sm:p-8"
+          style={{ boxShadow: '0 4px 24px rgba(20,60,100,0.10)' }}
         >
           {/* Pregunta */}
           <p className="font-display font-semibold text-[15px] sm:text-base text-slate-800 leading-snug mb-6">
