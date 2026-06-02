@@ -89,47 +89,42 @@ export default function HeroSection({ onGetStartedClick }: HeroSectionProps) {
               </span>
             </div>
 
-            <div className="w-full bg-white rounded-[22px] border border-slate-100 text-left relative overflow-hidden" style={{ boxShadow: '0 8px 32px rgba(30,60,100,0.10)' }}>
+            <div className="w-full bg-white rounded-[20px] border border-slate-100 text-left relative overflow-hidden" style={{ boxShadow: '0 12px 40px rgba(30,60,100,0.12)' }}>
 
-              {/* Header mobile */}
+              {/* Header — idéntico al desktop */}
               <div className="px-4 pt-4 pb-3 border-b border-slate-100">
-                <div className="flex items-start justify-between gap-2 mb-0.5">
-                  <span className="text-slate-400 font-sans text-[7.5px] font-bold tracking-widest uppercase">Tu diagnóstico vocacional</span>
+                <div className="flex items-start justify-between gap-2 mb-1">
+                  <span className="text-slate-400 font-sans text-[8px] font-bold tracking-widest uppercase">Perfil de enfoque</span>
                   <span className="bg-[#D8F95C] text-[#07111F] text-[10px] font-black px-2.5 py-0.5 rounded-md tracking-wide shrink-0">92% MATCH</span>
                 </div>
-                <span className="text-slate-400 font-sans text-[7px] font-semibold tracking-widest uppercase">Perfil de enfoque</span>
-                <h4 className="text-[15px] font-extrabold text-slate-900 tracking-tight leading-tight mt-0.5 mb-1">
-                  Exploradora Estratégica
-                </h4>
-                <p className="text-[9px] text-slate-500 font-medium leading-snug mb-2">Combina pensamiento empático con alta capacidad directiva.</p>
-                {/* Tags */}
-                <div className="flex flex-wrap gap-1">
+                <h4 className="text-[15px] font-extrabold text-slate-900 tracking-tight leading-tight mb-1">Exploradora Estratégica</h4>
+                <p className="text-[10px] text-slate-500 font-medium leading-snug mb-2.5">
+                  Combina pensamiento empático con alta capacidad directiva.
+                </p>
+                <div className="flex flex-wrap gap-1.5">
                   {['Diseño', 'Gestión Digital', 'Administración'].map(tag => (
-                    <span key={tag} className="text-[8px] font-semibold text-slate-600 bg-slate-100 border border-slate-200 px-2 py-0.5 rounded-full">
+                    <span key={tag} className="text-[9px] font-semibold text-slate-600 bg-slate-100 border border-slate-200 px-2.5 py-1 rounded-full">
                       {tag}
                     </span>
                   ))}
                 </div>
               </div>
 
+              {/* Carreras — idéntico al desktop */}
               <div className="px-4 py-3 border-b border-slate-100">
-                <span className="text-slate-400 font-sans text-[7.5px] font-bold tracking-widest uppercase block mb-2">Match de recorridos</span>
-                <div className="space-y-2">
+                <span className="text-slate-400 font-sans text-[9px] font-bold tracking-widest uppercase block mb-1.5">Carreras con mayor afinidad</span>
+                <div className="space-y-1.5">
                   {[
-                    { n: '1', label: 'Diseño UX/UI',              unis: 'UADE · UP',      pct: 94 },
-                    { n: '2', label: 'Comunicación Estratégica',   unis: 'UBA · Austral',  pct: 89 },
-                    { n: '3', label: 'Gestión de Producto',        unis: 'UTDT · UdeSA',   pct: 86 },
+                    { label: 'Diseño UX/UI',               unis: 'UADE · UP',    pct: 94 },
+                    { label: 'Administración de Empresas',  unis: 'UBA · UTDT',   pct: 89 },
                   ].map(c => (
-                    <div key={c.label} className="flex flex-col gap-1">
+                    <div key={c.label} className="flex flex-col gap-0.5">
                       <div className="flex items-start justify-between gap-2">
-                        <div className="flex items-start gap-1.5 min-w-0">
-                          <span className="text-slate-300 text-[8px] font-bold shrink-0 mt-0.5">{c.n}.</span>
-                          <div className="flex flex-col min-w-0">
-                            <span className="font-semibold text-slate-800 text-[10px] leading-tight">{c.label}</span>
-                            <span className="text-slate-400 text-[8px] font-medium leading-tight mt-0.5">{c.unis}</span>
-                          </div>
+                        <div className="flex flex-col min-w-0">
+                          <span className="font-medium text-slate-700 text-[11px] leading-tight">{c.label}</span>
+                          <span className="text-slate-400 text-[9px] font-medium leading-tight mt-0.5">{c.unis}</span>
                         </div>
-                        <span className="text-[9px] font-bold text-brand-sky shrink-0 mt-0.5">{c.pct}% Afinidad</span>
+                        <span className="text-slate-500 font-mono text-[11px] shrink-0 mt-0.5">{c.pct}%</span>
                       </div>
                       <div className="w-full h-[2px] bg-slate-100 rounded-full overflow-hidden">
                         <div className="bg-slate-300 h-full rounded-full" style={{ width: `${c.pct}%` }} />
@@ -139,18 +134,19 @@ export default function HeroSection({ onGetStartedClick }: HeroSectionProps) {
                 </div>
               </div>
 
+              {/* Contexto laboral — idéntico al desktop */}
               <div className="px-4 py-3">
-                <span className="text-slate-400 font-sans text-[7.5px] font-bold tracking-widest uppercase block mb-1.5">Contexto laboral</span>
-                <p className="text-[10px] text-slate-700 font-medium mb-1.5">
+                <span className="text-slate-400 font-sans text-[9px] font-bold tracking-widest uppercase block mb-1.5">Contexto laboral</span>
+                <p className="text-[11px] text-slate-700 font-medium mb-1.5">
                   Entrada: <strong>~ARS 1.8M</strong> &nbsp;/&nbsp; Senior: <strong>~ARS 2.5M / mes</strong>
                 </p>
-                <div className="flex items-center gap-3 mb-3">
-                  <span className="inline-flex items-center gap-1 text-emerald-600 text-[9px] font-semibold">
+                <div className="flex items-center gap-3 mb-2.5">
+                  <span className="inline-flex items-center gap-1 text-emerald-600 text-[9.5px] font-semibold">
                     <span className="w-1.5 h-1.5 bg-emerald-500 rounded-full" />Alta demanda
                   </span>
-                  <span className="text-slate-500 text-[9px] font-medium">Teletrabajo ✓</span>
+                  <span className="text-slate-500 text-[9.5px] font-medium">Teletrabajo ✓</span>
                 </div>
-                <span className="inline-flex items-center gap-1 bg-slate-50 border border-slate-200 text-slate-500 text-[8px] font-medium px-2.5 py-1 rounded-full">
+                <span className="inline-flex items-center gap-1 bg-slate-50 border border-slate-200 text-slate-500 text-[9px] font-medium px-2.5 py-1 rounded-full">
                   ⊙ Metodología Integrada
                 </span>
               </div>
