@@ -57,15 +57,10 @@ export default function LogoBanner() {
       id: 'unlp',
       name: 'Universidad Nacional de La Plata',
       element: (
-        <svg viewBox="0 0 190 50" className="h-7 md:h-8 text-slate-500 hover:text-slate-800 transition-colors" fill="currentColor">
-          <g transform="translate(4, 6)" fill="none" stroke="currentColor" strokeWidth="1.8">
-            <circle cx="19" cy="19" r="18" />
-            <circle cx="19" cy="19" r="14" strokeWidth="0.7" />
-            <path d="M19 5v28M5 19h28" strokeWidth="0.7" />
-            <path d="M12 12l14 14M26 12L12 26" strokeWidth="0.4" strokeDasharray="1 1" />
-          </g>
-          <text x="46" y="23" fontFamily="system-ui, -apple-system, sfont-sans" fontSize="10.5" fontWeight="800" letterSpacing="0.02em">UNIVERSIDAD NACIONAL</text>
-          <text x="46" y="38" fontFamily="system-ui, -apple-system, sfont-sans" fontSize="14" fontWeight="900" letterSpacing="0.04em">DE LA PLATA</text>
+        <svg viewBox="0 0 200 50" className="h-7 md:h-8 text-slate-500 hover:text-slate-800 transition-colors" fill="currentColor">
+          <text x="2" y="20" fontFamily="system-ui, -apple-system, sans-serif" fontSize="10" fontWeight="700" letterSpacing="0.03em">UNIVERSIDAD</text>
+          <text x="2" y="33" fontFamily="system-ui, -apple-system, sans-serif" fontSize="10" fontWeight="700" letterSpacing="0.03em">NACIONAL</text>
+          <text x="2" y="46" fontFamily="system-ui, -apple-system, sans-serif" fontSize="10" fontWeight="700" letterSpacing="0.03em">DE LA PLATA</text>
         </svg>
       )
     },
@@ -137,37 +132,28 @@ export default function LogoBanner() {
         </svg>
       )
     },
-    // 12. UCA (Pontificia Universidad Católica Argentina) - High-Fidelity Circular Seal & Serif Typography
+    // 12. UCA (Pontificia Universidad Católica Argentina)
     {
       id: 'uca',
       name: 'Pontificia Universidad Católica Argentina',
       element: (
-        <svg viewBox="0 0 155 50" className="h-7 md:h-8 text-slate-500 hover:text-slate-800 transition-colors" fill="currentColor">
-          {/* Detailed circular seal */}
-          <g transform="translate(2, 2)" fill="none" stroke="currentColor" strokeWidth="1.1">
-            <circle cx="23" cy="23" r="20" />
-            <circle cx="23" cy="23" r="17.5" strokeWidth="0.5" strokeDasharray="1.5 1" />
-            <circle cx="23" cy="23" r="15" strokeWidth="0.6" />
-            {/* Holy cross and Santa Maria ship cradle emblem */}
-            <path d="M23,12 V33" strokeWidth="1.5" strokeLinecap="round" />
-            <path d="M17,19 H29" strokeWidth="1.5" strokeLinecap="round" />
-            <path d="M16,28 C16,33 30,33 30,28 C30,26 28.5,26 28.5,28 C28.5,30.5 17.5,30.5 17.5,28 Z" fill="currentColor" fillOpacity="0.15" />
-            {/* Small 'SM' and 'BA' symbols flanking the cross */}
-            <text x="17.5" y="21.5" fontSize="3.5" fontWeight="900" fontFamily="sans-serif" textAnchor="middle">S</text>
-            <text x="17.5" y="25" fontSize="3.5" fontWeight="900" fontFamily="sans-serif" textAnchor="middle">M</text>
-            <text x="28.5" y="21.5" fontSize="3.5" fontWeight="900" fontFamily="sans-serif" textAnchor="middle">B</text>
-            <text x="28.5" y="25" fontSize="3.5" fontWeight="900" fontFamily="sans-serif" textAnchor="middle">A</text>
-            
-            {/* Circular rim texts */}
-            <text className="text-[2.6px] font-bold tracking-[0.08em]" fill="currentColor" stroke="none">
-              <textPath href="#uca-text-path-top" startOffset="50%" textAnchor="middle">CATOLICA ARGENTINA</textPath>
-            </text>
-            <text className="text-[2.6px] font-bold tracking-[0.08em]" fill="currentColor" stroke="none">
-              <textPath href="#uca-text-path-bottom" startOffset="50%" textAnchor="middle">UNIVERSIDAD</textPath>
-            </text>
+        <svg viewBox="0 0 210 50" className="h-7 md:h-8 text-slate-500 hover:text-slate-800 transition-colors" fill="currentColor">
+          {/* Sello circular: doble borde + cruz + ancla */}
+          <g transform="translate(1, 1)">
+            <circle cx="24" cy="24" r="22.5" fill="none" stroke="currentColor" strokeWidth="1.4"/>
+            <circle cx="24" cy="24" r="19.5" fill="none" stroke="currentColor" strokeWidth="0.5" strokeDasharray="2 1.5"/>
+            <circle cx="24" cy="24" r="16.5" fill="none" stroke="currentColor" strokeWidth="0.4"/>
+            {/* Cruz */}
+            <line x1="24" y1="9" x2="24" y2="36" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round"/>
+            <line x1="16" y1="17" x2="32" y2="17" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round"/>
+            {/* Ancla (base del barco) */}
+            <path d="M17,30 Q24,38 31,30" fill="none" stroke="currentColor" strokeWidth="1.2" strokeLinecap="round"/>
+            <circle cx="24" cy="30" r="2" fill="none" stroke="currentColor" strokeWidth="1"/>
           </g>
-          {/* Prominent Serif "UCA" */}
-          <text x="48" y="38" fontFamily="Georgia, 'Times New Roman', serif" fontSize="42" fontWeight="300" letterSpacing="-0.04em">UCA</text>
+          {/* UCA en serif grande */}
+          <text x="54" y="36" fontFamily="Georgia, 'Times New Roman', serif" fontSize="36" fontWeight="700" letterSpacing="-0.02em">UCA</text>
+          {/* Nombre completo */}
+          <text x="54" y="46" fontFamily="system-ui, sans-serif" fontSize="7" fontWeight="600" letterSpacing="0.05em">UNIVERSIDAD CATÓLICA ARGENTINA</text>
         </svg>
       )
     },
@@ -192,19 +178,53 @@ export default function LogoBanner() {
         </svg>
       )
     },
-    // 15. Universidad Favaloro
+    // 15. Universidad Favaloro — dos F invertidas formando corazón
     {
       id: 'favaloro',
       name: 'Universidad Favaloro',
       element: (
-        <svg viewBox="0 0 150 50" className="h-7 md:h-8 text-slate-500 hover:text-slate-800 transition-colors" fill="currentColor">
-          <g transform="translate(2, 6)">
-            <path d="M10 6c-3.5-3.5-9-3.5-9 2.5 0 6 9 12 9 12" fill="none" stroke="currentColor" strokeWidth="4" strokeLinecap="round" />
-            <path d="M10 6c3.5-3.5 9-2.5 9 2.5s-3.5 5-9 8" fill="none" stroke="currentColor" strokeWidth="4" strokeLinecap="round" />
-            <path d="M10 9v15" fill="none" stroke="currentColor" strokeWidth="3.5" strokeLinecap="round" />
-          </g>
-          <text x="34" y="23" fontFamily="system-ui, -apple-system, sfont-sans" fontSize="11" fontWeight="700" letterSpacing="0.04em">UNIVERSIDAD</text>
-          <text x="34" y="39" fontFamily="system-ui, -apple-system, sfont-sans" fontSize="16" fontWeight="900" letterSpacing="0.06em">FAVALORO</text>
+        <svg viewBox="0 0 155 50" className="h-7 md:h-8 text-slate-500 hover:text-slate-800 transition-colors" fill="currentColor">
+          {/*
+            El símbolo de Favaloro son dos "F" en espejo que forman un corazón.
+            F izquierda: barra vertical izquierda + dos brazos hacia la derecha (arriba y medio)
+            F derecha (espejo): barra vertical derecha + dos brazos hacia la izquierda
+            Juntas forman los dos lóbulos del corazón arriba y el punto abajo.
+          */}
+
+          {/* F izquierda — forma el lóbulo izquierdo */}
+          <path d="
+            M 22,42
+            C 14,36 4,27 4,18
+            C 4,10 9,6 15,6
+            C 18,6 20,8 22,11
+            L 22,16
+            C 20,14 18,13 15,13
+            C 11,13 9,16 9,19
+            C 9,26 16,33 22,38
+            Z
+          "/>
+
+          {/* F derecha (espejo) — forma el lóbulo derecho */}
+          <path d="
+            M 22,42
+            C 30,36 40,27 40,18
+            C 40,10 35,6 29,6
+            C 26,6 24,8 22,11
+            L 22,16
+            C 24,14 26,13 29,13
+            C 33,13 35,16 35,19
+            C 35,26 28,33 22,38
+            Z
+          "/>
+
+          {/* Brazo medio F izquierda */}
+          <path d="M 22,22 L 13,22 L 13,26 L 22,26 Z"/>
+          {/* Brazo medio F derecha */}
+          <path d="M 22,22 L 31,22 L 31,26 L 22,26 Z"/>
+
+          {/* Texto */}
+          <text x="48" y="22" fontFamily="system-ui,-apple-system,sans-serif" fontSize="10" fontWeight="700" letterSpacing="0.04em">UNIVERSIDAD</text>
+          <text x="48" y="37" fontFamily="system-ui,-apple-system,sans-serif" fontSize="13.5" fontWeight="900" letterSpacing="0.03em">FAVALORO</text>
         </svg>
       )
     },

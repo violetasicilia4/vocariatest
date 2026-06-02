@@ -23,7 +23,7 @@ const pasos = [
 
 export default function ComoFunciona() {
   return (
-    <section className="py-12 sm:py-20 bg-white border-t border-slate-100">
+    <section aria-labelledby="como-funciona-heading" className="py-12 sm:py-20 bg-white border-t border-slate-100">
       <div className="max-w-5xl mx-auto px-6">
 
         {/* Headline */}
@@ -32,6 +32,7 @@ export default function ComoFunciona() {
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
           transition={{ duration: 0.45 }}
+          id="como-funciona-heading"
           className="font-display text-2xl sm:text-4xl tracking-tight leading-[1.15] mb-10 sm:mb-14"
         >
           <span className="font-normal block text-slate-500 mb-0.5">

@@ -1,13 +1,134 @@
 <!doctype html>
-<html lang="en">
+<!-- VOCARIA — Test vocacional para elegir o cambiar de carrera en Argentina -->
+<html lang="es">
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Vocaria</title>
+
+    <!-- ═══════════════════════════════════════════════
+         TITLE & DESCRIPTION
+         Cuando tengas dominio propio, actualizá el canonical de abajo.
+    ════════════════════════════════════════════════ -->
+    <title>Vocaria — Test vocacional para elegir carrera en Argentina</title>
+    <meta name="description" content="Vocaria analiza cómo pensás, qué te motiva y qué contexto tenés para mostrarte carreras que podrían tener sentido para vos. No una etiqueta: un mapa orientado a la realidad de Argentina." />
+
+    <!-- Canonical — cambiar por dominio propio cuando esté disponible -->
+    <link rel="canonical" href="https://vocariatest.netlify.app/" />
+
+    <!-- Robots -->
+    <meta name="robots" content="index, follow" />
+
+    <!-- Idioma y región -->
+    <meta name="language" content="es" />
+    <meta name="geo.region" content="AR" />
+    <meta name="geo.country" content="Argentina" />
+
+    <!-- ═══════════════════════════════════════════════
+         OPEN GRAPH (Facebook, WhatsApp, LinkedIn)
+    ════════════════════════════════════════════════ -->
+    <meta property="og:type" content="website" />
+    <meta property="og:url" content="https://vocariatest.netlify.app/" />
+    <meta property="og:site_name" content="Vocaria" />
+    <meta property="og:title" content="Vocaria — Test vocacional para elegir carrera en Argentina" />
+    <meta property="og:description" content="Respondé preguntas sobre cómo pensás y qué te motiva. Vocaria cruza tu perfil con más de 130 carreras argentinas y te muestra las que más sentido podrían tener para vos." />
+    <meta property="og:image" content="https://vocariatest.netlify.app/og-image.png" />
+    <meta property="og:image:width" content="1200" />
+    <meta property="og:image:height" content="630" />
+    <meta property="og:locale" content="es_AR" />
+
+    <!-- ═══════════════════════════════════════════════
+         TWITTER / X CARD
+    ════════════════════════════════════════════════ -->
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:site" content="@vocaria_ar" />
+    <meta name="twitter:title" content="Vocaria — Test vocacional para elegir carrera en Argentina" />
+    <meta name="twitter:description" content="No una etiqueta: un mapa. Vocaria cruza cómo pensás con carreras reales de universidades argentinas." />
+    <meta name="twitter:image" content="https://vocariatest.netlify.app/og-image.png" />
+
+    <!-- ═══════════════════════════════════════════════
+         FAVICON
+    ════════════════════════════════════════════════ -->
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <link rel="icon" type="image/png" href="/favicon.png" />
+    <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
+    <meta name="theme-color" content="#9FD2F1" />
+
+    <!-- ═══════════════════════════════════════════════
+         STRUCTURED DATA — Organization + WebApplication
+         Ampliar con FAQPage desde el componente si se agrega SSR.
+    ════════════════════════════════════════════════ -->
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@graph": [
+        {
+          "@type": "Organization",
+          "@id": "https://vocariatest.netlify.app/#organization",
+          "name": "Vocaria",
+          "url": "https://vocariatest.netlify.app/",
+          "description": "Test vocacional digital orientado a jóvenes argentinos que están eligiendo carrera o considerando un cambio.",
+          "areaServed": {
+            "@type": "Country",
+            "name": "Argentina"
+          },
+          "inLanguage": "es-AR"
+        },
+        {
+          "@type": "WebApplication",
+          "@id": "https://vocariatest.netlify.app/#app",
+          "name": "Vocaria — Test Vocacional",
+          "url": "https://vocariatest.netlify.app/",
+          "applicationCategory": "EducationalApplication",
+          "operatingSystem": "Web",
+          "offers": {
+            "@type": "Offer",
+            "price": "0",
+            "priceCurrency": "ARS",
+            "description": "Preview gratuito del resultado vocacional"
+          },
+          "description": "Test vocacional que analiza estilo de pensamiento, motivadores e intereses y los cruza con más de 130 carreras de universidades argentinas.",
+          "inLanguage": "es-AR",
+          "audience": {
+            "@type": "Audience",
+            "audienceType": "Estudiantes secundarios y universitarios de Argentina"
+          }
+        },
+        {
+          "@type": "WebPage",
+          "@id": "https://vocariatest.netlify.app/#webpage",
+          "url": "https://vocariatest.netlify.app/",
+          "name": "Vocaria — Test vocacional para elegir carrera en Argentina",
+          "description": "Vocaria analiza cómo pensás, qué te motiva y qué contexto tenés para mostrarte carreras que podrían tener sentido para vos.",
+          "isPartOf": { "@id": "https://vocariatest.netlify.app/#organization" },
+          "inLanguage": "es-AR"
+        }
+      ]
+    }
+    </script>
+
+    <!-- ═══════════════════════════════════════════════
+         PERFORMANCE
+    ════════════════════════════════════════════════ -->
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link rel="dns-prefetch" href="https://images.unsplash.com" />
   </head>
   <body>
+    <!-- Contenido crítico estático para crawlers (antes del JS) -->
+    <noscript>
+      <div style="font-family:system-ui,sans-serif;max-width:700px;margin:40px auto;padding:0 20px;color:#0d1b2e">
+        <h1>Vocaria — Test vocacional para elegir carrera en Argentina</h1>
+        <p>Vocaria analiza cómo pensás, qué te motiva y qué contexto tenés para mostrarte carreras que podrían tener sentido para vos en Argentina. Cruzamos tu perfil con más de 130 carreras de universidades argentinas.</p>
+        <p>Para usar Vocaria necesitás activar JavaScript en tu navegador.</p>
+        <ul>
+          <li><a href="/test-vocacional">Información sobre el test vocacional</a></li>
+          <li><a href="/elegir-carrera">Cómo elegir carrera</a></li>
+          <li><a href="/carreras-en-argentina">Carreras en Argentina</a></li>
+        </ul>
+      </div>
+    </noscript>
+
     <div id="root"></div>
     <script type="module" src="/src/main.tsx"></script>
   </body>
 </html>
-

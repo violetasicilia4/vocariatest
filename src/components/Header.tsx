@@ -51,7 +51,7 @@ export default function Header({ currentVersion, onContactClick }: HeaderProps) 
         </a>
 
         {/* Desktop Navigation */}
-        <nav className="hidden md:flex items-center gap-8">
+        <nav aria-label="Navegación principal" className="hidden md:flex items-center gap-8">
           {navLinks.map((link) => (
             <a
               key={link.label}

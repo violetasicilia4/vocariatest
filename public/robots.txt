@@ -1,0 +1,13 @@
+# Vocaria — robots.txt
+# Cuando tengas dominio propio, actualizá la URL del Sitemap abajo.
+
+User-agent: *
+Allow: /
+
+# Recursos que no necesitan indexarse
+Disallow: /dist/
+Disallow: /node_modules/
+Disallow: /src/
+
+# Sitemap — cambiar dominio cuando esté disponible
+Sitemap: https://vocariatest.netlify.app/sitemap.xml

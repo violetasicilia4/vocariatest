@@ -32,7 +32,7 @@ const testimonios = [
 
 export default function NarrativaSection({ onGetStartedClick }: NarrativaSectionProps) {
   return (
-    <section className="pt-10 pb-14 sm:pt-16 sm:pb-20 bg-white relative overflow-hidden border-t border-slate-100">
+    <section aria-labelledby="narrativa-heading" className="pt-10 pb-14 sm:pt-16 sm:pb-20 bg-white relative overflow-hidden border-t border-slate-100">
       <div className="max-w-5xl mx-auto px-6">
 
         {/* Bloques 1 y 2 centrados */}
@@ -44,6 +44,7 @@ export default function NarrativaSection({ onGetStartedClick }: NarrativaSection
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
             transition={{ duration: 0.5 }}
+            id="narrativa-heading"
             className="font-display text-2xl sm:text-4xl tracking-tight leading-[1.15] mb-6 sm:mb-8"
           >
             <span className="font-normal block text-slate-400 mb-0.5 text-xl sm:text-3xl">

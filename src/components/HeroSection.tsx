@@ -130,63 +130,58 @@ export default function HeroSection({ version, setVersion, onGetStartedClick }: 
                 Empezar mi test vocacional
               </button>
             </div>
-            <p className="text-[9.5px] font-medium mb-4 text-center tracking-wide" style={{ color: 'rgba(255,255,255,0.55)' }}>
-              Preview gratis · Pago único si querés el mapa completo · Sin suscripción
-            </p>
 
             {/* 6. Mockup enriquecido */}
-            <div className="w-full relative pt-4">
+            <div className="w-full pt-4">
 
-              {/* Label "Preview de resultado" */}
+              {/* Label superior */}
               <div className="flex justify-center mb-2">
                 <span className="text-[9px] font-medium tracking-widest uppercase" style={{ color: 'rgba(255,255,255,0.82)' }}>
                   Preview de resultado
                 </span>
               </div>
 
-              {/* Badge 92% Match */}
-              <div className="absolute top-4 right-0 z-20 select-none flex flex-col items-center">
-                <div className="w-11 h-11 rounded-full bg-[#CCFF00] text-[#0a0a0a] flex flex-col items-center justify-center shadow-md border-2 border-white">
-                  <span className="font-mono text-[11px] font-black leading-none">92%</span>
-                  <span className="text-[6px] font-sans font-black tracking-wider uppercase leading-none mt-0.5">Match</span>
-                </div>
-                <span className="text-[7.5px] text-slate-400 font-medium mt-1 text-center leading-tight" style={{ maxWidth: '80px' }}>Alineación con intereses y motivadores</span>
-              </div>
+              <div className="w-full bg-white rounded-[22px] border border-slate-100 text-left relative overflow-hidden" style={{ boxShadow: '0 8px 32px rgba(30,60,100,0.10)' }}>
 
-              <div className="w-full bg-white rounded-[22px] border border-slate-100 text-left relative" style={{ padding: '18px 18px 16px', boxShadow: '0 8px 32px rgba(30,60,100,0.10), 0 1.5px 4px rgba(30,60,100,0.06)' }}>
-
-                {/* Perfil sugerido */}
-                <div className="mb-3">
-                  <span className="text-slate-400 font-sans text-[8px] font-semibold tracking-widest uppercase">Perfil sugerido</span>
-                  <h4 className="text-[17px] font-extrabold text-slate-900 tracking-tight leading-tight mt-0.5">
-                    Exploradora Estratégica
-                  </h4>
-                </div>
-
-                {/* Por qué encaja */}
-                <div className="border-l-[2px] border-slate-200 bg-slate-50/80 px-3 py-2 rounded-r-lg mb-3">
-                  <div className="text-slate-400 font-sans text-[7.5px] font-semibold tracking-wider uppercase mb-0.5">Por qué encaja con vos</div>
-                  <p className="text-[10px] text-slate-700 font-semibold leading-snug">Pensás en sistemas, pero sentís en personas.</p>
+                {/* Header: badges alineados al estilo referencia */}
+                <div className="flex items-start justify-between px-4 pt-4 pb-3 border-b border-slate-100">
+                  <div>
+                    <span className="text-slate-400 font-sans text-[7.5px] font-bold tracking-widest uppercase block mb-1">Tu diagnóstico vocacional</span>
+                    <span className="text-slate-400 font-sans text-[7px] font-semibold tracking-widest uppercase">Perfil de enfoque</span>
+                    <h4 className="text-[15px] font-extrabold text-slate-900 tracking-tight leading-tight mt-0.5">
+                      Exploradora Estratégica
+                    </h4>
+                    <p className="text-[9px] text-slate-500 font-medium mt-1 leading-snug">Combina pensamiento empático con alta capacidad directiva.</p>
+                  </div>
+                  <div className="flex flex-col items-end gap-1.5 shrink-0 ml-2">
+                    <span className="inline-flex items-center gap-1 bg-[#f0fdf4] border border-emerald-200 text-emerald-700 text-[8px] font-bold px-2 py-0.5 rounded-full whitespace-nowrap">
+                      <span className="w-1 h-1 bg-emerald-500 rounded-full" />Alta Salida Laboral
+                    </span>
+                    <span className="bg-[#D8F95C] text-[#07111F] text-[10px] font-black px-2.5 py-0.5 rounded-md tracking-wide">92% MATCH</span>
+                  </div>
                 </div>
 
-                {/* Carreras */}
-                <div className="mb-3">
-                  <span className="text-slate-400 font-sans text-[7.5px] font-semibold tracking-widest uppercase block mb-1.5">Carreras con mayor afinidad</span>
+                {/* Carreras — se mantiene la versión actual con barras y universidades */}
+                <div className="px-4 py-3 border-b border-slate-100">
+                  <span className="text-slate-400 font-sans text-[7.5px] font-bold tracking-widest uppercase block mb-2">Match de recorridos</span>
                   <div className="space-y-2">
                     {[
-                      { label: 'Diseño UX/UI', unis: 'UADE · UP', pct: 94 },
-                      { label: 'Comunicación Estratégica', unis: 'UBA · Austral', pct: 89 },
-                      { label: 'Gestión de Producto', unis: 'UTDT · UdeSA', pct: 86 },
+                      { n: '1', label: 'Diseño UX/UI', unis: 'UADE · UP', pct: 94 },
+                      { n: '2', label: 'Comunicación Estratégica', unis: 'UBA · Austral', pct: 89 },
+                      { n: '3', label: 'Gestión de Producto', unis: 'UTDT · UdeSA', pct: 86 },
                     ].map(c => (
                       <div key={c.label} className="flex flex-col gap-1">
                         <div className="flex items-start justify-between gap-2">
-                          <div className="flex flex-col min-w-0">
-                            <span className="font-medium text-slate-800 text-[10px] leading-tight">{c.label}</span>
-                            <span className="text-slate-400 text-[8.5px] font-medium leading-tight mt-0.5">{c.unis}</span>
+                          <div className="flex items-start gap-1.5 min-w-0">
+                            <span className="text-slate-300 text-[8px] font-bold shrink-0 mt-0.5">{c.n}.</span>
+                            <div className="flex flex-col min-w-0">
+                              <span className="font-semibold text-slate-800 text-[10px] leading-tight">{c.label}</span>
+                              <span className="text-slate-400 text-[8px] font-medium leading-tight mt-0.5">{c.unis}</span>
+                            </div>
                           </div>
-                          <span className="text-slate-500 font-mono text-[9.5px] font-semibold shrink-0 mt-0.5">{c.pct}%</span>
+                          <span className="text-[9px] font-bold text-brand-sky shrink-0 mt-0.5">{c.pct}% Afinidad</span>
                         </div>
-                        <div className="w-full h-[3px] bg-slate-100 rounded-full overflow-hidden">
+                        <div className="w-full h-[2.5px] bg-slate-100 rounded-full overflow-hidden">
                           <div className="bg-slate-300 h-full rounded-full" style={{ width: `${c.pct}%` }} />
                         </div>
                       </div>
@@ -194,11 +189,23 @@ export default function HeroSection({ version, setVersion, onGetStartedClick }: 
                   </div>
                 </div>
 
-                {/* También podrías explorar */}
-                <div className="flex items-baseline gap-2 pt-2.5 border-t border-slate-100">
-                  <span className="text-slate-400 font-sans text-[7.5px] font-semibold uppercase tracking-widest shrink-0">También explorar</span>
-                  <span className="text-slate-500 text-[9px]">Data · Producto · Comunicación</span>
+                {/* Contexto laboral — estilo referencia */}
+                <div className="px-4 py-3">
+                  <span className="text-slate-400 font-sans text-[7.5px] font-bold tracking-widest uppercase block mb-1.5">Contexto laboral</span>
+                  <p className="text-[10px] text-slate-700 font-medium mb-1.5">
+                    Entrada: <strong>~ARS 600k</strong> &nbsp;/&nbsp; Senior: <strong>~ARS 2.5M / mes</strong>
+                  </p>
+                  <div className="flex items-center gap-3 mb-3">
+                    <span className="inline-flex items-center gap-1 text-emerald-600 text-[9px] font-semibold">
+                      <span className="w-1.5 h-1.5 bg-emerald-500 rounded-full" />Alta demanda
+                    </span>
+                    <span className="text-slate-500 text-[9px] font-medium">Teletrabajo ✓</span>
+                  </div>
+                  <span className="inline-flex items-center gap-1 bg-slate-50 border border-slate-200 text-slate-500 text-[8px] font-medium px-2.5 py-1 rounded-full">
+                    ⊙ Metodología Integrada
+                  </span>
                 </div>
+
               </div>
             </div>
 
@@ -255,9 +262,6 @@ export default function HeroSection({ version, setVersion, onGetStartedClick }: 
                 >
                   Empezar mi test vocacional
                 </button>
-                <p className="text-[10px] font-medium mt-2.5 tracking-wide" style={{ color: 'rgba(255,255,255,0.50)' }}>
-                  Preview gratis · Pago único si querés el mapa completo · Sin suscripción
-                </p>
               </motion.div>
             </motion.div>
 
@@ -269,91 +273,65 @@ export default function HeroSection({ version, setVersion, onGetStartedClick }: 
                 initial={{ opacity: 0, scale: 0.95, y: 30 }}
                 animate={{ opacity: 1, scale: 1, y: 0 }}
                 transition={{ duration: 0.6, type: 'spring', stiffness: 80 }}
-                className="w-full max-w-[300px] relative hover:scale-[1.02] transition-transform duration-500 group"
+                className="w-full max-w-[370px] relative hover:scale-[1.02] transition-transform duration-500 group"
               >
-                {/* Badge 92% + contexto */}
-                <div className="absolute top-0 right-8 -translate-y-1/3 z-20 select-none flex flex-col items-center">
-                  <div className="w-12 h-12 rounded-full bg-[#CCFF00] text-[#0a0a0a] flex flex-col items-center justify-center shadow-lg border-2 border-white">
-                    <span className="font-mono text-[13px] font-black leading-none">92%</span>
-                    <span className="text-[7px] font-sans font-black tracking-wider uppercase leading-none mt-0.5">Match</span>
-                  </div>
-                  <span className="text-[9px] text-slate-400 font-medium mt-1.5 text-center leading-tight whitespace-nowrap">24 situaciones</span>
-                </div>
+                <div className="w-full bg-white rounded-[20px] border border-slate-100 text-left relative overflow-hidden" style={{ boxShadow: '0 8px 32px rgba(30,60,100,0.10)' }}>
 
-                <div className="w-full bg-white rounded-[20px] border border-slate-100 text-left relative" style={{ padding: '14px 16px 12px', boxShadow: '0 8px 32px rgba(30,60,100,0.10)' }}>
-
-                  {/* Header */}
-                  <div className="flex items-start justify-between mb-2">
-                    <div className="flex flex-col">
-                      <span className="text-slate-400 font-sans text-[10px] font-bold tracking-widest uppercase">Perfil sugerido</span>
-                      <span className="inline-flex items-center gap-1 bg-[#f0fdf4] border border-emerald-500/15 text-emerald-700 text-[10px] font-bold px-2 py-0.5 rounded-full mt-1 w-fit">
-                        <span className="w-1 h-1 bg-emerald-500 rounded-full shrink-0 animate-pulse" />
-                        Alta salida laboral
+                  {/* Header con badges inline */}
+                  <div className="flex items-start justify-between px-4 pt-4 pb-3 border-b border-slate-100">
+                    <div>
+                      <span className="text-slate-400 font-sans text-[8px] font-semibold tracking-widest uppercase">Perfil de enfoque</span>
+                      <h4 className="text-[16px] font-extrabold text-slate-900 tracking-tight leading-tight mt-0.5">Exploradora Estratégica</h4>
+                      <p className="text-[10px] text-slate-500 mt-1 font-medium leading-snug" style={{ display:'-webkit-box', WebkitLineClamp:2, WebkitBoxOrient:'vertical', overflow:'hidden' }}>Combina pensamiento empático con alta capacidad directiva.</p>
+                    </div>
+                    <div className="flex flex-col items-end gap-1.5 shrink-0 ml-2">
+                      <span className="inline-flex items-center gap-1 bg-[#f0fdf4] border border-emerald-200 text-emerald-700 text-[8px] font-bold px-2 py-0.5 rounded-full whitespace-nowrap">
+                        <span className="w-1 h-1 bg-emerald-500 rounded-full animate-pulse" />Alta Salida Laboral
                       </span>
+                      <span className="bg-[#D8F95C] text-[#07111F] text-[10px] font-black px-2.5 py-0.5 rounded-md tracking-wide">92% MATCH</span>
                     </div>
                   </div>
 
-                  <div className="h-px bg-slate-100 mb-2" />
-
-                  {/* Nombre */}
-                  <div className="mb-2">
-                    <h4 className="text-[17px] font-extrabold text-slate-900 tracking-tight leading-tight">
-                      Exploradora Estratégica
-                    </h4>
-                    <p className="text-[12px] text-slate-500 mt-0.5 font-medium leading-snug">
-                      Combina pensamiento empático con alta capacidad directiva.
-                    </p>
-                  </div>
-
-                  {/* Tags */}
-                  <div className="flex flex-wrap gap-1 mb-2">
-                    {['Diseño UX', 'Gestión Digital'].map((tag) => (
-                      <span key={tag} className="bg-slate-50 text-slate-600 font-sans text-[10px] px-2 py-0.5 rounded-full border border-slate-200 leading-none">
-                        {tag}
-                      </span>
-                    ))}
-                  </div>
-
-                  {/* Por qué encaja */}
-                  <div className="border-l-2 border-slate-200 bg-slate-50 px-2 py-1.5 rounded-r-md mb-2">
-                    <div className="text-slate-400 font-sans text-[9px] font-bold tracking-wider uppercase mb-0.5">Por qué encaja</div>
-                    <p className="text-[12px] text-slate-700 font-semibold leading-tight">
-                      Pensás en sistemas, pero sentís en personas.
-                    </p>
-                  </div>
-
-                {/* Carreras */}
-                <div className="mb-2">
-                  <span className="text-slate-400 font-sans text-[9.5px] font-bold tracking-widest uppercase block mb-1.5">Carreras con mayor afinidad</span>
-                  <div className="space-y-1.5">
-                    {[
-                      { label: 'Diseño UX/UI', unis: 'UADE · UP', pct: 94 },
-                      { label: 'Administración de Empresas', unis: 'UBA · UTDT', pct: 89 },
-                    ].map(c => (
-                      <div key={c.label} className="flex flex-col gap-0.5">
-                        <div className="flex items-start justify-between gap-2">
-                          <div className="flex flex-col min-w-0">
-                            <span className="font-medium text-slate-700 text-[12px] leading-tight">{c.label}</span>
-                            <span className="text-slate-400 text-[10px] font-medium leading-tight mt-0.5">{c.unis}</span>
+                  {/* Carreras con barras */}
+                  <div className="px-4 py-3 border-b border-slate-100">
+                    <span className="text-slate-400 font-sans text-[9px] font-bold tracking-widest uppercase block mb-1.5">Carreras con mayor afinidad</span>
+                    <div className="space-y-1.5">
+                      {[
+                        { label: 'Diseño UX/UI', unis: 'UADE · UP', pct: 94 },
+                        { label: 'Administración de Empresas', unis: 'UBA · UTDT', pct: 89 },
+                      ].map(c => (
+                        <div key={c.label} className="flex flex-col gap-0.5">
+                          <div className="flex items-start justify-between gap-2">
+                            <div className="flex flex-col min-w-0">
+                              <span className="font-medium text-slate-700 text-[11px] leading-tight">{c.label}</span>
+                              <span className="text-slate-400 text-[9px] font-medium leading-tight mt-0.5">{c.unis}</span>
+                            </div>
+                            <span className="text-slate-500 font-mono text-[11px] shrink-0 mt-0.5">{c.pct}%</span>
                           </div>
-                          <span className="text-slate-500 font-mono text-[11px] shrink-0 mt-0.5">{c.pct}%</span>
+                          <div className="w-full h-[2.5px] bg-slate-100 rounded-full overflow-hidden">
+                            <div className="bg-slate-300 h-full rounded-full" style={{ width: `${c.pct}%` }} />
+                          </div>
                         </div>
-                        <div className="w-full h-[3px] bg-slate-100 rounded-full overflow-hidden">
-                          <div className="bg-slate-300 h-full rounded-full" style={{ width: `${c.pct}%` }} />
-                        </div>
-                      </div>
-                    ))}
+                      ))}
+                    </div>
                   </div>
-                </div>
 
-                {/* Salario */}
-                <div className="flex items-center justify-between pt-2 border-t border-slate-100">
-                  <div className="flex items-center gap-1">
-                    <Wallet className="w-3 h-3 text-slate-400 shrink-0" />
-                    <span className="text-slate-400 font-sans text-[9.5px] font-bold uppercase tracking-widest">Contexto laboral</span>
+                  {/* Contexto laboral — estilo referencia */}
+                  <div className="px-4 py-3">
+                    <span className="text-slate-400 font-sans text-[9px] font-bold tracking-widest uppercase block mb-1.5">Contexto laboral</span>
+                    <p className="text-[11px] text-slate-700 font-medium mb-1.5">
+                      Entrada: <strong>~ARS 600k</strong> &nbsp;/&nbsp; Senior: <strong>~ARS 2.5M / mes</strong>
+                    </p>
+                    <div className="flex items-center gap-3 mb-2.5">
+                      <span className="inline-flex items-center gap-1 text-emerald-600 text-[9.5px] font-semibold">
+                        <span className="w-1.5 h-1.5 bg-emerald-500 rounded-full" />Alta demanda
+                      </span>
+                      <span className="text-slate-500 text-[9.5px] font-medium">Teletrabajo ✓</span>
+                    </div>
+                    <span className="inline-flex items-center gap-1 bg-slate-50 border border-slate-200 text-slate-500 text-[9px] font-medium px-2.5 py-1 rounded-full">
+                      ⊙ Metodología Integrada
+                    </span>
                   </div>
-                  <span className="font-mono font-normal text-slate-500 text-[12px]">$1.8M – 2.5M /mes</span>
-                </div>
 
                 </div>
               </motion.div>

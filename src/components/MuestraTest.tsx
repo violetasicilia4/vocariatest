@@ -16,18 +16,18 @@ export default function MuestraTest({ onGetStartedClick }: MuestraTestProps) {
   const [seleccionada, setSeleccionada] = useState<string | null>(null);
 
   return (
-    <section className="py-12 sm:py-20 bg-white border-t border-slate-100">
+    <section aria-labelledby="muestra-heading" className="py-12 sm:py-20 bg-white border-t border-slate-100">
       <div className="max-w-xl mx-auto px-6">
 
         {/* Label superior */}
-        <motion.p
+        <motion.h2
           initial={{ opacity: 0, y: 10 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
           className="text-center text-[10px] font-bold tracking-widest uppercase text-slate-400 mb-4"
         >
           Probá una pregunta real
-        </motion.p>
+        </motion.h2>
 
         {/* Card */}
         <motion.div

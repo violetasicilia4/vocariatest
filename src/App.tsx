@@ -21,39 +21,45 @@ export default function App() {
 
   return (
     <div className="relative min-h-screen bg-white overflow-hidden selection:bg-brand-lime selection:text-slate-950 font-sans antialiased text-[#0f172a]">
-      {/* Dynamic Header */}
+
+      {/* Landmark: header + nav */}
       <Header
         currentVersion={currentVersion}
         setVersion={setCurrentVersion}
         onContactClick={handleOpenContactGeneric}
       />
 
-      {/* Dynamic Animated Hero Section (Toggleable V1, V2, V3) */}
-      <HeroSection
-        version={currentVersion}
-        setVersion={setCurrentVersion}
-        onGetStartedClick={handleOpenContactGeneric}
-      />
+      {/* Landmark: main content */}
+      <main id="main-content">
 
-      {/* Logo Banner showing corporate partners */}
-      <LogoBanner />
+        {/* Hero — H1 + CTA principal + preview de resultado */}
+        <HeroSection
+          version={currentVersion}
+          setVersion={setCurrentVersion}
+          onGetStartedClick={handleOpenContactGeneric}
+        />
 
-      {/* Sección narrativa */}
-      <NarrativaSection onGetStartedClick={handleOpenContactGeneric} />
+        {/* Confianza: universidades argentinas analizadas */}
+        <LogoBanner />
 
-      {/* 1. Muestra del test */}
-      <MuestraTest onGetStartedClick={handleOpenContactGeneric} />
+        {/* El problema real: frases de identificación + testimonios */}
+        <NarrativaSection onGetStartedClick={handleOpenContactGeneric} />
 
-      {/* 2. Cómo funciona */}
-      <ComoFunciona />
+        {/* Preview interactivo del test */}
+        <MuestraTest onGetStartedClick={handleOpenContactGeneric} />
 
-      {/* 3. Cierre + CTA */}
-      <CierreCTA onGetStartedClick={handleOpenContactGeneric} />
+        {/* Cómo funciona Vocaria */}
+        <ComoFunciona />
 
-      {/* 4. FAQ */}
-      <FAQSection />
+        {/* CTA de cierre */}
+        <CierreCTA onGetStartedClick={handleOpenContactGeneric} />
 
-      {/* Footer */}
+        {/* Preguntas frecuentes */}
+        <FAQSection />
+
+      </main>
+
+      {/* Landmark: footer */}
       <Footer
         onLayoutChange={setCurrentVersion}
         onContactClick={handleOpenContactGeneric}
@@ -68,4 +74,3 @@ export default function App() {
     </div>
   );
 }
-

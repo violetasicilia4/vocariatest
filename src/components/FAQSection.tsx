@@ -20,7 +20,7 @@ const faqs = [
   {
     pregunta: '¿Es mejor que ir a una orientación vocacional tradicional?',
     respuesta:
-      'No reemplaza un proceso de orientación completo. Pero si todavía no estás seguro de si necesitás uno, Vocaria te da un mapa inicial a una fracción del costo. Muchos usuarios lo usan como primer paso antes de decidir si quieren ir más lejos.',
+      'No reemplaza un proceso de orientación completo. Pero si todavía no estás seguro de si necesitás uno, Vocaria te da un mapa inicial. Muchos usuarios lo usan como primer paso antes de decidir si quieren ir más lejos.',
   },
 ];
 
@@ -30,17 +30,37 @@ export default function FAQSection() {
   const toggle = (i: number) => setAbierta(abierta === i ? null : i);
 
   return (
-    <section className="py-12 sm:py-20 bg-white border-t border-slate-100">
+    <section aria-labelledby="faq-heading" className="py-12 sm:py-20 bg-white border-t border-slate-100">
       <div className="max-w-2xl mx-auto px-6">
 
         <motion.h2
           initial={{ opacity: 0, y: 12 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
+          id="faq-heading"
           className="font-display font-extrabold text-2xl sm:text-3xl text-[#0e1118] tracking-tight mb-8"
         >
           Preguntas frecuentes
         </motion.h2>
+
+        {/* Structured data para FAQPage (Google rich results) */}
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{
+            __html: JSON.stringify({
+              '@context': 'https://schema.org',
+              '@type': 'FAQPage',
+              mainEntity: faqs.map((f) => ({
+                '@type': 'Question',
+                name: f.pregunta,
+                acceptedAnswer: {
+                  '@type': 'Answer',
+                  text: f.respuesta,
+                },
+              })),
+            }),
+          }}
+        />
 
         <div className="divide-y divide-slate-100">
           {faqs.map((faq, i) => (
