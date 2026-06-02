@@ -12,6 +12,26 @@ const opciones = [
   { id: 'D', texto: 'Entender por qué algo no está funcionando.' },
 ];
 
+// Feedback específico por opción — suena como un sistema real, no como marketing
+const feedbacks: Record<string, { titulo: string; cuerpo: string }> = {
+  A: {
+    titulo: 'Orientación analítica y estratégica',
+    cuerpo: 'Esta respuesta es frecuente en perfiles que priorizan la resolución de problemas complejos, el análisis de sistemas y el pensamiento estructurado.',
+  },
+  B: {
+    titulo: 'Orientación al liderazgo y la colaboración',
+    cuerpo: 'Esta respuesta aparece habitualmente en perfiles orientados a la gestión de equipos, el trabajo interdisciplinario y el desarrollo de personas.',
+  },
+  C: {
+    titulo: 'Orientación creativa y al usuario',
+    cuerpo: 'Esta respuesta es característica de perfiles con sensibilidad hacia el diseño, la comunicación y la construcción de experiencias.',
+  },
+  D: {
+    titulo: 'Orientación investigativa y diagnóstica',
+    cuerpo: 'Esta respuesta aparece en perfiles con pensamiento crítico, capacidad de diagnóstico y orientación a la mejora continua.',
+  },
+};
+
 function InteractiveCard({ onGetStartedClick }: { onGetStartedClick: () => void }) {
   const [seleccionada, setSeleccionada] = useState<string | null>(null);
 
@@ -61,11 +81,18 @@ function InteractiveCard({ onGetStartedClick }: { onGetStartedClick: () => void 
             animate={{ opacity: 1, y: 0 }}
             exit={{ opacity: 0 }}
             transition={{ duration: 0.25 }}
-            className="mt-6"
+            className="mt-5 space-y-4"
           >
-            <p className="text-center text-[11px] text-slate-400 font-medium mb-4">
-              Tu respuesta ya empieza a mostrar cómo pensás.
-            </p>
+            {/* Feedback específico — parece un sistema real */}
+            <div className="bg-slate-50 border border-slate-100 rounded-2xl px-4 py-4">
+              <p className="text-[10px] font-bold tracking-widest uppercase mb-1" style={{ color: '#258ef9' }}>
+                {feedbacks[seleccionada].titulo}
+              </p>
+              <p className="text-[12.5px] text-slate-600 font-medium leading-relaxed">
+                {feedbacks[seleccionada].cuerpo}
+              </p>
+            </div>
+
             <button
               onClick={onGetStartedClick}
               className="w-full py-3.5 bg-[#07111F] text-white font-display text-[14px] font-black tracking-wide rounded-full hover:bg-brand-lime hover:text-slate-950 hover:scale-[1.02] active:scale-[0.98] transition-all duration-200 shadow-[0_10px_28px_rgba(5,8,22,0.18)]"
@@ -84,24 +111,27 @@ export default function MuestraTest({ onGetStartedClick }: MuestraTestProps) {
     <section id="preview" aria-labelledby="muestra-heading" className="py-14 sm:py-24 bg-white">
       <div className="max-w-5xl mx-auto px-6">
 
-        {/* ── MOBILE: centered, stacked ───────────────────── */}
+        {/* ── MOBILE ───────────────────────────────────── */}
         <div className="lg:hidden">
           <motion.div
             initial={{ opacity: 0, y: 12 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
             transition={{ duration: 0.45 }}
-            className="text-center mb-8"
+            className="mb-8"
           >
             <span className="text-[10px] font-bold tracking-widest uppercase text-sky-500/70 block mb-2">
-              Preview
+              Demo · Pregunta real
             </span>
             <h2
               id="muestra-heading"
-              className="font-display font-black text-2xl text-[#0e1118] tracking-tight leading-tight"
+              className="font-display font-black text-2xl text-[#0e1118] tracking-tight leading-tight mb-2"
             >
               Probá una pregunta real.
             </h2>
+            <p className="text-sm text-slate-400 font-medium leading-relaxed">
+              Sin respuestas correctas. Tu patrón emerge de las situaciones.
+            </p>
           </motion.div>
           <motion.div
             initial={{ opacity: 0, y: 16 }}
@@ -113,10 +143,9 @@ export default function MuestraTest({ onGetStartedClick }: MuestraTestProps) {
           </motion.div>
         </div>
 
-        {/* ── DESKTOP: 2-col — left context, right demo ───── */}
+        {/* ── DESKTOP: 2-col ───────────────────────────── */}
         <div className="hidden lg:grid lg:grid-cols-12 gap-14 xl:gap-20 items-center">
 
-          {/* Left: editorial context */}
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             whileInView={{ opacity: 1, y: 0 }}
@@ -125,7 +154,7 @@ export default function MuestraTest({ onGetStartedClick }: MuestraTestProps) {
             className="col-span-5"
           >
             <span className="text-[10px] font-bold tracking-widest uppercase text-sky-500/70 block mb-4">
-              Preview · Pregunta real
+              Demo · Pregunta real
             </span>
             <h2
               id="muestra-heading"
@@ -133,16 +162,15 @@ export default function MuestraTest({ onGetStartedClick }: MuestraTestProps) {
             >
               Probá una pregunta real.
             </h2>
-            <p className="text-slate-400 text-sm font-medium leading-relaxed mb-6">
+            <p className="text-slate-400 text-sm font-medium leading-relaxed mb-4">
               No te preguntamos qué carrera te gusta.
               Te ponemos en situaciones concretas.
             </p>
             <p className="text-slate-400 text-sm font-medium leading-relaxed">
-              15 preguntas. Sin respuestas correctas. Tu patrón emerge solo.
+              Cada respuesta activa señales específicas. Seleccioná una y ve cómo empieza a funcionar el análisis.
             </p>
           </motion.div>
 
-          {/* Right: interactive card */}
           <motion.div
             initial={{ opacity: 0, scale: 0.97, y: 16 }}
             whileInView={{ opacity: 1, scale: 1, y: 0 }}

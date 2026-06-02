@@ -75,6 +75,14 @@ export default function CierreCTA({ onGetStartedClick }: CierreCTAProps) {
           >
             Empezar mi test vocacional
           </button>
+
+          {/* Recordatorio de qué recibe — ancla la decisión */}
+          <p
+            className="text-[11px] font-medium tracking-wide mt-4"
+            style={{ color: 'rgba(255,255,255,0.30)' }}
+          >
+            Carreras · Universidades · Próximos pasos
+          </p>
         </motion.div>
 
       </div>

@@ -8,6 +8,7 @@ import NarrativaSection from './components/NarrativaSection';
 import TestimonialsSection from './components/TestimonialsSection';
 import MuestraTest from './components/MuestraTest';
 import ComoFunciona from './components/ComoFunciona';
+import MetodologiaSection from './components/MetodologiaSection';
 import CierreCTA from './components/CierreCTA';
 import FAQSection from './components/FAQSection';
 
@@ -21,29 +22,32 @@ export default function App() {
 
       <main id="main-content">
 
-        {/* Hero — H1 + CTA + preview de resultado */}
+        {/* Hero — problema + CTA */}
         <HeroSection onGetStartedClick={() => setContactOpen(true)} />
+
+        {/* El problema real — frases de identificación */}
+        <NarrativaSection onGetStartedClick={() => setContactOpen(true)} />
+
+        {/* Cómo funciona — metodología de situaciones */}
+        <ComoFunciona />
+
+        {/* Qué analiza — señales + disclaimer */}
+        <MetodologiaSection />
+
+        {/* Pregunta real del test — demo interactiva */}
+        <MuestraTest onGetStartedClick={() => setContactOpen(true)} />
 
         {/* Confianza: universidades argentinas analizadas */}
         <LogoBanner />
 
-        {/* El problema real: frases de identificación */}
-        <NarrativaSection onGetStartedClick={() => setContactOpen(true)} />
-
-        {/* Testimonios editoriales */}
+        {/* Casos de uso reales */}
         <TestimonialsSection />
-
-        {/* Preview interactivo del test */}
-        <MuestraTest onGetStartedClick={() => setContactOpen(true)} />
-
-        {/* Cómo funciona Vocaria */}
-        <ComoFunciona />
-
-        {/* CTA de cierre */}
-        <CierreCTA onGetStartedClick={() => setContactOpen(true)} />
 
         {/* Preguntas frecuentes */}
         <FAQSection />
+
+        {/* CTA de cierre */}
+        <CierreCTA onGetStartedClick={() => setContactOpen(true)} />
 
       </main>
 

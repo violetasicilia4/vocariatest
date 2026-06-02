@@ -5,6 +5,8 @@ interface HeroSectionProps {
   onGetStartedClick: () => void;
 }
 
+const trustItems = ['7 minutos', 'Resultado personalizado', 'Carreras + universidades'];
+
 export default function HeroSection({ onGetStartedClick }: HeroSectionProps) {
   const containerVariants = {
     hidden: { opacity: 0 },
@@ -33,17 +35,18 @@ export default function HeroSection({ onGetStartedClick }: HeroSectionProps) {
         backgroundPosition: 'center',
       }}
     >
-      {/* Gradientes ambientales de fondo */}
+      {/* Gradientes ambientales */}
       <div className="absolute top-1/4 right-0 w-[400px] h-[400px] bg-brand-sky/20 blur-[130px] rounded-full pointer-events-none animate-pulse duration-[8s]" />
       <div className="absolute bottom-10 left-10 w-[300px] h-[300px] bg-brand-lime/10 blur-[100px] rounded-full pointer-events-none" />
 
       <div className="max-w-6xl mx-auto px-6 lg:px-16 w-full relative z-10">
 
         {/* ==========================================
-            MOBILE (lg:hidden)
+            MOBILE (lg:hidden) — jerarquía limpia
         ========================================== */}
-        <div className="lg:hidden flex flex-col items-center text-center w-full max-w-[340px] mx-auto pt-2 pb-2">
+        <div className="lg:hidden flex flex-col items-center text-center w-full max-w-[340px] mx-auto pt-2 pb-4">
 
+          {/* Badge */}
           <div className="mb-4">
             <span
               className="font-display text-[8px] font-bold tracking-widest px-3 py-1 rounded-full uppercase backdrop-blur-sm"
@@ -53,49 +56,68 @@ export default function HeroSection({ onGetStartedClick }: HeroSectionProps) {
             </span>
           </div>
 
+          {/* H1 — específico, no genérico */}
           <h1
             className="font-display text-[26px] tracking-tight leading-[1.1] mb-4 w-full"
             style={{ textShadow: '0 2px 20px rgba(10,30,60,0.35), 0 1px 4px rgba(10,30,60,0.25)' }}
           >
             <span className="font-black block text-white">
               Descubrí qué carreras<br />
-              encajan con tu{' '}
-              <span className="underline decoration-[#D8F95C] decoration-[4px] underline-offset-[5px]">perfil real.</span>
+              encajan con{' '}
+              <span className="underline decoration-[#d5ff3f] decoration-[4px] underline-offset-[5px]">cómo pensás.</span>
             </span>
           </h1>
 
+          {/* Subtítulo — concreto */}
           <p
             className="text-[12.5px] w-full mb-5 leading-relaxed font-medium"
             style={{ color: 'rgba(255,255,255,0.88)', textShadow: '0 1px 12px rgba(10,30,60,0.30)' }}
           >
-            Respondé un test breve y recibí<br />
-            un perfil con carreras y caminos que encajan con vos.
+            Basado en situaciones reales, no en qué «te suena bien».<br />
+            Recibí carreras, universidades y próximos pasos.
           </p>
 
-          <div className="w-full mb-2">
+          {/* CTA principal */}
+          <div className="w-full mb-4">
             <button
               onClick={onGetStartedClick}
-              className="w-full py-3.5 bg-[#07111F] text-white font-display text-[15px] font-black tracking-wide rounded-full hover:bg-brand-lime hover:text-slate-950 hover:scale-[1.02] active:scale-[0.98] transition-all duration-200 flex items-center justify-center shadow-[0_14px_32px_rgba(5,8,22,0.22)]"
+              className="w-full py-3.5 bg-[#07111F] text-white font-display text-[15px] font-black tracking-wide rounded-full hover:bg-brand-lime hover:text-slate-950 active:scale-[0.98] transition-all duration-200 flex items-center justify-center shadow-[0_14px_32px_rgba(5,8,22,0.22)]"
             >
               Empezar mi test vocacional
             </button>
           </div>
 
-          {/* Preview de resultado — mobile */}
-          <div className="w-full pt-4">
-            <div className="flex justify-center mb-2">
-              <span className="text-[9px] font-medium tracking-widest uppercase" style={{ color: 'rgba(255,255,255,0.82)' }}>
-                Preview de resultado
+          {/* Trust strip — señales de confianza compactas */}
+          <div className="flex flex-wrap items-center justify-center gap-x-3 gap-y-1 mb-8">
+            {trustItems.map((item) => (
+              <span
+                key={item}
+                className="flex items-center gap-1 text-[10.5px] font-medium"
+                style={{ color: 'rgba(255,255,255,0.68)' }}
+              >
+                <span className="text-brand-lime font-bold leading-none">✓</span>
+                {item}
+              </span>
+            ))}
+          </div>
+
+          {/* Preview de resultado — después del CTA, no compite */}
+          <div className="w-full">
+            <div className="flex justify-center mb-2.5">
+              <span
+                className="text-[9px] font-medium tracking-widest uppercase"
+                style={{ color: 'rgba(255,255,255,0.55)' }}
+              >
+                Así se ve tu resultado
               </span>
             </div>
 
             <div className="w-full bg-white rounded-[20px] border border-slate-100 text-left relative overflow-hidden" style={{ boxShadow: '0 12px 40px rgba(30,60,100,0.12)' }}>
 
-              {/* Header — idéntico al desktop */}
               <div className="px-4 pt-4 pb-3 border-b border-slate-100">
                 <div className="flex items-start justify-between gap-2 mb-1">
                   <span className="text-slate-400 font-sans text-[8px] font-bold tracking-widest uppercase">Perfil de enfoque</span>
-                  <span className="bg-[#D8F95C] text-[#07111F] text-[10px] font-black px-2.5 py-0.5 rounded-md tracking-wide shrink-0">92% MATCH</span>
+                  <span className="bg-brand-lime text-[#07111F] text-[10px] font-black px-2.5 py-0.5 rounded-md tracking-wide shrink-0">92% MATCH</span>
                 </div>
                 <h4 className="text-[15px] font-extrabold text-slate-900 tracking-tight leading-tight mb-1">Exploradora Estratégica</h4>
                 <p className="text-[10px] text-slate-500 font-medium leading-snug mb-2.5">
@@ -110,13 +132,12 @@ export default function HeroSection({ onGetStartedClick }: HeroSectionProps) {
                 </div>
               </div>
 
-              {/* Carreras — idéntico al desktop */}
               <div className="px-4 py-3 border-b border-slate-100">
                 <span className="text-slate-400 font-sans text-[9px] font-bold tracking-widest uppercase block mb-1.5">Carreras con mayor afinidad</span>
                 <div className="space-y-1.5">
                   {[
-                    { label: 'Diseño UX/UI',               unis: 'UADE · UP',    pct: 94, top: true  },
-                    { label: 'Administración de Empresas',  unis: 'UBA · UTDT',   pct: 89, top: false },
+                    { label: 'Diseño UX/UI',               unis: 'UADE · UP',   pct: 94, top: true  },
+                    { label: 'Administración de Empresas',  unis: 'UBA · UTDT',  pct: 89, top: false },
                   ].map(c => (
                     <div key={c.label} className="flex flex-col gap-0.5">
                       <div className="flex items-start justify-between gap-2">
@@ -134,7 +155,6 @@ export default function HeroSection({ onGetStartedClick }: HeroSectionProps) {
                 </div>
               </div>
 
-              {/* Contexto laboral — idéntico al desktop */}
               <div className="px-4 py-3">
                 <span className="text-slate-400 font-sans text-[9px] font-bold tracking-widest uppercase block mb-1.5">Contexto laboral</span>
                 <p className="text-[11px] text-slate-700 font-medium mb-1.5">
@@ -183,8 +203,8 @@ export default function HeroSection({ onGetStartedClick }: HeroSectionProps) {
               className="font-display text-5xl xl:text-6xl text-white font-black tracking-tight leading-[1.05] mb-5 max-w-xl"
               style={{ textShadow: '0 2px 20px rgba(10,30,60,0.35), 0 1px 4px rgba(10,30,60,0.25)' }}
             >
-              Descubrí qué carreras encajan con tu{' '}
-              <span className="underline decoration-[#D8F95C] decoration-[4px] underline-offset-[5px]">perfil real.</span>
+              Descubrí qué carreras encajan con{' '}
+              <span className="underline decoration-[#d5ff3f] decoration-[4px] underline-offset-[5px]">cómo pensás.</span>
             </motion.h1>
 
             <motion.p
@@ -192,7 +212,7 @@ export default function HeroSection({ onGetStartedClick }: HeroSectionProps) {
               className="text-base leading-relaxed max-w-md mb-8 font-medium"
               style={{ color: 'rgba(255,255,255,0.88)', textShadow: '0 1px 12px rgba(10,30,60,0.30)' }}
             >
-              Respondé un test breve y recibí un perfil con carreras, áreas y caminos que encajan con vos.
+              Respondé un test basado en situaciones reales y recibí carreras, universidades y próximos pasos concretos.
             </motion.p>
 
             <motion.div variants={itemVariants}>
@@ -202,6 +222,20 @@ export default function HeroSection({ onGetStartedClick }: HeroSectionProps) {
               >
                 Empezar mi test vocacional
               </button>
+            </motion.div>
+
+            {/* Trust strip — desktop */}
+            <motion.div variants={itemVariants} className="flex items-center gap-5 mt-5">
+              {trustItems.map((item) => (
+                <span
+                  key={item}
+                  className="flex items-center gap-1.5 text-[11px] font-medium"
+                  style={{ color: 'rgba(255,255,255,0.60)' }}
+                >
+                  <span className="text-brand-lime font-bold">✓</span>
+                  {item}
+                </span>
+              ))}
             </motion.div>
           </motion.div>
 
@@ -217,17 +251,15 @@ export default function HeroSection({ onGetStartedClick }: HeroSectionProps) {
             >
               <div className="w-full bg-white rounded-[20px] border border-slate-100 text-left relative overflow-hidden" style={{ boxShadow: '0 12px 40px rgba(30,60,100,0.12)' }}>
 
-                {/* Header: label + title + desc + tags */}
                 <div className="px-4 pt-4 pb-3 border-b border-slate-100">
                   <div className="flex items-start justify-between gap-2 mb-1">
                     <span className="text-slate-400 font-sans text-[8px] font-bold tracking-widest uppercase">Perfil de enfoque</span>
-                    <span className="bg-[#D8F95C] text-[#07111F] text-[10px] font-black px-2.5 py-0.5 rounded-md tracking-wide shrink-0">92% MATCH</span>
+                    <span className="bg-brand-lime text-[#07111F] text-[10px] font-black px-2.5 py-0.5 rounded-md tracking-wide shrink-0">92% MATCH</span>
                   </div>
                   <h4 className="text-[16px] font-extrabold text-slate-900 tracking-tight leading-tight mb-1">Exploradora Estratégica</h4>
                   <p className="text-[10px] text-slate-500 font-medium leading-snug mb-2.5">
                     Combina pensamiento empático con alta capacidad directiva.
                   </p>
-                  {/* Tags de área */}
                   <div className="flex flex-wrap gap-1.5">
                     {['Diseño', 'Gestión Digital', 'Administración'].map(tag => (
                       <span key={tag} className="text-[9px] font-semibold text-slate-600 bg-slate-100 border border-slate-200 px-2.5 py-1 rounded-full">
@@ -237,13 +269,12 @@ export default function HeroSection({ onGetStartedClick }: HeroSectionProps) {
                   </div>
                 </div>
 
-                {/* Carreras con barras */}
                 <div className="px-4 py-3 border-b border-slate-100">
                   <span className="text-slate-400 font-sans text-[9px] font-bold tracking-widest uppercase block mb-1.5">Carreras con mayor afinidad</span>
                   <div className="space-y-1.5">
                     {[
-                      { label: 'Diseño UX/UI',               unis: 'UADE · UP',    pct: 94, top: true  },
-                      { label: 'Administración de Empresas',  unis: 'UBA · UTDT',   pct: 89, top: false },
+                      { label: 'Diseño UX/UI',               unis: 'UADE · UP',   pct: 94, top: true  },
+                      { label: 'Administración de Empresas',  unis: 'UBA · UTDT',  pct: 89, top: false },
                     ].map(c => (
                       <div key={c.label} className="flex flex-col gap-0.5">
                         <div className="flex items-start justify-between gap-2">
@@ -261,7 +292,6 @@ export default function HeroSection({ onGetStartedClick }: HeroSectionProps) {
                   </div>
                 </div>
 
-                {/* Contexto laboral */}
                 <div className="px-4 py-3">
                   <span className="text-slate-400 font-sans text-[9px] font-bold tracking-widest uppercase block mb-1.5">Contexto laboral</span>
                   <p className="text-[11px] text-slate-700 font-medium mb-1.5">
