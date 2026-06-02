@@ -115,8 +115,8 @@ export default function HeroSection({ onGetStartedClick }: HeroSectionProps) {
                 <span className="text-slate-400 font-sans text-[9px] font-bold tracking-widest uppercase block mb-1.5">Carreras con mayor afinidad</span>
                 <div className="space-y-1.5">
                   {[
-                    { label: 'Diseño UX/UI',               unis: 'UADE · UP',    pct: 94 },
-                    { label: 'Administración de Empresas',  unis: 'UBA · UTDT',   pct: 89 },
+                    { label: 'Diseño UX/UI',               unis: 'UADE · UP',    pct: 94, top: true  },
+                    { label: 'Administración de Empresas',  unis: 'UBA · UTDT',   pct: 89, top: false },
                   ].map(c => (
                     <div key={c.label} className="flex flex-col gap-0.5">
                       <div className="flex items-start justify-between gap-2">
@@ -124,10 +124,10 @@ export default function HeroSection({ onGetStartedClick }: HeroSectionProps) {
                           <span className="font-medium text-slate-700 text-[11px] leading-tight">{c.label}</span>
                           <span className="text-slate-400 text-[9px] font-medium leading-tight mt-0.5">{c.unis}</span>
                         </div>
-                        <span className="text-slate-500 font-mono text-[11px] shrink-0 mt-0.5">{c.pct}%</span>
+                        <span className={`font-mono text-[11px] shrink-0 mt-0.5 ${c.top ? 'text-[#07111F] font-bold' : 'text-slate-400'}`}>{c.pct}%</span>
                       </div>
                       <div className="w-full h-[2px] bg-slate-100 rounded-full overflow-hidden">
-                        <div className="bg-slate-300 h-full rounded-full" style={{ width: `${c.pct}%` }} />
+                        <div className={`h-full rounded-full ${c.top ? 'bg-brand-lime' : 'bg-slate-200'}`} style={{ width: `${c.pct}%` }} />
                       </div>
                     </div>
                   ))}
@@ -242,8 +242,8 @@ export default function HeroSection({ onGetStartedClick }: HeroSectionProps) {
                   <span className="text-slate-400 font-sans text-[9px] font-bold tracking-widest uppercase block mb-1.5">Carreras con mayor afinidad</span>
                   <div className="space-y-1.5">
                     {[
-                      { label: 'Diseño UX/UI',               unis: 'UADE · UP',    pct: 94 },
-                      { label: 'Administración de Empresas',  unis: 'UBA · UTDT',   pct: 89 },
+                      { label: 'Diseño UX/UI',               unis: 'UADE · UP',    pct: 94, top: true  },
+                      { label: 'Administración de Empresas',  unis: 'UBA · UTDT',   pct: 89, top: false },
                     ].map(c => (
                       <div key={c.label} className="flex flex-col gap-0.5">
                         <div className="flex items-start justify-between gap-2">
@@ -251,10 +251,10 @@ export default function HeroSection({ onGetStartedClick }: HeroSectionProps) {
                             <span className="font-medium text-slate-700 text-[11px] leading-tight">{c.label}</span>
                             <span className="text-slate-400 text-[9px] font-medium leading-tight mt-0.5">{c.unis}</span>
                           </div>
-                          <span className="text-slate-500 font-mono text-[11px] shrink-0 mt-0.5">{c.pct}%</span>
+                          <span className={`font-mono text-[11px] shrink-0 mt-0.5 ${c.top ? 'text-[#07111F] font-bold' : 'text-slate-400'}`}>{c.pct}%</span>
                         </div>
                         <div className="w-full h-[2px] bg-slate-100 rounded-full overflow-hidden">
-                          <div className="bg-slate-300 h-full rounded-full" style={{ width: `${c.pct}%` }} />
+                          <div className={`h-full rounded-full ${c.top ? 'bg-brand-lime' : 'bg-slate-200'}`} style={{ width: `${c.pct}%` }} />
                         </div>
                       </div>
                     ))}

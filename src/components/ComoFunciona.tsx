@@ -39,7 +39,8 @@ export default function ComoFunciona() {
             No te preguntamos qué te gusta.
           </span>
           <span className="font-black block text-[#0e1118]">
-            Te ponemos en situaciones.
+            Te ponemos en{' '}
+            <span className="underline decoration-brand-lime decoration-[3px] underline-offset-[4px]">situaciones.</span>
           </span>
         </motion.h2>
 
@@ -53,7 +54,7 @@ export default function ComoFunciona() {
               viewport={{ once: true }}
               transition={{ duration: 0.4, delay: i * 0.1 }}
             >
-              <span className="font-mono font-bold text-[12px] text-brand-sky block mb-2">
+              <span className="font-mono font-bold text-[12px] text-brand-lime block mb-2">
                 {p.n}
               </span>
               <h3 className="font-display font-extrabold text-[16px] sm:text-[17px] text-slate-900 mb-2 leading-tight">
