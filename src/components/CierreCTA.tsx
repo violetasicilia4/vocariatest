@@ -81,7 +81,7 @@ export default function CierreCTA({ onGetStartedClick }: CierreCTAProps) {
             className="text-[11px] font-medium tracking-wide mt-4"
             style={{ color: 'rgba(255,255,255,0.30)' }}
           >
-            Carreras · Universidades · Próximos pasos
+            Carreras · Universidades · Fortalezas · Próximos pasos
           </p>
         </motion.div>
 

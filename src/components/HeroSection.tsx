@@ -70,21 +70,27 @@ export default function HeroSection({ onGetStartedClick }: HeroSectionProps) {
 
           {/* Subtítulo — concreto */}
           <p
-            className="text-[12.5px] w-full mb-5 leading-relaxed font-medium"
+            className="text-sm w-full mb-5 leading-relaxed font-medium"
             style={{ color: 'rgba(255,255,255,0.88)', textShadow: '0 1px 12px rgba(10,30,60,0.30)' }}
           >
-            Basado en situaciones reales, no en qué «te suena bien».<br />
-            Recibí carreras, universidades y próximos pasos.
+            Respondé un test basado en situaciones reales y recibí carreras, universidades y próximos pasos concretos.
           </p>
 
           {/* CTA principal */}
-          <div className="w-full mb-8">
+          <div className="w-full mb-4">
             <button
               onClick={onGetStartedClick}
               className="w-full py-3.5 bg-[#07111F] text-white font-display text-[15px] font-black tracking-wide rounded-full hover:bg-brand-lime hover:text-slate-950 active:scale-[0.98] transition-all duration-200 flex items-center justify-center shadow-[0_14px_32px_rgba(5,8,22,0.22)]"
             >
               Empezar mi test vocacional
             </button>
+          </div>
+
+          {/* Trust pills */}
+          <div className="flex flex-wrap justify-center gap-x-4 gap-y-1.5 mb-6">
+            {['✓ 5–7 minutos', '✓ Resultado personalizado', '✓ Carreras + universidades'].map(item => (
+              <span key={item} className="text-[11px] font-medium" style={{ color: 'rgba(255,255,255,0.72)' }}>{item}</span>
+            ))}
           </div>
 
           {/* Preview de resultado — después del CTA, no compite */}
@@ -141,22 +147,6 @@ export default function HeroSection({ onGetStartedClick }: HeroSectionProps) {
                 </div>
               </div>
 
-              <div className="px-4 py-3">
-                <span className="text-slate-400 font-sans text-[9px] font-bold tracking-widest uppercase block mb-1.5">Contexto laboral</span>
-                <p className="text-[11px] text-slate-700 font-medium mb-1.5">
-                  Entrada: <strong>~ARS 1.8M</strong> &nbsp;/&nbsp; Senior: <strong>~ARS 2.5M / mes</strong>
-                </p>
-                <div className="flex items-center gap-3 mb-2.5">
-                  <span className="inline-flex items-center gap-1 text-emerald-600 text-[9.5px] font-semibold">
-                    <span className="w-1.5 h-1.5 bg-emerald-500 rounded-full" />Alta demanda
-                  </span>
-                  <span className="text-slate-500 text-[9.5px] font-medium">Teletrabajo ✓</span>
-                </div>
-                <span className="inline-flex items-center gap-1 bg-slate-50 border border-slate-200 text-slate-500 text-[9px] font-medium px-2.5 py-1 rounded-full">
-                  ⊙ Metodología Integrada
-                </span>
-              </div>
-
             </div>
           </div>
 
@@ -208,6 +198,13 @@ export default function HeroSection({ onGetStartedClick }: HeroSectionProps) {
               >
                 Empezar mi test vocacional
               </button>
+            </motion.div>
+
+            {/* Trust pills desktop */}
+            <motion.div variants={itemVariants} className="flex flex-wrap gap-x-5 gap-y-1.5 mt-5">
+              {['✓ 5–7 minutos', '✓ Resultado personalizado', '✓ Carreras + universidades'].map(item => (
+                <span key={item} className="text-[12px] font-medium" style={{ color: 'rgba(255,255,255,0.72)' }}>{item}</span>
+              ))}
             </motion.div>
           </motion.div>
 
@@ -262,22 +259,6 @@ export default function HeroSection({ onGetStartedClick }: HeroSectionProps) {
                       </div>
                     ))}
                   </div>
-                </div>
-
-                <div className="px-4 py-3">
-                  <span className="text-slate-400 font-sans text-[9px] font-bold tracking-widest uppercase block mb-1.5">Contexto laboral</span>
-                  <p className="text-[11px] text-slate-700 font-medium mb-1.5">
-                    Entrada: <strong>~ARS 1.8M</strong> &nbsp;/&nbsp; Senior: <strong>~ARS 2.5M / mes</strong>
-                  </p>
-                  <div className="flex items-center gap-3 mb-2.5">
-                    <span className="inline-flex items-center gap-1 text-emerald-600 text-[9.5px] font-semibold">
-                      <span className="w-1.5 h-1.5 bg-emerald-500 rounded-full" />Alta demanda
-                    </span>
-                    <span className="text-slate-500 text-[9.5px] font-medium">Teletrabajo ✓</span>
-                  </div>
-                  <span className="inline-flex items-center gap-1 bg-slate-50 border border-slate-200 text-slate-500 text-[9px] font-medium px-2.5 py-1 rounded-full">
-                    ⊙ Metodología Integrada
-                  </span>
                 </div>
 
               </div>

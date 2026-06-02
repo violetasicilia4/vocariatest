@@ -5,7 +5,6 @@ import LogoBanner from './components/LogoBanner';
 import Footer from './components/Footer';
 import ContactModal from './components/ContactModal';
 import NarrativaSection from './components/NarrativaSection';
-import TestimonialsSection from './components/TestimonialsSection';
 import MuestraTest from './components/MuestraTest';
 import ComoFunciona from './components/ComoFunciona';
 import MetodologiaSection from './components/MetodologiaSection';
@@ -39,9 +38,6 @@ export default function App() {
 
         {/* Pregunta real del test — demo interactiva */}
         <MuestraTest onGetStartedClick={() => setContactOpen(true)} />
-
-        {/* Casos de uso reales */}
-        <TestimonialsSection />
 
         {/* Preguntas frecuentes */}
         <FAQSection />

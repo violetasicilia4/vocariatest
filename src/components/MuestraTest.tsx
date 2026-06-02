@@ -97,7 +97,7 @@ function InteractiveCard({ onGetStartedClick }: { onGetStartedClick: () => void 
               onClick={onGetStartedClick}
               className="w-full py-3.5 bg-[#07111F] text-white font-display text-[14px] font-black tracking-wide rounded-full hover:bg-brand-lime hover:text-slate-950 hover:scale-[1.02] active:scale-[0.98] transition-all duration-200 shadow-[0_10px_28px_rgba(5,8,22,0.18)]"
             >
-              Ver mi resultado completo →
+              Seguir con mi test →
             </button>
           </motion.div>
         )}
@@ -108,7 +108,7 @@ function InteractiveCard({ onGetStartedClick }: { onGetStartedClick: () => void 
 
 export default function MuestraTest({ onGetStartedClick }: MuestraTestProps) {
   return (
-    <section id="preview" aria-labelledby="muestra-heading" className="py-14 sm:py-24 bg-white">
+    <section id="preview" aria-labelledby="muestra-heading" className="py-10 sm:py-16 bg-white">
       <div className="max-w-5xl mx-auto px-6">
 
         {/* ── MOBILE ───────────────────────────────────── */}
@@ -162,12 +162,9 @@ export default function MuestraTest({ onGetStartedClick }: MuestraTestProps) {
             >
               Probá una pregunta real.
             </h2>
-            <p className="text-slate-400 text-sm font-medium leading-relaxed mb-4">
-              No te preguntamos qué carrera te gusta.
-              Te ponemos en situaciones concretas.
-            </p>
             <p className="text-slate-400 text-sm font-medium leading-relaxed">
-              Cada respuesta activa señales específicas. Seleccioná una y ve cómo empieza a funcionar el análisis.
+              No te preguntamos qué carrera te gusta.<br />
+              Te ponemos en situaciones concretas y tu patrón emerge solo.
             </p>
           </motion.div>
 

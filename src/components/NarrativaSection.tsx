@@ -18,7 +18,7 @@ export default function NarrativaSection({ onGetStartedClick }: NarrativaSection
   return (
     <section
       aria-labelledby="narrativa-heading"
-      className="py-16 sm:py-28 bg-white relative overflow-hidden"
+      className="py-10 sm:py-16 bg-white relative overflow-hidden"
     >
       {/* Dot-grid texture — blank map waiting to be filled */}
       <div

@@ -20,7 +20,7 @@ const pasos = [
 
 export default function ComoFunciona() {
   return (
-    <section id="como-funciona" aria-labelledby="como-funciona-heading" className="py-14 sm:py-24 bg-white">
+    <section id="como-funciona" aria-labelledby="como-funciona-heading" className="py-10 sm:py-16 bg-white">
       <div className="max-w-5xl mx-auto px-6">
 
         {/* ── HEADLINE ─────────────────────────────────── */}
@@ -30,7 +30,7 @@ export default function ComoFunciona() {
           viewport={{ once: true }}
           transition={{ duration: 0.45 }}
           id="como-funciona-heading"
-          className="font-display text-2xl sm:text-4xl tracking-tight leading-[1.15] mb-14 sm:mb-20 max-w-lg"
+          className="font-display text-2xl sm:text-4xl tracking-tight leading-[1.15] mb-10 sm:mb-14 max-w-lg"
         >
           <span className="font-normal block text-slate-400 mb-0.5">
             No te preguntamos qué te gusta.
