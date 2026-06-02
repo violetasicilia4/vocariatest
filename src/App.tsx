@@ -25,6 +25,9 @@ export default function App() {
         {/* Hero — problema + CTA */}
         <HeroSection onGetStartedClick={() => setContactOpen(true)} />
 
+        {/* Confianza: universidades argentinas analizadas */}
+        <LogoBanner />
+
         {/* El problema real — frases de identificación */}
         <NarrativaSection onGetStartedClick={() => setContactOpen(true)} />
 
@@ -36,9 +39,6 @@ export default function App() {
 
         {/* Pregunta real del test — demo interactiva */}
         <MuestraTest onGetStartedClick={() => setContactOpen(true)} />
-
-        {/* Confianza: universidades argentinas analizadas */}
-        <LogoBanner />
 
         {/* Casos de uso reales */}
         <TestimonialsSection />

@@ -45,12 +45,12 @@ export default function NarrativaSection({ onGetStartedClick }: NarrativaSection
             transition={{ duration: 0.5 }}
             className="mb-8"
           >
-            <p className="text-lg font-normal text-slate-400 mb-2 leading-snug tracking-tight">
+            <p className="font-display text-[22px] font-semibold text-slate-500 mb-1.5 leading-snug tracking-tight">
               No es que no tengas opciones.
             </p>
             <h2
               id="narrativa-heading"
-              className="font-display font-black text-[38px] text-[#0e1118] tracking-tight leading-[1.05]"
+              className="font-display font-black text-[36px] text-[#0e1118] tracking-tight leading-[1.05]"
             >
               Es que todavía no tenés{' '}
               <span className="underline decoration-brand-lime decoration-[4px] underline-offset-[5px]">
@@ -116,12 +116,12 @@ export default function NarrativaSection({ onGetStartedClick }: NarrativaSection
             transition={{ duration: 0.5 }}
             className="col-span-5 pt-2"
           >
-            <p className="text-base font-normal text-slate-400 mb-2 leading-snug tracking-tight">
+            <p className="font-display text-2xl font-semibold text-slate-500 mb-2 leading-snug tracking-tight">
               No es que no tengas opciones.
             </p>
             <h2
               id="narrativa-heading"
-              className="font-display font-black text-[52px] text-[#0e1118] tracking-tight leading-[1.05] mb-8"
+              className="font-display font-black text-[46px] text-[#0e1118] tracking-tight leading-[1.05] mb-8"
             >
               Es que todavía no tenés{' '}
               <span className="underline decoration-brand-lime decoration-[5px] underline-offset-[7px]">

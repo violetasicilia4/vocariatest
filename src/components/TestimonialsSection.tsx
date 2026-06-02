@@ -32,12 +32,10 @@ const casos = [
   },
 ];
 
-const desktopStagger = ['mt-0', 'mt-8', 'mt-3'];
-
 function CasoCard({ c }: { c: typeof casos[number] }) {
   return (
     <div
-      className="bg-white rounded-2xl border border-slate-100 p-6 flex flex-col gap-5"
+      className="bg-white rounded-2xl border border-slate-100 p-6 flex flex-col gap-5 h-full"
       style={{ boxShadow: '0 2px 16px rgba(30,50,80,0.06), 0 1px 3px rgba(30,50,80,0.04)' }}
     >
       {/* Etiqueta + persona */}
@@ -138,8 +136,8 @@ export default function TestimonialsSection() {
           </p>
         </motion.div>
 
-        {/* ── DESKTOP: 3 columnas, stagger vertical ───── */}
-        <div className="hidden md:grid md:grid-cols-3 gap-5 px-6 items-start">
+        {/* ── DESKTOP: 3 columnas, altura uniforme ────── */}
+        <div className="hidden md:grid md:grid-cols-3 gap-5 px-6 items-stretch">
           {casos.map((c, i) => (
             <motion.div
               key={i}
@@ -147,7 +145,6 @@ export default function TestimonialsSection() {
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
               transition={{ duration: 0.45, delay: i * 0.1 }}
-              className={desktopStagger[i]}
             >
               <CasoCard c={c} />
             </motion.div>

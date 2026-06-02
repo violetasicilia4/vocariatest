@@ -78,27 +78,13 @@ export default function HeroSection({ onGetStartedClick }: HeroSectionProps) {
           </p>
 
           {/* CTA principal */}
-          <div className="w-full mb-4">
+          <div className="w-full mb-8">
             <button
               onClick={onGetStartedClick}
               className="w-full py-3.5 bg-[#07111F] text-white font-display text-[15px] font-black tracking-wide rounded-full hover:bg-brand-lime hover:text-slate-950 active:scale-[0.98] transition-all duration-200 flex items-center justify-center shadow-[0_14px_32px_rgba(5,8,22,0.22)]"
             >
               Empezar mi test vocacional
             </button>
-          </div>
-
-          {/* Trust strip — señales de confianza compactas */}
-          <div className="flex flex-wrap items-center justify-center gap-x-3 gap-y-1 mb-8">
-            {trustItems.map((item) => (
-              <span
-                key={item}
-                className="flex items-center gap-1 text-[10.5px] font-medium"
-                style={{ color: 'rgba(255,255,255,0.68)' }}
-              >
-                <span className="text-brand-lime font-bold leading-none">✓</span>
-                {item}
-              </span>
-            ))}
           </div>
 
           {/* Preview de resultado — después del CTA, no compite */}
@@ -222,20 +208,6 @@ export default function HeroSection({ onGetStartedClick }: HeroSectionProps) {
               >
                 Empezar mi test vocacional
               </button>
-            </motion.div>
-
-            {/* Trust strip — desktop */}
-            <motion.div variants={itemVariants} className="flex items-center gap-5 mt-5">
-              {trustItems.map((item) => (
-                <span
-                  key={item}
-                  className="flex items-center gap-1.5 text-[11px] font-medium"
-                  style={{ color: 'rgba(255,255,255,0.60)' }}
-                >
-                  <span className="text-brand-lime font-bold">✓</span>
-                  {item}
-                </span>
-              ))}
             </motion.div>
           </motion.div>
 
