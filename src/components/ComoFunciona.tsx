@@ -30,7 +30,7 @@ export default function ComoFunciona() {
           viewport={{ once: true }}
           transition={{ duration: 0.45 }}
           id="como-funciona-heading"
-          className="font-display text-2xl sm:text-4xl tracking-tight leading-[1.15] mb-12 sm:mb-16 max-w-lg"
+          className="font-display text-2xl sm:text-4xl tracking-tight leading-[1.15] mb-14 sm:mb-20 max-w-lg"
         >
           <span className="font-normal block text-slate-400 mb-0.5">
             No te preguntamos qué te gusta.
@@ -41,33 +41,47 @@ export default function ComoFunciona() {
           </span>
         </motion.h2>
 
-        {/* ── PASOS — números grandes como anclas ──────── */}
-        <div className="grid grid-cols-1 sm:grid-cols-3">
-          {pasos.map((p, i) => (
-            <motion.div
-              key={p.n}
-              initial={{ opacity: 0, y: 16 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true }}
-              transition={{ duration: 0.4, delay: i * 0.1 }}
-              className={`pt-6 pb-8 ${
-                i > 0
-                  ? 'border-t sm:border-t-0 sm:border-l border-slate-100 mt-0 sm:pl-10'
-                  : ''
-              } ${i < 2 ? 'sm:pr-10' : ''}`}
-            >
-              {/* Número grande — ancla visual */}
-              <span className="font-mono font-black text-[52px] sm:text-[60px] leading-none text-brand-lime block mb-5">
-                {p.n}
-              </span>
-              <h3 className="font-display font-extrabold text-[17px] sm:text-[18px] text-slate-900 mb-2 leading-tight">
-                {p.titulo}
-              </h3>
-              <p className="text-[13px] sm:text-sm text-slate-500 leading-relaxed font-medium">
-                {p.texto}
-              </p>
-            </motion.div>
-          ))}
+        {/* ── PASOS ─────────────────────────────────────── */}
+        <div className="relative">
+
+          {/* Path connector — dotted line through the step numbers (desktop) */}
+          <div
+            className="absolute hidden sm:block h-px top-[54px] z-0"
+            style={{
+              left: '16.67%',
+              right: '16.67%',
+              background: 'repeating-linear-gradient(90deg, #e2e8f0 0, #e2e8f0 5px, transparent 5px, transparent 14px)',
+            }}
+          />
+
+          <div className="grid grid-cols-1 sm:grid-cols-3 relative z-10">
+            {pasos.map((p, i) => (
+              <motion.div
+                key={p.n}
+                initial={{ opacity: 0, y: 16 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true }}
+                transition={{ duration: 0.4, delay: i * 0.1 }}
+                className={`pt-6 pb-8 ${
+                  i > 0
+                    ? 'border-t sm:border-t-0 sm:border-l border-slate-100 mt-0 sm:pl-10'
+                    : ''
+                } ${i < 2 ? 'sm:pr-10' : ''}`}
+              >
+                {/* Number — floats above the connector line */}
+                <span className="font-mono font-black text-[56px] sm:text-[64px] leading-none text-brand-lime block mb-5 bg-white pr-2 w-fit">
+                  {p.n}
+                </span>
+                <h3 className="font-display font-extrabold text-[17px] sm:text-[18px] text-slate-900 mb-2 leading-tight">
+                  {p.titulo}
+                </h3>
+                <p className="text-[13px] sm:text-sm text-slate-500 leading-relaxed font-medium">
+                  {p.texto}
+                </p>
+              </motion.div>
+            ))}
+          </div>
+
         </div>
 
       </div>
