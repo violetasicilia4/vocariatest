@@ -17,7 +17,7 @@ export default function Header({ onContactClick }: HeaderProps) {
 
   const navLinks = [
     { label: 'Cómo funciona', href: '#como-funciona' },
-    { label: 'Preview',       href: '#preview'       },
+    { label: 'Resultado',      href: '#preview'       },
     { label: 'Carreras',      href: '#carreras'      },
     { label: 'Preguntas',     href: '#faq'           },
   ];

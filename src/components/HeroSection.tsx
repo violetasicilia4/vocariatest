@@ -91,20 +91,24 @@ export default function HeroSection({ onGetStartedClick }: HeroSectionProps) {
 
             <div className="w-full bg-white rounded-[22px] border border-slate-100 text-left relative overflow-hidden" style={{ boxShadow: '0 8px 32px rgba(30,60,100,0.10)' }}>
 
-              <div className="flex items-start justify-between px-4 pt-4 pb-3 border-b border-slate-100">
-                <div>
-                  <span className="text-slate-400 font-sans text-[7.5px] font-bold tracking-widest uppercase block mb-1">Tu diagnóstico vocacional</span>
-                  <span className="text-slate-400 font-sans text-[7px] font-semibold tracking-widest uppercase">Perfil de enfoque</span>
-                  <h4 className="text-[15px] font-extrabold text-slate-900 tracking-tight leading-tight mt-0.5">
-                    Exploradora Estratégica
-                  </h4>
-                  <p className="text-[9px] text-slate-500 font-medium mt-1 leading-snug">Combina pensamiento empático con alta capacidad directiva.</p>
+              {/* Header mobile */}
+              <div className="px-4 pt-4 pb-3 border-b border-slate-100">
+                <div className="flex items-start justify-between gap-2 mb-0.5">
+                  <span className="text-slate-400 font-sans text-[7.5px] font-bold tracking-widest uppercase">Tu diagnóstico vocacional</span>
+                  <span className="bg-[#D8F95C] text-[#07111F] text-[10px] font-black px-2.5 py-0.5 rounded-md tracking-wide shrink-0">92% MATCH</span>
                 </div>
-                <div className="flex flex-col items-end gap-1.5 shrink-0 ml-2">
-                  <span className="inline-flex items-center gap-1 bg-[#f0fdf4] border border-emerald-200 text-emerald-700 text-[8px] font-bold px-2 py-0.5 rounded-full whitespace-nowrap">
-                    <span className="w-1 h-1 bg-emerald-500 rounded-full" />Alta Salida Laboral
-                  </span>
-                  <span className="bg-[#D8F95C] text-[#07111F] text-[10px] font-black px-2.5 py-0.5 rounded-md tracking-wide">92% MATCH</span>
+                <span className="text-slate-400 font-sans text-[7px] font-semibold tracking-widest uppercase">Perfil de enfoque</span>
+                <h4 className="text-[15px] font-extrabold text-slate-900 tracking-tight leading-tight mt-0.5 mb-1">
+                  Exploradora Estratégica
+                </h4>
+                <p className="text-[9px] text-slate-500 font-medium leading-snug mb-2">Combina pensamiento empático con alta capacidad directiva.</p>
+                {/* Tags */}
+                <div className="flex flex-wrap gap-1">
+                  {['Diseño', 'Gestión Digital', 'Administración'].map(tag => (
+                    <span key={tag} className="text-[8px] font-semibold text-slate-600 bg-slate-100 border border-slate-200 px-2 py-0.5 rounded-full">
+                      {tag}
+                    </span>
+                  ))}
                 </div>
               </div>
 
@@ -138,7 +142,7 @@ export default function HeroSection({ onGetStartedClick }: HeroSectionProps) {
               <div className="px-4 py-3">
                 <span className="text-slate-400 font-sans text-[7.5px] font-bold tracking-widest uppercase block mb-1.5">Contexto laboral</span>
                 <p className="text-[10px] text-slate-700 font-medium mb-1.5">
-                  Entrada: <strong>~ARS 600k</strong> &nbsp;/&nbsp; Senior: <strong>~ARS 2.5M / mes</strong>
+                  Entrada: <strong>~ARS 1.8M</strong> &nbsp;/&nbsp; Senior: <strong>~ARS 2.5M / mes</strong>
                 </p>
                 <div className="flex items-center gap-3 mb-3">
                   <span className="inline-flex items-center gap-1 text-emerald-600 text-[9px] font-semibold">
@@ -180,7 +184,7 @@ export default function HeroSection({ onGetStartedClick }: HeroSectionProps) {
 
             <motion.h1
               variants={itemVariants}
-              className="font-display text-4xl xl:text-5xl text-white font-black tracking-tight leading-[1.08] mb-5 max-w-xl"
+              className="font-display text-5xl xl:text-6xl text-white font-black tracking-tight leading-[1.05] mb-5 max-w-xl"
               style={{ textShadow: '0 2px 20px rgba(10,30,60,0.35), 0 1px 4px rgba(10,30,60,0.25)' }}
             >
               Descubrí qué carreras encajan con tu{' '}
@@ -215,24 +219,29 @@ export default function HeroSection({ onGetStartedClick }: HeroSectionProps) {
               transition={{ duration: 0.6, type: 'spring', stiffness: 80 }}
               className="w-full max-w-[370px] relative hover:scale-[1.02] transition-transform duration-500"
             >
-              <div className="w-full bg-white rounded-[20px] border border-slate-100 text-left relative overflow-hidden" style={{ boxShadow: '0 8px 32px rgba(30,60,100,0.10)' }}>
+              <div className="w-full bg-white rounded-[20px] border border-slate-100 text-left relative overflow-hidden" style={{ boxShadow: '0 12px 40px rgba(30,60,100,0.12)' }}>
 
-                <div className="flex items-start justify-between px-4 pt-4 pb-3 border-b border-slate-100">
-                  <div>
-                    <span className="text-slate-400 font-sans text-[8px] font-semibold tracking-widest uppercase">Perfil de enfoque</span>
-                    <h4 className="text-[16px] font-extrabold text-slate-900 tracking-tight leading-tight mt-0.5">Exploradora Estratégica</h4>
-                    <p className="text-[10px] text-slate-500 mt-1 font-medium leading-snug" style={{ display:'-webkit-box', WebkitLineClamp:2, WebkitBoxOrient:'vertical', overflow:'hidden' }}>
-                      Combina pensamiento empático con alta capacidad directiva.
-                    </p>
+                {/* Header: label + title + desc + tags */}
+                <div className="px-4 pt-4 pb-3 border-b border-slate-100">
+                  <div className="flex items-start justify-between gap-2 mb-1">
+                    <span className="text-slate-400 font-sans text-[8px] font-bold tracking-widest uppercase">Perfil de enfoque</span>
+                    <span className="bg-[#D8F95C] text-[#07111F] text-[10px] font-black px-2.5 py-0.5 rounded-md tracking-wide shrink-0">92% MATCH</span>
                   </div>
-                  <div className="flex flex-col items-end gap-1.5 shrink-0 ml-2">
-                    <span className="inline-flex items-center gap-1 bg-[#f0fdf4] border border-emerald-200 text-emerald-700 text-[8px] font-bold px-2 py-0.5 rounded-full whitespace-nowrap">
-                      <span className="w-1 h-1 bg-emerald-500 rounded-full animate-pulse" />Alta Salida Laboral
-                    </span>
-                    <span className="bg-[#D8F95C] text-[#07111F] text-[10px] font-black px-2.5 py-0.5 rounded-md tracking-wide">92% MATCH</span>
+                  <h4 className="text-[16px] font-extrabold text-slate-900 tracking-tight leading-tight mb-1">Exploradora Estratégica</h4>
+                  <p className="text-[10px] text-slate-500 font-medium leading-snug mb-2.5">
+                    Combina pensamiento empático con alta capacidad directiva.
+                  </p>
+                  {/* Tags de área */}
+                  <div className="flex flex-wrap gap-1.5">
+                    {['Diseño', 'Gestión Digital', 'Administración'].map(tag => (
+                      <span key={tag} className="text-[9px] font-semibold text-slate-600 bg-slate-100 border border-slate-200 px-2.5 py-1 rounded-full">
+                        {tag}
+                      </span>
+                    ))}
                   </div>
                 </div>
 
+                {/* Carreras con barras */}
                 <div className="px-4 py-3 border-b border-slate-100">
                   <span className="text-slate-400 font-sans text-[9px] font-bold tracking-widest uppercase block mb-1.5">Carreras con mayor afinidad</span>
                   <div className="space-y-1.5">
@@ -256,10 +265,11 @@ export default function HeroSection({ onGetStartedClick }: HeroSectionProps) {
                   </div>
                 </div>
 
+                {/* Contexto laboral */}
                 <div className="px-4 py-3">
                   <span className="text-slate-400 font-sans text-[9px] font-bold tracking-widest uppercase block mb-1.5">Contexto laboral</span>
                   <p className="text-[11px] text-slate-700 font-medium mb-1.5">
-                    Entrada: <strong>~ARS 600k</strong> &nbsp;/&nbsp; Senior: <strong>~ARS 2.5M / mes</strong>
+                    Entrada: <strong>~ARS 1.8M</strong> &nbsp;/&nbsp; Senior: <strong>~ARS 2.5M / mes</strong>
                   </p>
                   <div className="flex items-center gap-3 mb-2.5">
                     <span className="inline-flex items-center gap-1 text-emerald-600 text-[9.5px] font-semibold">
