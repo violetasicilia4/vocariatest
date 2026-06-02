@@ -73,7 +73,7 @@ export default function HeroSection({ onGetStartedClick }: HeroSectionProps) {
             className="text-sm w-full mb-5 leading-relaxed font-medium"
             style={{ color: 'rgba(255,255,255,0.88)', textShadow: '0 1px 12px rgba(10,30,60,0.30)' }}
           >
-            Respondé un test basado en situaciones reales y recibí carreras, universidades y próximos pasos concretos.
+            Respondé un test basado en situaciones reales y recibí carreras, universidades y próximos pasos.
           </p>
 
           {/* CTA principal */}
@@ -188,7 +188,7 @@ export default function HeroSection({ onGetStartedClick }: HeroSectionProps) {
               className="text-base leading-relaxed max-w-md mb-8 font-medium"
               style={{ color: 'rgba(255,255,255,0.88)', textShadow: '0 1px 12px rgba(10,30,60,0.30)' }}
             >
-              Respondé un test basado en situaciones reales y recibí carreras, universidades y próximos pasos concretos.
+              Respondé un test basado en situaciones reales y recibí carreras, universidades y próximos pasos.
             </motion.p>
 
             <motion.div variants={itemVariants}>
