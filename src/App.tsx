@@ -5,6 +5,7 @@ import LogoBanner from './components/LogoBanner';
 import Footer from './components/Footer';
 import ContactModal from './components/ContactModal';
 import NarrativaSection from './components/NarrativaSection';
+import TestimonialsSection from './components/TestimonialsSection';
 import MuestraTest from './components/MuestraTest';
 import ComoFunciona from './components/ComoFunciona';
 import CierreCTA from './components/CierreCTA';
@@ -26,8 +27,11 @@ export default function App() {
         {/* Confianza: universidades argentinas analizadas */}
         <LogoBanner />
 
-        {/* El problema real: frases de identificación + testimonios */}
+        {/* El problema real: frases de identificación */}
         <NarrativaSection onGetStartedClick={() => setContactOpen(true)} />
+
+        {/* Testimonios editoriales */}
+        <TestimonialsSection />
 
         {/* Preview interactivo del test */}
         <MuestraTest onGetStartedClick={() => setContactOpen(true)} />
