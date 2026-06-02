@@ -262,7 +262,9 @@ export default function LogoBanner() {
             Basado en carreras reales
           </p>
           <p className="text-[10px] sm:text-[10.5px] font-medium text-slate-400 mb-6 text-center select-none leading-relaxed px-4">
-            Cruzamos tu perfil con +130 carreras de universidades argentinas
+            Cruzamos tu perfil con{' '}
+            <span className="font-semibold text-slate-600 underline decoration-brand-lime decoration-[2.5px] underline-offset-[3px]">+130 carreras</span>
+            {' '}de universidades argentinas
           </p>
 
           <div className="w-full relative overflow-hidden py-2" id="universities-vector-marquee">
