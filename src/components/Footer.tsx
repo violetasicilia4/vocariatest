@@ -1,7 +1,4 @@
-import { HeroVersion } from '../types';
-
 interface FooterProps {
-  onLayoutChange: (version: HeroVersion) => void;
   onContactClick: () => void;
 }
 
@@ -10,7 +7,7 @@ export default function Footer({ onContactClick }: FooterProps) {
     <footer className="bg-[#07111F] text-white py-10 border-t border-white/5">
       <div className="max-w-5xl mx-auto px-6 flex flex-col sm:flex-row items-center justify-between gap-4">
 
-        {/* Logo + nombre */}
+        {/* Logo */}
         <a href="#home" className="flex items-center gap-2 focus:outline-none">
           <div className="w-2 h-2 rounded-full bg-brand-lime shrink-0" />
           <div className="flex flex-col">

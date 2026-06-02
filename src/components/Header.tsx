@@ -1,14 +1,11 @@
 import { useState, useEffect } from 'react';
 import { Menu, X } from 'lucide-react';
-import { HeroVersion } from '../types';
 
 interface HeaderProps {
-  currentVersion: HeroVersion;
-  setVersion: (v: HeroVersion) => void;
   onContactClick: () => void;
 }
 
-export default function Header({ currentVersion, onContactClick }: HeaderProps) {
+export default function Header({ onContactClick }: HeaderProps) {
   const [scrolled, setScrolled] = useState(false);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
 
@@ -19,13 +16,11 @@ export default function Header({ currentVersion, onContactClick }: HeaderProps) 
   }, []);
 
   const navLinks = [
-    { label: 'Cómo funciona', href: '#services' },
-    { label: 'Resultado',     href: '#about' },
-    { label: 'Carreras',      href: '#pricing' },
-    { label: 'Preguntas',     href: '#blog' },
+    { label: 'Cómo funciona', href: '#como-funciona' },
+    { label: 'Preview',       href: '#preview'       },
+    { label: 'Carreras',      href: '#carreras'      },
+    { label: 'Preguntas',     href: '#faq'           },
   ];
-
-  const isHeroLight = !scrolled && currentVersion === 'V1';
 
   return (
     <header
@@ -50,7 +45,7 @@ export default function Header({ currentVersion, onContactClick }: HeaderProps) 
           </div>
         </a>
 
-        {/* Desktop Navigation */}
+        {/* Nav desktop */}
         <nav aria-label="Navegación principal" className="hidden md:flex items-center gap-8">
           {navLinks.map((link) => (
             <a
@@ -75,16 +70,17 @@ export default function Header({ currentVersion, onContactClick }: HeaderProps) 
           </button>
         </div>
 
-        {/* Mobile hamburger */}
+        {/* Hamburguesa mobile */}
         <button
           onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
           className={`md:hidden p-1 rounded-lg focus:outline-none ${scrolled ? 'text-slate-900' : 'text-white'}`}
+          aria-label={mobileMenuOpen ? 'Cerrar menú' : 'Abrir menú'}
         >
           {mobileMenuOpen ? <X className="w-6 h-6" /> : <Menu className="w-6 h-6" />}
         </button>
       </div>
 
-      {/* Mobile Menu */}
+      {/* Menú mobile */}
       {mobileMenuOpen && (
         <div className="absolute top-full left-0 w-full bg-white border-b border-slate-100 shadow-xl py-6 px-6 text-slate-900 flex flex-col gap-5 md:hidden">
           <div className="flex flex-col gap-4">

@@ -242,7 +242,7 @@ export default function LogoBanner() {
   ];
 
   return (
-    <section className="py-7 md:py-10 border-b border-slate-100 overflow-hidden select-none relative" style={{ background: 'linear-gradient(to bottom, #EEF9FF 0%, #F8FEFF 60%, #ffffff 100%)' }}>
+    <section id="carreras" className="py-7 md:py-10 border-b border-slate-100 overflow-hidden select-none relative" style={{ background: 'linear-gradient(to bottom, #EEF9FF 0%, #F8FEFF 60%, #ffffff 100%)' }}>
       {/* Shared SVG Defs to avoid ID duplication in the DOM slider */}
       <svg className="absolute w-0 h-0 pointer-events-none" aria-hidden="true">
         <defs>

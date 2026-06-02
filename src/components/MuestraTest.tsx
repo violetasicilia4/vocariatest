@@ -16,7 +16,7 @@ export default function MuestraTest({ onGetStartedClick }: MuestraTestProps) {
   const [seleccionada, setSeleccionada] = useState<string | null>(null);
 
   return (
-    <section aria-labelledby="muestra-heading" className="py-12 sm:py-20 bg-white border-t border-slate-100">
+    <section id="preview" aria-labelledby="muestra-heading" className="py-12 sm:py-20 bg-white border-t border-slate-100">
       <div className="max-w-xl mx-auto px-6">
 
         {/* Label superior */}
