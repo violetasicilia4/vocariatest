@@ -82,7 +82,7 @@ export default function TestimonialsSection() {
   };
 
   return (
-    <section className="py-20 sm:py-28" style={{ background: '#F8F5F1' }}>
+    <section className="py-20 sm:py-28" style={{ background: '#EFF6FB' }}>
       <div className="max-w-5xl mx-auto">
 
         {/* ── ENCABEZADO ───────────────────────────────── */}
