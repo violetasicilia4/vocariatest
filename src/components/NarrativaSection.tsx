@@ -15,7 +15,7 @@ export default function NarrativaSection({ onGetStartedClick }: NarrativaSection
   return (
     <section
       aria-labelledby="narrativa-heading"
-      className="py-20 sm:py-28 bg-white relative overflow-hidden border-t border-slate-100"
+      className="py-16 sm:py-24 bg-white relative overflow-hidden border-t border-slate-100"
     >
       <div className="max-w-2xl mx-auto px-6 flex flex-col items-center text-center">
 
@@ -25,18 +25,17 @@ export default function NarrativaSection({ onGetStartedClick }: NarrativaSection
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
           transition={{ duration: 0.5 }}
-          className="mb-10 sm:mb-14"
+          className="mb-8 sm:mb-10"
         >
-          <p className="text-2xl sm:text-3xl font-normal text-slate-400 mb-3 leading-snug tracking-tight">
+          <p className="text-lg sm:text-xl font-normal text-slate-400 mb-2 leading-snug tracking-tight">
             No es que no tengas opciones.
           </p>
           <h2
             id="narrativa-heading"
-            className="font-display font-black text-[52px] sm:text-[68px] lg:text-[80px] text-[#0e1118] tracking-tight leading-[1.0]"
+            className="font-display font-black text-[38px] sm:text-[52px] text-[#0e1118] tracking-tight leading-[1.05]"
           >
-            Es que todavía<br className="hidden sm:block" />
-            {' '}no tenés{' '}
-            <span className="underline decoration-brand-lime decoration-[5px] sm:decoration-[6px] underline-offset-[6px] sm:underline-offset-[8px]">
+            Es que todavía no tenés{' '}
+            <span className="underline decoration-brand-lime decoration-[4px] sm:decoration-[5px] underline-offset-[5px] sm:underline-offset-[7px]">
               un mapa.
             </span>
           </h2>
@@ -48,12 +47,12 @@ export default function NarrativaSection({ onGetStartedClick }: NarrativaSection
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
           transition={{ duration: 0.45, delay: 0.1 }}
-          className="flex flex-col items-stretch w-full gap-3 mb-8"
+          className="flex flex-col items-center gap-2.5 mb-6 w-full"
         >
           {frases.map((f, i) => (
             <span
               key={i}
-              className={`w-full text-center px-8 py-4 rounded-full font-display font-semibold text-[15px] sm:text-base tracking-tight border cursor-default select-none transition-none ${
+              className={`text-center px-7 py-3 rounded-full font-display font-medium text-sm tracking-tight border cursor-default select-none ${
                 f.acento
                   ? 'bg-[#f2ffcc] border-[#c8f03a]/60 text-slate-800'
                   : 'bg-white border-slate-200 text-slate-500'
@@ -84,7 +83,7 @@ export default function NarrativaSection({ onGetStartedClick }: NarrativaSection
         >
           <button
             onClick={onGetStartedClick}
-            className="px-10 py-4 bg-[#07111F] text-white font-display text-base font-bold tracking-wide rounded-full hover:bg-brand-lime hover:text-slate-950 hover:scale-[1.02] active:scale-[0.98] transition-all duration-200 shadow-[0_8px_24px_rgba(5,8,22,0.16)]"
+            className="px-8 py-3.5 bg-[#07111F] text-white font-display text-sm font-bold tracking-widest rounded-full hover:bg-brand-lime hover:text-slate-950 hover:scale-[1.02] active:scale-[0.98] transition-all duration-200 shadow-[0_6px_20px_rgba(5,8,22,0.14)]"
           >
             ¿Alguna te suena? Empezá →
           </button>
