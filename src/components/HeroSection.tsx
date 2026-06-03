@@ -188,16 +188,15 @@ export default function HeroSection({ onGetStartedClick }: HeroSectionProps) {
             </motion.div>
 
             {/* Trust pills desktop */}
-            <motion.div variants={itemVariants} className="flex items-center gap-2.5 mt-5">
-              {['✓ Resultado personalizado', '✓ Sin registro previo'].map(item => (
+            <motion.div variants={itemVariants} className="flex items-center gap-2 mt-4">
+              {['Resultado personalizado', 'Sin registro previo'].map(item => (
                 <span
                   key={item}
-                  className="text-[10px] font-medium text-white/80 px-2 py-1 rounded-full"
+                  className="text-[9px] font-medium tracking-wide rounded-full px-2 py-0.5"
                   style={{
-                    background: 'rgba(10,20,45,0.25)',
-                    backdropFilter: 'blur(8px)',
-                    WebkitBackdropFilter: 'blur(8px)',
-                    border: '1px solid rgba(255,255,255,0.10)',
+                    background: 'rgba(255,255,255,0.10)',
+                    border: '1px solid rgba(255,255,255,0.18)',
+                    color: 'rgba(255,255,255,0.55)',
                   }}
                 >
                   {item}
