@@ -28,7 +28,7 @@ export default function HeroSection({ onGetStartedClick }: HeroSectionProps) {
   return (
     <section
       id="home"
-      className="relative pt-16 pb-14 lg:pt-28 lg:pb-24 overflow-hidden rounded-b-[56px] md:rounded-b-[80px] flex flex-col justify-start lg:justify-center text-slate-900 bg-sky-50"
+      className="relative pt-16 pb-10 lg:pt-28 lg:pb-24 overflow-hidden rounded-b-[56px] md:rounded-b-[80px] flex flex-col justify-start lg:justify-center text-slate-900 bg-sky-50"
       style={{
         backgroundImage: `linear-gradient(to bottom, rgba(111,159,202,0.97) 0%, rgba(159,210,241,0.93) 52%, rgba(221,247,255,0.90) 100%), url(${IMAGES.heroClouds})`,
         backgroundSize: 'cover',
@@ -63,17 +63,17 @@ export default function HeroSection({ onGetStartedClick }: HeroSectionProps) {
             </span>
           </motion.h1>
 
-          {/* Subtítulo — concreto */}
+          {/* Subtítulo — apoyo, no protagonista */}
           <motion.p
             variants={itemVariants}
-            className="text-sm w-full mb-5 leading-relaxed font-medium"
-            style={{ color: 'rgba(255,255,255,0.88)', textShadow: '0 1px 12px rgba(10,30,60,0.30)' }}
+            className="text-[12px] max-w-[260px] mb-3 leading-snug font-medium"
+            style={{ color: 'rgba(255,255,255,0.78)', textShadow: '0 1px 12px rgba(10,30,60,0.30)' }}
           >
             Respondé un test basado en situaciones reales y recibí carreras, universidades y próximos pasos.
           </motion.p>
 
           {/* CTA principal */}
-          <motion.div variants={itemVariants} className="w-full mb-4">
+          <motion.div variants={itemVariants} className="w-full mb-3">
             <button
               onClick={onGetStartedClick}
               className="w-full py-3.5 bg-[#07111F] text-white font-display text-[15px] font-black tracking-wide rounded-full hover:bg-brand-lime hover:text-slate-950 active:scale-[0.97] transition-[background-color,color,transform] duration-200 flex items-center justify-center shadow-[0_14px_32px_rgba(5,8,22,0.22)]"
@@ -82,16 +82,16 @@ export default function HeroSection({ onGetStartedClick }: HeroSectionProps) {
             </button>
           </motion.div>
 
-          {/* Trust pills */}
-          <motion.div variants={itemVariants} className="flex flex-wrap justify-center gap-x-4 gap-y-1.5 mb-6">
-            {['✓ 5–7 minutos', '✓ Resultado personalizado', '✓ Sin registro previo'].map(item => (
-              <span key={item} className="text-[11px] font-medium" style={{ color: 'rgba(255,255,255,0.72)' }}>{item}</span>
-            ))}
+          {/* Trust pills — una línea, sin ruido */}
+          <motion.div variants={itemVariants} className="flex items-center justify-center gap-3 mb-4">
+            <span className="text-[11px] font-medium" style={{ color: 'rgba(255,255,255,0.65)' }}>✓ Resultado personalizado</span>
+            <span className="text-[11px] font-medium" style={{ color: 'rgba(255,255,255,0.28)' }}>·</span>
+            <span className="text-[11px] font-medium" style={{ color: 'rgba(255,255,255,0.65)' }}>✓ Sin registro previo</span>
           </motion.div>
 
           {/* Preview de resultado */}
           <motion.div variants={itemVariants} className="w-full">
-            <div className="flex justify-center mb-2.5">
+            <div className="flex justify-center mb-2">
               <span className="text-[10px] font-medium tracking-widest uppercase" style={{ color: 'rgba(255,255,255,0.55)' }}>
                 Así se ve tu resultado
               </span>
@@ -104,13 +104,13 @@ export default function HeroSection({ onGetStartedClick }: HeroSectionProps) {
               className="w-full bg-white rounded-[20px] border border-slate-100 text-left relative overflow-hidden"
               style={{ boxShadow: '0 12px 40px rgba(30,60,100,0.12)' }}
             >
-              <div className="px-4 pt-4 pb-3 border-b border-slate-100">
+              <div className="px-4 pt-3 pb-2.5 border-b border-slate-100">
                 <div className="flex items-start justify-between gap-2 mb-1">
                   <span className="text-slate-400 font-sans text-[10px] font-bold tracking-widest uppercase">Perfil de enfoque</span>
                   <span className="bg-brand-lime text-[#07111F] text-[10px] font-black px-2.5 py-0.5 rounded-md tracking-wide shrink-0">Alta afinidad</span>
                 </div>
                 <h4 className="text-[15px] font-extrabold text-slate-900 tracking-tight leading-tight mb-1">Exploradora Estratégica</h4>
-                <p className="text-[10px] text-slate-500 font-medium leading-snug mb-2.5">
+                <p className="text-[10px] text-slate-500 font-medium leading-snug mb-2">
                   Combina pensamiento empático con alta capacidad directiva.
                 </p>
                 <div className="flex flex-wrap gap-1.5">
@@ -122,7 +122,7 @@ export default function HeroSection({ onGetStartedClick }: HeroSectionProps) {
                 </div>
               </div>
 
-              <div className="px-4 py-3">
+              <div className="px-4 py-2.5">
                 <span className="text-slate-400 font-sans text-[10px] font-bold tracking-widest uppercase block mb-1.5">Carreras con mayor afinidad</span>
                 <div className="space-y-1.5">
                   {[
