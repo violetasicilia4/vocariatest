@@ -189,9 +189,9 @@ export default function HeroSection({ onGetStartedClick }: HeroSectionProps) {
 
               {/* Trust pills — texto plano, centrado bajo el botón */}
               <div className="flex items-center gap-2">
-                <span className="text-[9.5px] font-medium" style={{ color: 'rgba(55,65,85,0.72)' }}>✓ Resultado personalizado</span>
+                <span className="text-[9.5px] font-medium" style={{ color: 'rgba(55,65,85,0.45)' }}>✓ Resultado personalizado</span>
                 <span className="text-[9.5px] font-medium" style={{ color: 'rgba(55,65,85,0.30)' }}>·</span>
-                <span className="text-[9.5px] font-medium" style={{ color: 'rgba(55,65,85,0.72)' }}>✓ Sin registro previo</span>
+                <span className="text-[9.5px] font-medium" style={{ color: 'rgba(55,65,85,0.45)' }}>✓ Sin registro previo</span>
               </div>
             </motion.div>
           </motion.div>
