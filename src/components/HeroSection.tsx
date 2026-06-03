@@ -192,12 +192,12 @@ export default function HeroSection({ onGetStartedClick }: HeroSectionProps) {
               {['✓ Resultado personalizado', '✓ Sin registro previo'].map(item => (
                 <span
                   key={item}
-                  className="text-[12px] font-medium text-white px-3 py-1.5 rounded-full"
+                  className="text-[10px] font-medium text-white/80 px-2 py-1 rounded-full"
                   style={{
-                    background: 'rgba(10,20,45,0.30)',
+                    background: 'rgba(10,20,45,0.25)',
                     backdropFilter: 'blur(8px)',
                     WebkitBackdropFilter: 'blur(8px)',
-                    border: '1px solid rgba(255,255,255,0.12)',
+                    border: '1px solid rgba(255,255,255,0.10)',
                   }}
                 >
                   {item}
