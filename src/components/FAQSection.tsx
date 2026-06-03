@@ -22,7 +22,7 @@ export default function FAQSection() {
   const toggle = (i: number) => setAbierta(abierta === i ? null : i);
 
   return (
-    <section id="faq" aria-labelledby="faq-heading" className="py-10 sm:py-16 bg-white">
+    <section id="faq" aria-labelledby="faq-heading" className="py-10 sm:py-16" style={{ background: '#F8FAFC' }}>
       <div className="max-w-2xl mx-auto px-6">
 
         <script

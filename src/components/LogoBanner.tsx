@@ -22,7 +22,7 @@ export default function LogoBanner() {
     <section
       id="carreras"
       className="py-6 md:py-8 overflow-hidden select-none relative border-t border-slate-100"
-      style={{ background: '#F8FAFC' }}
+      style={{ background: '#ffffff' }}
     >
       {/* Fading masks */}
       <div className="absolute top-0 bottom-0 left-0 w-16 sm:w-28 bg-gradient-to-r from-[#F8FAFC] to-transparent z-10 pointer-events-none" />
