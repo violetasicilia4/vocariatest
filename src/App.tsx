@@ -9,7 +9,6 @@ import MuestraTest from './components/MuestraTest';
 import ComoFunciona from './components/ComoFunciona';
 import CierreCTA from './components/CierreCTA';
 import FAQSection from './components/FAQSection';
-import IdentificacionSection from './components/IdentificacionSection';
 
 export default function App() {
   const [contactOpen, setContactOpen] = useState(false);
@@ -32,9 +31,6 @@ export default function App() {
 
         {/* Metodología — contexto para quien necesita entender el "cómo" */}
         <ComoFunciona />
-
-        {/* Perfiles de identificación — "¿Esto te suena?" */}
-        <IdentificacionSection onGetStartedClick={() => setContactOpen(true)} />
 
         {/* Preguntas frecuentes — resolver las últimas fricciones */}
         <FAQSection />
