@@ -188,9 +188,20 @@ export default function HeroSection({ onGetStartedClick }: HeroSectionProps) {
             </motion.div>
 
             {/* Trust pills desktop */}
-            <motion.div variants={itemVariants} className="flex flex-wrap gap-x-5 gap-y-1.5 mt-5">
-              {['✓ 5–7 minutos', '✓ Resultado personalizado', '✓ Sin registro previo'].map(item => (
-                <span key={item} className="text-[12px] font-medium" style={{ color: 'rgba(255,255,255,0.72)' }}>{item}</span>
+            <motion.div variants={itemVariants} className="flex items-center gap-2.5 mt-5">
+              {['✓ Resultado personalizado', '✓ Sin registro previo'].map(item => (
+                <span
+                  key={item}
+                  className="text-[12px] font-medium text-white px-3 py-1.5 rounded-full"
+                  style={{
+                    background: 'rgba(10,20,45,0.30)',
+                    backdropFilter: 'blur(8px)',
+                    WebkitBackdropFilter: 'blur(8px)',
+                    border: '1px solid rgba(255,255,255,0.12)',
+                  }}
+                >
+                  {item}
+                </span>
               ))}
             </motion.div>
           </motion.div>
@@ -210,7 +221,7 @@ export default function HeroSection({ onGetStartedClick }: HeroSectionProps) {
                 <div className="px-4 pt-4 pb-3 border-b border-slate-100">
                   <div className="flex items-start justify-between gap-2 mb-1">
                     <span className="text-slate-400 font-sans text-[10px] font-bold tracking-widest uppercase">Perfil de enfoque</span>
-                    <span className="bg-brand-lime text-[#07111F] text-[10px] font-black px-2.5 py-0.5 rounded-md tracking-wide shrink-0">92% MATCH</span>
+                    <span className="bg-brand-lime text-[#07111F] text-[10px] font-black px-2.5 py-0.5 rounded-md tracking-wide shrink-0">Alta afinidad</span>
                   </div>
                   <h4 className="text-[16px] font-extrabold text-slate-900 tracking-tight leading-tight mb-1">Exploradora Estratégica</h4>
                   <p className="text-[10px] text-slate-500 font-medium leading-snug mb-2.5">
