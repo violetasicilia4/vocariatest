@@ -4,56 +4,69 @@ interface IdentificacionSectionProps {
   onGetStartedClick: () => void;
 }
 
-const momentos = [
-  'Terminás el secundario con cinco carreras posibles.',
-  'Empezaste algo y algo no cierra.',
+const bullets = [
+  'Tenés varias carreras posibles y no sabés cuál elegir.',
+  'Empezaste algo y no termina de cerrar.',
   'Tenés una dirección, pero ninguna carrera concreta.',
 ];
 
 export default function IdentificacionSection({ onGetStartedClick }: IdentificacionSectionProps) {
   return (
-    <section className="py-14 sm:py-20" style={{ background: '#0e1118' }}>
-      <div className="max-w-5xl mx-auto px-6">
+    <section style={{ background: '#0e1118' }}>
+      <div className="max-w-5xl mx-auto px-6 py-10 sm:py-14">
 
-        <motion.p
+        <motion.div
           initial={{ opacity: 0, y: 12 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
           transition={{ duration: 0.4 }}
-          className="text-[11px] font-bold tracking-widest uppercase mb-8 sm:mb-10"
-          style={{ color: 'rgba(255,255,255,0.3)' }}
+          className="flex flex-col gap-5 sm:flex-row sm:items-start sm:gap-16"
         >
-          ¿Estás en alguno de estos momentos?
-        </motion.p>
+          {/* Izquierda: eyebrow + título */}
+          <div className="shrink-0">
+            <p className="text-[10px] font-bold tracking-widest uppercase mb-2" style={{ color: 'rgba(255,255,255,0.28)' }}>
+              ¿Te pasa alguna de estas?
+            </p>
+            <h2 className="font-display font-black text-[22px] sm:text-[26px] text-white tracking-tight leading-[1.1]">
+              Este test<br />es para vos.
+            </h2>
+          </div>
 
-        <div className="flex flex-col divide-y divide-white/10">
-          {momentos.map((texto, i) => (
-            <motion.p
-              key={i}
-              initial={{ opacity: 0, x: -8 }}
-              whileInView={{ opacity: 1, x: 0 }}
+          {/* Derecha: bullets + CTA */}
+          <div className="flex flex-col gap-4 flex-1">
+            <ul className="flex flex-col gap-2.5">
+              {bullets.map((b, i) => (
+                <motion.li
+                  key={i}
+                  initial={{ opacity: 0, x: 6 }}
+                  whileInView={{ opacity: 1, x: 0 }}
+                  viewport={{ once: true }}
+                  transition={{ duration: 0.3, delay: i * 0.06 }}
+                  className="flex items-start gap-2.5"
+                >
+                  <span className="mt-0.5 shrink-0 w-4 h-4 rounded-full bg-brand-lime/15 flex items-center justify-center">
+                    <svg width="8" height="6" viewBox="0 0 8 6" fill="none">
+                      <path d="M1 3l2 2 4-4" stroke="#d5ff3f" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
+                    </svg>
+                  </span>
+                  <span className="text-[13px] sm:text-[14px] font-medium leading-snug" style={{ color: 'rgba(255,255,255,0.60)' }}>
+                    {b}
+                  </span>
+                </motion.li>
+              ))}
+            </ul>
+
+            <motion.button
+              initial={{ opacity: 0 }}
+              whileInView={{ opacity: 1 }}
               viewport={{ once: true }}
-              transition={{ duration: 0.35, delay: i * 0.07 }}
-              className="font-display font-bold text-[20px] sm:text-[26px] text-white tracking-tight leading-snug py-5 sm:py-6"
+              transition={{ duration: 0.3, delay: 0.22 }}
+              onClick={onGetStartedClick}
+              className="w-full sm:w-fit sm:px-8 py-3 bg-brand-lime text-slate-950 font-display font-black text-[13px] tracking-wide rounded-full hover:bg-white hover:scale-[1.02] active:scale-[0.97] transition-[background-color,transform] duration-200 mt-1"
             >
-              {texto}
-            </motion.p>
-          ))}
-        </div>
-
-        <motion.div
-          initial={{ opacity: 0, y: 8 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true }}
-          transition={{ duration: 0.35, delay: 0.25 }}
-          className="mt-10 sm:mt-12"
-        >
-          <button
-            onClick={onGetStartedClick}
-            className="w-full sm:w-auto sm:px-10 py-4 bg-brand-lime text-slate-950 font-display font-black text-[14px] tracking-wide rounded-full hover:bg-white hover:scale-[1.02] active:scale-[0.97] transition-[background-color,transform] duration-200"
-          >
-            Empezar mi test
-          </button>
+              Empezar mi test
+            </motion.button>
+          </div>
         </motion.div>
 
       </div>
