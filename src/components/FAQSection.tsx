@@ -22,7 +22,7 @@ export default function FAQSection() {
   const toggle = (i: number) => setAbierta(abierta === i ? null : i);
 
   return (
-    <section id="faq" aria-labelledby="faq-heading" className="py-10 sm:py-16" style={{ background: '#F7FAFB' }}>
+    <section id="faq" aria-labelledby="faq-heading" className="py-10 sm:py-16 bg-white">
       <div className="max-w-2xl mx-auto px-6">
 
         <script
@@ -81,7 +81,7 @@ export default function FAQSection() {
                     initial={{ height: 0, opacity: 0 }}
                     animate={{ height: 'auto', opacity: 1 }}
                     exit={{ height: 0, opacity: 0 }}
-                    transition={{ duration: 0.22, ease: 'easeInOut' }}
+                    transition={{ duration: 0.28, ease: [0.16, 1, 0.3, 1] }}
                     className="overflow-hidden"
                   >
                     <p className="text-[13px] sm:text-sm text-slate-500 leading-relaxed pb-5 font-medium">

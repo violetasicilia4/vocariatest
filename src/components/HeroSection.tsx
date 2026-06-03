@@ -35,29 +35,24 @@ export default function HeroSection({ onGetStartedClick }: HeroSectionProps) {
         backgroundPosition: 'center',
       }}
     >
-      {/* Gradientes ambientales */}
-      <div className="absolute top-1/4 right-0 w-[400px] h-[400px] bg-brand-sky/20 blur-[130px] rounded-full pointer-events-none animate-pulse duration-[8s]" />
-      <div className="absolute bottom-10 left-10 w-[300px] h-[300px] bg-brand-lime/10 blur-[100px] rounded-full pointer-events-none" />
+      {/* Gradiente ambiental — solo sky, mantiene el mood del hero */}
+      <div className="absolute top-1/4 right-0 w-[400px] h-[400px] bg-brand-sky/20 blur-[130px] rounded-full pointer-events-none" />
 
       <div className="max-w-6xl mx-auto px-6 lg:px-16 w-full relative z-10">
 
         {/* ==========================================
             MOBILE (lg:hidden) — jerarquía limpia
         ========================================== */}
-        <div className="lg:hidden flex flex-col items-center text-center w-full max-w-[340px] mx-auto pt-2 pb-4">
-
-          {/* Badge */}
-          <div className="mb-4">
-            <span
-              className="font-display text-[8px] font-bold tracking-widest px-3 py-1 rounded-full uppercase backdrop-blur-sm"
-              style={{ background: 'rgba(255,255,255,0.15)', border: '1px solid rgba(255,255,255,0.35)', color: 'rgba(255,255,255,0.92)' }}
-            >
-              Orientación Vocacional
-            </span>
-          </div>
+        <motion.div
+          variants={containerVariants}
+          initial="hidden"
+          animate="visible"
+          className="lg:hidden flex flex-col items-center text-center w-full max-w-[340px] mx-auto pt-2 pb-4"
+        >
 
           {/* H1 — específico, no genérico */}
-          <h1
+          <motion.h1
+            variants={itemVariants}
             className="font-display text-[26px] tracking-tight leading-[1.1] mb-4 w-full"
             style={{ textShadow: '0 2px 20px rgba(10,30,60,0.35), 0 1px 4px rgba(10,30,60,0.25)' }}
           >
@@ -66,49 +61,59 @@ export default function HeroSection({ onGetStartedClick }: HeroSectionProps) {
               encajan con{' '}
               <span className="underline decoration-[#d5ff3f] decoration-[4px] underline-offset-[5px]">cómo pensás.</span>
             </span>
-          </h1>
+          </motion.h1>
 
           {/* Subtítulo — concreto */}
-          <p
+          <motion.p
+            variants={itemVariants}
             className="text-sm w-full mb-5 leading-relaxed font-medium"
             style={{ color: 'rgba(255,255,255,0.88)', textShadow: '0 1px 12px rgba(10,30,60,0.30)' }}
           >
             Respondé un test basado en situaciones reales y recibí carreras, universidades y próximos pasos.
-          </p>
+          </motion.p>
 
           {/* CTA principal */}
-          <div className="w-full mb-4">
+          <motion.div variants={itemVariants} className="w-full mb-4">
             <button
               onClick={onGetStartedClick}
-              className="w-full py-3.5 bg-[#07111F] text-white font-display text-[15px] font-black tracking-wide rounded-full hover:bg-brand-lime hover:text-slate-950 active:scale-[0.98] transition-all duration-200 flex items-center justify-center shadow-[0_14px_32px_rgba(5,8,22,0.22)]"
+              className="w-full py-3.5 bg-[#07111F] text-white font-display text-[15px] font-black tracking-wide rounded-full hover:bg-brand-lime hover:text-slate-950 active:scale-[0.97] transition-[background-color,color,transform] duration-200 flex items-center justify-center shadow-[0_14px_32px_rgba(5,8,22,0.22)]"
             >
               Empezar mi test vocacional
             </button>
-          </div>
+          </motion.div>
 
           {/* Trust pills */}
-          <div className="flex flex-wrap justify-center gap-x-4 gap-y-1.5 mb-6">
-            {['✓ 5–7 minutos', '✓ Resultado personalizado', '✓ Carreras + universidades'].map(item => (
+          <motion.div variants={itemVariants} className="flex flex-wrap justify-center gap-x-4 gap-y-1.5 mb-6">
+            {['✓ 5–7 minutos', '✓ Resultado personalizado'].map(item => (
               <span key={item} className="text-[11px] font-medium" style={{ color: 'rgba(255,255,255,0.72)' }}>{item}</span>
             ))}
-          </div>
+          </motion.div>
 
           {/* Preview de resultado — después del CTA, no compite */}
-          <div className="w-full">
+          <motion.div
+            variants={itemVariants}
+            className="w-full"
+          >
             <div className="flex justify-center mb-2.5">
               <span
-                className="text-[9px] font-medium tracking-widest uppercase"
+                className="text-[10px] font-medium tracking-widest uppercase"
                 style={{ color: 'rgba(255,255,255,0.55)' }}
               >
                 Así se ve tu resultado
               </span>
             </div>
 
-            <div className="w-full bg-white rounded-[20px] border border-slate-100 text-left relative overflow-hidden" style={{ boxShadow: '0 12px 40px rgba(30,60,100,0.12)' }}>
+            <motion.div
+              initial={{ opacity: 0, scale: 0.95, y: 16 }}
+              animate={{ opacity: 1, scale: 1, y: 0 }}
+              transition={{ duration: 0.55, type: 'spring', stiffness: 80, damping: 18, delay: 0.65 }}
+              className="w-full bg-white rounded-[20px] border border-slate-100 text-left relative overflow-hidden"
+              style={{ boxShadow: '0 12px 40px rgba(30,60,100,0.12)' }}
+            >
 
               <div className="px-4 pt-4 pb-3 border-b border-slate-100">
                 <div className="flex items-start justify-between gap-2 mb-1">
-                  <span className="text-slate-400 font-sans text-[8px] font-bold tracking-widest uppercase">Perfil de enfoque</span>
+                  <span className="text-slate-400 font-sans text-[10px] font-bold tracking-widest uppercase">Perfil de enfoque</span>
                   <span className="bg-brand-lime text-[#07111F] text-[10px] font-black px-2.5 py-0.5 rounded-md tracking-wide shrink-0">92% MATCH</span>
                 </div>
                 <h4 className="text-[15px] font-extrabold text-slate-900 tracking-tight leading-tight mb-1">Exploradora Estratégica</h4>
@@ -117,7 +122,7 @@ export default function HeroSection({ onGetStartedClick }: HeroSectionProps) {
                 </p>
                 <div className="flex flex-wrap gap-1.5">
                   {['Diseño', 'Gestión Digital', 'Administración'].map(tag => (
-                    <span key={tag} className="text-[9px] font-semibold text-slate-600 bg-slate-100 border border-slate-200 px-2.5 py-1 rounded-full">
+                    <span key={tag} className="text-[10px] font-semibold text-slate-600 bg-slate-100 border border-slate-200 px-2.5 py-1 rounded-full">
                       {tag}
                     </span>
                   ))}
@@ -125,32 +130,38 @@ export default function HeroSection({ onGetStartedClick }: HeroSectionProps) {
               </div>
 
               <div className="px-4 py-3 border-b border-slate-100">
-                <span className="text-slate-400 font-sans text-[9px] font-bold tracking-widest uppercase block mb-1.5">Carreras con mayor afinidad</span>
+                <span className="text-slate-400 font-sans text-[10px] font-bold tracking-widest uppercase block mb-1.5">Carreras con mayor afinidad</span>
                 <div className="space-y-1.5">
                   {[
                     { label: 'Diseño UX/UI',               unis: 'UADE · UP',   pct: 94, top: true  },
                     { label: 'Administración de Empresas',  unis: 'UBA · UTDT',  pct: 89, top: false },
-                  ].map(c => (
+                  ].map((c, barIdx) => (
                     <div key={c.label} className="flex flex-col gap-0.5">
                       <div className="flex items-start justify-between gap-2">
                         <div className="flex flex-col min-w-0">
                           <span className="font-medium text-slate-700 text-[11px] leading-tight">{c.label}</span>
-                          <span className="text-slate-400 text-[9px] font-medium leading-tight mt-0.5">{c.unis}</span>
+                          <span className="text-slate-400 text-[10px] font-medium leading-tight mt-0.5">{c.unis}</span>
                         </div>
                         <span className={`font-mono text-[11px] shrink-0 mt-0.5 ${c.top ? 'text-[#07111F] font-bold' : 'text-slate-400'}`}>{c.pct}%</span>
                       </div>
                       <div className="w-full h-[2px] bg-slate-100 rounded-full overflow-hidden">
-                        <div className={`h-full rounded-full ${c.top ? 'bg-brand-lime' : 'bg-slate-200'}`} style={{ width: `${c.pct}%` }} />
+                        <motion.div
+                          className={`h-full rounded-full ${c.top ? 'bg-brand-lime' : 'bg-slate-200'}`}
+                          style={{ width: `${c.pct}%`, transformOrigin: 'left center' }}
+                          initial={{ scaleX: 0 }}
+                          animate={{ scaleX: 1 }}
+                          transition={{ duration: 0.65, ease: [0.16, 1, 0.3, 1], delay: 1.0 + barIdx * 0.12 }}
+                        />
                       </div>
                     </div>
                   ))}
                 </div>
               </div>
 
-            </div>
-          </div>
+            </motion.div>
+          </motion.div>
 
-        </div>
+        </motion.div>
 
         {/* ==========================================
             DESKTOP (hidden lg:grid)
@@ -164,16 +175,6 @@ export default function HeroSection({ onGetStartedClick }: HeroSectionProps) {
             animate="visible"
             className="lg:col-span-6 xl:col-span-6 flex flex-col items-start text-left"
           >
-            <motion.div variants={itemVariants} className="mb-6">
-              <span
-                className="font-display text-[10px] font-bold tracking-widest px-4 py-1.5 rounded-full uppercase flex items-center gap-2 backdrop-blur-sm"
-                style={{ background: 'rgba(255,255,255,0.15)', border: '1px solid rgba(255,255,255,0.35)', color: 'rgba(255,255,255,0.92)' }}
-              >
-                <span className="w-1.5 h-1.5 rounded-full bg-brand-lime animate-pulse" />
-                ORIENTACIÓN VOCACIONAL
-              </span>
-            </motion.div>
-
             <motion.h1
               variants={itemVariants}
               className="font-display text-5xl xl:text-6xl text-white font-black tracking-tight leading-[1.05] mb-5 max-w-xl"
@@ -194,7 +195,7 @@ export default function HeroSection({ onGetStartedClick }: HeroSectionProps) {
             <motion.div variants={itemVariants}>
               <button
                 onClick={onGetStartedClick}
-                className="px-9 py-4 bg-[#07111F] text-white font-display text-[15px] font-black tracking-wide rounded-full hover:bg-brand-lime hover:text-slate-950 hover:scale-[1.02] active:scale-[0.98] transition-all duration-200 select-none whitespace-nowrap shadow-[0_14px_32px_rgba(5,8,22,0.22)]"
+                className="px-9 py-4 bg-[#07111F] text-white font-display text-[15px] font-black tracking-wide rounded-full hover:bg-brand-lime hover:text-slate-950 hover:scale-[1.02] active:scale-[0.97] transition-[background-color,color,transform,box-shadow] duration-200 select-none whitespace-nowrap shadow-[0_14px_32px_rgba(5,8,22,0.22)]"
               >
                 Empezar mi test vocacional
               </button>
@@ -202,7 +203,7 @@ export default function HeroSection({ onGetStartedClick }: HeroSectionProps) {
 
             {/* Trust pills desktop */}
             <motion.div variants={itemVariants} className="flex flex-wrap gap-x-5 gap-y-1.5 mt-5">
-              {['✓ 5–7 minutos', '✓ Resultado personalizado', '✓ Carreras + universidades'].map(item => (
+              {['✓ 5–7 minutos', '✓ Resultado personalizado'].map(item => (
                 <span key={item} className="text-[12px] font-medium" style={{ color: 'rgba(255,255,255,0.72)' }}>{item}</span>
               ))}
             </motion.div>
@@ -216,13 +217,13 @@ export default function HeroSection({ onGetStartedClick }: HeroSectionProps) {
               initial={{ opacity: 0, scale: 0.95, y: 30 }}
               animate={{ opacity: 1, scale: 1, y: 0 }}
               transition={{ duration: 0.6, type: 'spring', stiffness: 80 }}
-              className="w-full max-w-[370px] relative hover:scale-[1.02] transition-transform duration-500"
+              className="w-full max-w-[370px] relative hover:scale-[1.015] hover:shadow-[0_20px_60px_rgba(30,60,100,0.16)] transition-[transform,box-shadow] duration-500"
             >
               <div className="w-full bg-white rounded-[20px] border border-slate-100 text-left relative overflow-hidden" style={{ boxShadow: '0 12px 40px rgba(30,60,100,0.12)' }}>
 
                 <div className="px-4 pt-4 pb-3 border-b border-slate-100">
                   <div className="flex items-start justify-between gap-2 mb-1">
-                    <span className="text-slate-400 font-sans text-[8px] font-bold tracking-widest uppercase">Perfil de enfoque</span>
+                    <span className="text-slate-400 font-sans text-[10px] font-bold tracking-widest uppercase">Perfil de enfoque</span>
                     <span className="bg-brand-lime text-[#07111F] text-[10px] font-black px-2.5 py-0.5 rounded-md tracking-wide shrink-0">92% MATCH</span>
                   </div>
                   <h4 className="text-[16px] font-extrabold text-slate-900 tracking-tight leading-tight mb-1">Exploradora Estratégica</h4>
@@ -231,7 +232,7 @@ export default function HeroSection({ onGetStartedClick }: HeroSectionProps) {
                   </p>
                   <div className="flex flex-wrap gap-1.5">
                     {['Diseño', 'Gestión Digital', 'Administración'].map(tag => (
-                      <span key={tag} className="text-[9px] font-semibold text-slate-600 bg-slate-100 border border-slate-200 px-2.5 py-1 rounded-full">
+                      <span key={tag} className="text-[10px] font-semibold text-slate-600 bg-slate-100 border border-slate-200 px-2.5 py-1 rounded-full">
                         {tag}
                       </span>
                     ))}
@@ -239,22 +240,28 @@ export default function HeroSection({ onGetStartedClick }: HeroSectionProps) {
                 </div>
 
                 <div className="px-4 py-3 border-b border-slate-100">
-                  <span className="text-slate-400 font-sans text-[9px] font-bold tracking-widest uppercase block mb-1.5">Carreras con mayor afinidad</span>
+                  <span className="text-slate-400 font-sans text-[10px] font-bold tracking-widest uppercase block mb-1.5">Carreras con mayor afinidad</span>
                   <div className="space-y-1.5">
                     {[
                       { label: 'Diseño UX/UI',               unis: 'UADE · UP',   pct: 94, top: true  },
                       { label: 'Administración de Empresas',  unis: 'UBA · UTDT',  pct: 89, top: false },
-                    ].map(c => (
+                    ].map((c, barIdx) => (
                       <div key={c.label} className="flex flex-col gap-0.5">
                         <div className="flex items-start justify-between gap-2">
                           <div className="flex flex-col min-w-0">
                             <span className="font-medium text-slate-700 text-[11px] leading-tight">{c.label}</span>
-                            <span className="text-slate-400 text-[9px] font-medium leading-tight mt-0.5">{c.unis}</span>
+                            <span className="text-slate-400 text-[10px] font-medium leading-tight mt-0.5">{c.unis}</span>
                           </div>
                           <span className={`font-mono text-[11px] shrink-0 mt-0.5 ${c.top ? 'text-[#07111F] font-bold' : 'text-slate-400'}`}>{c.pct}%</span>
                         </div>
                         <div className="w-full h-[2px] bg-slate-100 rounded-full overflow-hidden">
-                          <div className={`h-full rounded-full ${c.top ? 'bg-brand-lime' : 'bg-slate-200'}`} style={{ width: `${c.pct}%` }} />
+                          <motion.div
+                            className={`h-full rounded-full ${c.top ? 'bg-brand-lime' : 'bg-slate-200'}`}
+                            style={{ width: `${c.pct}%`, transformOrigin: 'left center' }}
+                            initial={{ scaleX: 0 }}
+                            animate={{ scaleX: 1 }}
+                            transition={{ duration: 0.65, ease: [0.16, 1, 0.3, 1], delay: 0.75 + barIdx * 0.12 }}
+                          />
                         </div>
                       </div>
                     ))}
@@ -262,17 +269,17 @@ export default function HeroSection({ onGetStartedClick }: HeroSectionProps) {
                 </div>
 
                 <div className="px-4 py-3">
-                  <span className="text-slate-400 font-sans text-[9px] font-bold tracking-widest uppercase block mb-1.5">Contexto laboral</span>
+                  <span className="text-slate-400 font-sans text-[10px] font-bold tracking-widest uppercase block mb-1.5">Contexto laboral</span>
                   <p className="text-[11px] text-slate-700 font-medium mb-1.5">
                     Entrada: <strong>~ARS 1.8M</strong> &nbsp;/&nbsp; Senior: <strong>~ARS 2.5M / mes</strong>
                   </p>
                   <div className="flex items-center gap-3 mb-2.5">
-                    <span className="inline-flex items-center gap-1 text-emerald-600 text-[9.5px] font-semibold">
-                      <span className="w-1.5 h-1.5 bg-emerald-500 rounded-full" />Alta demanda
+                    <span className="inline-flex items-center gap-1 text-slate-600 text-[10px] font-semibold">
+                      Alta demanda ✓
                     </span>
-                    <span className="text-slate-500 text-[9.5px] font-medium">Teletrabajo ✓</span>
+                    <span className="text-slate-500 text-[10px] font-medium">Teletrabajo ✓</span>
                   </div>
-                  <span className="inline-flex items-center gap-1 bg-slate-50 border border-slate-200 text-slate-500 text-[9px] font-medium px-2.5 py-1 rounded-full">
+                  <span className="inline-flex items-center gap-1 bg-slate-50 border border-slate-200 text-slate-500 text-[10px] font-medium px-2.5 py-1 rounded-full">
                     ⊙ Metodología Integrada
                   </span>
                 </div>

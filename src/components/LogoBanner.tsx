@@ -258,12 +258,9 @@ export default function LogoBanner() {
 
       <div className="max-w-7xl mx-auto px-6">
         <div className="flex flex-col items-center">
-          <p className="text-[11px] sm:text-[12px] font-semibold text-slate-700 mb-1 text-center select-none tracking-wide">
-            Basado en carreras reales
-          </p>
           <p className="text-[10px] sm:text-[10.5px] font-medium text-slate-400 mb-6 text-center select-none leading-relaxed px-4">
             Cruzamos tu perfil con{' '}
-            <span className="font-semibold text-slate-600 underline decoration-brand-lime decoration-[2.5px] underline-offset-[3px]">+130 carreras</span>
+            <span className="font-semibold text-slate-600">+130 carreras</span>
             {' '}de universidades argentinas
           </p>
 

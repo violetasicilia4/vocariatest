@@ -7,9 +7,9 @@ import ContactModal from './components/ContactModal';
 import NarrativaSection from './components/NarrativaSection';
 import MuestraTest from './components/MuestraTest';
 import ComoFunciona from './components/ComoFunciona';
-import MetodologiaSection from './components/MetodologiaSection';
 import CierreCTA from './components/CierreCTA';
 import FAQSection from './components/FAQSection';
+import TestimonialsSection from './components/TestimonialsSection';
 
 export default function App() {
   const [contactOpen, setContactOpen] = useState(false);
@@ -33,11 +33,11 @@ export default function App() {
         {/* Cómo funciona — metodología de situaciones */}
         <ComoFunciona />
 
-        {/* Qué analiza — señales + disclaimer */}
-        <MetodologiaSection />
-
         {/* Pregunta real del test — demo interactiva */}
         <MuestraTest onGetStartedClick={() => setContactOpen(true)} />
+
+        {/* Casos reales — qué encontraron otros */}
+        <TestimonialsSection />
 
         {/* Preguntas frecuentes */}
         <FAQSection />

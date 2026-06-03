@@ -63,7 +63,7 @@ export default function Header({ onContactClick }: HeaderProps) {
         <div className="hidden md:flex">
           <button
             onClick={onContactClick}
-            className="px-5 py-2.5 bg-[#07111F] text-white rounded-full text-xs font-bold tracking-widest hover:bg-brand-lime hover:text-slate-950 hover:scale-[1.02] transition-all duration-200"
+            className="px-5 py-2.5 bg-[#07111F] text-white rounded-full text-xs font-bold tracking-widest hover:bg-brand-lime hover:text-slate-950 hover:scale-[1.02] active:scale-[0.97] transition-[background-color,color,transform] duration-200"
           >
             Empezar test
           </button>

@@ -12,7 +12,6 @@ const opciones = [
   { id: 'D', texto: 'Entender por qué algo no está funcionando.' },
 ];
 
-// Feedback específico por opción — suena como un sistema real, no como marketing
 const feedbacks: Record<string, { titulo: string; cuerpo: string }> = {
   A: {
     titulo: 'Orientación analítica y estratégica',
@@ -53,10 +52,10 @@ function InteractiveCard({ onGetStartedClick }: { onGetStartedClick: () => void 
             <button
               key={op.id}
               onClick={() => setSeleccionada(op.id)}
-              className={`w-full text-left px-4 py-3 rounded-xl border font-display text-sm font-medium transition-all duration-150 flex items-start gap-3 ${
+              className={`w-full text-left px-4 py-3 rounded-xl border font-display text-sm font-medium transition-[background-color,border-color,color,transform] duration-150 flex items-start gap-3 active:scale-[0.99] ${
                 activa
                   ? 'bg-[#07111F] text-white border-[#07111F]'
-                  : 'bg-white text-slate-700 border-slate-200 hover:border-slate-400'
+                  : 'bg-white text-slate-700 border-slate-200 hover:border-slate-400 hover:bg-slate-50'
               }`}
             >
               <span
@@ -77,15 +76,14 @@ function InteractiveCard({ onGetStartedClick }: { onGetStartedClick: () => void 
       <AnimatePresence>
         {seleccionada && (
           <motion.div
-            initial={{ opacity: 0, y: 8 }}
-            animate={{ opacity: 1, y: 0 }}
-            exit={{ opacity: 0 }}
-            transition={{ duration: 0.25 }}
+            initial={{ opacity: 0, y: 6, scale: 0.98 }}
+            animate={{ opacity: 1, y: 0, scale: 1 }}
+            exit={{ opacity: 0, scale: 0.98 }}
+            transition={{ duration: 0.3, ease: [0.16, 1, 0.3, 1] }}
             className="mt-5 space-y-4"
           >
-            {/* Feedback específico — parece un sistema real */}
             <div className="bg-slate-50 border border-slate-100 rounded-2xl px-4 py-4">
-              <p className="text-[10px] font-bold tracking-widest uppercase mb-1" style={{ color: '#258ef9' }}>
+              <p className="text-[10px] font-bold tracking-widest uppercase mb-1 text-slate-500">
                 {feedbacks[seleccionada].titulo}
               </p>
               <p className="text-[12.5px] text-slate-600 font-medium leading-relaxed">
@@ -95,7 +93,7 @@ function InteractiveCard({ onGetStartedClick }: { onGetStartedClick: () => void 
 
             <button
               onClick={onGetStartedClick}
-              className="w-full py-3.5 bg-[#07111F] text-white font-display text-[14px] font-black tracking-wide rounded-full hover:bg-brand-lime hover:text-slate-950 hover:scale-[1.02] active:scale-[0.98] transition-all duration-200 shadow-[0_10px_28px_rgba(5,8,22,0.18)]"
+              className="w-full py-3.5 bg-[#07111F] text-white font-display text-[14px] font-black tracking-wide rounded-full hover:bg-brand-lime hover:text-slate-950 hover:scale-[1.02] active:scale-[0.97] transition-[background-color,color,transform,box-shadow] duration-200 shadow-[0_10px_28px_rgba(5,8,22,0.18)]"
             >
               Seguir con mi test →
             </button>
@@ -120,9 +118,6 @@ export default function MuestraTest({ onGetStartedClick }: MuestraTestProps) {
             transition={{ duration: 0.45 }}
             className="mb-8"
           >
-            <span className="text-[10px] font-bold tracking-widest uppercase text-sky-500/70 block mb-2">
-              Demo · Pregunta real
-            </span>
             <h2
               id="muestra-heading"
               className="font-display font-black text-2xl text-[#0e1118] tracking-tight leading-tight mb-2"
@@ -153,9 +148,6 @@ export default function MuestraTest({ onGetStartedClick }: MuestraTestProps) {
             transition={{ duration: 0.5 }}
             className="col-span-5"
           >
-            <span className="text-[10px] font-bold tracking-widest uppercase text-sky-500/70 block mb-4">
-              Demo · Pregunta real
-            </span>
             <h2
               id="muestra-heading"
               className="font-display font-black text-[40px] text-[#0e1118] tracking-tight leading-[1.1] mb-5"
@@ -163,8 +155,7 @@ export default function MuestraTest({ onGetStartedClick }: MuestraTestProps) {
               Probá una pregunta real.
             </h2>
             <p className="text-slate-400 text-sm font-medium leading-relaxed">
-              No te preguntamos qué carrera te gusta.<br />
-              Te ponemos en situaciones concretas y tu patrón emerge solo.
+              Sin respuestas correctas. Tu patrón emerge de las situaciones.
             </p>
           </motion.div>
 

@@ -1,7 +1,6 @@
 import { useRef, useState, useCallback } from 'react';
 import { motion } from 'motion/react';
 
-// Casos de uso — formato before/after, sin frases publicitarias
 const casos = [
   {
     etiqueta: 'DEMASIADAS OPCIONES',
@@ -35,17 +34,14 @@ const casos = [
 function CasoCard({ c }: { c: typeof casos[number] }) {
   return (
     <div
-      className="bg-white rounded-2xl border border-slate-100 p-6 flex flex-col gap-5 h-full"
+      className="bg-white rounded-2xl border border-slate-100 p-6 flex flex-col gap-4 h-full transition-[transform,box-shadow] duration-200 hover:-translate-y-1 hover:shadow-[0_10px_36px_rgba(30,50,80,0.10)]"
       style={{ boxShadow: '0 2px 16px rgba(30,50,80,0.06), 0 1px 3px rgba(30,50,80,0.04)' }}
     >
       {/* Etiqueta + persona */}
       <div>
-        <div className="flex items-center gap-1.5 mb-3">
-          <span className="w-1.5 h-1.5 rounded-full bg-brand-lime shrink-0" />
-          <span className="text-[9px] font-bold tracking-widest uppercase text-slate-400">
-            {c.etiqueta}
-          </span>
-        </div>
+        <p className="text-[9px] font-bold tracking-widest uppercase text-slate-400 mb-3">
+          {c.etiqueta}
+        </p>
         <div className="flex items-center gap-2.5">
           <div className="w-8 h-8 rounded-full bg-slate-100 flex items-center justify-center shrink-0">
             <span className="font-display font-bold text-[10px] text-slate-500">{c.iniciales}</span>
@@ -56,10 +52,10 @@ function CasoCard({ c }: { c: typeof casos[number] }) {
         </div>
       </div>
 
-      {/* Antes */}
+      {/* Dudaba entre */}
       <div>
         <p className="text-[9px] font-bold tracking-widest uppercase text-slate-400 mb-2">
-          Manejaba
+          Dudaba entre
         </p>
         <div className="flex flex-wrap gap-1.5">
           {c.antes.map((op) => (
@@ -73,19 +69,19 @@ function CasoCard({ c }: { c: typeof casos[number] }) {
         </div>
       </div>
 
-      {/* Después */}
+      {/* Eligió */}
       <div>
         <p className="text-[9px] font-bold tracking-widest uppercase text-slate-400 mb-1.5">
           Eligió
         </p>
-        <p className="font-display font-extrabold text-[14px] text-slate-900 leading-snug">
+        <p className="font-display font-extrabold text-[15px] text-slate-900 leading-snug">
           {c.despues}
         </p>
       </div>
 
-      {/* Insight — corto, auténtico */}
-      <div className="border-t border-slate-100 pt-4">
-        <p className="text-[13px] text-slate-500 font-medium leading-relaxed italic">
+      {/* Lo que descubrió */}
+      <div className="border-t border-slate-100 pt-4 mt-auto">
+        <p className="text-sm text-slate-700 font-medium leading-relaxed">
           "{c.descubrimiento}"
         </p>
       </div>
@@ -110,7 +106,7 @@ export default function TestimonialsSection() {
   };
 
   return (
-    <section className="py-20 sm:py-28" style={{ background: '#EFF6FB' }}>
+    <section className="py-14 sm:py-24" style={{ background: '#EFF6FB' }}>
       <div className="max-w-5xl mx-auto">
 
         {/* ── ENCABEZADO ───────────────────────────────── */}
@@ -119,21 +115,11 @@ export default function TestimonialsSection() {
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
           transition={{ duration: 0.45 }}
-          className="mb-12 px-6 text-center md:text-left"
+          className="mb-10 px-6 text-center md:text-left"
         >
-          <span className="inline-flex items-center gap-1.5 bg-brand-lime text-slate-950 text-[10px] font-black tracking-widest uppercase px-4 py-1.5 rounded-full mb-5">
-            <span className="w-1.5 h-1.5 rounded-full bg-slate-950 shrink-0" />
-            Casos de uso
-          </span>
-
-          <h2 className="font-display font-black text-3xl sm:text-5xl text-[#0e1118] tracking-tight leading-[1.1] mb-4">
+          <h2 className="font-display font-black text-3xl sm:text-5xl text-[#0e1118] tracking-tight leading-[1.1]">
             Qué encontraron otros.
           </h2>
-
-          <p className="text-slate-500 text-sm sm:text-base leading-relaxed max-w-lg">
-            Tres situaciones distintas, tres resultados distintos.
-            Lo que tienen en común: una decisión más clara.
-          </p>
         </motion.div>
 
         {/* ── DESKTOP: 3 columnas, altura uniforme ────── */}
@@ -173,8 +159,8 @@ export default function TestimonialsSection() {
                 key={i}
                 onClick={() => goTo(i)}
                 aria-label={`Ver caso ${i + 1}`}
-                className={`rounded-full transition-all duration-200 ${
-                  activeIndex === i ? 'w-5 h-2 bg-brand-lime' : 'w-2 h-2 bg-slate-300'
+                className={`rounded-full transition-[width,background-color] duration-200 ${
+                  activeIndex === i ? 'w-5 h-2 bg-[#07111F]' : 'w-2 h-2 bg-slate-300'
                 }`}
               />
             ))}
