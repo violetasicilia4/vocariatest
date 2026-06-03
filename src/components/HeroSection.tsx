@@ -178,30 +178,31 @@ export default function HeroSection({ onGetStartedClick }: HeroSectionProps) {
               Respondé un test basado en situaciones reales y recibí carreras, universidades y próximos pasos.
             </motion.p>
 
-            <motion.div variants={itemVariants}>
+            {/* Botón + trust pills centrados juntos */}
+            <motion.div variants={itemVariants} className="inline-flex flex-col items-center gap-2.5">
               <button
                 onClick={onGetStartedClick}
                 className="px-9 py-4 bg-[#07111F] text-white font-display text-[15px] font-black tracking-wide rounded-full hover:bg-brand-lime hover:text-slate-950 hover:scale-[1.02] active:scale-[0.97] transition-[background-color,color,transform,box-shadow] duration-200 select-none whitespace-nowrap shadow-[0_14px_32px_rgba(5,8,22,0.22)]"
               >
                 Empezar mi test vocacional
               </button>
-            </motion.div>
 
-            {/* Trust pills desktop */}
-            <motion.div variants={itemVariants} className="flex items-center gap-2 mt-4">
-              {['Resultado personalizado', 'Sin registro previo'].map(item => (
-                <span
-                  key={item}
-                  className="text-[9px] font-medium tracking-wide rounded-full px-2 py-0.5"
-                  style={{
-                    background: 'rgba(255,255,255,0.10)',
-                    border: '1px solid rgba(255,255,255,0.18)',
-                    color: 'rgba(255,255,255,0.55)',
-                  }}
-                >
-                  {item}
-                </span>
-              ))}
+              {/* Trust pills — centradas bajo el botón */}
+              <div className="flex items-center gap-2">
+                {['Resultado personalizado', 'Sin registro previo'].map(item => (
+                  <span
+                    key={item}
+                    className="text-[9px] font-semibold tracking-wide rounded-full px-2 py-0.5"
+                    style={{
+                      background: 'rgba(255,255,255,0.55)',
+                      border: '1px solid rgba(255,255,255,0.30)',
+                      color: 'rgba(15,25,50,0.65)',
+                    }}
+                  >
+                    {item}
+                  </span>
+                ))}
+              </div>
             </motion.div>
           </motion.div>
 
