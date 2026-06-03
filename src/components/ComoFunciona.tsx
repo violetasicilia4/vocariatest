@@ -20,7 +20,7 @@ const pasos = [
 
 export default function ComoFunciona() {
   return (
-    <section id="como-funciona" aria-labelledby="como-funciona-heading" className="py-10 sm:py-16" style={{ background: '#F8FAFC' }}>
+    <section id="como-funciona" aria-labelledby="como-funciona-heading" className="pt-10 pb-4 sm:pt-16 sm:pb-8" style={{ background: '#F8FAFC' }}>
       <div className="max-w-5xl mx-auto px-6">
 
         {/* ── HEADLINE ─────────────────────────────────── */}
@@ -68,16 +68,6 @@ export default function ComoFunciona() {
           ))}
         </div>
 
-        {/* Nota de confianza — absorbe MetodologiaSection */}
-        <motion.p
-          initial={{ opacity: 0 }}
-          whileInView={{ opacity: 1 }}
-          viewport={{ once: true }}
-          transition={{ duration: 0.4, delay: 0.4 }}
-          className="text-[13px] text-slate-400 font-medium mt-8 sm:mt-10 max-w-sm leading-relaxed"
-        >
-          Vocaria no decide por vos. Organiza señales para ayudarte a comparar caminos posibles.
-        </motion.p>
 
       </div>
     </section>
