@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react';
 import { Menu, X } from 'lucide-react';
+import LogoIcon from './ui/LogoIcon';
 
 interface HeaderProps {
   onContactClick: () => void;
@@ -32,8 +33,8 @@ export default function Header({ onContactClick }: HeaderProps) {
       <div className="max-w-7xl mx-auto px-6 flex items-center justify-between">
 
         {/* Logo */}
-        <a href="#home" className="flex items-center gap-1.5 group focus:outline-none">
-          <div className="w-2 h-2 rounded-full bg-brand-lime shrink-0" />
+        <a href="#home" className="flex items-center gap-2.5 group focus:outline-none">
+          <LogoIcon size={28} />
           <div className="flex flex-col">
             <span className={`font-display font-bold text-[15px] tracking-tight leading-none ${scrolled ? 'text-slate-900' : 'text-white'}`}>
               Vocaria

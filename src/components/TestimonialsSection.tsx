@@ -1,170 +1,181 @@
 import { useRef, useState, useCallback } from 'react';
+import { ChevronLeft, ChevronRight } from 'lucide-react';
 import { motion } from 'motion/react';
 
-const casos = [
+const testimonios = [
   {
-    etiqueta: 'DEMASIADAS OPCIONES',
+    texto: 'No me dijo qué estudiar. Me ayudó a entender por qué me atraían opciones tan distintas.',
     nombre: 'Valentina M.',
     edad: '18',
-    antes: ['Psicología', 'Derecho', 'Marketing', 'Diseño'],
-    despues: 'Comunicación Estratégica · UCES',
-    descubrimiento: 'Las cuatro compartían el mismo patrón. No lo había visto.',
-    iniciales: 'VM',
+    carrera: 'Comunicación Estratégica · UCES',
   },
   {
-    etiqueta: 'CAMBIÓ EN 2° AÑO',
+    texto: 'Pensé que estaba eligiendo entre tres carreras. Resultaron tener algo en común.',
     nombre: 'Nicolás R.',
     edad: '24',
-    antes: ['Contador Público (2° año)'],
-    despues: 'Administración de Empresas · UBA',
-    descubrimiento: 'El problema no era la carrera. Era que la exactitud nunca me importó.',
-    iniciales: 'NR',
+    carrera: 'Administración de Empresas · UBA',
   },
   {
-    etiqueta: 'DESCUBRIÓ LO INESPERADO',
+    texto: 'No salí con una respuesta definitiva. Salí con menos ruido.',
     nombre: 'Lucía T.',
     edad: '21',
-    antes: ['Ingeniería', 'Actuariado'],
-    despues: 'Ciencia de Datos · ITBA',
-    descubrimiento: 'Pensaba que era para exactas. Era para convencer con datos.',
-    iniciales: 'LT',
+    carrera: 'Ciencia de Datos · ITBA',
+  },
+  {
+    texto: 'Lo más útil fue entender por qué estaba trabado, no descubrir adónde ir.',
+    nombre: 'Martín E.',
+    edad: '22',
+    carrera: 'Diseño UX/UI · UADE',
   },
 ];
 
-function CasoCard({ c }: { c: typeof casos[number] }) {
-  return (
-    <div
-      className="bg-white rounded-2xl border border-slate-100 p-6 flex flex-col gap-4 h-full transition-[transform,box-shadow] duration-200 hover:-translate-y-1 hover:shadow-[0_10px_36px_rgba(30,50,80,0.10)]"
-      style={{ boxShadow: '0 2px 16px rgba(30,50,80,0.06), 0 1px 3px rgba(30,50,80,0.04)' }}
-    >
-      {/* Etiqueta + persona */}
-      <div>
-        <p className="text-[9px] font-bold tracking-widest uppercase text-slate-400 mb-3">
-          {c.etiqueta}
-        </p>
-        <div className="flex items-center gap-2.5">
-          <div className="w-8 h-8 rounded-full bg-slate-100 flex items-center justify-center shrink-0">
-            <span className="font-display font-bold text-[10px] text-slate-500">{c.iniciales}</span>
-          </div>
-          <span className="font-display font-bold text-[13px] text-slate-800">
-            {c.nombre}, {c.edad}
-          </span>
-        </div>
-      </div>
-
-      {/* Dudaba entre */}
-      <div>
-        <p className="text-[9px] font-bold tracking-widest uppercase text-slate-400 mb-2">
-          Dudaba entre
-        </p>
-        <div className="flex flex-wrap gap-1.5">
-          {c.antes.map((op) => (
-            <span
-              key={op}
-              className="text-[11px] font-medium text-slate-500 bg-slate-50 border border-slate-200 px-2.5 py-1 rounded-full"
-            >
-              {op}
-            </span>
-          ))}
-        </div>
-      </div>
-
-      {/* Eligió */}
-      <div>
-        <p className="text-[9px] font-bold tracking-widest uppercase text-slate-400 mb-1.5">
-          Eligió
-        </p>
-        <p className="font-display font-extrabold text-[15px] text-slate-900 leading-snug">
-          {c.despues}
-        </p>
-      </div>
-
-      {/* Lo que descubrió */}
-      <div className="border-t border-slate-100 pt-4 mt-auto">
-        <p className="text-sm text-slate-700 font-medium leading-relaxed">
-          "{c.descubrimiento}"
-        </p>
-      </div>
-    </div>
-  );
+function getInitials(nombre: string): string {
+  return nombre.split(' ').map((w) => w[0]).join('').slice(0, 2).toUpperCase();
 }
 
 export default function TestimonialsSection() {
-  const [activeIndex, setActiveIndex] = useState(0);
   const scrollRef = useRef<HTMLDivElement>(null);
+  const [activeIndex, setActiveIndex] = useState(0);
+
+  /* Paso exacto por card usando el DOM para evitar cálculos aproximados */
+  const getStep = () => {
+    const card = scrollRef.current?.querySelector('[data-card]') as HTMLElement | null;
+    return card ? card.offsetWidth + 20 : 0; // ancho + gap-5 (20px)
+  };
 
   const handleScroll = useCallback(() => {
     if (!scrollRef.current) return;
-    const { scrollLeft, offsetWidth } = scrollRef.current;
-    setActiveIndex(Math.round(scrollLeft / offsetWidth));
+    const card = scrollRef.current.querySelector('[data-card]') as HTMLElement | null;
+    if (!card) return;
+    const step = card.offsetWidth + 20;
+    const idx = Math.round(scrollRef.current.scrollLeft / step);
+    setActiveIndex(Math.max(0, Math.min(idx, testimonios.length - 1)));
   }, []);
 
+  const scrollByCard = (dir: 1 | -1) => {
+    const step = getStep();
+    if (!scrollRef.current || !step) return;
+    scrollRef.current.scrollBy({ left: dir * step, behavior: 'smooth' });
+  };
+
   const goTo = (i: number) => {
-    if (!scrollRef.current) return;
-    scrollRef.current.scrollTo({ left: i * scrollRef.current.offsetWidth, behavior: 'smooth' });
+    const step = getStep();
+    if (!scrollRef.current || !step) return;
+    scrollRef.current.scrollTo({ left: i * step, behavior: 'smooth' });
     setActiveIndex(i);
   };
 
   return (
-    <section className="py-14 sm:py-24" style={{ background: '#EFF6FB' }}>
-      <div className="max-w-5xl mx-auto">
+    <section className="py-10 sm:py-14" style={{ background: '#07111F' }}>
+      <div className="max-w-5xl mx-auto px-6">
 
-        {/* ── ENCABEZADO ───────────────────────────────── */}
+        {/* Encabezado + flechas desktop */}
         <motion.div
-          initial={{ opacity: 0, y: 18 }}
+          initial={{ opacity: 0, y: 12 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
-          transition={{ duration: 0.45 }}
-          className="mb-10 px-6 text-center md:text-left"
+          transition={{ duration: 0.4 }}
+          className="flex items-center justify-between mb-6 sm:mb-8"
         >
-          <h2 className="font-display font-black text-3xl sm:text-5xl text-[#0e1118] tracking-tight leading-[1.1]">
-            Qué encontraron otros.
+          <h2 className="font-display font-black text-xl sm:text-2xl text-white tracking-tight">
+            Lo que encontraron otros.
           </h2>
+
+          <div className="hidden sm:flex items-center gap-2">
+            <button
+              onClick={() => scrollByCard(-1)}
+              disabled={activeIndex === 0}
+              aria-label="Anterior"
+              className="w-9 h-9 rounded-full border border-white/15 flex items-center justify-center text-white/50 hover:text-white hover:border-white/30 disabled:opacity-20 active:scale-[0.95] transition-[color,border-color,transform] duration-150"
+            >
+              <ChevronLeft className="w-4 h-4" />
+            </button>
+            <button
+              onClick={() => scrollByCard(1)}
+              disabled={activeIndex === testimonios.length - 1}
+              aria-label="Siguiente"
+              className="w-9 h-9 rounded-full border border-white/15 flex items-center justify-center text-white/50 hover:text-white hover:border-white/30 disabled:opacity-20 active:scale-[0.95] transition-[color,border-color,transform] duration-150"
+            >
+              <ChevronRight className="w-4 h-4" />
+            </button>
+          </div>
         </motion.div>
 
-        {/* ── DESKTOP: 3 columnas, altura uniforme ────── */}
-        <div className="hidden md:grid md:grid-cols-3 gap-5 px-6 items-stretch">
-          {casos.map((c, i) => (
-            <motion.div
-              key={i}
-              initial={{ opacity: 0, y: 20 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true }}
-              transition={{ duration: 0.45, delay: i * 0.1 }}
-            >
-              <CasoCard c={c} />
-            </motion.div>
-          ))}
-        </div>
-
-        {/* ── MOBILE: carrusel ─────────────────────────── */}
-        <div className="md:hidden">
+        {/* Carrusel */}
+        <motion.div
+          initial={{ opacity: 0 }}
+          whileInView={{ opacity: 1 }}
+          viewport={{ once: true }}
+          transition={{ duration: 0.5, delay: 0.1 }}
+        >
           <div
             ref={scrollRef}
             onScroll={handleScroll}
-            className="flex overflow-x-auto snap-x snap-mandatory scroll-smooth gap-4 px-6"
+            className="flex overflow-x-auto snap-x snap-mandatory gap-5"
             style={{ scrollbarWidth: 'none', WebkitOverflowScrolling: 'touch' }}
           >
-            {casos.map((c, i) => (
-              <div key={i} className="snap-center shrink-0 w-[calc(100%-3rem)]">
-                <CasoCard c={c} />
+            {testimonios.map((t, i) => (
+              <div
+                key={i}
+                data-card
+                className="snap-start shrink-0 w-[calc(100%-56px)] sm:w-[calc(100%-140px)] bg-white rounded-2xl p-5 sm:p-6 flex flex-col"
+                style={{ boxShadow: '0 4px 24px rgba(0,0,0,0.20)' }}
+              >
+                {/* Comilla — oscura para máximo contraste sobre blanco */}
+                <span
+                  className="font-display font-black text-[#0e1118] select-none block mb-3"
+                  style={{ fontSize: '42px', lineHeight: '0.85' }}
+                  aria-hidden="true"
+                >
+                  {'“'}
+                </span>
+
+                {/* Cita */}
+                <p className="font-display text-[15px] sm:text-[16px] font-medium text-slate-800 leading-relaxed flex-1 mb-5">
+                  {t.texto}
+                </p>
+
+                {/* Atribución */}
+                <div className="flex items-center gap-3 pt-4 border-t border-slate-100">
+                  <div
+                    className="w-8 h-8 rounded-full bg-[#0e1118] flex items-center justify-center shrink-0"
+                    style={{ boxShadow: '0 0 0 2px rgba(213,255,63,0.18)' }}
+                  >
+                    <span className="font-display font-black text-[10px] text-brand-lime tracking-wide">
+                      {getInitials(t.nombre)}
+                    </span>
+                  </div>
+                  <div className="min-w-0">
+                    <p className="font-display font-bold text-[13px] text-slate-900 leading-tight">
+                      {t.nombre}, {t.edad} años
+                    </p>
+                    <p className="text-[11px] text-slate-400 font-medium mt-0.5 leading-tight truncate">
+                      {t.carrera}
+                    </p>
+                  </div>
+                </div>
               </div>
             ))}
-            <div className="shrink-0 w-3" aria-hidden="true" />
-          </div>
 
-          <div className="flex items-center justify-center gap-2 mt-6">
-            {casos.map((_, i) => (
-              <button
-                key={i}
-                onClick={() => goTo(i)}
-                aria-label={`Ver caso ${i + 1}`}
-                className={`rounded-full transition-[width,background-color] duration-200 ${
-                  activeIndex === i ? 'w-5 h-2 bg-[#07111F]' : 'w-2 h-2 bg-slate-300'
-                }`}
-              />
-            ))}
+            {/* Trailing spacer — permite que el último card haga snap correctamente */}
+            <div className="shrink-0 w-14 sm:w-[140px]" aria-hidden="true" />
           </div>
+        </motion.div>
+
+        {/* Dots mobile */}
+        <div className="flex items-center justify-center gap-2 mt-5 sm:hidden">
+          {testimonios.map((_, i) => (
+            <button
+              key={i}
+              onClick={() => goTo(i)}
+              aria-label={`Testimonio ${i + 1}`}
+              className={`rounded-full transition-[width,background-color] duration-200 ${
+                activeIndex === i
+                  ? 'w-5 h-2 bg-brand-lime'
+                  : 'w-2 h-2 bg-white/20 hover:bg-white/40'
+              }`}
+            />
+          ))}
         </div>
 
       </div>

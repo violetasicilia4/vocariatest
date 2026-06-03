@@ -1,15 +1,17 @@
+import LogoIcon from './ui/LogoIcon';
+
 interface FooterProps {
   onContactClick: () => void;
 }
 
 export default function Footer({ onContactClick }: FooterProps) {
   return (
-    <footer className="bg-[#07111F] text-white py-10 border-t border-white/5">
+    <footer className="bg-[#050c17] text-white py-10 border-t border-white/10">
       <div className="max-w-5xl mx-auto px-6 flex flex-col sm:flex-row items-center justify-between gap-4">
 
         {/* Logo */}
-        <a href="#home" className="flex items-center gap-2 focus:outline-none">
-          <div className="w-2 h-2 rounded-full bg-brand-lime shrink-0" />
+        <a href="#home" className="flex items-center gap-2.5 focus:outline-none">
+          <LogoIcon size={28} onDark />
           <div className="flex flex-col">
             <span className="font-display font-bold text-[15px] tracking-tight leading-none text-white">
               Vocaria

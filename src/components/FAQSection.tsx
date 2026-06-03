@@ -3,16 +3,16 @@ import { motion, AnimatePresence } from 'motion/react';
 
 const faqs = [
   {
+    pregunta: '¿Para quién es Vocaria?',
+    respuesta: 'Para cualquier persona que esté eligiendo carrera, dudando entre opciones, o evaluando un cambio. Funciona para quienes terminan el secundario, para quienes ya empezaron una carrera y no están seguros, y para quienes quieren validar una decisión.',
+  },
+  {
     pregunta: '¿Cuánto tiempo lleva?',
     respuesta: 'Entre 5 y 7 minutos. Las preguntas son situacionales y no tienen respuestas correctas.',
   },
   {
     pregunta: '¿El resultado me dice exactamente qué estudiar?',
     respuesta: 'No. Te muestra tu patrón y las carreras que más encajan con cómo pensás. La decisión sigue siendo tuya.',
-  },
-  {
-    pregunta: '¿Esto reemplaza a un orientador vocacional?',
-    respuesta: 'No. Vocaria da un punto de partida: organiza señales que muchas veces están pero no son visibles. Un orientador puede profundizar desde ahí con mucho más contexto.',
   },
 ];
 

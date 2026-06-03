@@ -9,6 +9,7 @@ import MuestraTest from './components/MuestraTest';
 import ComoFunciona from './components/ComoFunciona';
 import CierreCTA from './components/CierreCTA';
 import FAQSection from './components/FAQSection';
+import TestimonialsSection from './components/TestimonialsSection';
 
 export default function App() {
   const [contactOpen, setContactOpen] = useState(false);
@@ -23,20 +24,23 @@ export default function App() {
         {/* Hero — propuesta de valor + CTA */}
         <HeroSection onGetStartedClick={() => setContactOpen(true)} />
 
+        {/* Respaldo institucional — ancla credibilidad temprana */}
+        <LogoBanner />
+
         {/* Identificación emocional — el usuario se reconoce */}
         <NarrativaSection onGetStartedClick={() => setContactOpen(true)} />
 
         {/* Demo interactiva — la sección más poderosa */}
         <MuestraTest onGetStartedClick={() => setContactOpen(true)} />
 
+        {/* Prueba social — casos reales de otros usuarios */}
+        <TestimonialsSection />
+
         {/* Metodología — contexto para quien necesita entender el "cómo" */}
         <ComoFunciona />
 
         {/* Preguntas frecuentes — resolver las últimas fricciones */}
         <FAQSection />
-
-        {/* Respaldo institucional — cerca del cierre, no al principio */}
-        <LogoBanner />
 
         {/* CTA de cierre */}
         <CierreCTA onGetStartedClick={() => setContactOpen(true)} />
