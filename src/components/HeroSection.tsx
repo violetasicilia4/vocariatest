@@ -192,11 +192,11 @@ export default function HeroSection({ onGetStartedClick }: HeroSectionProps) {
                 {['Resultado personalizado', 'Sin registro previo'].map(item => (
                   <span
                     key={item}
-                    className="text-[9px] font-semibold tracking-wide rounded-full px-2 py-0.5"
+                    className="text-[8px] font-medium tracking-wide rounded-full px-1.5 py-px"
                     style={{
-                      background: 'rgba(255,255,255,0.55)',
-                      border: '1px solid rgba(255,255,255,0.30)',
-                      color: 'rgba(15,25,50,0.65)',
+                      background: 'rgba(255,255,255,0.50)',
+                      border: '0.5px solid rgba(255,255,255,0.25)',
+                      color: 'rgba(15,25,50,0.60)',
                     }}
                   >
                     {item}
