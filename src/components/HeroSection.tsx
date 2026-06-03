@@ -84,21 +84,15 @@ export default function HeroSection({ onGetStartedClick }: HeroSectionProps) {
 
           {/* Trust pills */}
           <motion.div variants={itemVariants} className="flex flex-wrap justify-center gap-x-4 gap-y-1.5 mb-6">
-            {['✓ 5–7 minutos', '✓ Resultado personalizado'].map(item => (
+            {['✓ 5–7 minutos', '✓ Resultado personalizado', '✓ Sin registro previo'].map(item => (
               <span key={item} className="text-[11px] font-medium" style={{ color: 'rgba(255,255,255,0.72)' }}>{item}</span>
             ))}
           </motion.div>
 
-          {/* Preview de resultado — después del CTA, no compite */}
-          <motion.div
-            variants={itemVariants}
-            className="w-full"
-          >
+          {/* Preview de resultado */}
+          <motion.div variants={itemVariants} className="w-full">
             <div className="flex justify-center mb-2.5">
-              <span
-                className="text-[10px] font-medium tracking-widest uppercase"
-                style={{ color: 'rgba(255,255,255,0.55)' }}
-              >
+              <span className="text-[10px] font-medium tracking-widest uppercase" style={{ color: 'rgba(255,255,255,0.55)' }}>
                 Así se ve tu resultado
               </span>
             </div>
@@ -110,11 +104,10 @@ export default function HeroSection({ onGetStartedClick }: HeroSectionProps) {
               className="w-full bg-white rounded-[20px] border border-slate-100 text-left relative overflow-hidden"
               style={{ boxShadow: '0 12px 40px rgba(30,60,100,0.12)' }}
             >
-
               <div className="px-4 pt-4 pb-3 border-b border-slate-100">
                 <div className="flex items-start justify-between gap-2 mb-1">
                   <span className="text-slate-400 font-sans text-[10px] font-bold tracking-widest uppercase">Perfil de enfoque</span>
-                  <span className="bg-brand-lime text-[#07111F] text-[10px] font-black px-2.5 py-0.5 rounded-md tracking-wide shrink-0">92% MATCH</span>
+                  <span className="bg-brand-lime text-[#07111F] text-[10px] font-black px-2.5 py-0.5 rounded-md tracking-wide shrink-0">Alta afinidad</span>
                 </div>
                 <h4 className="text-[15px] font-extrabold text-slate-900 tracking-tight leading-tight mb-1">Exploradora Estratégica</h4>
                 <p className="text-[10px] text-slate-500 font-medium leading-snug mb-2.5">
@@ -129,35 +122,28 @@ export default function HeroSection({ onGetStartedClick }: HeroSectionProps) {
                 </div>
               </div>
 
-              <div className="px-4 py-3 border-b border-slate-100">
+              <div className="px-4 py-3">
                 <span className="text-slate-400 font-sans text-[10px] font-bold tracking-widest uppercase block mb-1.5">Carreras con mayor afinidad</span>
                 <div className="space-y-1.5">
                   {[
-                    { label: 'Diseño UX/UI',               unis: 'UADE · UP',   pct: 94, top: true  },
-                    { label: 'Administración de Empresas',  unis: 'UBA · UTDT',  pct: 89, top: false },
-                  ].map((c, barIdx) => (
+                    { label: 'Diseño UX/UI',              unis: 'UADE · UP',  top: true  },
+                    { label: 'Administración de Empresas', unis: 'UBA · UTDT', top: false },
+                  ].map((c) => (
                     <div key={c.label} className="flex flex-col gap-0.5">
                       <div className="flex items-start justify-between gap-2">
                         <div className="flex flex-col min-w-0">
                           <span className="font-medium text-slate-700 text-[11px] leading-tight">{c.label}</span>
                           <span className="text-slate-400 text-[10px] font-medium leading-tight mt-0.5">{c.unis}</span>
                         </div>
-                        <span className={`font-mono text-[11px] shrink-0 mt-0.5 ${c.top ? 'text-[#07111F] font-bold' : 'text-slate-400'}`}>{c.pct}%</span>
+                        <span className={`text-[10px] shrink-0 mt-0.5 font-semibold ${c.top ? 'text-brand-lime bg-[#07111F] px-1.5 py-0.5 rounded' : 'text-slate-300'}`}>
+                          {c.top ? '↑ Top' : '—'}
+                        </span>
                       </div>
-                      <div className="w-full h-[2px] bg-slate-100 rounded-full overflow-hidden">
-                        <motion.div
-                          className={`h-full rounded-full ${c.top ? 'bg-brand-lime' : 'bg-slate-200'}`}
-                          style={{ width: `${c.pct}%`, transformOrigin: 'left center' }}
-                          initial={{ scaleX: 0 }}
-                          animate={{ scaleX: 1 }}
-                          transition={{ duration: 0.65, ease: [0.16, 1, 0.3, 1], delay: 1.0 + barIdx * 0.12 }}
-                        />
-                      </div>
+                      <div className="w-full h-[2px] bg-slate-100 rounded-full" />
                     </div>
                   ))}
                 </div>
               </div>
-
             </motion.div>
           </motion.div>
 
@@ -203,7 +189,7 @@ export default function HeroSection({ onGetStartedClick }: HeroSectionProps) {
 
             {/* Trust pills desktop */}
             <motion.div variants={itemVariants} className="flex flex-wrap gap-x-5 gap-y-1.5 mt-5">
-              {['✓ 5–7 minutos', '✓ Resultado personalizado'].map(item => (
+              {['✓ 5–7 minutos', '✓ Resultado personalizado', '✓ Sin registro previo'].map(item => (
                 <span key={item} className="text-[12px] font-medium" style={{ color: 'rgba(255,255,255,0.72)' }}>{item}</span>
               ))}
             </motion.div>

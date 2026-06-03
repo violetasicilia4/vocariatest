@@ -14,20 +14,20 @@ const opciones = [
 
 const feedbacks: Record<string, { titulo: string; cuerpo: string }> = {
   A: {
-    titulo: 'Orientación analítica y estratégica',
-    cuerpo: 'Esta respuesta es frecuente en perfiles que priorizan la resolución de problemas complejos, el análisis de sistemas y el pensamiento estructurado.',
+    titulo: 'Tu respuesta ya empieza a dibujar un patrón.',
+    cuerpo: 'Hay carreras muy distintas que comparten esta misma orientación. El test cruza esto con tus otras respuestas para distinguirlas.',
   },
   B: {
-    titulo: 'Orientación al liderazgo y la colaboración',
-    cuerpo: 'Esta respuesta aparece habitualmente en perfiles orientados a la gestión de equipos, el trabajo interdisciplinario y el desarrollo de personas.',
+    titulo: 'Esto es más específico de lo que parece.',
+    cuerpo: 'Hay un grupo de carreras donde este perfil termina siendo muy fuerte. El test necesita más respuestas para definir cuál es el tuyo.',
   },
   C: {
-    titulo: 'Orientación creativa y al usuario',
-    cuerpo: 'Esta respuesta es característica de perfiles con sensibilidad hacia el diseño, la comunicación y la construcción de experiencias.',
+    titulo: 'Interesante. Esta respuesta aparece en perfiles muy distintos entre sí.',
+    cuerpo: 'Para saber cuál es el tuyo, el test cruza esto con cómo respondés el resto de las situaciones.',
   },
   D: {
-    titulo: 'Orientación investigativa y diagnóstica',
-    cuerpo: 'Esta respuesta aparece en perfiles con pensamiento crítico, capacidad de diagnóstico y orientación a la mejora continua.',
+    titulo: 'Pocos eligen esto. Y cuando lo hacen, el patrón suele sorprender.',
+    cuerpo: 'El test define con más precisión hacia dónde apunta esa orientación.',
   },
 };
 
@@ -82,20 +82,20 @@ function InteractiveCard({ onGetStartedClick }: { onGetStartedClick: () => void 
             transition={{ duration: 0.3, ease: [0.16, 1, 0.3, 1] }}
             className="mt-5 space-y-4"
           >
-            <div className="bg-slate-50 border border-slate-100 rounded-2xl px-4 py-4">
-              <p className="text-[10px] font-bold tracking-widest uppercase mb-1 text-slate-500">
+            <div className="bg-[#07111F] rounded-2xl px-4 py-4">
+              <p className="text-[13px] font-bold text-white leading-snug mb-1.5">
                 {feedbacks[seleccionada].titulo}
               </p>
-              <p className="text-[12.5px] text-slate-600 font-medium leading-relaxed">
+              <p className="text-[12.5px] font-medium leading-relaxed" style={{ color: 'rgba(255,255,255,0.55)' }}>
                 {feedbacks[seleccionada].cuerpo}
               </p>
             </div>
 
             <button
               onClick={onGetStartedClick}
-              className="w-full py-3.5 bg-[#07111F] text-white font-display text-[14px] font-black tracking-wide rounded-full hover:bg-brand-lime hover:text-slate-950 hover:scale-[1.02] active:scale-[0.97] transition-[background-color,color,transform,box-shadow] duration-200 shadow-[0_10px_28px_rgba(5,8,22,0.18)]"
+              className="w-full py-3.5 bg-brand-lime text-slate-950 font-display text-[14px] font-black tracking-wide rounded-full hover:bg-[#07111F] hover:text-white hover:scale-[1.02] active:scale-[0.97] transition-[background-color,color,transform,box-shadow] duration-200 shadow-[0_10px_28px_rgba(213,255,63,0.20)]"
             >
-              Seguir con mi test →
+              Ver mi resultado completo →
             </button>
           </motion.div>
         )}

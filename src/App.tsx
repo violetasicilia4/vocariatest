@@ -9,7 +9,7 @@ import MuestraTest from './components/MuestraTest';
 import ComoFunciona from './components/ComoFunciona';
 import CierreCTA from './components/CierreCTA';
 import FAQSection from './components/FAQSection';
-import TestimonialsSection from './components/TestimonialsSection';
+import IdentificacionSection from './components/IdentificacionSection';
 
 export default function App() {
   const [contactOpen, setContactOpen] = useState(false);
@@ -21,26 +21,26 @@ export default function App() {
 
       <main id="main-content">
 
-        {/* Hero — problema + CTA */}
+        {/* Hero — propuesta de valor + CTA */}
         <HeroSection onGetStartedClick={() => setContactOpen(true)} />
 
-        {/* Confianza: universidades argentinas analizadas */}
-        <LogoBanner />
-
-        {/* El problema real — frases de identificación */}
+        {/* Identificación emocional — el usuario se reconoce */}
         <NarrativaSection onGetStartedClick={() => setContactOpen(true)} />
 
-        {/* Cómo funciona — metodología de situaciones */}
-        <ComoFunciona />
-
-        {/* Pregunta real del test — demo interactiva */}
+        {/* Demo interactiva — la sección más poderosa */}
         <MuestraTest onGetStartedClick={() => setContactOpen(true)} />
 
-        {/* Casos reales — qué encontraron otros */}
-        <TestimonialsSection />
+        {/* Metodología — contexto para quien necesita entender el "cómo" */}
+        <ComoFunciona />
 
-        {/* Preguntas frecuentes */}
+        {/* Perfiles de identificación — "¿Esto te suena?" */}
+        <IdentificacionSection onGetStartedClick={() => setContactOpen(true)} />
+
+        {/* Preguntas frecuentes — resolver las últimas fricciones */}
         <FAQSection />
+
+        {/* Respaldo institucional — cerca del cierre, no al principio */}
+        <LogoBanner />
 
         {/* CTA de cierre */}
         <CierreCTA onGetStartedClick={() => setContactOpen(true)} />

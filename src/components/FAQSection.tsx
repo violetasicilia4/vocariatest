@@ -7,12 +7,12 @@ const faqs = [
     respuesta: 'Entre 5 y 7 minutos. Las preguntas son situacionales y no tienen respuestas correctas.',
   },
   {
-    pregunta: '¿Es gratis empezar?',
-    respuesta: 'Sí. El test es gratuito. Al final recibís un resultado con tu perfil, carreras y próximos pasos.',
-  },
-  {
     pregunta: '¿El resultado me dice exactamente qué estudiar?',
     respuesta: 'No. Te muestra tu patrón y las carreras que más encajan con cómo pensás. La decisión sigue siendo tuya.',
+  },
+  {
+    pregunta: '¿Esto reemplaza a un orientador vocacional?',
+    respuesta: 'No. Vocaria da un punto de partida: organiza señales que muchas veces están pero no son visibles. Un orientador puede profundizar desde ahí con mucho más contexto.',
   },
 ];
 

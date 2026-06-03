@@ -27,7 +27,7 @@ export default function CierreCTA({ onGetStartedClick }: CierreCTAProps) {
           </h2>
 
           <p className="font-display text-xl sm:text-2xl font-normal tracking-tight" style={{ color: 'rgba(255,255,255,0.5)' }}>
-            Un resultado que tiene lógica detrás.
+            Después, algo se ordena.
           </p>
         </motion.div>
 
