@@ -66,7 +66,7 @@ export default function HeroSection({ onGetStartedClick }: HeroSectionProps) {
           {/* Subtítulo — apoyo, no protagonista */}
           <motion.p
             variants={itemVariants}
-            className="text-[12px] max-w-[260px] mb-3 leading-snug font-medium"
+            className="text-[12px] w-full mb-3 leading-snug font-medium"
             style={{ color: 'rgba(255,255,255,0.78)', textShadow: '0 1px 12px rgba(10,30,60,0.30)' }}
           >
             Respondé un test basado en situaciones reales y recibí carreras, universidades y próximos pasos.
