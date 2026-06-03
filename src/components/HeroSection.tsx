@@ -187,21 +187,11 @@ export default function HeroSection({ onGetStartedClick }: HeroSectionProps) {
                 Empezar mi test vocacional
               </button>
 
-              {/* Trust pills — centradas bajo el botón */}
+              {/* Trust pills — texto plano, centrado bajo el botón */}
               <div className="flex items-center gap-2">
-                {['Resultado personalizado', 'Sin registro previo'].map(item => (
-                  <span
-                    key={item}
-                    className="text-[8px] font-medium tracking-wide rounded-full px-1.5 py-px"
-                    style={{
-                      background: 'rgba(255,255,255,0.50)',
-                      border: '0.5px solid rgba(255,255,255,0.25)',
-                      color: 'rgba(15,25,50,0.60)',
-                    }}
-                  >
-                    {item}
-                  </span>
-                ))}
+                <span className="text-[11px] font-medium" style={{ color: 'rgba(20,30,55,0.55)' }}>✓ Resultado personalizado</span>
+                <span className="text-[11px] font-medium" style={{ color: 'rgba(20,30,55,0.28)' }}>·</span>
+                <span className="text-[11px] font-medium" style={{ color: 'rgba(20,30,55,0.55)' }}>✓ Sin registro previo</span>
               </div>
             </motion.div>
           </motion.div>
