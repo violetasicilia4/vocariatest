@@ -110,24 +110,6 @@ export default function TestimonialsSection() {
             Lo que encontraron otros.
           </h2>
 
-          <div className="hidden sm:flex items-center gap-2">
-            <button
-              onClick={() => scrollByCard(-1)}
-              disabled={activeIndex === 0}
-              aria-label="Anterior"
-              className="w-9 h-9 rounded-full border border-white/15 flex items-center justify-center text-white/50 hover:text-white hover:border-white/30 disabled:opacity-20 active:scale-[0.95] transition-[color,border-color,transform] duration-150"
-            >
-              <ChevronLeft className="w-4 h-4" />
-            </button>
-            <button
-              onClick={() => scrollByCard(1)}
-              disabled={activeIndex === testimonios.length - 1}
-              aria-label="Siguiente"
-              className="w-9 h-9 rounded-full border border-white/15 flex items-center justify-center text-white/50 hover:text-white hover:border-white/30 disabled:opacity-20 active:scale-[0.95] transition-[color,border-color,transform] duration-150"
-            >
-              <ChevronRight className="w-4 h-4" />
-            </button>
-          </div>
         </motion.div>
 
         {/* Desktop: grilla 4 columnas sin scroll */}
