@@ -6,14 +6,14 @@ interface CierreCTAProps {
 
 export default function CierreCTA({ onGetStartedClick }: CierreCTAProps) {
   return (
-    <section className="px-4 sm:px-8 pb-0 pt-14 sm:pt-20" style={{ background: '#ffffff' }}>
+    <section className="pb-0 pt-14 sm:pt-20" style={{ background: '#ffffff' }}>
       {/* Card flotante — mismo estilo que referencia */}
       <motion.div
         initial={{ opacity: 0, y: 20 }}
         whileInView={{ opacity: 1, y: 0 }}
         viewport={{ once: true }}
         transition={{ duration: 0.5 }}
-        className="w-full max-w-6xl mx-auto rounded-[24px] sm:rounded-[32px] relative overflow-hidden px-6 sm:px-16 py-12 sm:py-24 text-center"
+        className="w-[calc(100%-2rem)] sm:w-[calc(100%-4rem)] max-w-6xl mx-auto rounded-[24px] sm:rounded-[32px] relative overflow-hidden px-6 sm:px-16 py-12 sm:py-24 text-center"
         style={{ background: '#07111F' }}
       >
         {/* Lima accent line — top edge */}
