@@ -10,32 +10,39 @@ import ComoFunciona from './components/ComoFunciona';
 import CierreCTA from './components/CierreCTA';
 import FAQSection from './components/FAQSection';
 import TestimonialsSection from './components/TestimonialsSection';
+import TestFlow from './test/TestFlow';
 
 export default function App() {
   const [contactOpen, setContactOpen] = useState(false);
+  const [testOpen, setTestOpen] = useState(false);
 
   useEffect(() => {
     window.scrollTo({ top: 0, left: 0, behavior: 'instant' as ScrollBehavior });
   }, []);
 
+  const openTest = () => {
+    setContactOpen(false);
+    setTestOpen(true);
+  };
+
   return (
     <div className="relative min-h-screen bg-white overflow-hidden selection:bg-brand-lime selection:text-slate-950 font-sans antialiased text-[#0f172a]">
 
-      <Header onContactClick={() => setContactOpen(true)} />
+      <Header onContactClick={openTest} />
 
       <main id="main-content">
 
         {/* Hero — propuesta de valor + CTA */}
-        <HeroSection onGetStartedClick={() => setContactOpen(true)} />
+        <HeroSection onGetStartedClick={openTest} />
 
         {/* Respaldo institucional — ancla credibilidad temprana */}
         <LogoBanner />
 
         {/* Identificación emocional — el usuario se reconoce */}
-        <NarrativaSection onGetStartedClick={() => setContactOpen(true)} />
+        <NarrativaSection onGetStartedClick={openTest} />
 
         {/* Demo interactiva — la sección más poderosa */}
-        <MuestraTest onGetStartedClick={() => setContactOpen(true)} />
+        <MuestraTest onGetStartedClick={openTest} />
 
         {/* Prueba social — casos reales de otros usuarios */}
         <TestimonialsSection />
@@ -47,16 +54,20 @@ export default function App() {
         <FAQSection />
 
         {/* CTA de cierre */}
-        <CierreCTA onGetStartedClick={() => setContactOpen(true)} />
+        <CierreCTA onGetStartedClick={openTest} />
 
       </main>
 
-      <Footer onContactClick={() => setContactOpen(true)} />
+      <Footer onContactClick={openTest} />
 
       <ContactModal
         isOpen={contactOpen}
         onClose={() => setContactOpen(false)}
       />
+
+      {testOpen && (
+        <TestFlow onExit={() => setTestOpen(false)} />
+      )}
     </div>
   );
 }
