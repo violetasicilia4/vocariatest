@@ -21,7 +21,7 @@ export default function LogoBanner() {
   return (
     <section
       id="carreras"
-      className="py-6 md:py-8 overflow-hidden select-none relative border-t border-slate-100"
+      className="py-6 md:py-8 overflow-hidden select-none relative"
       style={{ background: '#ffffff' }}
     >
       {/* Fading masks */}
