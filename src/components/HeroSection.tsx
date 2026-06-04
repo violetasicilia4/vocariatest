@@ -248,7 +248,9 @@ export default function HeroSection({ onGetStartedClick }: HeroSectionProps) {
                             <span className="font-medium text-slate-700 text-[11px] leading-tight">{c.label}</span>
                             <span className="text-slate-400 text-[10px] font-medium leading-tight mt-0.5">{c.unis}</span>
                           </div>
-                          <span className={`font-mono text-[11px] shrink-0 mt-0.5 ${c.top ? 'text-[#07111F] font-bold' : 'text-slate-400'}`}>{c.pct}%</span>
+                          <span className={`text-[10px] shrink-0 mt-0.5 font-semibold ${c.top ? 'text-brand-lime bg-[#07111F] px-1.5 py-0.5 rounded' : 'text-slate-300'}`}>
+                            {c.top ? '↑ Top' : '—'}
+                          </span>
                         </div>
                         <div className="w-full h-[2px] bg-slate-100 rounded-full overflow-hidden">
                           <motion.div
