@@ -174,7 +174,8 @@ export default function HeroSection({ onGetStartedClick }: HeroSectionProps) {
               className="font-display text-[38px] xl:text-[44px] text-white font-black tracking-tight leading-[1.05] mb-5 max-w-xl"
               style={{ textShadow: '0 2px 20px rgba(10,30,60,0.35), 0 1px 4px rgba(10,30,60,0.25)' }}
             >
-              Descubrí qué carreras encajan con{' '}
+              Descubrí qué carreras<br />
+              encajan con{' '}
               <span className="underline decoration-[#d5ff3f] decoration-[4px] underline-offset-[5px]">cómo pensás.</span>
             </motion.h1>
 
