@@ -5,22 +5,22 @@ import { motion } from 'motion/react';
 const testimonios = [
   {
     texto: 'Venía cambiando de idea todo el tiempo. Me ayudó a poner un poco de orden entre tantas opciones.',
-    nombre: 'Martina',
+    nombre: 'Martina S.',
     edad: '18',
   },
   {
     texto: 'Sentía que tenía demasiada información y cada vez estaba más confundido. El informe me ayudó a bajar todo a tierra.',
-    nombre: 'Tomás',
+    nombre: 'Tomás R.',
     edad: '17',
   },
   {
     texto: 'Ya había arrancado una carrera y venía con dudas hace meses. Me sirvió para entender que no estaba dudando porque sí.',
-    nombre: 'Nicolás',
+    nombre: 'Nicolás M.',
     edad: '20',
   },
   {
     texto: 'Lo hice pensando que me iba a decir qué estudiar. Al final me ayudó más a entenderme a mí que a elegir una carrera puntual.',
-    nombre: 'Sofía',
+    nombre: 'Sofía L.',
     edad: '19',
   },
 ];
