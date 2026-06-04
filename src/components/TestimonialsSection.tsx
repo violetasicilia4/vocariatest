@@ -136,7 +136,7 @@ export default function TestimonialsSection() {
           whileInView={{ opacity: 1 }}
           viewport={{ once: true }}
           transition={{ duration: 0.5, delay: 0.1 }}
-          className=”hidden sm:grid sm:grid-cols-2 lg:grid-cols-4 gap-5”
+          className="hidden sm:grid sm:grid-cols-2 lg:grid-cols-4 gap-5"
         >
           {testimonios.map((t, i) => <TestimonioCard key={i} t={t} />)}
         </motion.div>
@@ -147,25 +147,25 @@ export default function TestimonialsSection() {
           whileInView={{ opacity: 1 }}
           viewport={{ once: true }}
           transition={{ duration: 0.5, delay: 0.1 }}
-          className=”sm:hidden”
+          className="sm:hidden"
         >
           <div
             ref={scrollRef}
             onScroll={handleScroll}
-            className=”flex overflow-x-auto snap-x snap-mandatory gap-5”
+            className="flex overflow-x-auto snap-x snap-mandatory gap-5"
             style={{ scrollbarWidth: 'none', WebkitOverflowScrolling: 'touch' }}
           >
             {testimonios.map((t, i) => (
-              <div key={i} data-card className=”snap-start shrink-0 w-[calc(100%-56px)]”>
+              <div key={i} data-card className="snap-start shrink-0 w-[calc(100%-56px)]">
                 <TestimonioCard t={t} />
               </div>
             ))}
-            <div className=”shrink-0 w-14” aria-hidden=”true” />
+            <div className="shrink-0 w-14" aria-hidden="true" />
           </div>
         </motion.div>
 
         {/* Dots mobile */}
-        <div className=”flex items-center justify-center gap-2 mt-5 sm:hidden”>
+        <div className="flex items-center justify-center gap-2 mt-5 sm:hidden">
           {testimonios.map((_, i) => (
             <button
               key={i}
