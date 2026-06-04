@@ -31,7 +31,7 @@ export default function LogoBanner() {
       <div className="max-w-7xl mx-auto px-6">
         <div className="flex flex-col items-center">
 
-          <p className="font-display font-bold text-[17px] sm:text-[19px] text-slate-700 mb-1 text-center select-none tracking-tight">
+          <p className="font-display font-bold text-[14px] sm:text-[15px] text-slate-700 mb-1 text-center select-none tracking-tight">
             Basado en carreras reales
           </p>
           <p className="text-[10px] sm:text-[11px] font-medium text-slate-400 mb-5 text-center select-none leading-relaxed">
