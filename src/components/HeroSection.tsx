@@ -152,14 +152,14 @@ export default function HeroSection({ onGetStartedClick }: HeroSectionProps) {
         {/* ==========================================
             DESKTOP (hidden lg:grid)
         ========================================== */}
-        <div className="hidden lg:grid lg:grid-cols-12 gap-12 xl:gap-16 items-center">
+        <div className="hidden lg:grid lg:grid-cols-12 gap-8 xl:gap-12 items-center">
 
           {/* Columna izquierda: texto */}
           <motion.div
             variants={containerVariants}
             initial="hidden"
             animate="visible"
-            className="lg:col-span-6 xl:col-span-6 flex flex-col items-start text-left"
+            className="lg:col-span-7 xl:col-span-7 flex flex-col items-start text-left"
           >
             {/* Badge orientación vocacional */}
             <motion.div variants={itemVariants} className="mb-5">
@@ -206,7 +206,7 @@ export default function HeroSection({ onGetStartedClick }: HeroSectionProps) {
           </motion.div>
 
           {/* Columna derecha: mockup de resultado */}
-          <div className="lg:col-span-6 xl:col-span-6 flex items-center justify-center relative pt-6">
+          <div className="lg:col-span-5 xl:col-span-5 flex items-center justify-center relative pt-6">
             <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[420px] h-[420px] bg-sky-200/30 blur-3xl rounded-full pointer-events-none" />
 
             <motion.div
