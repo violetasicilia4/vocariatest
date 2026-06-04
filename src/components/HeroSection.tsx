@@ -26,8 +26,13 @@ export default function HeroSection({ onGetStartedClick }: HeroSectionProps) {
   };
 
   const mobileVariants = {
-    hidden: { opacity: 0, y: 18 },
-    visible: { opacity: 1, y: 0, transition: { duration: 0.4, ease: 'easeOut' } },
+    hidden: { opacity: 0 },
+    visible: { opacity: 1, transition: { staggerChildren: 0.08, delayChildren: 0.05 } },
+  };
+
+  const mobileItemVariants = {
+    hidden: { opacity: 0, y: 12 },
+    visible: { opacity: 1, y: 0, transition: { duration: 0.3, ease: 'easeOut' } },
   };
 
   return (
@@ -56,7 +61,7 @@ export default function HeroSection({ onGetStartedClick }: HeroSectionProps) {
         >
 
           {/* H1 */}
-          <h1
+          <motion.h1 variants={mobileItemVariants}
             className="font-display text-[26px] tracking-tight leading-[1.1] mb-4 w-full"
             style={{ textShadow: '0 2px 20px rgba(10,30,60,0.35), 0 1px 4px rgba(10,30,60,0.25)' }}
           >
@@ -65,35 +70,35 @@ export default function HeroSection({ onGetStartedClick }: HeroSectionProps) {
               encajan con{' '}
               <span className="underline decoration-[#d5ff3f] decoration-[4px] underline-offset-[5px]">cómo pensás.</span>
             </span>
-          </h1>
+          </motion.h1>
 
           {/* Subtítulo */}
-          <p
+          <motion.p variants={mobileItemVariants}
             className="text-[12px] w-full mb-3 leading-snug font-medium"
             style={{ color: 'rgba(255,255,255,0.78)', textShadow: '0 1px 12px rgba(10,30,60,0.30)' }}
           >
             Respondé un test basado en situaciones reales y recibí carreras, universidades y próximos pasos.
-          </p>
+          </motion.p>
 
           {/* CTA principal */}
-          <div className="w-full mb-3">
+          <motion.div variants={mobileItemVariants} className="w-full mb-3">
             <button
               onClick={onGetStartedClick}
               className="w-full py-3.5 bg-[#07111F] text-white font-display text-[15px] font-black tracking-wide rounded-full hover:bg-brand-lime hover:text-slate-950 active:scale-[0.97] transition-[background-color,color,transform] duration-200 flex items-center justify-center shadow-[0_14px_32px_rgba(5,8,22,0.22)]"
             >
               Empezar mi test vocacional
             </button>
-          </div>
+          </motion.div>
 
           {/* Trust pills */}
-          <div className="flex items-center justify-center gap-3 mb-4">
+          <motion.div variants={mobileItemVariants} className="flex items-center justify-center gap-3 mb-4">
             <span className="text-[11px] font-medium" style={{ color: 'rgba(255,255,255,0.65)' }}>✓ Resultado personalizado</span>
             <span className="text-[11px] font-medium" style={{ color: 'rgba(255,255,255,0.28)' }}>·</span>
             <span className="text-[11px] font-medium" style={{ color: 'rgba(255,255,255,0.65)' }}>✓ Sin registro previo</span>
-          </div>
+          </motion.div>
 
           {/* Preview de resultado */}
-          <div className="w-full">
+          <motion.div variants={mobileItemVariants} className="w-full">
             <div className="flex justify-center mb-2">
               <span className="text-[10px] font-medium tracking-widest uppercase" style={{ color: 'rgba(255,255,255,0.55)' }}>
                 Así se ve tu resultado
@@ -145,7 +150,7 @@ export default function HeroSection({ onGetStartedClick }: HeroSectionProps) {
                 </div>
               </div>
             </div>
-          </div>
+          </motion.div>
 
         </motion.div>
 
