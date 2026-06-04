@@ -25,6 +25,11 @@ export default function HeroSection({ onGetStartedClick }: HeroSectionProps) {
     },
   };
 
+  const mobileVariants = {
+    hidden: { opacity: 0, y: 18 },
+    visible: { opacity: 1, y: 0, transition: { duration: 0.4, ease: 'easeOut' } },
+  };
+
   return (
     <section
       id="home"
@@ -44,15 +49,14 @@ export default function HeroSection({ onGetStartedClick }: HeroSectionProps) {
             MOBILE (lg:hidden) — jerarquía limpia
         ========================================== */}
         <motion.div
-          variants={containerVariants}
+          variants={mobileVariants}
           initial="hidden"
           animate="visible"
           className="lg:hidden flex flex-col items-center text-center w-full max-w-[340px] mx-auto pt-2 pb-0"
         >
 
-          {/* H1 — específico, no genérico */}
-          <motion.h1
-            variants={itemVariants}
+          {/* H1 */}
+          <h1
             className="font-display text-[26px] tracking-tight leading-[1.1] mb-4 w-full"
             style={{ textShadow: '0 2px 20px rgba(10,30,60,0.35), 0 1px 4px rgba(10,30,60,0.25)' }}
           >
@@ -61,46 +65,42 @@ export default function HeroSection({ onGetStartedClick }: HeroSectionProps) {
               encajan con{' '}
               <span className="underline decoration-[#d5ff3f] decoration-[4px] underline-offset-[5px]">cómo pensás.</span>
             </span>
-          </motion.h1>
+          </h1>
 
-          {/* Subtítulo — apoyo, no protagonista */}
-          <motion.p
-            variants={itemVariants}
+          {/* Subtítulo */}
+          <p
             className="text-[12px] w-full mb-3 leading-snug font-medium"
             style={{ color: 'rgba(255,255,255,0.78)', textShadow: '0 1px 12px rgba(10,30,60,0.30)' }}
           >
             Respondé un test basado en situaciones reales y recibí carreras, universidades y próximos pasos.
-          </motion.p>
+          </p>
 
           {/* CTA principal */}
-          <motion.div variants={itemVariants} className="w-full mb-3">
+          <div className="w-full mb-3">
             <button
               onClick={onGetStartedClick}
               className="w-full py-3.5 bg-[#07111F] text-white font-display text-[15px] font-black tracking-wide rounded-full hover:bg-brand-lime hover:text-slate-950 active:scale-[0.97] transition-[background-color,color,transform] duration-200 flex items-center justify-center shadow-[0_14px_32px_rgba(5,8,22,0.22)]"
             >
               Empezar mi test vocacional
             </button>
-          </motion.div>
+          </div>
 
-          {/* Trust pills — una línea, sin ruido */}
-          <motion.div variants={itemVariants} className="flex items-center justify-center gap-3 mb-4">
+          {/* Trust pills */}
+          <div className="flex items-center justify-center gap-3 mb-4">
             <span className="text-[11px] font-medium" style={{ color: 'rgba(255,255,255,0.65)' }}>✓ Resultado personalizado</span>
             <span className="text-[11px] font-medium" style={{ color: 'rgba(255,255,255,0.28)' }}>·</span>
             <span className="text-[11px] font-medium" style={{ color: 'rgba(255,255,255,0.65)' }}>✓ Sin registro previo</span>
-          </motion.div>
+          </div>
 
           {/* Preview de resultado */}
-          <motion.div variants={itemVariants} className="w-full">
+          <div className="w-full">
             <div className="flex justify-center mb-2">
               <span className="text-[10px] font-medium tracking-widest uppercase" style={{ color: 'rgba(255,255,255,0.55)' }}>
                 Así se ve tu resultado
               </span>
             </div>
 
-            <motion.div
-              initial={{ opacity: 0, scale: 0.95, y: 16 }}
-              animate={{ opacity: 1, scale: 1, y: 0 }}
-              transition={{ duration: 0.55, type: 'spring', stiffness: 80, damping: 18, delay: 0.65 }}
+            <div
               className="w-full bg-white rounded-[20px] border border-slate-100 text-left relative overflow-hidden"
               style={{ boxShadow: '0 12px 40px rgba(30,60,100,0.12)' }}
             >
@@ -144,8 +144,8 @@ export default function HeroSection({ onGetStartedClick }: HeroSectionProps) {
                   ))}
                 </div>
               </div>
-            </motion.div>
-          </motion.div>
+            </div>
+          </div>
 
         </motion.div>
 
