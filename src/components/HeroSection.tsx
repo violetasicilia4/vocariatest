@@ -222,8 +222,7 @@ export default function HeroSection({ onGetStartedClick }: HeroSectionProps) {
             >
               {/* Etiqueta preview — deja claro que es un ejemplo */}
               <div className="flex justify-center mb-2.5">
-                <span className="inline-flex items-center gap-1.5 text-[10px] font-semibold tracking-widest uppercase px-3 py-1 rounded-full border border-white/20 bg-white/10 backdrop-blur-sm" style={{ color: 'rgba(255,255,255,0.65)' }}>
-                  <span className="w-1 h-1 rounded-full bg-white/50" />
+                <span className="text-[10px] font-semibold tracking-widest uppercase" style={{ color: 'rgba(255,255,255,0.55)' }}>
                   Ejemplo de resultado
                 </span>
               </div>
