@@ -6,7 +6,7 @@ interface CierreCTAProps {
 
 export default function CierreCTA({ onGetStartedClick }: CierreCTAProps) {
   return (
-    <section className="pb-0 pt-14 sm:pt-20" style={{ background: '#ffffff' }}>
+    <section className="py-14 sm:py-20" style={{ background: '#ffffff' }}>
       {/* Card flotante — mismo estilo que referencia */}
       <motion.div
         initial={{ opacity: 0, y: 20 }}

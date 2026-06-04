@@ -47,8 +47,6 @@ export default function App() {
 
       </main>
 
-      {/* Footer con bordes superiores redondeados, separado de la card por un espacio blanco */}
-      <div className="h-6 bg-white" />
       <Footer onContactClick={() => setContactOpen(true)} />
 
       <ContactModal
