@@ -28,7 +28,7 @@ export default function HeroSection({ onGetStartedClick }: HeroSectionProps) {
   return (
     <section
       id="home"
-      className="relative pt-16 pb-10 lg:pt-28 lg:pb-24 overflow-hidden rounded-b-[56px] md:rounded-b-[80px] flex flex-col justify-start lg:justify-center text-slate-900 bg-sky-50"
+      className="relative pt-16 pb-4 lg:pt-28 lg:pb-24 overflow-hidden rounded-b-[56px] md:rounded-b-[80px] flex flex-col justify-start lg:justify-center text-slate-900 bg-sky-50"
       style={{
         backgroundImage: `linear-gradient(to bottom, rgba(111,159,202,0.97) 0%, rgba(159,210,241,0.93) 52%, rgba(221,247,255,0.90) 100%), url(${IMAGES.heroClouds})`,
         backgroundSize: 'cover',
@@ -47,7 +47,7 @@ export default function HeroSection({ onGetStartedClick }: HeroSectionProps) {
           variants={containerVariants}
           initial="hidden"
           animate="visible"
-          className="lg:hidden flex flex-col items-center text-center w-full max-w-[340px] mx-auto pt-2 pb-4"
+          className="lg:hidden flex flex-col items-center text-center w-full max-w-[340px] mx-auto pt-2 pb-0"
         >
 
           {/* H1 — específico, no genérico */}
