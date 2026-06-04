@@ -125,7 +125,7 @@ export default function MuestraTest({ onGetStartedClick }: MuestraTestProps) {
               Probá una pregunta real.
             </h2>
             <p className="text-sm text-slate-400 font-medium leading-relaxed">
-              Sin respuestas correctas. Tu patrón emerge de las situaciones.
+              Sin respuestas correctas.
             </p>
           </motion.div>
           <motion.div
@@ -155,7 +155,7 @@ export default function MuestraTest({ onGetStartedClick }: MuestraTestProps) {
               Probá una pregunta real.
             </h2>
             <p className="text-slate-400 text-sm font-medium leading-relaxed">
-              Sin respuestas correctas. Tu patrón emerge de las situaciones.
+              Sin respuestas correctas.
             </p>
           </motion.div>
 
