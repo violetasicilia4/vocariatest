@@ -16,8 +16,6 @@ export default function CierreCTA({ onGetStartedClick }: CierreCTAProps) {
         className="w-[calc(100%-2rem)] sm:w-[calc(100%-4rem)] max-w-6xl mx-auto rounded-[24px] sm:rounded-[32px] relative overflow-hidden px-6 sm:px-16 py-12 sm:py-24 text-center"
         style={{ background: '#07111F' }}
       >
-        {/* Lima accent line — top edge */}
-        <div className="absolute top-0 left-0 right-0 h-[2px]" style={{ background: '#d5ff3f' }} />
 
         <motion.div
           initial={{ opacity: 0, y: 16 }}

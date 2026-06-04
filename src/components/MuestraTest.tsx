@@ -36,8 +36,8 @@ function InteractiveCard({ onGetStartedClick }: { onGetStartedClick: () => void 
 
   return (
     <div
-      className="bg-white rounded-[20px] border-2 border-brand-lime p-6 sm:p-8"
-      style={{ boxShadow: '0 4px 28px rgba(20,60,100,0.10), 0 0 0 4px rgba(213,255,63,0.12)' }}
+      className="bg-white rounded-[20px] border border-slate-200 p-6 sm:p-8"
+      style={{ boxShadow: '0 4px 28px rgba(20,60,100,0.12)' }}
     >
       <p className="font-display font-semibold text-[15px] sm:text-base text-slate-800 leading-snug mb-6">
         Imaginá tu primer día en algo nuevo.
@@ -61,7 +61,7 @@ function InteractiveCard({ onGetStartedClick }: { onGetStartedClick: () => void 
               <span
                 className="font-mono text-[11px] font-bold shrink-0 w-5 h-5 rounded-full flex items-center justify-center"
                 style={activa
-                  ? { background: '#d5ff3f', color: '#0d1b2e' }
+                  ? { background: '#BFDBFE', color: '#1e3a5f' }
                   : { color: '#94a3b8' }
                 }
               >

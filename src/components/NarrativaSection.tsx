@@ -17,7 +17,8 @@ export default function NarrativaSection({ onGetStartedClick }: NarrativaSection
   return (
     <section
       aria-labelledby="narrativa-heading"
-      className="py-10 sm:py-16 bg-white relative overflow-hidden border-b border-slate-100"
+      className="py-10 sm:py-16 relative overflow-hidden border-b border-slate-100"
+      style={{ background: 'linear-gradient(to bottom, rgba(159,210,241,0.07) 0%, #ffffff 60%)' }}
     >
       <div className="max-w-5xl mx-auto px-6 relative z-10">
 

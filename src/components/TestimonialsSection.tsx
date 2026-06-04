@@ -50,7 +50,7 @@ function TestimonioCard({ t }: { t: typeof testimonios[0] }) {
           className="w-8 h-8 rounded-full bg-[#0e1118] flex items-center justify-center shrink-0"
           style={{ boxShadow: '0 0 0 2px rgba(213,255,63,0.18)' }}
         >
-          <span className="font-display font-black text-[10px] text-brand-lime tracking-wide">
+          <span className="font-display font-black text-[10px] text-white tracking-wide">
             {getInitials(t.nombre)}
           </span>
         </div>

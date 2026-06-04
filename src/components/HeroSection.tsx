@@ -169,7 +169,7 @@ export default function HeroSection({ onGetStartedClick }: HeroSectionProps) {
             {/* Badge orientación vocacional */}
             <motion.div variants={itemVariants} className="mb-5">
               <span className="inline-flex items-center gap-2 border border-white/25 bg-white/10 backdrop-blur-sm text-white/90 text-[11px] font-bold tracking-widest uppercase px-4 py-1.5 rounded-full">
-                <span className="w-1.5 h-1.5 rounded-full bg-[#d5ff3f] shrink-0" />
+                <span className="w-1.5 h-1.5 rounded-full bg-white/70 shrink-0" />
                 Orientación vocacional
               </span>
             </motion.div>

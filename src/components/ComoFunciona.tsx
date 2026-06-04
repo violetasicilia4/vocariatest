@@ -55,7 +55,7 @@ export default function ComoFunciona() {
                   : ''
               } ${i < 2 ? 'sm:pr-10' : ''}`}
             >
-              <span className="font-mono font-black text-[48px] sm:text-[56px] leading-none text-slate-200 block mb-5">
+              <span className="font-mono font-black text-[48px] sm:text-[56px] leading-none block mb-5" style={{ color: 'rgba(159,210,241,0.5)' }}>
                 {p.n}
               </span>
               <h3 className="font-display font-extrabold text-[17px] sm:text-[18px] text-slate-900 mb-2 leading-tight">
