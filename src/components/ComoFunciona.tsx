@@ -20,7 +20,7 @@ const pasos = [
 
 export default function ComoFunciona() {
   return (
-    <section id="como-funciona" aria-labelledby="como-funciona-heading" className="pt-8 pb-4 sm:pt-10 sm:pb-6 bg-white">
+    <section id="como-funciona" aria-labelledby="como-funciona-heading" className="pt-8 pb-4 sm:pt-12 sm:pb-8 bg-white">
       <div className="max-w-5xl mx-auto px-6">
 
         {/* ── HEADLINE ─────────────────────────────────── */}
