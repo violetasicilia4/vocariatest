@@ -33,7 +33,7 @@ export default function Header({ onContactClick }: HeaderProps) {
       <div className="max-w-7xl mx-auto px-6 flex items-center justify-between">
 
         {/* Logo */}
-        <a href="#home" className="flex items-center gap-2.5 group focus:outline-none">
+        <a href="#home" className={`flex items-center gap-2.5 group focus:outline-none ${scrolled ? 'text-slate-900' : 'text-white'}`}>
           <LogoIcon size={28} />
           <div className="flex flex-col">
             <span className={`font-display font-bold text-[15px] tracking-tight leading-none ${scrolled ? 'text-slate-900' : 'text-white'}`}>
