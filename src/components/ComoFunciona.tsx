@@ -30,7 +30,7 @@ export default function ComoFunciona() {
           viewport={{ once: true }}
           transition={{ duration: 0.45 }}
           id="como-funciona-heading"
-          className="font-display text-2xl sm:text-4xl tracking-tight leading-[1.15] mb-10 sm:mb-14 max-w-lg"
+          className="font-display text-2xl sm:text-4xl tracking-tight leading-[1.15] mb-10 sm:mb-14 max-w-2xl"
         >
           <span className="font-normal block text-slate-400 mb-0.5">
             No te preguntamos qué te gusta.
