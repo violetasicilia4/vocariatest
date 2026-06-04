@@ -106,7 +106,7 @@ function InteractiveCard({ onGetStartedClick }: { onGetStartedClick: () => void 
 
 export default function MuestraTest({ onGetStartedClick }: MuestraTestProps) {
   return (
-    <section id="preview" aria-labelledby="muestra-heading" className="py-10 sm:py-16" style={{ background: '#F8FAFC' }}>
+    <section id="preview" aria-labelledby="muestra-heading" className="py-10 sm:py-16" style={{ background: '#F1F5F9' }}>
       <div className="max-w-5xl mx-auto px-6">
 
         {/* ── MOBILE ───────────────────────────────────── */}

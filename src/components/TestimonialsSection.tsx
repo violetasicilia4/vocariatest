@@ -35,13 +35,13 @@ function TestimonioCard({ t }: { t: typeof testimonios[0] }) {
       className="bg-white rounded-2xl p-5 flex flex-col h-full"
       style={{ boxShadow: '0 4px 24px rgba(0,0,0,0.20)' }}
     >
-      <span
-        className="font-display font-black text-[#0e1118] select-none block mb-3"
-        style={{ fontSize: '42px', lineHeight: '0.85' }}
+      <div
+        className="font-display font-black text-[#0e1118] select-none mb-3 leading-none"
+        style={{ fontSize: '48px', lineHeight: '0.75' }}
         aria-hidden="true"
       >
-        {'"'}
-      </span>
+        &ldquo;
+      </div>
       <p className="font-display text-[14px] font-medium text-slate-800 leading-relaxed flex-1 mb-5">
         {t.texto}
       </p>
