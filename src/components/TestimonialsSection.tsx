@@ -4,33 +4,62 @@ import { motion } from 'motion/react';
 
 const testimonios = [
   {
-    texto: 'No me dijo qué estudiar. Me ayudó a entender por qué me atraían opciones tan distintas.',
-    nombre: 'Valentina M.',
+    texto: 'Venía cambiando de idea todo el tiempo. Me ayudó a poner un poco de orden entre tantas opciones.',
+    nombre: 'Martina',
     edad: '18',
-    carrera: 'Comunicación Estratégica · UCES',
   },
   {
-    texto: 'Pensé que estaba eligiendo entre tres carreras. Resultaron tener algo en común.',
-    nombre: 'Nicolás R.',
-    edad: '24',
-    carrera: 'Administración de Empresas · UBA',
+    texto: 'Sentía que tenía demasiada información y cada vez estaba más confundido. El informe me ayudó a bajar todo a tierra.',
+    nombre: 'Tomás',
+    edad: '17',
   },
   {
-    texto: 'No salí con una respuesta definitiva. Salí con menos ruido.',
-    nombre: 'Lucía T.',
-    edad: '21',
-    carrera: 'Ciencia de Datos · ITBA',
+    texto: 'Ya había arrancado una carrera y venía con dudas hace meses. Me sirvió para entender que no estaba dudando porque sí.',
+    nombre: 'Nicolás',
+    edad: '20',
   },
   {
-    texto: 'Lo más útil fue entender por qué estaba trabado, no descubrir adónde ir.',
-    nombre: 'Martín E.',
-    edad: '22',
-    carrera: 'Diseño UX/UI · UADE',
+    texto: 'Lo hice pensando que me iba a decir qué estudiar. Al final me ayudó más a entenderme a mí que a elegir una carrera puntual.',
+    nombre: 'Sofía',
+    edad: '19',
   },
 ];
 
 function getInitials(nombre: string): string {
   return nombre.split(' ').map((w) => w[0]).join('').slice(0, 2).toUpperCase();
+}
+
+function TestimonioCard({ t }: { t: typeof testimonios[0] }) {
+  return (
+    <div
+      className="bg-white rounded-2xl p-5 flex flex-col h-full"
+      style={{ boxShadow: '0 4px 24px rgba(0,0,0,0.20)' }}
+    >
+      <span
+        className="font-display font-black text-[#0e1118] select-none block mb-3"
+        style={{ fontSize: '42px', lineHeight: '0.85' }}
+        aria-hidden="true"
+      >
+        {'"'}
+      </span>
+      <p className="font-display text-[14px] font-medium text-slate-800 leading-relaxed flex-1 mb-5">
+        {t.texto}
+      </p>
+      <div className="flex items-center gap-3 pt-4 border-t border-slate-100">
+        <div
+          className="w-8 h-8 rounded-full bg-[#0e1118] flex items-center justify-center shrink-0"
+          style={{ boxShadow: '0 0 0 2px rgba(213,255,63,0.18)' }}
+        >
+          <span className="font-display font-black text-[10px] text-brand-lime tracking-wide">
+            {getInitials(t.nombre)}
+          </span>
+        </div>
+        <p className="font-display font-bold text-[13px] text-slate-900 leading-tight">
+          {t.nombre}, {t.edad} años
+        </p>
+      </div>
+    </div>
+  );
 }
 
 export default function TestimonialsSection() {
@@ -101,69 +130,42 @@ export default function TestimonialsSection() {
           </div>
         </motion.div>
 
-        {/* Carrusel */}
+        {/* Desktop: grilla 4 columnas sin scroll */}
         <motion.div
           initial={{ opacity: 0 }}
           whileInView={{ opacity: 1 }}
           viewport={{ once: true }}
           transition={{ duration: 0.5, delay: 0.1 }}
+          className=”hidden sm:grid sm:grid-cols-2 lg:grid-cols-4 gap-5”
+        >
+          {testimonios.map((t, i) => <TestimonioCard key={i} t={t} />)}
+        </motion.div>
+
+        {/* Mobile: carrusel con scroll */}
+        <motion.div
+          initial={{ opacity: 0 }}
+          whileInView={{ opacity: 1 }}
+          viewport={{ once: true }}
+          transition={{ duration: 0.5, delay: 0.1 }}
+          className=”sm:hidden”
         >
           <div
             ref={scrollRef}
             onScroll={handleScroll}
-            className="flex overflow-x-auto snap-x snap-mandatory gap-5"
+            className=”flex overflow-x-auto snap-x snap-mandatory gap-5”
             style={{ scrollbarWidth: 'none', WebkitOverflowScrolling: 'touch' }}
           >
             {testimonios.map((t, i) => (
-              <div
-                key={i}
-                data-card
-                className="snap-start shrink-0 w-[calc(100%-56px)] sm:w-[calc(100%-140px)] bg-white rounded-2xl p-5 sm:p-6 flex flex-col"
-                style={{ boxShadow: '0 4px 24px rgba(0,0,0,0.20)' }}
-              >
-                {/* Comilla — oscura para máximo contraste sobre blanco */}
-                <span
-                  className="font-display font-black text-[#0e1118] select-none block mb-3"
-                  style={{ fontSize: '42px', lineHeight: '0.85' }}
-                  aria-hidden="true"
-                >
-                  {'“'}
-                </span>
-
-                {/* Cita */}
-                <p className="font-display text-[15px] sm:text-[16px] font-medium text-slate-800 leading-relaxed flex-1 mb-5">
-                  {t.texto}
-                </p>
-
-                {/* Atribución */}
-                <div className="flex items-center gap-3 pt-4 border-t border-slate-100">
-                  <div
-                    className="w-8 h-8 rounded-full bg-[#0e1118] flex items-center justify-center shrink-0"
-                    style={{ boxShadow: '0 0 0 2px rgba(213,255,63,0.18)' }}
-                  >
-                    <span className="font-display font-black text-[10px] text-brand-lime tracking-wide">
-                      {getInitials(t.nombre)}
-                    </span>
-                  </div>
-                  <div className="min-w-0">
-                    <p className="font-display font-bold text-[13px] text-slate-900 leading-tight">
-                      {t.nombre}, {t.edad} años
-                    </p>
-                    <p className="text-[11px] text-slate-400 font-medium mt-0.5 leading-tight truncate">
-                      {t.carrera}
-                    </p>
-                  </div>
-                </div>
+              <div key={i} data-card className=”snap-start shrink-0 w-[calc(100%-56px)]”>
+                <TestimonioCard t={t} />
               </div>
             ))}
-
-            {/* Trailing spacer — permite que el último card haga snap correctamente */}
-            <div className="shrink-0 w-14 sm:w-[140px]" aria-hidden="true" />
+            <div className=”shrink-0 w-14” aria-hidden=”true” />
           </div>
         </motion.div>
 
         {/* Dots mobile */}
-        <div className="flex items-center justify-center gap-2 mt-5 sm:hidden">
+        <div className=”flex items-center justify-center gap-2 mt-5 sm:hidden”>
           {testimonios.map((_, i) => (
             <button
               key={i}
