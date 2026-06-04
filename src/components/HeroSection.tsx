@@ -201,11 +201,11 @@ export default function HeroSection({ onGetStartedClick }: HeroSectionProps) {
                 Empezar mi test vocacional
               </button>
 
-              {/* Trust pills — texto plano, centrado bajo el botón */}
+              {/* Trust pills — legibles bajo el botón */}
               <div className="flex items-center gap-2">
-                <span className="text-[9.5px] font-medium" style={{ color: 'rgba(255,255,255,0.65)' }}>✓ Resultado personalizado</span>
-                <span className="text-[9.5px] font-medium" style={{ color: 'rgba(255,255,255,0.28)' }}>·</span>
-                <span className="text-[9.5px] font-medium" style={{ color: 'rgba(255,255,255,0.65)' }}>✓ Sin registro previo</span>
+                <span className="text-[11px] font-semibold" style={{ color: 'rgba(255,255,255,0.85)' }}>✓ Resultado personalizado</span>
+                <span className="text-[11px] font-medium" style={{ color: 'rgba(255,255,255,0.35)' }}>·</span>
+                <span className="text-[11px] font-semibold" style={{ color: 'rgba(255,255,255,0.85)' }}>✓ Sin registro previo</span>
               </div>
             </motion.div>
           </motion.div>
@@ -218,9 +218,17 @@ export default function HeroSection({ onGetStartedClick }: HeroSectionProps) {
               initial={{ opacity: 0, scale: 0.95, y: 30 }}
               animate={{ opacity: 1, scale: 1, y: 0 }}
               transition={{ duration: 0.6, type: 'spring', stiffness: 80 }}
-              className="w-full max-w-[370px] relative hover:scale-[1.015] hover:shadow-[0_20px_60px_rgba(30,60,100,0.16)] transition-[transform,box-shadow] duration-500"
+              className="w-full max-w-[370px] relative"
             >
-              <div className="w-full bg-white rounded-[20px] border border-slate-100 text-left relative overflow-hidden" style={{ boxShadow: '0 12px 40px rgba(30,60,100,0.12)' }}>
+              {/* Etiqueta preview — deja claro que es un ejemplo */}
+              <div className="flex justify-center mb-2.5">
+                <span className="inline-flex items-center gap-1.5 text-[10px] font-semibold tracking-widest uppercase px-3 py-1 rounded-full border border-white/20 bg-white/10 backdrop-blur-sm" style={{ color: 'rgba(255,255,255,0.65)' }}>
+                  <span className="w-1 h-1 rounded-full bg-white/50" />
+                  Ejemplo de resultado
+                </span>
+              </div>
+
+              <div className="w-full bg-white rounded-[20px] border border-slate-100 text-left relative overflow-hidden pointer-events-none select-none" style={{ boxShadow: '0 12px 40px rgba(30,60,100,0.12)' }}>
 
                 <div className="px-4 pt-4 pb-3 border-b border-slate-100">
                   <div className="flex items-start justify-between gap-2 mb-1">
