@@ -6,7 +6,7 @@ interface FooterProps {
 
 export default function Footer({ onContactClick }: FooterProps) {
   return (
-    <footer className="bg-[#050c17] text-white py-10 border-t border-white/10">
+    <footer className="bg-[#07111F] text-white py-10 rounded-t-[28px] mt-0">
       <div className="max-w-5xl mx-auto px-6 flex flex-col sm:flex-row items-center justify-between gap-4">
 
         {/* Logo */}

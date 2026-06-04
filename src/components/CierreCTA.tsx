@@ -6,14 +6,18 @@ interface CierreCTAProps {
 
 export default function CierreCTA({ onGetStartedClick }: CierreCTAProps) {
   return (
-    <section
-      className="py-14 sm:py-24 relative overflow-hidden"
-      style={{ background: '#07111F' }}
-    >
-      {/* Lima accent line — top edge */}
-      <div className="absolute top-0 left-0 right-0 h-[2px]" style={{ background: '#d5ff3f' }} />
-
-      <div className="max-w-2xl mx-auto px-6 text-center relative z-10">
+    <section className="px-4 sm:px-8 pb-0 pt-14 sm:pt-20" style={{ background: '#ffffff' }}>
+      {/* Card flotante — mismo estilo que referencia */}
+      <motion.div
+        initial={{ opacity: 0, y: 20 }}
+        whileInView={{ opacity: 1, y: 0 }}
+        viewport={{ once: true }}
+        transition={{ duration: 0.5 }}
+        className="max-w-5xl mx-auto rounded-[28px] relative overflow-hidden px-8 sm:px-16 py-14 sm:py-20 text-center"
+        style={{ background: '#07111F' }}
+      >
+        {/* Lima accent line — top edge */}
+        <div className="absolute top-0 left-0 right-0 h-[2px]" style={{ background: '#d5ff3f' }} />
 
         <motion.div
           initial={{ opacity: 0, y: 16 }}
@@ -51,8 +55,7 @@ export default function CierreCTA({ onGetStartedClick }: CierreCTAProps) {
             Carreras · Universidades · Fortalezas · Próximos pasos
           </p>
         </motion.div>
-
-      </div>
+      </motion.div>
     </section>
   );
 }
