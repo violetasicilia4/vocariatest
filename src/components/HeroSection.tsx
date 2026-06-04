@@ -28,7 +28,7 @@ export default function HeroSection({ onGetStartedClick }: HeroSectionProps) {
   return (
     <section
       id="home"
-      className="relative pt-20 pb-10 lg:pt-32 lg:pb-32 overflow-hidden rounded-b-[56px] md:rounded-b-[80px] flex flex-col justify-start lg:justify-center text-slate-900 bg-sky-50"
+      className="relative pt-20 pb-10 lg:pt-24 lg:pb-20 overflow-hidden rounded-b-[56px] md:rounded-b-[80px] flex flex-col justify-start lg:justify-center text-slate-900 bg-sky-50"
       style={{
         backgroundImage: `linear-gradient(to bottom, rgba(111,159,202,0.97) 0%, rgba(159,210,241,0.93) 52%, rgba(221,247,255,0.90) 100%), url(${IMAGES.heroClouds})`,
         backgroundSize: 'cover',
@@ -171,7 +171,7 @@ export default function HeroSection({ onGetStartedClick }: HeroSectionProps) {
 
             <motion.h1
               variants={itemVariants}
-              className="font-display text-[52px] xl:text-[64px] text-white font-black tracking-tight leading-[1.02] mb-5 max-w-xl"
+              className="font-display text-[44px] xl:text-[52px] text-white font-black tracking-tight leading-[1.05] mb-5 max-w-lg"
               style={{ textShadow: '0 2px 20px rgba(10,30,60,0.35), 0 1px 4px rgba(10,30,60,0.25)' }}
             >
               Descubrí qué carreras encajan con{' '}
@@ -180,7 +180,7 @@ export default function HeroSection({ onGetStartedClick }: HeroSectionProps) {
 
             <motion.p
               variants={itemVariants}
-              className="text-[17px] leading-relaxed max-w-md mb-8 font-medium"
+              className="text-[15px] leading-relaxed max-w-md mb-8 font-medium"
               style={{ color: 'rgba(255,255,255,0.88)', textShadow: '0 1px 12px rgba(10,30,60,0.30)' }}
             >
               Respondé un test basado en situaciones reales y recibí carreras, universidades y próximos pasos.
