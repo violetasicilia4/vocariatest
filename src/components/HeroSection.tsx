@@ -28,7 +28,7 @@ export default function HeroSection({ onGetStartedClick }: HeroSectionProps) {
   return (
     <section
       id="home"
-      className="relative pt-16 pb-8 lg:pt-28 lg:pb-24 overflow-hidden rounded-b-[56px] md:rounded-b-[80px] flex flex-col justify-start lg:justify-center text-slate-900 bg-sky-50"
+      className="relative pt-20 pb-10 lg:pt-32 lg:pb-32 overflow-hidden rounded-b-[56px] md:rounded-b-[80px] flex flex-col justify-start lg:justify-center text-slate-900 bg-sky-50"
       style={{
         backgroundImage: `linear-gradient(to bottom, rgba(111,159,202,0.97) 0%, rgba(159,210,241,0.93) 52%, rgba(221,247,255,0.90) 100%), url(${IMAGES.heroClouds})`,
         backgroundSize: 'cover',
@@ -161,9 +161,17 @@ export default function HeroSection({ onGetStartedClick }: HeroSectionProps) {
             animate="visible"
             className="lg:col-span-6 xl:col-span-6 flex flex-col items-start text-left"
           >
+            {/* Badge orientación vocacional */}
+            <motion.div variants={itemVariants} className="mb-5">
+              <span className="inline-flex items-center gap-2 border border-white/25 bg-white/10 backdrop-blur-sm text-white/90 text-[11px] font-bold tracking-widest uppercase px-4 py-1.5 rounded-full">
+                <span className="w-1.5 h-1.5 rounded-full bg-[#d5ff3f] shrink-0" />
+                Orientación vocacional
+              </span>
+            </motion.div>
+
             <motion.h1
               variants={itemVariants}
-              className="font-display text-5xl xl:text-6xl text-white font-black tracking-tight leading-[1.05] mb-5 max-w-xl"
+              className="font-display text-[52px] xl:text-[64px] text-white font-black tracking-tight leading-[1.02] mb-5 max-w-xl"
               style={{ textShadow: '0 2px 20px rgba(10,30,60,0.35), 0 1px 4px rgba(10,30,60,0.25)' }}
             >
               Descubrí qué carreras encajan con{' '}
@@ -172,7 +180,7 @@ export default function HeroSection({ onGetStartedClick }: HeroSectionProps) {
 
             <motion.p
               variants={itemVariants}
-              className="text-base leading-relaxed max-w-md mb-8 font-medium"
+              className="text-[17px] leading-relaxed max-w-md mb-8 font-medium"
               style={{ color: 'rgba(255,255,255,0.88)', textShadow: '0 1px 12px rgba(10,30,60,0.30)' }}
             >
               Respondé un test basado en situaciones reales y recibí carreras, universidades y próximos pasos.
