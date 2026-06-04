@@ -171,7 +171,7 @@ export default function HeroSection({ onGetStartedClick }: HeroSectionProps) {
 
             <motion.h1
               variants={itemVariants}
-              className="font-display text-[36px] xl:text-[42px] text-white font-black tracking-tight leading-[1.05] mb-5"
+              className="font-display text-[32px] xl:text-[36px] text-white font-black tracking-tight leading-[1.05] mb-5"
               style={{ textShadow: '0 2px 20px rgba(10,30,60,0.35), 0 1px 4px rgba(10,30,60,0.25)' }}
             >
               Descubrí qué carreras<br />
