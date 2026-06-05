@@ -85,10 +85,7 @@ export function recomendar(
       ];
       const fitScore = cosineSim(riasecUser, riasecCarrera);
 
-      // Bonus por arquetipo compatible
       const arquetipoBonus = carrera.arquetipos_compatibles.includes(arquetipoId) ? 0.12 : 0;
-
-      // Bonus por mercado
       const mercadoBonus = carrera.mercado === 'en_expansion' ? 0.05
         : carrera.mercado === 'saturado' ? -0.05 : 0;
 
@@ -104,30 +101,29 @@ export function recomendar(
     })
     .sort((a, b) => b.score - a.score);
 
-  // Etiquetar y diversificar
+  // Diversity by familia — max 2 per familia in top results
   const resultado: CarreraRecomendada[] = [];
-  const areasUsadas: Record<string, number> = {};
+  const familiasUsadas: Record<string, number> = {};
 
   for (const item of scored) {
-    if (resultado.length >= 5) break;
+    if (resultado.length >= 6) break;
 
-    const area = item.carrera.area;
-    const countArea = areasUsadas[area] ?? 0;
+    const familia = item.carrera.familia;
+    const countFamilia = familiasUsadas[familia] ?? 0;
 
-    // No poner más de 2 carreras de la misma área en el top 5
-    if (countArea >= 2) continue;
+    if (countFamilia >= 2) continue;
 
-    areasUsadas[area] = countArea + 1;
+    familiasUsadas[familia] = countFamilia + 1;
     resultado.push({
       ...item,
       tag: resultado.length === 0 ? 'top' : 'alternativa',
     });
   }
 
-  // Agregar una "sorpresa" si hay espacio: carrera con fit ≥ 55 de área no representada
-  const areasEnResultado = new Set(resultado.map(r => r.carrera.area));
+  // Sorpresa: carrera con fit ≥ 55 de familia no representada
+  const familiasEnResultado = new Set(resultado.map(r => r.carrera.familia));
   const sorpresa = scored.find(
-    s => !areasEnResultado.has(s.carrera.area) && s.score >= 55 && !resultado.some(r => r.carrera.id === s.carrera.id)
+    s => !familiasEnResultado.has(s.carrera.familia) && s.score >= 55 && !resultado.some(r => r.carrera.id === s.carrera.id)
   );
   if (sorpresa) {
     resultado.push({ ...sorpresa, tag: 'sorpresa' });

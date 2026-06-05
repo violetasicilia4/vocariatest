@@ -3,27 +3,38 @@ import { motion } from 'motion/react';
 interface ProgressBarProps {
   current: number;
   total: number;
+  bloque?: string;
 }
 
-export default function ProgressBar({ current, total }: ProgressBarProps) {
+const bloqueLabel: Record<string, string> = {
+  contexto: 'Tu contexto',
+  actividad: 'Actividad y motivación',
+  entorno: 'Entorno de trabajo',
+  autoconocimiento: 'Autoconocimiento',
+  adaptativa: 'Afinando tu perfil',
+};
+
+export default function ProgressBar({ current, total, bloque }: ProgressBarProps) {
   const pct = Math.round((current / total) * 100);
 
   return (
     <div className="w-full">
       <div className="flex items-center justify-between mb-2">
-        <span className="text-[11px] font-semibold text-slate-400 font-mono">
-          {current} de {total}
-        </span>
-        <span className="text-[11px] font-bold text-slate-500 font-mono">
-          {pct}%
+        {bloque && (
+          <span className="text-[11px] font-semibold text-white/40 tracking-widest uppercase">
+            {bloqueLabel[bloque] ?? bloque}
+          </span>
+        )}
+        <span className="ml-auto text-[11px] font-mono text-white/30">
+          {current}/{total}
         </span>
       </div>
-      <div className="h-2 w-full rounded-full bg-slate-100 overflow-hidden">
+      <div className="h-[3px] w-full rounded-full bg-white/10 overflow-hidden">
         <motion.div
-          className="h-full rounded-full bg-[#07111F]"
+          className="h-full rounded-full bg-brand-lime"
           initial={{ width: 0 }}
           animate={{ width: `${pct}%` }}
-          transition={{ duration: 0.6, ease: [0.16, 1, 0.3, 1] }}
+          transition={{ duration: 0.5, ease: [0.16, 1, 0.3, 1] }}
         />
       </div>
     </div>
