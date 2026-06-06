@@ -57,12 +57,12 @@ export default function HeroSection({ onGetStartedClick }: HeroSectionProps) {
           variants={mobileVariants}
           initial="hidden"
           animate="visible"
-          className="lg:hidden flex flex-col items-center text-center w-full max-w-[340px] mx-auto pt-2 pb-0"
+          className="lg:hidden flex flex-col items-center text-center w-full max-w-[340px] mx-auto pt-2 pb-4"
         >
 
           {/* H1 */}
           <motion.h1 variants={mobileItemVariants}
-            className="font-display text-[26px] tracking-tight leading-[1.1] mb-4 w-full"
+            className="font-display text-[26px] tracking-tight leading-[1.1] mb-2.5 w-full"
             style={{ textShadow: '0 2px 20px rgba(10,30,60,0.35), 0 1px 4px rgba(10,30,60,0.25)' }}
           >
             <span className="font-black block text-white">
@@ -74,82 +74,82 @@ export default function HeroSection({ onGetStartedClick }: HeroSectionProps) {
 
           {/* Subtítulo */}
           <motion.p variants={mobileItemVariants}
-            className="text-[12px] w-full mb-3 leading-snug font-medium"
-            style={{ color: 'rgba(255,255,255,0.78)', textShadow: '0 1px 12px rgba(10,30,60,0.30)' }}
+            className="text-[11.5px] w-full mb-3 leading-snug font-medium"
+            style={{ color: 'rgba(255,255,255,0.75)', textShadow: '0 1px 12px rgba(10,30,60,0.30)' }}
           >
             Respondé un test basado en situaciones reales y recibí carreras, universidades y próximos pasos.
           </motion.p>
 
-          {/* CTA principal */}
-          <motion.div variants={mobileItemVariants} className="w-full mb-3">
-            <button
-              onClick={onGetStartedClick}
-              className="w-full py-3.5 bg-[#07111F] text-white font-display text-[15px] font-black tracking-wide rounded-full hover:bg-brand-lime hover:text-slate-950 active:scale-[0.97] transition-[background-color,color,transform] duration-200 flex items-center justify-center shadow-[0_14px_32px_rgba(5,8,22,0.22)]"
-            >
-              Empezar mi test vocacional
-            </button>
-          </motion.div>
-
-          {/* Trust pills */}
-          <motion.div variants={mobileItemVariants} className="flex items-center justify-center gap-3 mb-4">
-            <span className="text-[11px] font-medium" style={{ color: 'rgba(255,255,255,0.65)' }}>✓ Resultado personalizado</span>
-            <span className="text-[11px] font-medium" style={{ color: 'rgba(255,255,255,0.28)' }}>·</span>
-            <span className="text-[11px] font-medium" style={{ color: 'rgba(255,255,255,0.65)' }}>✓ Sin registro previo</span>
-          </motion.div>
-
-          {/* Preview de resultado */}
-          <motion.div variants={mobileItemVariants} className="w-full">
-            <div className="flex justify-center mb-2">
-              <span className="text-[10px] font-medium tracking-widest uppercase" style={{ color: 'rgba(255,255,255,0.55)' }}>
+          {/* Preview de resultado — prueba social de apoyo, escala reducida */}
+          <motion.div variants={mobileItemVariants} className="w-[78%] mx-auto mb-3 opacity-90">
+            <div className="flex justify-center mb-1.5">
+              <span className="text-[9px] font-medium tracking-widest uppercase" style={{ color: 'rgba(255,255,255,0.40)' }}>
                 Así se ve tu resultado
               </span>
             </div>
 
             <div
-              className="w-full bg-white rounded-[20px] border border-slate-100 text-left relative overflow-hidden"
-              style={{ boxShadow: '0 12px 40px rgba(30,60,100,0.12)' }}
+              className="w-full bg-white rounded-[14px] border border-slate-100 text-left relative overflow-hidden"
+              style={{ boxShadow: '0 6px 18px rgba(30,60,100,0.09)' }}
             >
-              <div className="px-4 pt-3 pb-2.5 border-b border-slate-100">
-                <div className="flex items-start justify-between gap-2 mb-1">
-                  <span className="text-slate-400 font-sans text-[10px] font-bold tracking-widest uppercase">Perfil de enfoque</span>
-                  <span className="bg-brand-lime text-[#07111F] text-[10px] font-black px-2.5 py-0.5 rounded-md tracking-wide shrink-0">Alta afinidad</span>
+              <div className="px-3 pt-2 pb-1.5 border-b border-slate-100">
+                <div className="flex items-start justify-between gap-2 mb-0.5">
+                  <span className="text-slate-400 font-sans text-[8.5px] font-bold tracking-widest uppercase">Perfil de enfoque</span>
+                  <span className="bg-brand-lime text-[#07111F] text-[8.5px] font-black px-1.5 py-0.5 rounded tracking-wide shrink-0">Alta afinidad</span>
                 </div>
-                <h4 className="text-[15px] font-extrabold text-slate-900 tracking-tight leading-tight mb-1">Exploradora Estratégica</h4>
-                <p className="text-[10px] text-slate-500 font-medium leading-snug mb-2">
-                  Combina pensamiento empático con alta capacidad directiva.
-                </p>
-                <div className="flex flex-wrap gap-1.5">
+                <h4 className="text-[12.5px] font-extrabold text-slate-900 tracking-tight leading-tight mb-0.5">Exploradora Estratégica</h4>
+                <div className="flex flex-wrap gap-1 mt-1">
                   {['Diseño', 'Gestión Digital', 'Administración'].map(tag => (
-                    <span key={tag} className="text-[10px] font-semibold text-slate-600 bg-slate-100 border border-slate-200 px-2.5 py-1 rounded-full">
+                    <span key={tag} className="text-[8.5px] font-semibold text-slate-500 bg-slate-100 border border-slate-200 px-1.5 py-0.5 rounded-full">
                       {tag}
                     </span>
                   ))}
                 </div>
               </div>
 
-              <div className="px-4 py-2.5">
-                <span className="text-slate-400 font-sans text-[10px] font-bold tracking-widest uppercase block mb-1.5">Carreras con mayor afinidad</span>
-                <div className="space-y-1.5">
+              <div className="px-3 py-1.5">
+                <span className="text-slate-400 font-sans text-[8.5px] font-bold tracking-widest uppercase block mb-1">Carreras con mayor afinidad</span>
+                <div className="space-y-1">
                   {[
                     { label: 'Diseño UX/UI',              unis: 'UADE · UP',  top: true  },
                     { label: 'Administración de Empresas', unis: 'UBA · UTDT', top: false },
                   ].map((c) => (
-                    <div key={c.label} className="flex flex-col gap-0.5">
-                      <div className="flex items-start justify-between gap-2">
-                        <div className="flex flex-col min-w-0">
-                          <span className="font-medium text-slate-700 text-[11px] leading-tight">{c.label}</span>
-                          <span className="text-slate-400 text-[10px] font-medium leading-tight mt-0.5">{c.unis}</span>
-                        </div>
-                        <span className={`text-[10px] shrink-0 mt-0.5 font-semibold ${c.top ? 'text-brand-lime bg-[#07111F] px-1.5 py-0.5 rounded' : 'text-slate-300'}`}>
-                          {c.top ? '↑ Top' : '—'}
-                        </span>
+                    <div key={c.label} className="flex items-center justify-between gap-2">
+                      <div className="flex flex-col min-w-0">
+                        <span className="font-medium text-slate-700 text-[9.5px] leading-tight">{c.label}</span>
+                        <span className="text-slate-400 text-[8.5px] font-medium leading-tight">{c.unis}</span>
                       </div>
-                      <div className="w-full h-[2px] bg-slate-100 rounded-full" />
+                      <span className={`text-[8.5px] shrink-0 font-semibold ${c.top ? 'text-brand-lime bg-[#07111F] px-1.5 py-0.5 rounded' : 'text-slate-300'}`}>
+                        {c.top ? '↑ Top' : '-'}
+                      </span>
                     </div>
                   ))}
                 </div>
               </div>
             </div>
+          </motion.div>
+
+          {/* CTA principal — debajo del mockup, a la altura del pulgar */}
+          <motion.div variants={mobileItemVariants} className="w-full mb-2">
+            <button
+              onClick={onGetStartedClick}
+              className="w-full py-4 bg-[#07111F] text-white font-display text-[16px] font-black tracking-wide rounded-full
+                         hover:bg-brand-lime hover:text-slate-950
+                         active:scale-[0.97] active:shadow-[0_4px_12px_rgba(5,8,22,0.12)]
+                         transition-[background-color,color,transform,box-shadow]
+                         duration-150 [transition-timing-function:cubic-bezier(0.16,1,0.3,1)]
+                         flex items-center justify-center
+                         shadow-[0_8px_28px_rgba(5,8,22,0.30)]"
+            >
+              Empezar mi test vocacional
+            </button>
+          </motion.div>
+
+          {/* Trust pills */}
+          <motion.div variants={mobileItemVariants} className="flex items-center justify-center gap-3">
+            <span className="text-[11px] font-medium" style={{ color: 'rgba(255,255,255,0.65)' }}>✓ Resultado personalizado</span>
+            <span className="text-[11px] font-medium" style={{ color: 'rgba(255,255,255,0.28)' }}>·</span>
+            <span className="text-[11px] font-medium" style={{ color: 'rgba(255,255,255,0.65)' }}>✓ Sin registro previo</span>
           </motion.div>
 
         </motion.div>
