@@ -38,7 +38,7 @@ export default function HeroSection({ onGetStartedClick }: HeroSectionProps) {
   return (
     <section
       id="home"
-      className="relative pt-20 pb-10 lg:pt-24 lg:pb-20 overflow-hidden rounded-b-[56px] md:rounded-b-[80px] flex flex-col justify-start lg:justify-center text-slate-900 bg-sky-50"
+      className="relative pt-20 pb-24 lg:pt-24 lg:pb-20 overflow-hidden rounded-b-[56px] md:rounded-b-[80px] flex flex-col justify-start lg:justify-center text-slate-900 bg-sky-50"
       style={{
         backgroundImage: `linear-gradient(to bottom, rgba(111,159,202,0.97) 0%, rgba(159,210,241,0.93) 52%, rgba(221,247,255,0.90) 100%), url(${IMAGES.heroClouds})`,
         backgroundSize: 'cover',
@@ -81,7 +81,7 @@ export default function HeroSection({ onGetStartedClick }: HeroSectionProps) {
           </motion.p>
 
           {/* Preview de resultado — prueba social de apoyo, escala reducida */}
-          <motion.div variants={mobileItemVariants} className="w-[78%] mx-auto mb-3 opacity-90">
+          <motion.div variants={mobileItemVariants} className="w-[88%] mx-auto mb-5 opacity-90">
             <div className="flex justify-center mb-1.5">
               <span className="text-[9px] font-medium tracking-widest uppercase" style={{ color: 'rgba(255,255,255,0.40)' }}>
                 Así se ve tu resultado
@@ -130,7 +130,7 @@ export default function HeroSection({ onGetStartedClick }: HeroSectionProps) {
           </motion.div>
 
           {/* CTA principal — debajo del mockup, a la altura del pulgar */}
-          <motion.div variants={mobileItemVariants} className="w-full mb-2">
+          <motion.div variants={mobileItemVariants} className="w-full">
             <button
               onClick={onGetStartedClick}
               className="w-full py-4 bg-[#07111F] text-white font-display text-[16px] font-black tracking-wide rounded-full
@@ -143,13 +143,6 @@ export default function HeroSection({ onGetStartedClick }: HeroSectionProps) {
             >
               Empezar mi test vocacional
             </button>
-          </motion.div>
-
-          {/* Trust pills */}
-          <motion.div variants={mobileItemVariants} className="flex items-center justify-center gap-3">
-            <span className="text-[11px] font-medium" style={{ color: 'rgba(255,255,255,0.65)' }}>✓ Resultado personalizado</span>
-            <span className="text-[11px] font-medium" style={{ color: 'rgba(255,255,255,0.28)' }}>·</span>
-            <span className="text-[11px] font-medium" style={{ color: 'rgba(255,255,255,0.65)' }}>✓ Sin registro previo</span>
           </motion.div>
 
         </motion.div>
