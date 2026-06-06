@@ -81,34 +81,37 @@ export default function HeroSection({ onGetStartedClick }: HeroSectionProps) {
           </motion.p>
 
           {/* Preview de resultado — prueba social de apoyo, escala reducida */}
-          <motion.div variants={mobileItemVariants} className="w-[88%] mx-auto mb-5 opacity-90">
-            <div className="flex justify-center mb-1.5">
-              <span className="text-[9px] font-medium tracking-widest uppercase" style={{ color: 'rgba(255,255,255,0.40)' }}>
+          <motion.div variants={mobileItemVariants} className="w-[95%] mx-auto mb-10 opacity-90">
+            <div className="flex justify-center mb-2">
+              <span className="text-[9.5px] font-medium tracking-widest uppercase" style={{ color: 'rgba(255,255,255,0.45)' }}>
                 Así se ve tu resultado
               </span>
             </div>
 
             <div
-              className="w-full bg-white rounded-[14px] border border-slate-100 text-left relative overflow-hidden"
-              style={{ boxShadow: '0 6px 18px rgba(30,60,100,0.09)' }}
+              className="w-full bg-white rounded-[16px] border border-slate-100 text-left relative overflow-hidden"
+              style={{ boxShadow: '0 8px 24px rgba(30,60,100,0.11)' }}
             >
-              <div className="px-3 pt-2 pb-1.5 border-b border-slate-100">
+              <div className="px-3.5 pt-2.5 pb-2 border-b border-slate-100">
                 <div className="flex items-start justify-between gap-2 mb-0.5">
-                  <span className="text-slate-400 font-sans text-[8.5px] font-bold tracking-widest uppercase">Perfil de enfoque</span>
-                  <span className="bg-brand-lime text-[#07111F] text-[8.5px] font-black px-1.5 py-0.5 rounded tracking-wide shrink-0">Alta afinidad</span>
+                  <span className="text-slate-400 font-sans text-[9px] font-bold tracking-widest uppercase">Perfil de enfoque</span>
+                  <span className="bg-brand-lime text-[#07111F] text-[9px] font-black px-2 py-0.5 rounded tracking-wide shrink-0">Alta afinidad</span>
                 </div>
-                <h4 className="text-[12.5px] font-extrabold text-slate-900 tracking-tight leading-tight mb-0.5">Exploradora Estratégica</h4>
-                <div className="flex flex-wrap gap-1 mt-1">
+                <h4 className="text-[13.5px] font-extrabold text-slate-900 tracking-tight leading-tight mb-0.5">Exploradora Estratégica</h4>
+                <p className="text-[10px] text-slate-500 font-medium leading-snug mb-1.5">
+                  Combina pensamiento empático con alta capacidad directiva.
+                </p>
+                <div className="flex flex-wrap gap-1">
                   {['Diseño', 'Gestión Digital', 'Administración'].map(tag => (
-                    <span key={tag} className="text-[8.5px] font-semibold text-slate-500 bg-slate-100 border border-slate-200 px-1.5 py-0.5 rounded-full">
+                    <span key={tag} className="text-[9px] font-semibold text-slate-500 bg-slate-100 border border-slate-200 px-2 py-0.5 rounded-full">
                       {tag}
                     </span>
                   ))}
                 </div>
               </div>
 
-              <div className="px-3 py-1.5">
-                <span className="text-slate-400 font-sans text-[8.5px] font-bold tracking-widest uppercase block mb-1">Carreras con mayor afinidad</span>
+              <div className="px-3.5 py-2">
+                <span className="text-slate-400 font-sans text-[9px] font-bold tracking-widest uppercase block mb-1">Carreras con mayor afinidad</span>
                 <div className="space-y-1">
                   {[
                     { label: 'Diseño UX/UI',              unis: 'UADE · UP',  top: true  },
@@ -116,10 +119,10 @@ export default function HeroSection({ onGetStartedClick }: HeroSectionProps) {
                   ].map((c) => (
                     <div key={c.label} className="flex items-center justify-between gap-2">
                       <div className="flex flex-col min-w-0">
-                        <span className="font-medium text-slate-700 text-[9.5px] leading-tight">{c.label}</span>
-                        <span className="text-slate-400 text-[8.5px] font-medium leading-tight">{c.unis}</span>
+                        <span className="font-medium text-slate-700 text-[10px] leading-tight">{c.label}</span>
+                        <span className="text-slate-400 text-[9px] font-medium leading-tight">{c.unis}</span>
                       </div>
-                      <span className={`text-[8.5px] shrink-0 font-semibold ${c.top ? 'text-brand-lime bg-[#07111F] px-1.5 py-0.5 rounded' : 'text-slate-300'}`}>
+                      <span className={`text-[9px] shrink-0 font-semibold ${c.top ? 'text-brand-lime bg-[#07111F] px-1.5 py-0.5 rounded' : 'text-slate-300'}`}>
                         {c.top ? '↑ Top' : '-'}
                       </span>
                     </div>
