@@ -1,6 +1,5 @@
 {
   "name": "Perfil Vocacional",
   "description": "Una plataforma interactiva de orientación vocacional avanzada para descubrir tu carrera ideal mediante tests cognitivos.",
-  "requestFramePermissions": [],
-  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+  "requestFramePermissions": []
 }

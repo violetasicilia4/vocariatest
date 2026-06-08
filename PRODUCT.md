@@ -10,7 +10,7 @@ Jóvenes argentinos de 17–25 años que enfrentan la elección de carrera unive
 
 ## Product Purpose
 
-Vocaria es un test vocacional freemium basado en situaciones reales (no preferencias abstractas) que detecta el patrón de pensamiento del usuario y lo cruza con carreras universitarias argentinas reales, incluyendo universidades y contexto laboral. El objetivo de la landing es capturar emails para waitlist y convertir visitas en inicio del test. El test real con IA (Gemini) está en desarrollo. Éxito = el usuario entiende el valor en 10 segundos y quiere empezar.
+Vocaria es un test vocacional freemium basado en situaciones reales (no preferencias abstractas) que detecta el patrón de pensamiento del usuario y lo cruza con carreras universitarias argentinas reales, incluyendo universidades y contexto laboral. El objetivo de la landing es capturar emails para waitlist y convertir visitas en inicio del test. Éxito = el usuario entiende el valor en 10 segundos y quiere empezar.
 
 ## Brand Personality
 
