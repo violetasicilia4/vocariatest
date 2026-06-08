@@ -33,7 +33,7 @@ export default function Header({ onContactClick }: HeaderProps) {
       <div className="max-w-7xl mx-auto px-6 flex items-center justify-between">
 
         {/* Logo */}
-        <a href="#home" className={`flex items-center gap-2.5 group focus:outline-none ${scrolled ? 'text-slate-900' : 'text-white'}`}>
+        <a href="#home" className={`flex items-center gap-2.5 group rounded-md focus:outline-none focus-visible:ring-2 focus-visible:ring-brand-lime focus-visible:ring-offset-2 ${scrolled ? 'text-slate-900 focus-visible:ring-offset-white' : 'text-white focus-visible:ring-offset-transparent'}`}>
           <LogoIcon size={28} />
           <div className="flex flex-col">
             <span className={`font-display font-bold text-[15px] tracking-tight leading-none ${scrolled ? 'text-slate-900' : 'text-white'}`}>
@@ -73,7 +73,7 @@ export default function Header({ onContactClick }: HeaderProps) {
         {/* Hamburguesa mobile */}
         <button
           onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
-          className={`md:hidden p-1 rounded-lg focus:outline-none ${scrolled ? 'text-slate-900' : 'text-white'}`}
+          className={`md:hidden p-1 rounded-lg focus:outline-none focus-visible:ring-2 focus-visible:ring-brand-lime ${scrolled ? 'text-slate-900' : 'text-white'}`}
           aria-label={mobileMenuOpen ? 'Cerrar menú' : 'Abrir menú'}
         >
           {mobileMenuOpen ? <X className="w-6 h-6" /> : <Menu className="w-6 h-6" />}

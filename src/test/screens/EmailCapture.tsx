@@ -46,10 +46,11 @@ export default function EmailCapture({ onStart }: EmailCaptureProps) {
         {/* Form */}
         <form onSubmit={handleSubmit} className="space-y-4">
           <div>
-            <label className="block text-white/50 text-[12px] font-semibold mb-1.5 tracking-wide uppercase">
+            <label htmlFor="nombre" className="block text-white/50 text-[12px] font-semibold mb-1.5 tracking-wide uppercase">
               Tu nombre
             </label>
             <input
+              id="nombre"
               type="text"
               placeholder="Ej: Martina"
               value={nombre}
@@ -59,10 +60,11 @@ export default function EmailCapture({ onStart }: EmailCaptureProps) {
             />
           </div>
           <div>
-            <label className="block text-white/50 text-[12px] font-semibold mb-1.5 tracking-wide uppercase">
+            <label htmlFor="email" className="block text-white/50 text-[12px] font-semibold mb-1.5 tracking-wide uppercase">
               Tu email
             </label>
             <input
+              id="email"
               type="email"
               placeholder="tucorreo@email.com"
               value={email}

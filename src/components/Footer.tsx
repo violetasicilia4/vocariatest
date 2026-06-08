@@ -10,7 +10,7 @@ export default function Footer({ onContactClick }: FooterProps) {
       <div className="max-w-5xl mx-auto px-6 flex flex-col sm:flex-row items-center justify-between gap-4">
 
         {/* Logo */}
-        <a href="#home" className="flex items-center gap-2.5 focus:outline-none">
+        <a href="#home" className="flex items-center gap-2.5 rounded-md focus:outline-none focus-visible:ring-2 focus-visible:ring-brand-lime focus-visible:ring-offset-2 focus-visible:ring-offset-[#07111F]">
           <LogoIcon size={28} onDark />
           <div className="flex flex-col">
             <span className="font-display font-bold text-[15px] tracking-tight leading-none text-white">
