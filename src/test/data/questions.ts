@@ -1,25 +1,14 @@
-export type QuestionType = 'forced_choice' | 'situational' | 'scale' | 'context';
-export type Bloque = 'contexto' | 'actividad' | 'entorno' | 'autoconocimiento' | 'adaptativa';
+export type Bloque = 'contexto' | 'situacional';
+export type QuestionType = 'situacional' | 'context';
 
-export interface DimensionScores {
-  R?: number; // Realista/Técnico
-  I?: number; // Investigativo
-  A?: number; // Artístico
-  S?: number; // Social
-  E?: number; // Emprendedor
-  C?: number; // Convencional/Organizativo
-  autonomia?: number;
-  seguridad?: number;
-  impacto?: number;
-  riesgo?: number;
-  rutina?: number;
-  equipo?: number;
+export interface ArquetipoScores {
+  [arquetipoId: string]: number;
 }
 
 export interface Opcion {
   id: string;
   texto: string;
-  scores?: DimensionScores;
+  scores?: ArquetipoScores;
 }
 
 export interface Question {
@@ -29,28 +18,27 @@ export interface Question {
   enunciado: string;
   subtext?: string;
   opciones: Opcion[];
-  // Para preguntas adaptativas: función que determina si mostrarla
-  condicion?: (answers: Record<string, string>) => boolean;
 }
 
 export const QUESTIONS: Question[] = [
-  // ── BLOQUE 0: CONTEXTO (no puntúan RIASEC) ───────────────────────────────
+
+  // ── CONTEXTO ─────────────────────────────────────────────────────────────────
 
   {
     id: 'ctx_1',
     bloque: 'contexto',
     tipo: 'context',
     enunciado: '¿En qué provincia vivís actualmente?',
-    subtext: 'Usamos esto para recomendarte universidades accesibles.',
+    subtext: 'Usamos esto para recomendarte universidades accesibles desde tu ubicación.',
     opciones: [
-      { id: 'CABA', texto: 'Ciudad de Buenos Aires' },
-      { id: 'GBA', texto: 'Gran Buenos Aires (Conurbano)' },
+      { id: 'CABA',   texto: 'Ciudad de Buenos Aires' },
+      { id: 'GBA',    texto: 'Gran Buenos Aires (Conurbano)' },
       { id: 'BAPROV', texto: 'Buenos Aires (interior de provincia)' },
-      { id: 'COR', texto: 'Córdoba' },
-      { id: 'SF', texto: 'Santa Fe' },
-      { id: 'MZA', texto: 'Mendoza' },
-      { id: 'TUC', texto: 'Tucumán' },
-      { id: 'OTRA', texto: 'Otra provincia' },
+      { id: 'COR',    texto: 'Córdoba' },
+      { id: 'SF',     texto: 'Santa Fe' },
+      { id: 'MZA',    texto: 'Mendoza' },
+      { id: 'TUC',    texto: 'Tucumán' },
+      { id: 'OTRA',   texto: 'Otra provincia' },
     ],
   },
 
@@ -58,12 +46,13 @@ export const QUESTIONS: Question[] = [
     id: 'ctx_2',
     bloque: 'contexto',
     tipo: 'context',
-    enunciado: '¿Podés o querés estudiar fuera de tu ciudad actual?',
+    enunciado: '¿Podrías mudarte o viajar para estudiar si encontraras la carrera ideal?',
+    subtext: 'Sin compromiso — es solo para calibrar las recomendaciones.',
     opciones: [
-      { id: 'si_total', texto: 'Sí, puedo mudarme sin problema' },
-      { id: 'si_beca', texto: 'Podría, pero necesitaría una beca o apoyo económico' },
-      { id: 'virtual', texto: 'Prefiero estudiar en mi ciudad o en modalidad virtual' },
-      { id: 'no', texto: 'No puedo mudarme (trabajo, familia u otro motivo)' },
+      { id: 'si_total', texto: 'Sí, sin problema. Podría mudarme o viajar.' },
+      { id: 'si_beca',  texto: 'Si consigo beca o apoyo económico, sí.' },
+      { id: 'virtual',  texto: 'Prefiero opciones virtuales o semipresenciales.' },
+      { id: 'no',       texto: 'No, necesito estudiar cerca de donde vivo.' },
     ],
   },
 
@@ -71,411 +60,354 @@ export const QUESTIONS: Question[] = [
     id: 'ctx_3',
     bloque: 'contexto',
     tipo: 'context',
-    enunciado: '¿Cuánto tiempo querés dedicarle a la carrera?',
-    subtext: 'No hay una respuesta correcta. Esto nos ayuda a ajustar las recomendaciones.',
+    enunciado: '¿Cuánto tiempo estás dispuesto/a a invertir en estudiar una carrera?',
     opciones: [
-      { id: 'larga', texto: 'Una carrera completa, aunque dure 5 o 6 años' },
-      { id: 'media', texto: 'Algo de 3 a 4 años' },
-      { id: 'corta', texto: 'Una tecnicatura o carrera corta (2 a 3 años)' },
-      { id: 'nosé', texto: 'No lo tengo claro todavía' },
+      { id: 'corta',  texto: 'Corta (1–3 años): quiero salida rápida al mercado.' },
+      { id: 'media',  texto: 'Media (3–5 años): estoy dispuesto/a a una carrera de grado.' },
+      { id: 'larga',  texto: 'Larga (+5 años): no me importa si es lo que quiero.' },
+      { id: 'nose',   texto: 'No lo sé todavía.' },
     ],
   },
 
-  // ── BLOQUE 1: ACTIVIDAD Y MOTIVACIÓN (core, 12 preguntas) ────────────────
+  // ── SITUACIONALES ─────────────────────────────────────────────────────────────
 
   {
-    id: 'act_1',
-    bloque: 'actividad',
-    tipo: 'forced_choice',
-    enunciado: 'Imaginá que tenés un proyecto libre por hacer. ¿Qué tipo de tarea te sale buscar primero?',
+    id: 'sit_1',
+    bloque: 'situacional',
+    tipo: 'situacional',
+    enunciado: 'Tenés un fin de semana libre y ganas de hacer algo productivo. ¿Qué arrancás?',
     opciones: [
-      { id: 'A', texto: 'Armar, construir o reparar algo concreto con tus manos o herramientas', scores: { R: 10, C: 2 } },
-      { id: 'B', texto: 'Investigar a fondo un tema que no terminás de entender', scores: { I: 10, A: 2 } },
-      { id: 'C', texto: 'Diseñar algo visual, escribir o crear desde cero', scores: { A: 10, I: 2 } },
-      { id: 'D', texto: 'Organizar el proceso, armar un plan y distribuir tareas', scores: { C: 10, E: 4 } },
-    ],
-  },
-
-  {
-    id: 'act_2',
-    bloque: 'actividad',
-    tipo: 'forced_choice',
-    enunciado: '¿Cuál de estas actividades disfrutarías más un sábado a la tarde?',
-    opciones: [
-      { id: 'A', texto: 'Aprender a usar una herramienta nueva o hacer algo técnico', scores: { R: 8, I: 4 } },
-      { id: 'B', texto: 'Charlar o ayudar a alguien que está pasando por algo difícil', scores: { S: 10, A: 2 } },
-      { id: 'C', texto: 'Buscar un negocio o proyecto propio que me entusiasme', scores: { E: 10, A: 4 } },
-      { id: 'D', texto: 'Poner en orden algo que está desorganizado (datos, espacio, agenda)', scores: { C: 10, R: 2 } },
+      { id: 'a', texto: 'Aprender a programar algo, automatizar una tarea o armar un sistema propio.',
+        scores: { arquitecto: 10, interprete: 5 } },
+      { id: 'b', texto: 'Construir, reparar o mejorar algo físico en casa.',
+        scores: { constructor: 10, custodio: 5 } },
+      { id: 'c', texto: 'Escribir, dibujar, componer o producir algo creativo.',
+        scores: { artifice: 10, narrador: 5 } },
+      { id: 'd', texto: 'Organizar una actividad, salida o experiencia para otras personas.',
+        scores: { anfitrion: 10, catalizador: 5 } },
     ],
   },
 
   {
-    id: 'act_3',
-    bloque: 'actividad',
-    tipo: 'situational',
-    enunciado: 'Empezaste a trabajar en un lugar nuevo. Al mes te ofrecen liderar un proyecto que nadie manejó antes. ¿Qué hacés?',
+    id: 'sit_2',
+    bloque: 'situacional',
+    tipo: 'situacional',
+    enunciado: 'Un problema que no podés sacarte de la cabeza, aunque no sea tu responsabilidad resolverlo:',
     opciones: [
-      { id: 'A', texto: 'Lo acepto — el desafío me activa aunque tenga incertidumbre', scores: { E: 10, riesgo: 8 } },
-      { id: 'B', texto: 'Lo acepto, pero primero pido estructura y apoyo claro', scores: { C: 6, E: 4, seguridad: 6 } },
-      { id: 'C', texto: 'Prefiero quedarme en mi rol actual y dominarlo bien antes de liderar', scores: { I: 6, C: 6, seguridad: 8, rutina: 4 } },
-      { id: 'D', texto: 'Depende mucho del tema del proyecto — me importa más el qué que el rol', scores: { I: 8, A: 4 } },
+      { id: 'a', texto: 'Un proceso que claramente podría automatizarse o mejorarse con tecnología.',
+        scores: { arquitecto: 10, constructor: 5 } },
+      { id: 'b', texto: 'Alguien que está siendo tratado injustamente y nadie lo ve.',
+        scores: { arbitro: 10, sanador: 5 } },
+      { id: 'c', texto: 'Un ecosistema, especie o recurso natural que se está degradando.',
+        scores: { custodio: 10, descubridor: 5 } },
+      { id: 'd', texto: 'Una idea creativa o narrativa que nadie está explorando todavía.',
+        scores: { artifice: 10, narrador: 5 } },
     ],
   },
 
   {
-    id: 'act_4',
-    bloque: 'actividad',
-    tipo: 'situational',
-    enunciado: 'En un equipo de trabajo se cometió un error grave. ¿Qué hacés vos primero?',
+    id: 'sit_3',
+    bloque: 'situacional',
+    tipo: 'situacional',
+    enunciado: 'Tu jornada de trabajo ideal se parece más a:',
     opciones: [
-      { id: 'A', texto: 'Analizo qué falló técnicamente y propongo una solución', scores: { I: 8, R: 4 } },
-      { id: 'B', texto: 'Hablo con el equipo para entender cómo se siente cada uno y reorganizo', scores: { S: 10, E: 4 } },
-      { id: 'C', texto: 'Me aseguro de que el proceso quede documentado para que no vuelva a pasar', scores: { C: 10, I: 2 } },
-      { id: 'D', texto: 'Busco una solución creativa que salve la situación rápido', scores: { A: 6, E: 8 } },
+      { id: 'a', texto: 'Foco profundo: construir, programar o analizar sin interrupciones.',
+        scores: { arquitecto: 10, interprete: 5 } },
+      { id: 'b', texto: 'Acompañar personas: escuchar, orientar, trabajar con quienes lo necesitan.',
+        scores: { sanador: 10, catalizador: 5 } },
+      { id: 'c', texto: 'Trabajo de campo: movimiento, contacto con el entorno real y las personas.',
+        scores: { constructor: 10, custodio: 5 } },
+      { id: 'd', texto: 'Crear y diseñar: producir algo propio con libertad de forma y contenido.',
+        scores: { artifice: 10, narrador: 5 } },
     ],
   },
 
   {
-    id: 'act_5',
-    bloque: 'actividad',
-    tipo: 'scale',
-    enunciado: 'Disfrutás explicarle algo complejo a alguien hasta que lo entienda de verdad.',
-    subtext: '1 = no es para mí · 5 = lo haría aunque no me pagaran',
+    id: 'sit_4',
+    bloque: 'situacional',
+    tipo: 'situacional',
+    enunciado: '¿Cuándo sentiste más orgullo o satisfacción por algo que lograste?',
     opciones: [
-      { id: '1', texto: 'Casi nunca', scores: { S: 0 } },
-      { id: '2', texto: 'Poco', scores: { S: 2 } },
-      { id: '3', texto: 'A veces', scores: { S: 5 } },
-      { id: '4', texto: 'Bastante', scores: { S: 8 } },
-      { id: '5', texto: 'Siempre', scores: { S: 10, A: 2 } },
+      { id: 'a', texto: 'Cuando resolví algo técnico complejo que nadie más había podido.',
+        scores: { arquitecto: 10, descubridor: 5 } },
+      { id: 'b', texto: 'Cuando alguien mejoró, creció o superó algo gracias a mí.',
+        scores: { sanador: 10, catalizador: 5 } },
+      { id: 'c', texto: 'Cuando algo que organicé salió perfecto y todos lo valoraron.',
+        scores: { orquestador: 10, anfitrion: 5 } },
+      { id: 'd', texto: 'Cuando algo que hice o creé fue reconocido o generó impacto propio.',
+        scores: { artifice: 10, narrador: 5 } },
     ],
   },
 
   {
-    id: 'act_6',
-    bloque: 'actividad',
-    tipo: 'scale',
-    enunciado: 'Preferís saber exactamente qué se espera de vos antes de empezar algo.',
-    subtext: '1 = prefiero la ambigüedad · 5 = necesito instrucciones claras',
+    id: 'sit_5',
+    bloque: 'situacional',
+    tipo: 'situacional',
+    enunciado: 'Cuando necesitás aprender algo nuevo, ¿cómo preferís hacerlo?',
     opciones: [
-      { id: '1', texto: 'Prefiero la ambigüedad', scores: { A: 4, riesgo: 6, autonomia: 6 } },
-      { id: '2', texto: 'Algo de libertad', scores: { A: 2, autonomia: 4 } },
-      { id: '3', texto: 'Un poco de cada cosa', scores: {} },
-      { id: '4', texto: 'Bastante estructura', scores: { C: 4, seguridad: 4 } },
-      { id: '5', texto: 'Instrucciones muy claras', scores: { C: 8, seguridad: 8, rutina: 4 } },
+      { id: 'a', texto: 'Experimentando: rompiendo cosas, probando y llegando solo/a a la solución.',
+        scores: { arquitecto: 10, descubridor: 5 } },
+      { id: 'b', texto: 'Leyendo e investigando en profundidad antes de tocar nada.',
+        scores: { descubridor: 10, interprete: 5 } },
+      { id: 'c', texto: 'Viendo cómo lo hace alguien con experiencia y replicándolo.',
+        scores: { constructor: 10, catalizador: 5 } },
+      { id: 'd', texto: 'Aprendiéndolo en contexto real, con alguien que me guíe mientras hago.',
+        scores: { anfitrion: 10, sanador: 5 } },
     ],
   },
 
   {
-    id: 'act_7',
-    bloque: 'actividad',
-    tipo: 'forced_choice',
-    enunciado: 'Si tuvieras que elegir un contenido para ver o escuchar ahora mismo, ¿qué elegirías?',
+    id: 'sit_6',
+    bloque: 'situacional',
+    tipo: 'situacional',
+    enunciado: '¿En qué entorno trabajarías mejor?',
     opciones: [
-      { id: 'A', texto: 'Un documental técnico sobre cómo funciona algo (ingeniería, ciencia, tecnología)', scores: { R: 6, I: 8 } },
-      { id: 'B', texto: 'Una charla sobre cómo mejorar organizaciones o liderar personas', scores: { E: 8, S: 4 } },
-      { id: 'C', texto: 'Un proceso creativo: arte, diseño, escritura, música', scores: { A: 10 } },
-      { id: 'D', texto: 'Un análisis sobre política, sociedad o economía', scores: { I: 6, E: 4, S: 4 } },
+      { id: 'a', texto: 'Silencioso, autónomo, con foco largo y pocas interrupciones.',
+        scores: { arquitecto: 10, descubridor: 5 } },
+      { id: 'b', texto: 'Dinámico, con personas distintas, donde cada día es diferente.',
+        scores: { anfitrion: 10, narrador: 5 } },
+      { id: 'c', texto: 'Colaborativo pero con espacio para trabajar en profundidad cuando lo necesito.',
+        scores: { catalizador: 10, artifice: 5 } },
+      { id: 'd', texto: 'Estructurado, con roles claros y procesos bien definidos.',
+        scores: { arbitro: 10, interprete: 5 } },
     ],
   },
 
   {
-    id: 'act_8',
-    bloque: 'actividad',
-    tipo: 'forced_choice',
-    enunciado: 'Pensá en un logro del que estés orgulloso/a. ¿Cómo llegaste a ese resultado?',
+    id: 'sit_7',
+    bloque: 'situacional',
+    tipo: 'situacional',
+    enunciado: '¿Qué tipo de impacto te gustaría tener en el mundo?',
     opciones: [
-      { id: 'A', texto: 'Me concentré solo/a y lo fui construyendo paso a paso', scores: { I: 8, C: 4, autonomia: 8 } },
-      { id: 'B', texto: 'Armé un equipo y coordiné para que todo funcione', scores: { E: 10, S: 6 } },
-      { id: 'C', texto: 'Tuve una idea original que nadie había pensado', scores: { A: 10, I: 4 } },
-      { id: 'D', texto: 'Seguí un proceso claro y lo ejecuté muy bien', scores: { C: 10, R: 4 } },
+      { id: 'a', texto: 'Crear herramientas o sistemas que usen o necesiten miles de personas.',
+        scores: { arquitecto: 10, orquestador: 5 } },
+      { id: 'b', texto: 'Mejorar directamente la vida de personas en su momento más vulnerable.',
+        scores: { sanador: 10, catalizador: 5 } },
+      { id: 'c', texto: 'Proteger algo valioso que se puede perder: la naturaleza, la justicia, la cultura.',
+        scores: { custodio: 10, arbitro: 5 } },
+      { id: 'd', texto: 'Generar conocimiento nuevo que cambie cómo entendemos algo.',
+        scores: { descubridor: 10, narrador: 5 } },
     ],
   },
 
   {
-    id: 'act_9',
-    bloque: 'actividad',
-    tipo: 'scale',
-    enunciado: 'La incertidumbre te activa más de lo que te paraliza.',
-    subtext: '1 = me paraliza · 5 = me activa',
+    id: 'sit_8',
+    bloque: 'situacional',
+    tipo: 'situacional',
+    enunciado: 'Cuando ves algo que está mal, ¿qué hacés?',
     opciones: [
-      { id: '1', texto: 'Me paraliza', scores: { seguridad: 10, rutina: 6 } },
-      { id: '2', texto: 'Me incomoda bastante', scores: { seguridad: 6, rutina: 4 } },
-      { id: '3', texto: 'Depende de la situación', scores: {} },
-      { id: '4', texto: 'Suelo manejarlo bien', scores: { riesgo: 6, autonomia: 4 } },
-      { id: '5', texto: 'Me activa', scores: { riesgo: 10, E: 4, A: 2 } },
+      { id: 'a', texto: 'Analizo la causa raíz y propongo una solución sistemática.',
+        scores: { arquitecto: 10, interprete: 5 } },
+      { id: 'b', texto: 'Lo enfrento directamente: busco que se haga lo correcto.',
+        scores: { arbitro: 10, orquestador: 5 } },
+      { id: 'c', texto: 'Busco a las personas involucradas y trato de mediar o acompañar.',
+        scores: { sanador: 10, catalizador: 5 } },
+      { id: 'd', texto: 'Lo documentás, lo escribís, lo hacés visible para que otros lo vean.',
+        scores: { narrador: 10, orquestador: 5 } },
     ],
   },
 
   {
-    id: 'act_10',
-    bloque: 'actividad',
-    tipo: 'forced_choice',
-    enunciado: '¿Cuál de estos resultados te importaría más en tu trabajo ideal?',
+    id: 'sit_9',
+    bloque: 'situacional',
+    tipo: 'situacional',
+    enunciado: '¿Qué relación tenés con los números y los datos?',
     opciones: [
-      { id: 'A', texto: 'Ganar bien desde el principio', scores: { E: 4, C: 4, seguridad: 8 } },
-      { id: 'B', texto: 'Sentir que mis acciones ayudan a otras personas', scores: { S: 10, impacto: 10 } },
-      { id: 'C', texto: 'Tener libertad para hacer las cosas a mi manera', scores: { A: 6, autonomia: 10 } },
-      { id: 'D', texto: 'Que me reconozcan por lo que logro y construyo', scores: { E: 8, I: 4 } },
+      { id: 'a', texto: 'Los amo. Son mi forma natural de entender cómo funciona el mundo.',
+        scores: { interprete: 10, arquitecto: 5 } },
+      { id: 'b', texto: 'Los uso como herramienta cuando son necesarios, sin amor ni rechazo.',
+        scores: { constructor: 10, orquestador: 5 } },
+      { id: 'c', texto: 'Prefiero trabajar con personas, ideas o formas visuales.',
+        scores: { sanador: 10, artifice: 5 } },
+      { id: 'd', texto: 'Me interesa más el contexto, la historia y el significado detrás del número.',
+        scores: { narrador: 10, descubridor: 5 } },
     ],
   },
 
   {
-    id: 'act_11',
-    bloque: 'actividad',
-    tipo: 'situational',
-    enunciado: 'Te piden que presentes un tema que conocés bien frente a 30 personas. ¿Cómo te sentís?',
+    id: 'sit_10',
+    bloque: 'situacional',
+    tipo: 'situacional',
+    enunciado: '¿Cuánto tiempo podés pasar en un mismo espacio cerrado trabajando?',
     opciones: [
-      { id: 'A', texto: 'Me gusta, es una oportunidad de que me escuchen', scores: { E: 8, S: 6, A: 4 } },
-      { id: 'B', texto: 'Lo hago si hace falta, pero no es lo que más disfruto', scores: { I: 4, C: 4 } },
-      { id: 'C', texto: 'Prefiero escribirlo o hacer algo visual antes que hablar', scores: { A: 8, I: 4 } },
-      { id: 'D', texto: 'Me genera ansiedad pero lo enfrento', scores: { S: 4, seguridad: 4 } },
+      { id: 'a', texto: 'Mucho tiempo: es donde más me concentro y más rindo.',
+        scores: { arquitecto: 10, interprete: 5 } },
+      { id: 'b', texto: 'Necesito alternar: el campo, el aire libre o el movimiento me recarga.',
+        scores: { custodio: 10, constructor: 5 } },
+      { id: 'c', texto: 'No me importa el lugar mientras el proyecto cambie y me desafíe.',
+        scores: { orquestador: 10, narrador: 5 } },
+      { id: 'd', texto: 'Prefiero estar en movimiento, en contacto con personas en contextos distintos.',
+        scores: { anfitrion: 10, sanador: 5 } },
     ],
   },
 
   {
-    id: 'act_12',
-    bloque: 'actividad',
-    tipo: 'forced_choice',
-    enunciado: 'Si pudieras elegir cómo pasar tu próxima semana de trabajo, ¿qué elegiríás?',
+    id: 'sit_11',
+    bloque: 'situacional',
+    tipo: 'situacional',
+    enunciado: 'Si tuvieras que crear algo que dure 20 años, ¿qué sería?',
     opciones: [
-      { id: 'A', texto: 'Resolver un problema técnico complejo solo/a, con profundidad', scores: { I: 10, R: 6, autonomia: 8 } },
-      { id: 'B', texto: 'Trabajar codo a codo con personas, en movimiento y contacto directo', scores: { S: 10, E: 4, equipo: 10 } },
-      { id: 'C', texto: 'Crear algo desde cero — un diseño, un texto, un concepto', scores: { A: 10, autonomia: 6 } },
-      { id: 'D', texto: 'Gestionar múltiples cosas a la vez y que todo salga en tiempo y forma', scores: { C: 10, E: 6 } },
-    ],
-  },
-
-  // ── BLOQUE 2: ENTORNO DE TRABAJO (8 preguntas) ───────────────────────────
-
-  {
-    id: 'ent_1',
-    bloque: 'entorno',
-    tipo: 'forced_choice',
-    enunciado: 'En tu trabajo ideal, ¿en qué tipo de espacio estarías la mayor parte del tiempo?',
-    opciones: [
-      { id: 'A', texto: 'Oficina, laboratorio o aula — espacio interior, concentrado', scores: { I: 4, C: 4 } },
-      { id: 'B', texto: 'Terreno, obra, campo, hospitales — contacto directo con el mundo real', scores: { R: 10, S: 4 } },
-      { id: 'C', texto: 'Estudio, taller o espacio creativo propio', scores: { A: 10, autonomia: 6 } },
-      { id: 'D', texto: 'Distintos lugares — moviéndome, conociendo, visitando', scores: { E: 6, S: 4 } },
+      { id: 'a', texto: 'Un sistema, software o plataforma digital que resuelva un problema real.',
+        scores: { arquitecto: 10, orquestador: 5 } },
+      { id: 'b', texto: 'Una obra física: infraestructura, edificio o producto tangible.',
+        scores: { constructor: 10, custodio: 5 } },
+      { id: 'c', texto: 'Un libro, serie, obra de arte o producción cultural que perdure.',
+        scores: { narrador: 10, artifice: 5 } },
+      { id: 'd', texto: 'Una organización, movimiento o institución que cambie algo en la sociedad.',
+        scores: { orquestador: 10, arbitro: 5 } },
     ],
   },
 
   {
-    id: 'ent_2',
-    bloque: 'entorno',
-    tipo: 'scale',
-    enunciado: 'Preferís un trabajo con rutina y procesos predecibles.',
-    subtext: '1 = prefiero variedad total · 5 = prefiero rutina estable',
+    id: 'sit_12',
+    bloque: 'situacional',
+    tipo: 'situacional',
+    enunciado: '¿Cómo describirías tu relación con las personas en el trabajo?',
     opciones: [
-      { id: '1', texto: 'Variedad total', scores: { A: 4, E: 4, riesgo: 6 } },
-      { id: '2', texto: 'Mayormente variedad', scores: { A: 2, E: 2 } },
-      { id: '3', texto: 'Balance', scores: {} },
-      { id: '4', texto: 'Mayormente rutina', scores: { C: 4, rutina: 6 } },
-      { id: '5', texto: 'Rutina estable', scores: { C: 8, seguridad: 6, rutina: 10 } },
+      { id: 'a', texto: 'Prefiero trabajar solo/a o en equipos pequeños y muy autónomos.',
+        scores: { arquitecto: 10, descubridor: 5 } },
+      { id: 'b', texto: 'Las personas son el núcleo de mi trabajo: sin eso no tiene sentido.',
+        scores: { sanador: 10, catalizador: 5 } },
+      { id: 'c', texto: 'Me gusta liderar y orientar a otros hacia un objetivo concreto.',
+        scores: { orquestador: 10, catalizador: 5 } },
+      { id: 'd', texto: 'Disfruto el intercambio creativo pero no necesito que sea el eje.',
+        scores: { artifice: 10, narrador: 5 } },
     ],
   },
 
   {
-    id: 'ent_3',
-    bloque: 'entorno',
-    tipo: 'forced_choice',
-    enunciado: '¿Cómo preferirías trabajar en términos de presencia?',
+    id: 'sit_13',
+    bloque: 'situacional',
+    tipo: 'situacional',
+    enunciado: '¿Qué tipo de problema te genera más ganas de resolver?',
     opciones: [
-      { id: 'A', texto: 'Presencial — me gusta el contacto y el ambiente compartido', scores: { S: 6, equipo: 8 } },
-      { id: 'B', texto: 'Remoto — trabajo mejor desde mi espacio, sin interrupciones', scores: { I: 6, autonomia: 8 } },
-      { id: 'C', texto: 'Híbrido — lo mejor de los dos mundos', scores: { E: 4, C: 2 } },
-      { id: 'D', texto: 'No me importa, depende del rol', scores: {} },
+      { id: 'a', texto: 'Algo técnico y complejo que requiere lógica, experimentación y creatividad.',
+        scores: { descubridor: 10, arquitecto: 5 } },
+      { id: 'b', texto: 'Un conflicto humano que necesita escucha activa, empatía y presencia.',
+        scores: { sanador: 10, catalizador: 5 } },
+      { id: 'c', texto: 'Un sistema injusto o ineficiente que tiene que cambiar desde adentro.',
+        scores: { arbitro: 10, orquestador: 5 } },
+      { id: 'd', texto: 'Un vacío cultural, educativo o narrativo que nadie está llenando.',
+        scores: { narrador: 10, catalizador: 5 } },
     ],
   },
 
   {
-    id: 'ent_4',
-    bloque: 'entorno',
-    tipo: 'forced_choice',
-    enunciado: '¿En qué tipo de organización te imaginarías mejor?',
+    id: 'sit_14',
+    bloque: 'situacional',
+    tipo: 'situacional',
+    enunciado: '¿Cuál de estas frases te resuena más a la hora de tomar decisiones?',
     opciones: [
-      { id: 'A', texto: 'Empresa grande con estructura y carrera definida', scores: { C: 8, seguridad: 8 } },
-      { id: 'B', texto: 'Startup o equipo chico donde tengo más impacto', scores: { E: 10, riesgo: 6 } },
-      { id: 'C', texto: 'Independiente o freelance — mi propio proyecto', scores: { A: 6, autonomia: 10, riesgo: 8 } },
-      { id: 'D', texto: 'Estado o sector público — estabilidad e impacto social', scores: { C: 6, S: 6, seguridad: 10, impacto: 6 } },
+      { id: 'a', texto: '"Si lo pude medir, lo pude entender."',
+        scores: { interprete: 10, arquitecto: 5 } },
+      { id: 'b', texto: '"Lo que funciona en la práctica importa más que la teoría."',
+        scores: { constructor: 10, anfitrion: 5 } },
+      { id: 'c', texto: '"El contexto lo cambia todo. No hay reglas absolutas."',
+        scores: { narrador: 10, descubridor: 5 } },
+      { id: 'd', texto: '"Las normas existen por algo y son necesarias para que todo funcione."',
+        scores: { arbitro: 10, interprete: 5 } },
     ],
   },
 
   {
-    id: 'ent_5',
-    bloque: 'entorno',
-    tipo: 'scale',
-    enunciado: 'Preferís definir vos cómo hacés tu trabajo, aunque eso implique más responsabilidad.',
-    subtext: '1 = prefiero que me digan cómo · 5 = quiero total autonomía',
+    id: 'sit_15',
+    bloque: 'situacional',
+    tipo: 'situacional',
+    enunciado: 'En 10 años, ¿qué querés que digan de vos en tu trabajo?',
     opciones: [
-      { id: '1', texto: 'Que me digan cómo', scores: { C: 6, seguridad: 6 } },
-      { id: '2', texto: 'Guías claras con algo de libertad', scores: { C: 4 } },
-      { id: '3', texto: 'Mitad y mitad', scores: {} },
-      { id: '4', texto: 'Bastante autonomía', scores: { autonomia: 6, E: 4 } },
-      { id: '5', texto: 'Autonomía total', scores: { autonomia: 10, A: 4, E: 4 } },
+      { id: 'a', texto: '"Resolvía lo que nadie más podía resolver."',
+        scores: { arquitecto: 10, descubridor: 5 } },
+      { id: 'b', texto: '"Siempre estuvo para ayudar. Fue clave en el desarrollo de muchos."',
+        scores: { sanador: 10, catalizador: 5 } },
+      { id: 'c', texto: '"Tenía una visión y la ejecutaba. Movía equipos y generaba resultados."',
+        scores: { orquestador: 10, constructor: 5 } },
+      { id: 'd', texto: '"Lo que creó sigue vivo. Tiene valor propio."',
+        scores: { artifice: 10, narrador: 5 } },
     ],
   },
 
   {
-    id: 'ent_6',
-    bloque: 'entorno',
-    tipo: 'forced_choice',
-    enunciado: '¿Qué valorás más en un trabajo diario?',
+    id: 'sit_16',
+    bloque: 'situacional',
+    tipo: 'situacional',
+    enunciado: '¿Qué pregunta te parece más interesante y urgente?',
     opciones: [
-      { id: 'A', texto: 'Resultados inmediatos — ver el impacto de lo que hago ese mismo día', scores: { R: 6, E: 4 } },
-      { id: 'B', texto: 'Proyectos de largo plazo — construir algo que dure y valga la pena', scores: { I: 8, C: 4 } },
-      { id: 'C', texto: 'Aprendizaje constante — siempre estar creciendo', scores: { I: 6, A: 4 } },
-      { id: 'D', texto: 'Impacto en personas — saber que hoy hice diferencia en alguien', scores: { S: 10, impacto: 10 } },
+      { id: 'a', texto: '¿Cómo podemos usar la tecnología para resolver mejor esto?',
+        scores: { arquitecto: 10, descubridor: 5 } },
+      { id: 'b', texto: '¿Por qué algunas personas tienen acceso a esto y otras no?',
+        scores: { catalizador: 10, arbitro: 5 } },
+      { id: 'c', texto: '¿Cómo protegemos lo que todavía no perdimos?',
+        scores: { custodio: 10, narrador: 5 } },
+      { id: 'd', texto: '¿Qué está cambiando en la economía y cómo aprovecharlo bien?',
+        scores: { interprete: 10, orquestador: 5 } },
     ],
   },
 
   {
-    id: 'ent_7',
-    bloque: 'entorno',
-    tipo: 'forced_choice',
-    enunciado: '¿Preferís un rol técnico o un rol de coordinación?',
+    id: 'sit_17',
+    bloque: 'situacional',
+    tipo: 'situacional',
+    enunciado: '¿Qué actividad, si pudiera ocupar el 80% de tu semana, te haría sentir que vivís bien?',
     opciones: [
-      { id: 'A', texto: 'Técnico — me gusta ser el experto/a en la materia', scores: { R: 8, I: 6 } },
-      { id: 'B', texto: 'Coordinación — me gusta conectar personas y procesos', scores: { E: 8, S: 6, C: 4 } },
-      { id: 'C', texto: 'Creativo — me gusta generar ideas y propuestas', scores: { A: 10, I: 4 } },
-      { id: 'D', texto: 'Me imagino en los dos según el momento', scores: { E: 4, I: 4 } },
+      { id: 'a', texto: 'Programar, construir sistemas o analizar datos en profundidad.',
+        scores: { arquitecto: 10, interprete: 5 } },
+      { id: 'b', texto: 'Acompañar, escuchar, enseñar o ayudar a personas.',
+        scores: { sanador: 10, catalizador: 5 } },
+      { id: 'c', texto: 'Investigar, experimentar, leer y generar conocimiento nuevo.',
+        scores: { descubridor: 10, interprete: 5 } },
+      { id: 'd', texto: 'Crear, producir o expresar algo que comunica una idea con fuerza.',
+        scores: { artifice: 10, narrador: 5 } },
     ],
   },
 
   {
-    id: 'ent_8',
-    bloque: 'entorno',
-    tipo: 'scale',
-    enunciado: 'Te importa sentir que tu trabajo tiene un impacto en la sociedad o en otras personas.',
-    subtext: '1 = no es determinante · 5 = es fundamental para mí',
+    id: 'sit_18',
+    bloque: 'situacional',
+    tipo: 'situacional',
+    enunciado: '¿Cómo te imaginás trabajando a los 30–35 años?',
     opciones: [
-      { id: '1', texto: 'No es determinante', scores: { E: 2 } },
-      { id: '2', texto: 'Algo me importa', scores: { impacto: 2 } },
-      { id: '3', texto: 'Me parece importante', scores: { impacto: 5 } },
-      { id: '4', texto: 'Es muy importante', scores: { S: 6, impacto: 8 } },
-      { id: '5', texto: 'Es fundamental', scores: { S: 10, impacto: 10 } },
-    ],
-  },
-
-  // ── BLOQUE 3: AUTOCONOCIMIENTO (5 preguntas) ─────────────────────────────
-
-  {
-    id: 'auto_1',
-    bloque: 'autoconocimiento',
-    tipo: 'scale',
-    enunciado: '¿Qué tan claro/a tenés lo que querés estudiar?',
-    subtext: '1 = sin la menor idea · 5 = tengo muy claro hacia dónde voy',
-    opciones: [
-      { id: '1', texto: 'Sin la menor idea' },
-      { id: '2', texto: 'Algunas ideas vagas' },
-      { id: '3', texto: 'Tengo algunas opciones en mente' },
-      { id: '4', texto: 'Bastante claro, pero con dudas' },
-      { id: '5', texto: 'Muy claro' },
+      { id: 'a', texto: 'Frente a pantallas, en proyectos complejos, con autonomía total.',
+        scores: { arquitecto: 10, narrador: 5 } },
+      { id: 'b', texto: 'En contacto directo con personas o entornos reales, en movimiento.',
+        scores: { sanador: 10, anfitrion: 5 } },
+      { id: 'c', texto: 'Liderando equipos hacia algo que yo ayudé a diseñar o construir.',
+        scores: { orquestador: 10, constructor: 5 } },
+      { id: 'd', texto: 'Con autonomía y tiempo para investigar, crear o explorar nuevos territorios.',
+        scores: { descubridor: 10, artifice: 5 } },
     ],
   },
 
   {
-    id: 'auto_2',
-    bloque: 'autoconocimiento',
-    tipo: 'context',
-    enunciado: '¿Hay alguien en tu entorno que espera que estudies algo en particular?',
-    subtext: 'Familia, pareja, amigos... Esta pregunta es confidencial y no afecta tu resultado, pero nos ayuda a interpretar el perfil.',
+    id: 'sit_19',
+    bloque: 'situacional',
+    tipo: 'situacional',
+    enunciado: 'Te ofrecen dos trabajos: uno muy estable, otro incierto pero apasionante. ¿Qué hacés?',
     opciones: [
-      { id: 'no', texto: 'No, tengo total libertad para elegir' },
-      { id: 'si_leve', texto: 'Sí, hay expectativas pero siento que puedo elegir igual' },
-      { id: 'si_fuerte', texto: 'Sí, hay bastante presión y me cuesta ignorarla' },
-      { id: 'prefiero', texto: 'Prefiero no responder esto' },
+      { id: 'a', texto: 'Me quedo con el incierto sin dudarlo. La pasión primero.',
+        scores: { artifice: 10, descubridor: 5 } },
+      { id: 'b', texto: 'Elijo el estable: la seguridad me libera para hacer lo que quiero fuera del trabajo.',
+        scores: { interprete: 10, arbitro: 5 } },
+      { id: 'c', texto: 'Negocio algo del apasionante para que tenga más estabilidad.',
+        scores: { orquestador: 10, arquitecto: 5 } },
+      { id: 'd', texto: 'Evalúo cuál tiene más impacto real, independientemente de lo que me genere.',
+        scores: { catalizador: 10, custodio: 5 } },
     ],
   },
 
   {
-    id: 'auto_3',
-    bloque: 'autoconocimiento',
-    tipo: 'context',
-    enunciado: '¿Cuántas carreras consideraste en serio hasta ahora?',
+    id: 'sit_20',
+    bloque: 'situacional',
+    tipo: 'situacional',
+    enunciado: '¿Con cuál de estas imágenes te identificás más como forma de ser?',
     opciones: [
-      { id: 'ninguna', texto: 'Ninguna todavía, estoy en cero' },
-      { id: 'una', texto: 'Una sola opción' },
-      { id: 'pocas', texto: 'Dos o tres opciones' },
-      { id: 'varias', texto: 'Cuatro o más — tengo demasiadas opciones' },
+      { id: 'a', texto: 'Un arquitecto de sistemas: construye reglas que funcionan solas.',
+        scores: { arquitecto: 10, arbitro: 5 } },
+      { id: 'b', texto: 'Un explorador: lo desconocido le genera más curiosidad que miedo.',
+        scores: { descubridor: 10, custodio: 5 } },
+      { id: 'c', texto: 'Un puente: conecta personas, ideas y mundos que no se veían.',
+        scores: { catalizador: 10, narrador: 5 } },
+      { id: 'd', texto: 'Un artesano: lo que hace lleva su firma, cada detalle es una decisión.',
+        scores: { artifice: 10, constructor: 5 } },
     ],
-  },
-
-  {
-    id: 'auto_4',
-    bloque: 'autoconocimiento',
-    tipo: 'forced_choice',
-    enunciado: '¿Qué te genera más ansiedad cuando pensás en elegir carrera?',
-    opciones: [
-      { id: 'A', texto: 'Equivocarme y perder años de mi vida', scores: { seguridad: 8 } },
-      { id: 'B', texto: 'No encontrar trabajo o no ganar bien', scores: { seguridad: 6, C: 2 } },
-      { id: 'C', texto: 'Decepcionar a las personas que me importan', scores: { S: 4 } },
-      { id: 'D', texto: 'No saber quién soy realmente ni qué quiero', scores: {} },
-    ],
-  },
-
-  {
-    id: 'auto_5',
-    bloque: 'autoconocimiento',
-    tipo: 'forced_choice',
-    enunciado: 'Cuando tenés que tomar una decisión importante, ¿cómo la tomás?',
-    opciones: [
-      { id: 'A', texto: 'Analizo toda la información disponible antes de decidir', scores: { I: 8, C: 4 } },
-      { id: 'B', texto: 'Consulto con personas de confianza y peso sus opiniones', scores: { S: 8, equipo: 6 } },
-      { id: 'C', texto: 'Confío en lo que me dice el instinto', scores: { A: 6, riesgo: 6 } },
-      { id: 'D', texto: 'Pruebo algo y ajusto según los resultados', scores: { E: 8, R: 4 } },
-    ],
-  },
-
-  // ── BLOQUE 4: ADAPTATIVAS (solo si hay ambigüedad) ───────────────────────
-
-  {
-    id: 'adap_1',
-    bloque: 'adaptativa',
-    tipo: 'forced_choice',
-    enunciado: 'Entre construir algo físico y entender algo abstracto, ¿cuál te parece más atractivo?',
-    subtext: 'Una pregunta más para afinar tu perfil.',
-    opciones: [
-      { id: 'A', texto: 'Construir algo físico — ver el resultado tangible', scores: { R: 10 } },
-      { id: 'B', texto: 'Entender algo abstracto — resolver el porqué', scores: { I: 10 } },
-    ],
-    condicion: (answers) => {
-      // Mostrar si R e I están muy cercanos
-      return true; // El engine decide en runtime
-    },
-  },
-
-  {
-    id: 'adap_2',
-    bloque: 'adaptativa',
-    tipo: 'forced_choice',
-    enunciado: 'Si tuvieras que elegir entre estos dos roles en un proyecto de impacto social, ¿cuál elegirías?',
-    subtext: 'Una pregunta más para afinar tu perfil.',
-    opciones: [
-      { id: 'A', texto: 'El que diseña la estrategia y convence a otros de seguirla', scores: { E: 10, S: 2 } },
-      { id: 'B', texto: 'El que trabaja directamente con las personas a quienes ayuda el proyecto', scores: { S: 10, E: 2 } },
-    ],
-    condicion: (answers) => true,
-  },
-
-  {
-    id: 'adap_3',
-    bloque: 'adaptativa',
-    tipo: 'forced_choice',
-    enunciado: 'En un proyecto creativo, ¿qué parte disfrutás más?',
-    subtext: 'Una pregunta más para afinar tu perfil.',
-    opciones: [
-      { id: 'A', texto: 'La expresión libre — hacer algo nuevo sin reglas', scores: { A: 10 } },
-      { id: 'B', texto: 'La organización del proceso — que todo fluya y esté bien ejecutado', scores: { C: 10, A: 2 } },
-    ],
-    condicion: (answers) => true,
   },
 ];
-
-export const CONTEXT_QUESTION_IDS = QUESTIONS
-  .filter(q => q.bloque === 'contexto')
-  .map(q => q.id);
-
-export const SCORED_QUESTION_IDS = QUESTIONS
-  .filter(q => q.bloque !== 'contexto')
-  .map(q => q.id);

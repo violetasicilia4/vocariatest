@@ -1,133 +1,167 @@
-import { CARRERAS, type Carrera } from '../data/carreras';
-import type { NormalizedProfile } from './scorer';
+import { CARRERAS_DB, type CarreraEntry, type UniversidadEntry } from '../data/db';
+import { getSalarioByMacroArea, type SalarioFamilia } from '../data/salarios';
+import type { ScoringResult } from './scorer';
 
 export interface CarreraRecomendada {
-  carrera: Carrera;
-  score: number; // 0-100
-  fit_score: number;
-  razon: string;
+  id: string;
+  titulo: string;
+  macroArea: string;
+  familia: string;
+  duracion: string | null;
+  universidadesTotal: number;
+  universidadesEnProvincia: UniversidadEntry[];
+  salario: SalarioFamilia | null;
   tag: 'top' | 'alternativa' | 'sorpresa';
+  arquetipoOrigen: string;
 }
 
-export interface ContextoFiltro {
-  provincia?: string;
-  movilidad?: string; // 'si_total' | 'si_beca' | 'virtual' | 'no'
-  duracion?: string;  // 'larga' | 'media' | 'corta' | 'nosé'
+function parseDuracionAnios(duracion: string | undefined | null): number | null {
+  if (!duracion) return null;
+  const m = duracion.match(/^(\d+(?:\.\d+)?)\s*años?/i);
+  return m ? parseFloat(m[1]) : null;
 }
 
-function cosineSim(a: number[], b: number[]): number {
-  const dot = a.reduce((s, v, i) => s + v * b[i], 0);
-  const magA = Math.sqrt(a.reduce((s, v) => s + v * v, 0));
-  const magB = Math.sqrt(b.reduce((s, v) => s + v * v, 0));
-  if (magA === 0 || magB === 0) return 0;
-  return dot / (magA * magB);
-}
-
-function duracionCompatible(carrera: Carrera, preferencia?: string): boolean {
-  if (!preferencia || preferencia === 'nosé') return true;
-  if (preferencia === 'larga') return carrera.duracion_anios >= 5;
-  if (preferencia === 'media') return carrera.duracion_anios >= 3 && carrera.duracion_anios <= 5;
-  if (preferencia === 'corta') return carrera.tipo === 'tecnicatura' || carrera.duracion_anios <= 3;
+function duracionCompatible(entry: CarreraEntry, preferencia?: string): boolean {
+  if (!preferencia || preferencia === 'nose') return true;
+  const anios = entry.universidades
+    .map(u => parseDuracionAnios(u.duracion))
+    .find((a): a is number => a !== null);
+  if (anios == null) return true;
+  if (preferencia === 'corta') return anios <= 3;
+  if (preferencia === 'media') return anios > 3 && anios <= 5;
+  if (preferencia === 'larga') return anios >= 5;
   return true;
 }
 
-function movilidadCompatible(carrera: Carrera, movilidad?: string, provincia?: string): boolean {
-  if (!movilidad || movilidad === 'si_total') return true;
-
-  const tieneEnProvincia = carrera.universidades.some(u =>
-    !provincia || u.provincia === provincia || u.provincia === 'Nacional'
-  );
-
-  if (movilidad === 'no' || movilidad === 'virtual') {
-    const tieneVirtual = carrera.universidades.some(u =>
-      u.modalidad === 'virtual' || u.modalidad === 'mixta'
-    );
-    return tieneEnProvincia || tieneVirtual;
-  }
-
-  return true;
+function filtrarUniversidadesPorProvincia(
+  entry: CarreraEntry,
+  provincia: string | undefined,
+  movilidad: string | undefined
+): UniversidadEntry[] {
+  if (!provincia || movilidad === 'si_total') return entry.universidades.slice(0, 6);
+  return entry.universidades.filter(u => u.provincia === provincia).slice(0, 6);
 }
 
-function generarRazon(carrera: Carrera, arquetipoId: string, profile: NormalizedProfile): string {
-  const esCompatible = carrera.arquetipos_compatibles.includes(arquetipoId);
-  const expandiendo = carrera.mercado === 'en_expansion';
-  const remoto = carrera.remoto_posible;
-
-  if (esCompatible && expandiendo && remoto) {
-    return `Combina muy bien con tu perfil y tiene alta demanda con posibilidad de trabajo remoto.`;
-  }
-  if (esCompatible && expandiendo) {
-    return `Alinea con tus dimensiones dominantes y el mercado laboral está creciendo.`;
-  }
-  if (esCompatible) {
-    return `Tu perfil vocacional tiene una coincidencia fuerte con esta carrera.`;
-  }
-  if (profile.impacto > 65) {
-    return `Para tu orientación hacia el impacto social, esta carrera ofrece salidas laborales muy significativas.`;
-  }
-  return `Esta carrera complementa tu perfil con habilidades que ya tenés desarrolladas.`;
+function getDuracionDisplay(entry: CarreraEntry): string | null {
+  const duraciones = entry.universidades
+    .map(u => u.duracion)
+    .filter(Boolean) as string[];
+  if (duraciones.length === 0) return null;
+  // Return most common duration
+  const freq: Record<string, number> = {};
+  for (const d of duraciones) freq[d] = (freq[d] ?? 0) + 1;
+  return Object.entries(freq).sort((a, b) => b[1] - a[1])[0][0];
 }
 
-export function recomendar(
-  profile: NormalizedProfile,
-  arquetipoId: string,
-  contexto: ContextoFiltro
-): CarreraRecomendada[] {
-  const riasecUser = [profile.R, profile.I, profile.A, profile.S, profile.E, profile.C];
+export function recomendar(result: ScoringResult): CarreraRecomendada[] {
+  const { activos, primario, contexto } = result;
 
-  const scored = CARRERAS
-    .filter(c => duracionCompatible(c, contexto.duracion))
-    .filter(c => movilidadCompatible(c, contexto.movilidad, contexto.provincia))
-    .map(carrera => {
-      const riasecCarrera = [
-        carrera.perfil_riasec.R, carrera.perfil_riasec.I, carrera.perfil_riasec.A,
-        carrera.perfil_riasec.S, carrera.perfil_riasec.E, carrera.perfil_riasec.C,
-      ];
-      const fitScore = cosineSim(riasecUser, riasecCarrera);
+  // Collect all macroareas from active archetypes (weighted by score)
+  const macroAreaPeso: Record<string, number> = {};
+  for (const activo of activos) {
+    const arq = result.ranking.find(r => r.id === activo.id);
+    const peso = arq?.pct ?? 50;
+    const arquetipoData = result.primario.id === activo.id
+      ? result.primario
+      : result.secundario?.id === activo.id
+      ? result.secundario
+      : result.tercero?.id === activo.id
+      ? result.tercero
+      : null;
+    if (!arquetipoData) continue;
+    for (const macro of arquetipoData.macroareas) {
+      macroAreaPeso[macro] = Math.max(macroAreaPeso[macro] ?? 0, peso);
+    }
+  }
 
-      const arquetipoBonus = carrera.arquetipos_compatibles.includes(arquetipoId) ? 0.12 : 0;
-      const mercadoBonus = carrera.mercado === 'en_expansion' ? 0.05
-        : carrera.mercado === 'saturado' ? -0.05 : 0;
+  const macroAreasActivas = new Set(Object.keys(macroAreaPeso));
 
-      const score = Math.min(1, fitScore + arquetipoBonus + mercadoBonus);
+  // Score each career
+  const scored = CARRERAS_DB
+    .filter(entry => macroAreasActivas.has(entry.macroArea))
+    .filter(entry => duracionCompatible(entry, contexto.duracion))
+    .map(entry => {
+      const pesoPorMacro = macroAreaPeso[entry.macroArea] ?? 0;
+      const univsEnProv = filtrarUniversidadesPorProvincia(entry, contexto.provincia, contexto.movilidad);
+      const disponibleEnProv = univsEnProv.length > 0;
+      const provBonus = contexto.provincia && disponibleEnProv ? 15 : 0;
+      const score = pesoPorMacro + provBonus;
 
-      return {
-        carrera,
-        score: Math.round(score * 100),
-        fit_score: Math.round(fitScore * 100),
-        razon: generarRazon(carrera, arquetipoId, profile),
-        tag: 'alternativa' as const,
-      };
+      return { entry, score, univsEnProv, disponibleEnProv };
     })
     .sort((a, b) => b.score - a.score);
 
-  // Diversity by familia — max 2 per familia in top results
+  // Diversity: max 3 per macroArea
   const resultado: CarreraRecomendada[] = [];
-  const familiasUsadas: Record<string, number> = {};
+  const macroUsada: Record<string, number> = {};
+  const titlosUsados = new Set<string>();
 
-  for (const item of scored) {
-    if (resultado.length >= 6) break;
+  for (const { entry, score, univsEnProv } of scored) {
+    if (resultado.length >= 8) break;
+    if (titlosUsados.has(entry.titulo)) continue;
 
-    const familia = item.carrera.familia;
-    const countFamilia = familiasUsadas[familia] ?? 0;
+    const count = macroUsada[entry.macroArea] ?? 0;
+    if (count >= 3) continue;
 
-    if (countFamilia >= 2) continue;
+    macroUsada[entry.macroArea] = count + 1;
+    titlosUsados.add(entry.titulo);
 
-    familiasUsadas[familia] = countFamilia + 1;
+    // Determine origin archetype
+    let origenId = primario.id;
+    for (const activo of activos) {
+      const arquetipoData = result.primario.id === activo.id
+        ? result.primario
+        : result.secundario?.id === activo.id
+        ? result.secundario
+        : result.tercero?.id === activo.id
+        ? result.tercero
+        : null;
+      if (arquetipoData?.macroareas.includes(entry.macroArea)) {
+        origenId = activo.id;
+        break;
+      }
+    }
+
     resultado.push({
-      ...item,
-      tag: resultado.length === 0 ? 'top' : 'alternativa',
+      id: entry.id,
+      titulo: entry.titulo,
+      macroArea: entry.macroArea,
+      familia: entry.familia,
+      duracion: getDuracionDisplay(entry),
+      universidadesTotal: entry.universidades.length,
+      universidadesEnProvincia: univsEnProv,
+      salario: getSalarioByMacroArea(entry.macroArea) ?? null,
+      tag: 'alternativa',
+      arquetipoOrigen: origenId,
     });
   }
 
-  // Sorpresa: carrera con fit ≥ 55 de familia no representada
-  const familiasEnResultado = new Set(resultado.map(r => r.carrera.familia));
-  const sorpresa = scored.find(
-    s => !familiasEnResultado.has(s.carrera.familia) && s.score >= 55 && !resultado.some(r => r.carrera.id === s.carrera.id)
+  // Sorpresa: carrera de macroárea no representada pero de archetype activo
+  const macroEnResultado = new Set(resultado.map(r => r.macroArea));
+  const sorpresaCandidata = scored.find(
+    ({ entry }) =>
+      !macroEnResultado.has(entry.macroArea) &&
+      macroAreasActivas.has(entry.macroArea) &&
+      !titlosUsados.has(entry.titulo)
   );
-  if (sorpresa) {
-    resultado.push({ ...sorpresa, tag: 'sorpresa' });
+  if (sorpresaCandidata && resultado.length < 9) {
+    const { entry, univsEnProv } = sorpresaCandidata;
+    resultado.push({
+      id: entry.id,
+      titulo: entry.titulo,
+      macroArea: entry.macroArea,
+      familia: entry.familia,
+      duracion: getDuracionDisplay(entry),
+      universidadesTotal: entry.universidades.length,
+      universidadesEnProvincia: univsEnProv,
+      salario: getSalarioByMacroArea(entry.macroArea) ?? null,
+      tag: 'sorpresa',
+      arquetipoOrigen: primario.id,
+    });
   }
+
+  // Tag the first as 'top'
+  if (resultado.length > 0) resultado[0].tag = 'top';
 
   return resultado;
 }

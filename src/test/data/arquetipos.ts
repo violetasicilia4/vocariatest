@@ -4,267 +4,244 @@ export interface Arquetipo {
   tagline: string;
   descripcion: string;
   emoji: string;
-  color: string; // hex accent
+  color: string;
   colorBg: string;
-  // Perfil RIASEC dominante (0-100)
-  perfil: {
-    R: number; I: number; A: number; S: number; E: number; C: number;
-  };
-  motivacion: {
-    autonomia: number;
-    seguridad: number;
-    impacto: number;
-    riesgo: number;
-  };
-  carreras_primarias: string[];
-  carreras_secundarias: string[];
-  combinaciones: { con: string; resultado: string }[];
+  macroareas: string[];
   fortalezas: string[];
   desafios: string[];
 }
 
+export interface Combinacion {
+  ids: [string, string];
+  nombre: string;
+  descripcion: string;
+}
+
 export const ARQUETIPOS: Arquetipo[] = [
+  {
+    id: 'arquitecto',
+    nombre: 'El Arquitecto',
+    tagline: 'Construye sistemas que funcionan solos. Ve estructura donde otros ven caos.',
+    descripcion: 'Tenés una mente que descompone problemas complejos en partes manejables. No solo querés que las cosas funcionen: querés entender por qué funcionan y cómo hacerlas más eficientes. Tu satisfacción más grande es construir algo invisible que sostiene todo lo demás.',
+    emoji: '⚙️',
+    color: '#6366f1',
+    colorBg: '#eef2ff',
+    macroareas: [
+      'Ingeniería Informática y Sistemas',
+      'Datos, IA y Matemática',
+      'Ingeniería Eléctrica, Electrónica y Telecomunicaciones',
+    ],
+    fortalezas: ['Pensamiento sistémico', 'Resolución de problemas complejos', 'Autonomía y foco profundo', 'Lógica aplicada', 'Abstracción y modelado'],
+    desafios: ['Puede subestimar la dimensión humana de los problemas', 'Prefiere el detalle técnico por sobre la visión estratégica', 'Puede aislarse demasiado en el trabajo individual'],
+  },
   {
     id: 'constructor',
     nombre: 'El Constructor',
-    tagline: 'Creás cosas concretas. El resultado que se puede tocar te importa.',
-    descripcion: 'Sos de las personas que encuentran satisfacción en el resultado tangible. Preferís un problema técnico claro por encima de una discusión abstracta. Te movés bien en entornos donde hay algo que armar, reparar o mejorar.',
-    emoji: '🔧',
+    tagline: 'Necesita que sus ideas tengan peso y volumen. Opera en el mundo físico.',
+    descripcion: 'Para vos, el resultado es algo que se puede tocar, medir o transitar. Encontrás satisfacción en materializar ideas: un edificio que se sostiene, una máquina que funciona, una red que resiste. El trabajo concreto y el resultado tangible son lo que te moviliza.',
+    emoji: '🏗️',
     color: '#f97316',
     colorBg: '#fff7ed',
-    perfil: { R: 85, I: 50, A: 25, S: 30, E: 40, C: 45 },
-    motivacion: { autonomia: 55, seguridad: 60, impacto: 40, riesgo: 35 },
-    carreras_primarias: ['Ingeniería Civil', 'Ingeniería Mecánica', 'Ingeniería Industrial', 'Arquitectura', 'Ingeniería Electrónica', 'Tecnología en Construcción'],
-    carreras_secundarias: ['Diseño Industrial', 'Ingeniería Química', 'Ingeniería Agraria', 'Tecnicatura en Mantenimiento'],
-    combinaciones: [
-      { con: 'investigador', resultado: 'Ingeniería de alto nivel o I+D aplicado' },
-      { con: 'organizador', resultado: 'Gestión de proyectos de construcción o manufactura' },
+    macroareas: [
+      'Ingeniería Civil, Construcción e Infraestructura',
+      'Ingeniería Mecánica, Electromecánica y Mecatrónica',
+      'Ingeniería Industrial y Producción',
+      'Arquitectura, Urbanismo y Construcción',
+      'Ingeniería y Tecnología',
     ],
-    fortalezas: ['Pensamiento práctico', 'Capacidad técnica', 'Orientación a resultados', 'Resolución de problemas concretos'],
-    desafios: ['Puede frustrarse con tareas muy abstractas o sin resultado visible', 'A veces prefiere el detalle técnico por encima de la visión estratégica'],
+    fortalezas: ['Orientación a resultados tangibles', 'Capacidad técnica y manual', 'Gestión de proyectos complejos', 'Pensamiento espacial', 'Rigor y precisión'],
+    desafios: ['Puede frustrarse con lo abstracto o intangible', 'A veces el detalle técnico opaca la visión de conjunto', 'Puede resistir cambios de plan una vez que arrancó'],
   },
-
   {
-    id: 'investigador',
-    nombre: 'El Investigador',
-    tagline: 'Querés entender cómo funciona todo, no solo que funcione.',
-    descripcion: 'Te sentís más vivo/a cuando encontrás la respuesta a algo que nadie había resuelto antes. Preferís trabajar en profundidad. La incertidumbre no te asusta, te atrae. Necesitás autonomía para explorar a tu ritmo.',
-    emoji: '🔬',
-    color: '#6366f1',
-    colorBg: '#eef2ff',
-    perfil: { R: 40, I: 90, A: 45, S: 30, E: 30, C: 45 },
-    motivacion: { autonomia: 75, seguridad: 35, impacto: 55, riesgo: 50 },
-    carreras_primarias: ['Física', 'Matemática', 'Bioquímica', 'Biotecnología', 'Ciencias de Datos', 'Filosofía', 'Economía'],
-    carreras_secundarias: ['Ingeniería en Computación', 'Medicina', 'Historia', 'Ciencias Naturales'],
-    combinaciones: [
-      { con: 'analista', resultado: 'Ciencia de datos, bioinformática, inteligencia artificial' },
-      { con: 'comunicador', resultado: 'Periodismo científico, divulgación, docencia universitaria' },
+    id: 'sanador',
+    nombre: 'El Sanador',
+    tagline: 'Acompaña a otros en su dimensión más vulnerable. La persona como centro.',
+    descripcion: 'Tenés una orientación natural hacia el bienestar de los demás. No es solo empatía: es la convicción de que acompañar a alguien en un momento difícil es uno de los trabajos más importantes que existen. La salud, en su sentido más amplio, es tu territorio.',
+    emoji: '🩺',
+    color: '#10b981',
+    colorBg: '#ecfdf5',
+    macroareas: [
+      'Medicina y Salud',
+      'Psicología y Comportamiento Humano',
+      'Química, Farmacia y Bioquímica',
     ],
-    fortalezas: ['Pensamiento analítico profundo', 'Capacidad de concentración', 'Rigor intelectual', 'Curiosidad sostenida'],
-    desafios: ['Puede subestimar cuánto tarda la investigación en dar frutos', 'A veces le cuesta comunicar sus hallazgos a audiencias no técnicas'],
+    fortalezas: ['Escucha activa y empatía', 'Presencia en situaciones difíciles', 'Orientación al cuidado', 'Visión integral de la persona', 'Paciencia y constancia'],
+    desafios: ['Puede cargar emocionalmente con el trabajo', 'A veces posterga sus propias necesidades', 'Puede tener dificultad para poner límites profesionales'],
   },
-
   {
-    id: 'creativo',
-    nombre: 'El Creativo Aplicado',
-    tagline: 'Expresión + función. Creás cosas que importan y que se ven.',
-    descripcion: 'Tenés una combinación poco común: querés que lo que creás sea útil y también bello. No te basta con que algo funcione si no tiene una forma que valga la pena. Te movés bien en la intersección entre arte y problema real.',
+    id: 'catalizador',
+    nombre: 'El Catalizador',
+    tagline: 'Su mayor satisfacción es multiplicar el potencial de otros.',
+    descripcion: 'No trabajás para brillar vos: trabajás para que otros brillen. Encontrás sentido en desarrollar capacidades, facilitar aprendizajes y construir comunidad. El impacto que más te importa es el que se multiplica en otras personas.',
+    emoji: '🌱',
+    color: '#14b8a6',
+    colorBg: '#f0fdfa',
+    macroareas: [
+      'Educación y Docencia',
+      'Recursos Humanos y Organizaciones',
+      'Ciencias Sociales y Comunitarias',
+    ],
+    fortalezas: ['Comunicación y pedagogía', 'Desarrollo de personas', 'Trabajo comunitario', 'Facilitación de procesos grupales', 'Visión social del trabajo'],
+    desafios: ['Puede depender demasiado de la validación externa', 'A veces posterga resultados por priorizar el proceso', 'Dificultad para tomar decisiones duras con personas'],
+  },
+  {
+    id: 'artifice',
+    nombre: 'El Artífice',
+    tagline: 'Piensa en imágenes antes que en palabras. Combina estética con función.',
+    descripcion: 'Para vos, la forma importa tanto como el contenido. Tenés una sensibilidad especial hacia lo visual, lo estético y lo expresivo. Tu trabajo lleva una firma: cada detalle refleja una decisión consciente. No concebís hacer algo que no tenga valor propio.',
     emoji: '🎨',
     color: '#ec4899',
     colorBg: '#fdf2f8',
-    perfil: { R: 25, I: 40, A: 90, S: 45, E: 50, C: 25 },
-    motivacion: { autonomia: 80, seguridad: 30, impacto: 50, riesgo: 55 },
-    carreras_primarias: ['Diseño Gráfico', 'Diseño de Indumentaria', 'Comunicación Visual', 'Arquitectura', 'Diseño Industrial', 'Bellas Artes'],
-    carreras_secundarias: ['Publicidad', 'Diseño UX/UI', 'Arquitectura de Interiores', 'Animación Digital'],
-    combinaciones: [
-      { con: 'emprendedor', resultado: 'Agencia creativa, marca personal, estudio de diseño propio' },
-      { con: 'comunicador', resultado: 'Dirección de arte, content design, creative strategy' },
+    macroareas: [
+      'Arte, Música y Audiovisual',
+      'Diseño y Creatividad',
     ],
-    fortalezas: ['Pensamiento visual', 'Capacidad de síntesis estética', 'Creatividad aplicada', 'Sensibilidad hacia el usuario'],
-    desafios: ['Puede subestimar la parte técnica o de negocios de una carrera creativa', 'El mercado laboral creativo requiere construir portafolio desde el día 1'],
+    fortalezas: ['Sensibilidad estética', 'Creatividad aplicada', 'Atención al detalle', 'Comunicación visual', 'Originalidad y voz propia'],
+    desafios: ['Puede tener dificultad con restricciones creativas externas', 'A veces la perfección impide cerrar proyectos', 'Puede subestimar la dimensión técnica o de negocio'],
   },
-
   {
-    id: 'conector',
-    nombre: 'El Conector Social',
-    tagline: 'Tu energía está en las personas. El vínculo es tu herramienta.',
-    descripcion: 'Sos naturalmente bueno/a para leer a las personas, crear confianza rápido y hacer que los grupos funcionen. Te cansa trabajar solo/a por mucho tiempo. Encontrás sentido cuando lo que hacés tiene un efecto directo en alguien.',
-    emoji: '🤝',
-    color: '#10b981',
-    colorBg: '#ecfdf5',
-    perfil: { R: 20, I: 25, A: 35, S: 90, E: 55, C: 30 },
-    motivacion: { autonomia: 40, seguridad: 50, impacto: 90, riesgo: 35 },
-    carreras_primarias: ['Psicología', 'Trabajo Social', 'Educación', 'Enfermería', 'Comunicación Social', 'Recursos Humanos'],
-    carreras_secundarias: ['Sociología', 'Salud Pública', 'Terapia Ocupacional', 'Licenciatura en Educación'],
-    combinaciones: [
-      { con: 'cuidador', resultado: 'Psicología clínica, trabajo en salud mental o atención primaria' },
-      { con: 'estratega', resultado: 'Liderazgo en organizaciones sociales, consultoría en RR.HH.' },
-    ],
-    fortalezas: ['Empatía y escucha activa', 'Capacidad de construir relaciones', 'Trabajo en equipo', 'Comunicación interpersonal'],
-    desafios: ['Puede absorber emocionalmente las situaciones difíciles de otros', 'Necesita aprender a poner límites en profesiones de ayuda'],
-  },
-
-  {
-    id: 'estratega',
-    nombre: 'El Estratega',
-    tagline: 'Pensás en sistemas. Sabés cómo hacer que las cosas pasen.',
-    descripcion: 'Tenés capacidad para ver el cuadro completo y también el detalle que va a marcar la diferencia. Te gusta tomar decisiones, incluso con información incompleta. Los roles donde tenés que convencer y mover a otros te quedan cómodos.',
-    emoji: '♟️',
-    color: '#f59e0b',
-    colorBg: '#fffbeb',
-    perfil: { R: 30, I: 50, A: 35, S: 55, E: 90, C: 60 },
-    motivacion: { autonomia: 65, seguridad: 45, impacto: 60, riesgo: 70 },
-    carreras_primarias: ['Administración de Empresas', 'Ciencias Políticas', 'Derecho', 'Marketing', 'Relaciones Internacionales', 'Ingeniería Industrial'],
-    carreras_secundarias: ['Economía', 'Comunicación Institucional', 'Sociología', 'MBA (posgrado)'],
-    combinaciones: [
-      { con: 'organizador', resultado: 'Gestión de proyectos, consultoría de procesos, supply chain' },
-      { con: 'investigador', resultado: 'Economía aplicada, política pública, inteligencia de mercado' },
-    ],
-    fortalezas: ['Pensamiento estratégico', 'Liderazgo natural', 'Capacidad de decisión bajo presión', 'Visión sistémica'],
-    desafios: ['Puede impacientarse con procesos lentos o exceso de burocracia', 'A veces subestima la importancia del detalle técnico'],
-  },
-
-  {
-    id: 'organizador',
-    nombre: 'El Organizador',
-    tagline: 'Donde hay caos, vos ponés orden. Y eso tiene un valor enorme.',
-    descripcion: 'Sos de las personas que disfrutan cuando un proceso funciona como reloj. Preferís la certeza y los sistemas bien definidos. La improvisación te incomoda, no porque te falte capacidad, sino porque sabés que la estructura previene errores.',
-    emoji: '📋',
-    color: '#0ea5e9',
-    colorBg: '#f0f9ff',
-    perfil: { R: 35, I: 50, A: 20, S: 35, E: 50, C: 90 },
-    motivacion: { autonomia: 35, seguridad: 85, impacto: 40, riesgo: 20 },
-    carreras_primarias: ['Contador Público', 'Administración', 'Tecnicatura en Administración', 'Licenciatura en Sistemas', 'Comercio Exterior', 'Gestión de Información'],
-    carreras_secundarias: ['Auditoría', 'Logística', 'Gestión de RRHH', 'Ciencias Económicas'],
-    combinaciones: [
-      { con: 'analista', resultado: 'Business Intelligence, análisis financiero, data governance' },
-      { con: 'estratega', resultado: 'Gerencia de operaciones, PMO, consultoría de procesos' },
-    ],
-    fortalezas: ['Orden y meticulosidad', 'Confiabilidad y consistencia', 'Capacidad de sistematizar', 'Gestión del detalle'],
-    desafios: ['Puede resistir los cambios rápidos o la ambigüedad prolongada', 'En entornos muy creativos puede sentirse fuera de lugar'],
-  },
-
-  {
-    id: 'transformador',
-    nombre: 'El Transformador Social',
-    tagline: 'No te alcanza con estar bien vos. Querés cambiar algo más grande.',
-    descripcion: 'Tenés una brújula interna muy clara sobre lo que está bien y lo que está mal. El impacto colectivo te moviliza. No querés solo un trabajo, querés que tu trabajo cambie algo en el mundo, aunque sea en una escala pequeña.',
-    emoji: '🌱',
-    color: '#84cc16',
-    colorBg: '#f7fee7',
-    perfil: { R: 20, I: 45, A: 40, S: 85, E: 65, C: 35 },
-    motivacion: { autonomia: 55, seguridad: 35, impacto: 95, riesgo: 50 },
-    carreras_primarias: ['Trabajo Social', 'Ciencias Políticas', 'Derecho', 'Sociología', 'Salud Pública', 'Relaciones Internacionales'],
-    carreras_secundarias: ['Periodismo', 'Antropología', 'Psicología Social', 'Educación Popular'],
-    combinaciones: [
-      { con: 'estratega', resultado: 'Gestión de ONGs, política pública, advocacy' },
-      { con: 'comunicador', resultado: 'Periodismo de investigación, comunicación para el desarrollo' },
-    ],
-    fortalezas: ['Compromiso y convicción', 'Empatía sistémica', 'Capacidad de movilizar a otros', 'Visión de largo plazo'],
-    desafios: ['El sector social puede ser emocionalmente agotador y económicamente inestable al inicio', 'Necesita aprender a sostener el ritmo sin quemarse'],
-  },
-
-  {
-    id: 'cientifico',
-    nombre: 'El Científico-Técnico',
-    tagline: 'La exactitud no es una obsesión. Es tu manera de respetar la realidad.',
-    descripcion: 'Combinás la curiosidad del investigador con la capacidad técnica del constructor. Te incomoda la imprecisión. Preferís una respuesta correcta tardía que una rápida y equivocada. Te movés muy bien en ciencias exactas, medicina o ingeniería de alto nivel.',
-    emoji: '⚗️',
-    color: '#8b5cf6',
-    colorBg: '#f5f3ff',
-    perfil: { R: 70, I: 85, A: 25, S: 25, E: 30, C: 50 },
-    motivacion: { autonomia: 65, seguridad: 50, impacto: 55, riesgo: 40 },
-    carreras_primarias: ['Medicina', 'Bioquímica', 'Física', 'Ingeniería Química', 'Biotecnología', 'Odontología'],
-    carreras_secundarias: ['Farmacia', 'Kinesiología', 'Ingeniería Electrónica', 'Ciencias Naturales'],
-    combinaciones: [
-      { con: 'investigador', resultado: 'Investigación biomédica, física aplicada, nanotecnología' },
-      { con: 'cuidador', resultado: 'Medicina clínica, salud pública, rehabilitación' },
-    ],
-    fortalezas: ['Rigor metodológico', 'Capacidad técnica avanzada', 'Pensamiento sistémico', 'Precisión'],
-    desafios: ['Las carreras de este perfil son largas y exigentes — requieren mucha tolerancia al esfuerzo prolongado', 'El éxito suele llegar tarde'],
-  },
-
-  {
-    id: 'emprendedor_creativo',
-    nombre: 'El Emprendedor Creativo',
-    tagline: 'Tenés ideas originales y querés hacerlas pasar. Eso es raro y valioso.',
-    descripcion: 'Combinás la creatividad con la energía para ejecutar. No te basta con tener la idea — querés que pase. Tolerás bien el riesgo, te aburre la rutina excesiva y preferís construir algo propio antes que seguir estructuras ajenas.',
-    emoji: '🚀',
-    color: '#f43f5e',
-    colorBg: '#fff1f2',
-    perfil: { R: 35, I: 45, A: 75, S: 45, E: 85, C: 25 },
-    motivacion: { autonomia: 90, seguridad: 20, impacto: 60, riesgo: 85 },
-    carreras_primarias: ['Diseño UX/UI', 'Marketing', 'Comunicación', 'Diseño Gráfico', 'Administración de Empresas', 'Publicidad'],
-    carreras_secundarias: ['Ingeniería en Sistemas (con orientación producto)', 'Relaciones Públicas', 'Multimedia'],
-    combinaciones: [
-      { con: 'creativo', resultado: 'Agencias, startups de producto, creative technologist' },
-      { con: 'estratega', resultado: 'Fundador/a de startup, consultor/a de innovación' },
-    ],
-    fortalezas: ['Pensamiento innovador', 'Alta energía y ejecución', 'Tolerancia al riesgo', 'Visión de producto'],
-    desafios: ['Puede comprometer demasiadas cosas a la vez y dispersarse', 'Necesita aprender a validar antes de escalar'],
-  },
-
-  {
-    id: 'cuidador',
-    nombre: 'El Cuidador Profesional',
-    tagline: 'Estar presente en los momentos difíciles de otro es una habilidad, no un rasgo.',
-    descripcion: 'Tenés una combinación de empatía y vocación de servicio que es genuina. No te agotan los problemas de los demás — te activan. Encontrás sentido profundo cuando ves a alguien mejorar gracias a lo que hacés.',
-    emoji: '💙',
-    color: '#06b6d4',
-    colorBg: '#ecfeff',
-    perfil: { R: 30, I: 40, A: 30, S: 90, E: 35, C: 40 },
-    motivacion: { autonomia: 40, seguridad: 60, impacto: 90, riesgo: 25 },
-    carreras_primarias: ['Medicina', 'Enfermería', 'Psicología', 'Kinesiología', 'Nutrición', 'Terapia Ocupacional'],
-    carreras_secundarias: ['Trabajo Social', 'Educación Especial', 'Farmacia', 'Salud Mental'],
-    combinaciones: [
-      { con: 'cientifico', resultado: 'Medicina especializada, investigación clínica, salud pública' },
-      { con: 'conector', resultado: 'Psicología grupal, trabajo comunitario, facilitación' },
-    ],
-    fortalezas: ['Empatía clínica', 'Presencia y escucha', 'Orientación al bienestar del otro', 'Resiliencia emocional'],
-    desafios: ['Las profesiones de cuidado tienen desgaste emocional real — requieren autocuidado activo', 'Los salarios iniciales suelen ser bajos en el sector público'],
-  },
-
-  {
-    id: 'comunicador',
-    nombre: 'El Comunicador',
-    tagline: 'Las palabras y las historias son tu herramienta de trabajo más afilada.',
-    descripcion: 'Tenés la capacidad de hacer que las cosas complejas parezcan claras, y que las simples parezcan importantes. Te gusta conectar ideas con audiencias. Tanto el periodismo como el marketing, la docencia o la comunicación institucional tienen sentido para vos.',
-    emoji: '📢',
-    color: '#d946ef',
-    colorBg: '#fdf4ff',
-    perfil: { R: 15, I: 40, A: 70, S: 70, E: 55, C: 30 },
-    motivacion: { autonomia: 60, seguridad: 40, impacto: 70, riesgo: 45 },
-    carreras_primarias: ['Comunicación Social', 'Periodismo', 'Publicidad', 'Letras', 'Relaciones Públicas', 'Docencia'],
-    carreras_secundarias: ['Marketing Digital', 'Edición', 'Guion y Realización', 'Comunicación Política'],
-    combinaciones: [
-      { con: 'investigador', resultado: 'Periodismo de investigación, comunicación científica, data journalism' },
-      { con: 'creativo', resultado: 'Dirección de arte, branding, producción audiovisual' },
-    ],
-    fortalezas: ['Claridad comunicativa', 'Empatía con la audiencia', 'Narrativa y storytelling', 'Adaptabilidad de registro'],
-    desafios: ['El periodismo y la comunicación atraviesan transformaciones profundas — requieren adaptación constante', 'El mercado es muy competitivo para posiciones estables'],
-  },
-
-  {
-    id: 'analista',
-    nombre: 'El Analista de Sistemas',
-    tagline: 'Los datos, los patrones y la lógica son tu lenguaje nativo.',
-    descripcion: 'Sos de las personas que disfrutan cuando los números cuentan una historia. Pensás en sistemas, en procesos y en cómo automatizar lo que puede automatizarse. Combinás capacidad técnica con una mente ordenada que busca eficiencia.',
+    id: 'interprete',
+    nombre: 'El Intérprete',
+    tagline: 'Lee la realidad a través de patrones y números. Convierte datos en decisiones.',
+    descripcion: 'Los números son tu idioma nativo. No solo los manejás: los disfrutás. Sos de las personas que ven un gráfico y ven una historia, que encuentran señales donde otros ven ruido. Tu valor está en traducir la complejidad en algo accionable.',
     emoji: '📊',
     color: '#3b82f6',
     colorBg: '#eff6ff',
-    perfil: { R: 40, I: 80, A: 25, S: 20, E: 40, C: 80 },
-    motivacion: { autonomia: 60, seguridad: 55, impacto: 40, riesgo: 40 },
-    carreras_primarias: ['Ingeniería en Sistemas', 'Ciencia de Datos', 'Ingeniería en Computación', 'Estadística', 'Ingeniería Industrial', 'Licenciatura en Informática'],
-    carreras_secundarias: ['Tecnicatura en Programación', 'Ingeniería Electrónica', 'Actuariado', 'Matemática Aplicada'],
-    combinaciones: [
-      { con: 'investigador', resultado: 'Machine learning, investigación en IA, ciencia de datos académica' },
-      { con: 'organizador', resultado: 'Business intelligence, gestión de proyectos de tecnología, ERP' },
+    macroareas: [
+      'Economía y Finanzas',
+      'Contabilidad e Impuestos',
+      'Datos, IA y Matemática',
     ],
-    fortalezas: ['Pensamiento lógico y estructurado', 'Capacidad para detectar patrones', 'Precisión técnica', 'Sistematización'],
-    desafios: ['Puede subestimar las habilidades blandas necesarias para trabajar en equipo', 'El campo evoluciona muy rápido — requiere actualización continua'],
+    fortalezas: ['Pensamiento analítico', 'Manejo de datos y modelos', 'Objetividad en la toma de decisiones', 'Capacidad para simplificar lo complejo', 'Rigor metodológico'],
+    desafios: ['Puede sobre-analizar antes de actuar', 'A veces subestima factores cualitativos', 'Puede ser percibido como frío o distante'],
+  },
+  {
+    id: 'orquestador',
+    nombre: 'El Orquestador',
+    tagline: 'Mueve personas y recursos hacia un objetivo. Liderazgo como forma de pensar.',
+    descripcion: 'Ves el panorama completo y sabés qué pieza mover primero. Tenés una capacidad natural para organizar esfuerzos, alinear personas y ejecutar estrategias. No necesitás hacer todo vos: tu rol es que el conjunto funcione mejor que cada parte por separado.',
+    emoji: '🎯',
+    color: '#f59e0b',
+    colorBg: '#fffbeb',
+    macroareas: [
+      'Administración y Negocios',
+      'Marketing, Publicidad y Comercialización',
+      'Gobierno, Política y Relaciones Internacionales',
+    ],
+    fortalezas: ['Visión estratégica', 'Liderazgo y coordinación', 'Comunicación persuasiva', 'Orientación a resultados de negocio', 'Adaptabilidad y gestión del cambio'],
+    desafios: ['Puede perder el foco en el detalle operativo', 'A veces toma decisiones sin suficiente consulta', 'Puede depender demasiado del contexto para motivarse'],
+  },
+  {
+    id: 'descubridor',
+    nombre: 'El Descubridor',
+    tagline: 'Vive para formular preguntas que nadie hizo todavía. La duda como motor.',
+    descripcion: 'Tu energía viene de lo que aún no se sabe. Tenés una curiosidad que no se sacia fácilmente: cada respuesta abre tres preguntas nuevas. La investigación, la experimentación y el pensamiento profundo son tu hábitat natural.',
+    emoji: '🔬',
+    color: '#8b5cf6',
+    colorBg: '#f5f3ff',
+    macroareas: [
+      'Ciencias Exactas y Naturales',
+      'Ciencias Biológicas y Biotecnología',
+      'Ingeniería Química y de Alimentos',
+    ],
+    fortalezas: ['Curiosidad intelectual profunda', 'Rigor científico', 'Pensamiento crítico', 'Tolerancia a la incertidumbre', 'Capacidad de concentración sostenida'],
+    desafios: ['Puede tener dificultad para cerrar proyectos y pasar a la acción', 'A veces se aísla en el trabajo individual', 'Puede subestimar la comunicación de sus hallazgos'],
+  },
+  {
+    id: 'arbitro',
+    nombre: 'El Árbitro',
+    tagline: 'El orden y la justicia como principio organizador de todo.',
+    descripcion: 'Creés genuinamente en las normas, no como restricciones sino como acuerdos que hacen posible la convivencia. Tenés una sensibilidad aguda hacia lo que está bien y lo que está mal, y la energía para actuar en consecuencia. La justicia no es abstracta para vos: es urgente.',
+    emoji: '⚖️',
+    color: '#94a3b8',
+    colorBg: '#f8fafc',
+    macroareas: [
+      'Derecho y Ciencias Jurídicas',
+      'Seguridad, Criminalística y Defensa',
+      'Gobierno, Política y Relaciones Internacionales',
+    ],
+    fortalezas: ['Pensamiento jurídico y normativo', 'Sentido de la justicia', 'Argumentación y retórica', 'Integridad y consistencia', 'Manejo de conflictos complejos'],
+    desafios: ['Puede ser inflexible ante situaciones grises', 'A veces la rigidez normativa impide adaptarse al contexto', 'Puede tomarse los conflictos demasiado personalmente'],
+  },
+  {
+    id: 'custodio',
+    nombre: 'El Custodio',
+    tagline: 'Responsable de lo vivo y lo natural. Piensa en décadas, no en trimestres.',
+    descripcion: 'Tenés un vínculo profundo con los sistemas vivos: el campo, el ecosistema, los animales, el territorio. Tu horizonte de tiempo es largo: te importa lo que va a quedar cuando vos ya no estés. La responsabilidad sobre lo que existe y lo que puede existir te define.',
+    emoji: '🌿',
+    color: '#22c55e',
+    colorBg: '#f0fdf4',
+    macroareas: [
+      'Ambiente y Recursos Naturales',
+      'Agropecuarias y Producción Alimentaria',
+      'Veterinaria',
+    ],
+    fortalezas: ['Visión de largo plazo', 'Responsabilidad ambiental y territorial', 'Trabajo en entornos naturales', 'Conexión con sistemas vivos', 'Paciencia y constancia'],
+    desafios: ['Puede frustrarse con la lentitud de los cambios sistémicos', 'A veces el idealismo choca con la viabilidad económica', 'Puede tener dificultad para trabajar en entornos muy urbanos o corporativos'],
+  },
+  {
+    id: 'narrador',
+    nombre: 'El Narrador',
+    tagline: 'Da forma al mundo con palabras, imágenes y cultura.',
+    descripcion: 'Para vos, el lenguaje es una herramienta de transformación. Sabés que una historia bien contada puede cambiar perspectivas, mover emociones e instalar ideas que duran. Tenés el impulso de nombrar lo que otros sienten pero no saben cómo decir.',
+    emoji: '✍️',
+    color: '#e879f9',
+    colorBg: '#fdf4ff',
+    macroareas: [
+      'Comunicación y Medios',
+      'Humanidades, Filosofía y Religión',
+      'Lenguas, Traducción y Letras',
+    ],
+    fortalezas: ['Comunicación escrita y oral', 'Sensibilidad cultural y narrativa', 'Pensamiento crítico y reflexivo', 'Capacidad de síntesis', 'Empatía conceptual'],
+    desafios: ['Puede tener dificultad con estructuras muy rígidas o técnicas', 'A veces la reflexión posterga la acción', 'Puede subestimar el valor de lo cuantitativo'],
+  },
+  {
+    id: 'anfitrion',
+    nombre: 'El Anfitrión',
+    tagline: 'Crea experiencias que transforman a las personas. Hospitalidad como vocación.',
+    descripcion: 'Tu trabajo existe en el encuentro: el momento en que alguien vive algo que no esperaba, disfruta más de lo que imaginaba, o se siente genuinamente cuidado. Tenés una energía especial para que los demás se sientan bien, y eso lo convertís en tu profesión.',
+    emoji: '🤝',
+    color: '#06b6d4',
+    colorBg: '#ecfeff',
+    macroareas: [
+      'Turismo, Gastronomía y Hospitalidad',
+      'Deportes y Actividad Física',
+    ],
+    fortalezas: ['Orientación al cliente y la experiencia', 'Energía interpersonal', 'Adaptabilidad y creatividad situacional', 'Liderazgo de equipos operativos', 'Presencia y comunicación'],
+    desafios: ['Puede tener dificultad con el trabajo muy solitario o técnico', 'Jornadas exigentes pueden generar desgaste', 'A veces subestima la dimensión estratégica del sector'],
   },
 ];
 
-export function getArquetipoById(id: string): Arquetipo | undefined {
+export const COMBINACIONES: Combinacion[] = [
+  { ids: ['arquitecto', 'interprete'], nombre: 'El Ingeniero de Decisiones', descripcion: 'Construye sistemas y los alimenta con datos para tomar mejores decisiones.' },
+  { ids: ['arquitecto', 'descubridor'], nombre: 'El Científico de Sistemas', descripcion: 'Investiga en profundidad para diseñar soluciones técnicas de alto nivel.' },
+  { ids: ['arquitecto', 'orquestador'], nombre: 'El Líder Técnico', descripcion: 'Combina visión estratégica con capacidad de construir sistemas que escalan.' },
+  { ids: ['arquitecto', 'constructor'], nombre: 'El Ingeniero Total', descripcion: 'Domina tanto el mundo digital como el físico. Diseña y construye de punta a punta.' },
+  { ids: ['sanador', 'catalizador'], nombre: 'El Transformador Social', descripcion: 'Combina cuidado individual con impacto colectivo. Salud y comunidad como misión.' },
+  { ids: ['sanador', 'descubridor'], nombre: 'El Científico Clínico', descripcion: 'Une la curiosidad científica con la vocación de curar. Investigación aplicada a la salud.' },
+  { ids: ['sanador', 'arbitro'], nombre: 'El Defensor de Derechos', descripcion: 'Trabaja en la intersección entre salud, justicia y dignidad humana.' },
+  { ids: ['catalizador', 'orquestador'], nombre: 'El Líder de Personas', descripcion: 'Desarrolla individuos y construye organizaciones. Liderazgo con foco humano.' },
+  { ids: ['catalizador', 'narrador'], nombre: 'El Educador Cultural', descripcion: 'Transmite conocimiento y cultura con creatividad narrativa y sentido pedagógico.' },
+  { ids: ['artifice', 'narrador'], nombre: 'El Creador de Cultura', descripcion: 'Produce contenido, arte e ideas que instalan conversaciones y mueven emociones.' },
+  { ids: ['artifice', 'descubridor'], nombre: 'El Innovador Creativo', descripcion: 'Experimenta con formas nuevas de expresar ideas. La creatividad como investigación.' },
+  { ids: ['artifice', 'orquestador'], nombre: 'El Director Creativo', descripcion: 'Tiene visión estética y la capacidad de ejecutarla con equipos y recursos.' },
+  { ids: ['interprete', 'orquestador'], nombre: 'El Arquitecto de Negocios', descripcion: 'Combina análisis riguroso con visión estratégica para construir y gestionar organizaciones.' },
+  { ids: ['interprete', 'descubridor'], nombre: 'El Analista Científico', descripcion: 'Aplica metodología científica al análisis económico, financiero o estadístico.' },
+  { ids: ['orquestador', 'arbitro'], nombre: 'El Gestor de Instituciones', descripcion: 'Construye y lidera organizaciones con un fuerte sentido de norma y bien común.' },
+  { ids: ['descubridor', 'custodio'], nombre: 'El Guardián Científico', descripcion: 'Investiga ecosistemas, biodiversidad y sistemas naturales para protegerlos.' },
+  { ids: ['custodio', 'narrador'], nombre: 'El Comunicador de Territorio', descripcion: 'Documenta, cuenta y defiende el valor de lo natural y lo cultural.' },
+  { ids: ['narrador', 'catalizador'], nombre: 'El Periodista Social', descripcion: 'Usa la comunicación como herramienta de transformación comunitaria.' },
+  { ids: ['arbitro', 'orquestador'], nombre: 'El Gestor de Poder', descripcion: 'Combina la comprensión del sistema jurídico con la capacidad de liderar en él.' },
+  { ids: ['anfitrion', 'catalizador'], nombre: 'El Animador de Comunidades', descripcion: 'Crea experiencias que construyen comunidad y transforman la vida cotidiana.' },
+  { ids: ['constructor', 'custodio'], nombre: 'El Ingeniero Ambiental', descripcion: 'Construye infraestructura que respeta y convive con los sistemas naturales.' },
+];
+
+export function getArquetipo(id: string): Arquetipo | undefined {
   return ARQUETIPOS.find(a => a.id === id);
+}
+
+export function getCombinacion(id1: string, id2: string): Combinacion | undefined {
+  return COMBINACIONES.find(
+    c => (c.ids[0] === id1 && c.ids[1] === id2) || (c.ids[0] === id2 && c.ids[1] === id1)
+  );
 }
