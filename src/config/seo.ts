@@ -9,7 +9,7 @@
  */
 
 export const SITE_URL =
-  'https://vocariatest.netlify.app'; // ← reemplazar por dominio propio
+  'https://vocariatest.vercel.app'; // ← reemplazar por dominio propio
 
 export const SEO = {
   siteName: 'Vocaria',
