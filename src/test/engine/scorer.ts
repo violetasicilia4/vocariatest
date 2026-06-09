@@ -1,7 +1,8 @@
 import { QUESTIONS } from '../data/questions';
 import { ARQUETIPOS, getArquetipo, getCombinacion, type Arquetipo, type Combinacion } from '../data/arquetipos';
 import { type UserProfile, PROVINCIAS, getProvinciasDisponibles } from '../data/profile';
-import { normalizePct } from './techo';
+import { computeVector, type VectorVocacional } from './signals';
+import { emergerArquetipos } from './archetypeEmergence';
 import { extractPreferences, type CareerPreferences } from './preferences';
 import { detectarTensiones, type Tension } from './tensions';
 import { calcularConfianza, type ConfidenceBreakdown } from './confidence';
@@ -32,71 +33,38 @@ export interface ScoringResult {
   preferences: CareerPreferences;
   antipatrones: string[];
   contexto: Contexto;
-}
-
-const ANTIPATRON_PENALTIES: Record<string, Partial<Record<string, number>>> = {
-  sangre:      { sanador: -30, descubridor: -8 },
-  matematica:  { interprete: -30, arquitecto: -20, descubridor: -15 },
-  exposicion:  { catalizador: -20, anfitrion: -30, narrador: -15 },
-  rutina:      { arbitro: -15, custodio: -10 },
-  ventas:      { orquestador: -15, anfitrion: -10 },
-  soledad:     { arquitecto: -20, descubridor: -15, interprete: -15 },
-  competencia: { orquestador: -10 },
-};
-
-function acumularScores(answers: Record<string, string>): Record<string, number> {
-  const raw: Record<string, number> = {};
-  for (const arq of ARQUETIPOS) raw[arq.id] = 0;
-
-  for (const q of QUESTIONS) {
-    const answerId = answers[q.id];
-    if (!answerId) continue;
-
-    const ids = q.tipo === 'multiselect'
-      ? answerId.split(',').filter(Boolean)
-      : [answerId];
-
-    for (const selectedId of ids) {
-      const opcion = q.opciones.find(o => o.id === selectedId);
-      if (!opcion?.scores) continue;
-      for (const [arquetipoId, pts] of Object.entries(opcion.scores)) {
-        if (arquetipoId in raw) raw[arquetipoId] += pts;
-      }
-    }
-  }
-
-  // Apply antipattern penalties
-  const antiRaw = answers['anti_1'];
-  if (antiRaw) {
-    for (const antiId of antiRaw.split(',').filter(Boolean)) {
-      const penalties = ANTIPATRON_PENALTIES[antiId];
-      if (!penalties) continue;
-      for (const [id, pts] of Object.entries(penalties)) {
-        if (id in raw) raw[id] = Math.max(0, raw[id] + pts);
-      }
-    }
-  }
-
-  return raw;
+  vector: VectorVocacional;
 }
 
 export function calcularResultado(
   answers: Record<string, string>,
   profile: UserProfile,
 ): ScoringResult {
-  const raw = acumularScores(answers);
+  // Build latent signal vector
+  const vector = computeVector(answers);
 
-  // Use TECHO-based normalisation instead of maxScore-relative pct
-  const ranking: ArquetipoScore[] = ARQUETIPOS
-    .map(arq => ({
-      id: arq.id,
-      score: raw[arq.id],
-      pct: Math.round(normalizePct(raw[arq.id], arq.id)),
+  // Derive archetype emergence scores
+  const arquetiposEmergentes = emergerArquetipos(vector);
+
+  // Build ranking from emergence scores (0-100 already)
+  const ranking: ArquetipoScore[] = arquetiposEmergentes
+    .map(e => ({
+      id: e.id,
+      score: e.emergencia,
+      pct: e.emergencia,
     }))
     .sort((a, b) => b.score - a.score);
 
+  // Ensure all 12 archetypes appear in ranking (fill missing with 0)
+  const rankingIds = new Set(ranking.map(r => r.id));
+  for (const arq of ARQUETIPOS) {
+    if (!rankingIds.has(arq.id)) {
+      ranking.push({ id: arq.id, score: 0, pct: 0 });
+    }
+  }
+
   const top = ranking[0];
-  const umbral = top.score * 0.5;
+  const umbral = top.score * 0.4; // 40% of top — richer secondary set than V1
   const activos = ranking.filter(a => a.score >= umbral && a.score > 0);
 
   const primario = getArquetipo(ranking[0].id)!;
@@ -107,7 +75,7 @@ export function calcularResultado(
     ? getCombinacion(primario.id, secundario.id) ?? null
     : null;
 
-  // Confidence using the new robust formula
+  // Confidence — uses ranking[0].pct and ranking[1].pct (emergence scores, 0-100)
   const confianzaBreakdown = calcularConfianza(ranking, answers, QUESTIONS.length);
   const confianza = confianzaBreakdown.score;
 
@@ -155,5 +123,6 @@ export function calcularResultado(
     preferences,
     antipatrones,
     contexto,
+    vector,
   };
 }

@@ -1,7 +1,7 @@
 import { CARRERAS_DB, type CarreraEntry, type UniversidadEntry } from '../data/db';
 import { getSalarioByMacroArea, type SalarioFamilia } from '../data/salarios';
 import { ARQUETIPOS, getArquetipo } from '../data/arquetipos';
-import { getFamilyAffinity } from './familyAffinity';
+import { computeFamilyFit } from './familySignatures';
 import { explicarCarrera } from './explainability';
 import type { ScoringResult } from './scorer';
 
@@ -129,25 +129,9 @@ function computePreferenceBonus(
 // ---------------------------------------------------------------------------
 
 export function recomendar(result: ScoringResult): CarreraRecomendada[] {
-  const { activos, primario, secundario, tercero, contexto, ranking, preferences, antipatrones } = result;
+  const { activos, primario, secundario, tercero, contexto, preferences, antipatrones, vector } = result;
 
-  // ── Step 1: MacroArea scores (weighted SUM across all active archetypes) ──
-  const macroAreaScore: Record<string, number> = {};
-  for (const arqScore of ranking) {
-    const macroareas = ARCHETYPE_MACROAREAS[arqScore.id] ?? [];
-    for (const macro of macroareas) {
-      macroAreaScore[macro] = (macroAreaScore[macro] ?? 0) + arqScore.pct;
-    }
-  }
-
-  // Normalize macro-area scores to 0–100
-  const maxMacroScore = Math.max(...Object.values(macroAreaScore), 1);
-  const macroAreaNorm: Record<string, number> = {};
-  for (const [macro, score] of Object.entries(macroAreaScore)) {
-    macroAreaNorm[macro] = (score / maxMacroScore) * 100;
-  }
-
-  // Active macro areas — only those covered by at least one ACTIVE archetype
+  // ── Step 1: MacroArea gate — only macroareas covered by at least one ACTIVE archetype ──
   const macroAreasActivas = new Set<string>();
   for (const activo of activos) {
     const arquetipoData =
@@ -162,21 +146,12 @@ export function recomendar(result: ScoringResult): CarreraRecomendada[] {
     }
   }
 
-  // ── Step 2–5: Score each career ──────────────────────────────────────────
+  // ── Step 2–4: Score each career using vector-based family fit ───────────
   const scored = CARRERAS_DB
     .filter(entry => macroAreasActivas.has(entry.macroArea))
     .map(entry => {
-      // Step 2: Family affinity score
-      let familyRaw = 0;
-      for (const arqScore of ranking) {
-        familyRaw += arqScore.pct * getFamilyAffinity(entry.familia, arqScore.id);
-      }
-      // Normalize: max possible = 100 * 1.0 * n_archetypes (but practically ≤ ~200)
-      // We normalise against 100 to keep it 0–100
-      const familyNorm = clamp(familyRaw / 100, 0, 100) * 100; // 0-100
-
-      // Step 1 normalized score
-      const macroNorm = macroAreaNorm[entry.macroArea] ?? 0;
+      // Step 2: Family fit via signature cosine similarity (0-100)
+      const familyFit = computeFamilyFit(vector, entry.familia);
 
       // Step 3: Province bonus
       const univsEnProv = filtrarUniversidadesPorProvincia(entry, contexto.provinciasDisponibles);
@@ -187,7 +162,7 @@ export function recomendar(result: ScoringResult): CarreraRecomendada[] {
       const prefBonus = computePreferenceBonus(entry.familia, preferences);
 
       // Step 5: Total
-      const careerScore = macroNorm * 0.45 + familyNorm * 0.45 + provBonus + prefBonus;
+      const careerScore = familyFit * 0.75 + provBonus + prefBonus;
 
       return { entry, careerScore, univsEnProv, disponibleEnProv };
     })
