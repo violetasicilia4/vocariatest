@@ -1,5 +1,8 @@
 import { CARRERAS_DB, type CarreraEntry, type UniversidadEntry } from '../data/db';
 import { getSalarioByMacroArea, type SalarioFamilia } from '../data/salarios';
+import { ARQUETIPOS, getArquetipo } from '../data/arquetipos';
+import { getFamilyAffinity } from './familyAffinity';
+import { explicarCarrera } from './explainability';
 import type { ScoringResult } from './scorer';
 
 export interface CarreraRecomendada {
@@ -13,7 +16,14 @@ export interface CarreraRecomendada {
   salario: SalarioFamilia | null;
   tag: 'top' | 'alternativa' | 'sorpresa';
   arquetipoOrigen: string;
+  fitScore: number;
+  razon: string;
+  alerta: string | null;
 }
+
+// ---------------------------------------------------------------------------
+// Helpers
+// ---------------------------------------------------------------------------
 
 function parseDuracionAnios(duracion: string | undefined | null): number | null {
   if (!duracion) return null;
@@ -47,79 +57,187 @@ function getDuracionDisplay(entry: CarreraEntry): string | null {
     .map(u => u.duracion)
     .filter(Boolean) as string[];
   if (duraciones.length === 0) return null;
-  // Return most common duration
   const freq: Record<string, number> = {};
   for (const d of duraciones) freq[d] = (freq[d] ?? 0) + 1;
   return Object.entries(freq).sort((a, b) => b[1] - a[1])[0][0];
 }
 
-export function recomendar(result: ScoringResult): CarreraRecomendada[] {
-  const { activos, primario, contexto } = result;
+function clamp(v: number, min: number, max: number): number {
+  return Math.max(min, Math.min(max, v));
+}
 
-  // Collect all macroareas from active archetypes (weighted by score)
-  const macroAreaPeso: Record<string, number> = {};
-  for (const activo of activos) {
-    const arq = result.ranking.find(r => r.id === activo.id);
-    const peso = arq?.pct ?? 50;
-    const arquetipoData = result.primario.id === activo.id
-      ? result.primario
-      : result.secundario?.id === activo.id
-      ? result.secundario
-      : result.tercero?.id === activo.id
-      ? result.tercero
-      : null;
-    if (!arquetipoData) continue;
-    for (const macro of arquetipoData.macroareas) {
-      macroAreaPeso[macro] = Math.max(macroAreaPeso[macro] ?? 0, peso);
+// ---------------------------------------------------------------------------
+// Archetype → macro-area lookup (built from ARQUETIPOS data)
+// ---------------------------------------------------------------------------
+
+const ARCHETYPE_MACROAREAS: Record<string, string[]> = {};
+for (const arq of ARQUETIPOS) {
+  ARCHETYPE_MACROAREAS[arq.id] = arq.macroareas;
+}
+
+// ---------------------------------------------------------------------------
+// Scoring algorithm
+// ---------------------------------------------------------------------------
+
+/**
+ * Compute a preference bonus (0–10) for a career family based on preferences.
+ * Uses a lightweight mapping of which dimensions align with which families.
+ */
+function computePreferenceBonus(
+  familia: string,
+  prefs: ScoringResult['preferences'],
+): number {
+  const dimMap: Record<string, Array<keyof typeof prefs>> = {
+    "Software sistemas e informática":     ['datos', 'ideas'],
+    "Datos IA estadística y matemática":   ['datos', 'teoria'],
+    "Psicología":                          ['personas', 'impactoSocial'],
+    "Medicina y atención clínica":         ['personas', 'impactoSocial'],
+    "Arte música teatro y audiovisual":    ['creatividad', 'autonomia'],
+    "Diseño gráfico industrial y digital": ['creatividad', 'ideas'],
+    "Administración gestión y negocios":   ['liderazgo', 'estructura'],
+    "Marketing publicidad y ventas":       ['liderazgo', 'creatividad'],
+    "Economía finanzas y banca":           ['datos', 'ingresos'],
+    "Contabilidad auditoría e impuestos":  ['estructura', 'datos'],
+    "Educación física y deporte":          ['personas', 'impactoSocial'],
+    "RRHH y desarrollo organizacional":    ['personas', 'liderazgo'],
+    "Gobierno política y RRII":            ['liderazgo', 'impactoSocial'],
+    "Civil obras e infraestructura":       ['objetos', 'practica'],
+    "Mecánica electromecánica y mecatrónica": ['objetos', 'practica'],
+    "Agronomía agro y producción":         ['objetos', 'practica'],
+    "Ambiente biodiversidad y recursos naturales": ['impactoSocial', 'teoria'],
+    "Biología genética y biotecnología":   ['teoria', 'datos'],
+    "Química":                             ['teoria', 'datos'],
+    "Comunicación y medios digitales":     ['creatividad', 'personas'],
+    "Periodismo y redacción":              ['ideas', 'personas'],
+    "Filosofía historia y humanidades":    ['ideas', 'teoria'],
+    "Idiomas traducción y letras":         ['ideas', 'creatividad'],
+    "Turismo hotelería y gastronomía":     ['personas', 'creatividad'],
+    "Turismo hotelería eventos y gastronomía": ['personas', 'creatividad'],
+    "Videojuegos y simulación":            ['creatividad', 'ideas'],
+  };
+
+  const dims = dimMap[familia];
+  if (!dims || dims.length === 0) return 0;
+
+  const avg = dims.reduce((sum, d) => sum + prefs[d], 0) / dims.length;
+  // Scale: 0-100 average → 0-10 bonus
+  return clamp(avg / 10, 0, 10);
+}
+
+// ---------------------------------------------------------------------------
+// Main export
+// ---------------------------------------------------------------------------
+
+export function recomendar(result: ScoringResult): CarreraRecomendada[] {
+  const { activos, primario, secundario, tercero, contexto, ranking, preferences, antipatrones } = result;
+
+  // ── Step 1: MacroArea scores (weighted SUM across all active archetypes) ──
+  const macroAreaScore: Record<string, number> = {};
+  for (const arqScore of ranking) {
+    const macroareas = ARCHETYPE_MACROAREAS[arqScore.id] ?? [];
+    for (const macro of macroareas) {
+      macroAreaScore[macro] = (macroAreaScore[macro] ?? 0) + arqScore.pct;
     }
   }
 
-  const macroAreasActivas = new Set(Object.keys(macroAreaPeso));
+  // Normalize macro-area scores to 0–100
+  const maxMacroScore = Math.max(...Object.values(macroAreaScore), 1);
+  const macroAreaNorm: Record<string, number> = {};
+  for (const [macro, score] of Object.entries(macroAreaScore)) {
+    macroAreaNorm[macro] = (score / maxMacroScore) * 100;
+  }
 
-  // Score each career
+  // Active macro areas — only those covered by at least one ACTIVE archetype
+  const macroAreasActivas = new Set<string>();
+  for (const activo of activos) {
+    const arquetipoData =
+      primario.id === activo.id ? primario
+      : secundario?.id === activo.id ? secundario
+      : tercero?.id === activo.id ? tercero
+      : null;
+    if (arquetipoData) {
+      for (const macro of arquetipoData.macroareas) {
+        macroAreasActivas.add(macro);
+      }
+    }
+  }
+
+  // ── Step 2–5: Score each career ──────────────────────────────────────────
   const scored = CARRERAS_DB
     .filter(entry => macroAreasActivas.has(entry.macroArea))
     .map(entry => {
-      const pesoPorMacro = macroAreaPeso[entry.macroArea] ?? 0;
+      // Step 2: Family affinity score
+      let familyRaw = 0;
+      for (const arqScore of ranking) {
+        familyRaw += arqScore.pct * getFamilyAffinity(entry.familia, arqScore.id);
+      }
+      // Normalize: max possible = 100 * 1.0 * n_archetypes (but practically ≤ ~200)
+      // We normalise against 100 to keep it 0–100
+      const familyNorm = clamp(familyRaw / 100, 0, 100) * 100; // 0-100
+
+      // Step 1 normalized score
+      const macroNorm = macroAreaNorm[entry.macroArea] ?? 0;
+
+      // Step 3: Province bonus
       const univsEnProv = filtrarUniversidadesPorProvincia(entry, contexto.provinciasDisponibles);
       const disponibleEnProv = univsEnProv.length > 0;
       const provBonus = disponibleEnProv ? 15 : 0;
-      const score = pesoPorMacro + provBonus;
 
-      return { entry, score, univsEnProv, disponibleEnProv };
+      // Step 4: Preference bonus (subtle, 0–10)
+      const prefBonus = computePreferenceBonus(entry.familia, preferences);
+
+      // Step 5: Total
+      const careerScore = macroNorm * 0.45 + familyNorm * 0.45 + provBonus + prefBonus;
+
+      return { entry, careerScore, univsEnProv, disponibleEnProv };
     })
-    .sort((a, b) => b.score - a.score);
+    .sort((a, b) => b.careerScore - a.careerScore);
 
-  // Diversity: max 3 per macroArea
+  // Normalize careerScore to fitScore (0–100)
+  const maxCareerScore = Math.max(...scored.map(s => s.careerScore), 1);
+
+  // ── Diversity: max 3 per macroArea ────────────────────────────────────────
   const resultado: CarreraRecomendada[] = [];
   const macroUsada: Record<string, number> = {};
-  const titlosUsados = new Set<string>();
+  const titulosUsados = new Set<string>();
 
-  for (const { entry, score, univsEnProv } of scored) {
+
+  for (const { entry, careerScore, univsEnProv, disponibleEnProv } of scored) {
     if (resultado.length >= 8) break;
-    if (titlosUsados.has(entry.titulo)) continue;
+    if (titulosUsados.has(entry.titulo)) continue;
 
     const count = macroUsada[entry.macroArea] ?? 0;
     if (count >= 3) continue;
 
     macroUsada[entry.macroArea] = count + 1;
-    titlosUsados.add(entry.titulo);
+    titulosUsados.add(entry.titulo);
 
     // Determine origin archetype
     let origenId = primario.id;
     for (const activo of activos) {
-      const arquetipoData = result.primario.id === activo.id
-        ? result.primario
-        : result.secundario?.id === activo.id
-        ? result.secundario
-        : result.tercero?.id === activo.id
-        ? result.tercero
+      const arquetipoData =
+        primario.id === activo.id ? primario
+        : secundario?.id === activo.id ? secundario
+        : tercero?.id === activo.id ? tercero
         : null;
       if (arquetipoData?.macroareas.includes(entry.macroArea)) {
         origenId = activo.id;
         break;
       }
     }
+
+    const fitScore = Math.round((careerScore / maxCareerScore) * 100);
+    const origenArquetipo = getArquetipo(origenId);
+    const secundarioArquetipo = secundario ? { id: secundario.id, nombre: secundario.nombre } : null;
+
+    const explicacion = explicarCarrera(
+      { titulo: entry.titulo, familia: entry.familia, macroArea: entry.macroArea },
+      { id: primario.id, nombre: primario.nombre },
+      secundarioArquetipo,
+      preferences,
+      antipatrones,
+      disponibleEnProv,
+    );
 
     resultado.push({
       id: entry.id,
@@ -132,19 +250,33 @@ export function recomendar(result: ScoringResult): CarreraRecomendada[] {
       salario: getSalarioByMacroArea(entry.macroArea) ?? null,
       tag: 'alternativa',
       arquetipoOrigen: origenId,
+      fitScore: explicacion.fitScore > 0 ? explicacion.fitScore : fitScore,
+      razon: explicacion.razon,
+      alerta: explicacion.alerta,
     });
   }
 
-  // Sorpresa: carrera de macroárea no representada pero de archetype activo
+  // ── Sorpresa: carrera de macroárea no representada aún ───────────────────
   const macroEnResultado = new Set(resultado.map(r => r.macroArea));
   const sorpresaCandidata = scored.find(
     ({ entry }) =>
       !macroEnResultado.has(entry.macroArea) &&
       macroAreasActivas.has(entry.macroArea) &&
-      !titlosUsados.has(entry.titulo)
+      !titulosUsados.has(entry.titulo),
   );
+
   if (sorpresaCandidata && resultado.length < 9) {
-    const { entry, univsEnProv } = sorpresaCandidata;
+    const { entry, careerScore, univsEnProv, disponibleEnProv } = sorpresaCandidata;
+    const fitScore = Math.round((careerScore / maxCareerScore) * 100);
+    const explicacion = explicarCarrera(
+      { titulo: entry.titulo, familia: entry.familia, macroArea: entry.macroArea },
+      { id: primario.id, nombre: primario.nombre },
+      secundario ? { id: secundario.id, nombre: secundario.nombre } : null,
+      preferences,
+      antipatrones,
+      disponibleEnProv,
+    );
+
     resultado.push({
       id: entry.id,
       titulo: entry.titulo,
@@ -156,6 +288,9 @@ export function recomendar(result: ScoringResult): CarreraRecomendada[] {
       salario: getSalarioByMacroArea(entry.macroArea) ?? null,
       tag: 'sorpresa',
       arquetipoOrigen: primario.id,
+      fitScore: explicacion.fitScore > 0 ? explicacion.fitScore : fitScore,
+      razon: explicacion.razon,
+      alerta: explicacion.alerta,
     });
   }
 

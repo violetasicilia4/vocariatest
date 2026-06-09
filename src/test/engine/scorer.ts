@@ -1,6 +1,10 @@
 import { QUESTIONS } from '../data/questions';
 import { ARQUETIPOS, getArquetipo, getCombinacion, type Arquetipo, type Combinacion } from '../data/arquetipos';
 import { type UserProfile, PROVINCIAS, getProvinciasDisponibles } from '../data/profile';
+import { normalizePct } from './techo';
+import { extractPreferences, type CareerPreferences } from './preferences';
+import { detectarTensiones, type Tension } from './tensions';
+import { calcularConfianza, type ConfidenceBreakdown } from './confidence';
 
 export interface ArquetipoScore {
   id: string;
@@ -22,7 +26,11 @@ export interface ScoringResult {
   tercero: Arquetipo | null;
   combinacion: Combinacion | null;
   confianza: number;
+  confianzaBreakdown: ConfidenceBreakdown;
   advertencias: string[];
+  tensiones: Tension[];
+  preferences: CareerPreferences;
+  antipatrones: string[];
   contexto: Contexto;
 }
 
@@ -78,13 +86,12 @@ export function calcularResultado(
 ): ScoringResult {
   const raw = acumularScores(answers);
 
-  const maxScore = Math.max(...Object.values(raw), 1);
-
+  // Use TECHO-based normalisation instead of maxScore-relative pct
   const ranking: ArquetipoScore[] = ARQUETIPOS
     .map(arq => ({
       id: arq.id,
       score: raw[arq.id],
-      pct: Math.round((raw[arq.id] / maxScore) * 100),
+      pct: Math.round(normalizePct(raw[arq.id], arq.id)),
     }))
     .sort((a, b) => b.score - a.score);
 
@@ -100,25 +107,31 @@ export function calcularResultado(
     ? getCombinacion(primario.id, secundario.id) ?? null
     : null;
 
-  const secondScore = ranking[1]?.score ?? 0;
-  const gap = top.score > 0 ? (top.score - secondScore) / top.score : 0;
+  // Confidence using the new robust formula
+  const confianzaBreakdown = calcularConfianza(ranking, answers, QUESTIONS.length);
+  const confianza = confianzaBreakdown.score;
 
-  let confianza = 85;
-  if (gap < 0.1) confianza = 60;
-  else if (gap < 0.2) confianza = 72;
-  else if (gap >= 0.4) confianza = 92;
+  // Preferences
+  const preferences = extractPreferences(answers);
 
-  const respondidas = QUESTIONS.filter(q => answers[q.id]).length;
-  if (respondidas < Math.ceil(QUESTIONS.length * 0.7)) {
-    confianza = Math.min(confianza, 65);
-  }
+  // Antipattern list for tensions
+  const antiRaw = answers['anti_1'] ?? '';
+  const antipatrones = antiRaw.split(',').filter(Boolean);
+
+  // Tensions
+  const tensiones = detectarTensiones(ranking, preferences, antipatrones);
 
   const advertencias: string[] = [];
   if (activos.length >= 3) {
-    advertencias.push('Tu perfil es amplio y multidimensional. Hay varias áreas que te interesan genuinamente — el informe completo te ayuda a priorizar.');
+    advertencias.push(
+      'Tu perfil es amplio y multidimensional. Hay varias áreas que te interesan genuinamente — el informe completo te ayuda a priorizar.',
+    );
   }
+  const respondidas = QUESTIONS.filter(q => answers[q.id]).length;
   if (respondidas < QUESTIONS.length * 0.8) {
-    advertencias.push('Respondiste algunas preguntas sin completar el test. Más respuestas mejoran la precisión del resultado.');
+    advertencias.push(
+      'Respondiste algunas preguntas sin completar el test. Más respuestas mejoran la precisión del resultado.',
+    );
   }
 
   const provinciaInfo = PROVINCIAS.find(p => p.id === profile.provinciaId);
@@ -135,8 +148,12 @@ export function calcularResultado(
     secundario,
     tercero,
     combinacion,
-    confianza: Math.max(50, Math.min(98, confianza)),
+    confianza,
+    confianzaBreakdown,
     advertencias,
+    tensiones,
+    preferences,
+    antipatrones,
     contexto,
   };
 }
