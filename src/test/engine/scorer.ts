@@ -12,6 +12,7 @@ export interface Contexto {
   provincia?: string;
   provinciasDisponibles: string[];
   movilidad: 'si' | 'no' | 'nose';
+  duracionPreferida: 'corta' | 'cualquiera';
 }
 
 export interface ScoringResult {
@@ -100,10 +101,12 @@ export function calcularResultado(
   }
 
   const provinciaInfo = PROVINCIAS.find(p => p.id === profile.provinciaId);
+  const duracionRaw = answers['ctx_duracion'];
   const contexto: Contexto = {
     provincia: provinciaInfo?.dbName,
     provinciasDisponibles: getProvinciasDisponibles(profile),
     movilidad: profile.movilidad,
+    duracionPreferida: duracionRaw === 'corta' ? 'corta' : 'cualquiera',
   };
 
   return {
