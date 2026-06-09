@@ -6,7 +6,7 @@ import ProcessingScreen from './screens/ProcessingScreen';
 import ResultPreview from './screens/ResultPreview';
 import CheckoutScreen from './screens/CheckoutScreen';
 import type { ScoringResult } from './engine/scorer';
-import type { UserProfile } from './data/profile';
+import type { UserProfile, PlanId } from './data/profile';
 
 type Step = 'profile' | 'test' | 'processing' | 'result' | 'checkout';
 
@@ -19,6 +19,7 @@ export default function TestFlow({ onExit }: TestFlowProps) {
   const [profile, setProfile] = useState<UserProfile | null>(null);
   const [answers, setAnswers] = useState<Record<string, string>>({});
   const [result, setResult] = useState<ScoringResult | null>(null);
+  const [selectedPlan, setSelectedPlan] = useState<PlanId>('universitario');
 
   const handleStart = useCallback((p: UserProfile) => {
     setProfile(p);
@@ -35,7 +36,8 @@ export default function TestFlow({ onExit }: TestFlowProps) {
     setStep('result');
   }, []);
 
-  const handleGetFullReport = useCallback(() => {
+  const handleGetFullReport = useCallback((plan: PlanId) => {
+    setSelectedPlan(plan);
     setStep('checkout');
   }, []);
 
@@ -91,6 +93,7 @@ export default function TestFlow({ onExit }: TestFlowProps) {
               nombre={profile.nombre}
               email={profile.email}
               result={result}
+              plan={selectedPlan}
               onBack={handleBackToResult}
             />
           </motion.div>

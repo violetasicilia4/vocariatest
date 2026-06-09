@@ -11,7 +11,7 @@ export interface ArquetipoScore {
 export interface Contexto {
   provincia?: string;
   provinciasDisponibles: string[];
-  movilidad: UserProfile['movilidad'];
+  movilidad: 'si' | 'no' | 'nose';
 }
 
 export interface ScoringResult {

@@ -20,292 +20,289 @@ export interface Question {
   maxSelect?: number;
 }
 
+/*
+  Base psicológica:
+  - Teoría de intereses vocacionales (Holland / Super)
+  - Self-Determination Theory: autonomía, competencia, relación
+  - Big Five aplicado al contexto laboral (apertura, responsabilidad, extraversión)
+  - Career Anchors (Schein): competencia técnica, gestión, servicio, autonomía, emprendimiento
+  - Cognitive style: analítico vs. intuitivo vs. relacional vs. estructurado
+  Las preguntas miden constructos latentes, no preferencias de carrera directas.
+*/
+
 export const QUESTIONS: Question[] = [
 
-  // ── VISUAL 1 ─────────────────────────────────────────────────────────────────
-  {
-    id: 'vis_1',
-    tipo: 'visual',
-    enunciado: '¿En cuál de estos entornos te imaginás trabajando?',
-    opciones: [
-      { id: 'a', emoji: '🔬', texto: 'Laboratorio o investigación', scores: { descubridor: 10, arquitecto: 5 } },
-      { id: 'b', emoji: '🏥', texto: 'Clínica, hospital o consultorio', scores: { sanador: 10, anfitrion: 5 } },
-      { id: 'c', emoji: '🎨', texto: 'Estudio creativo o agencia', scores: { artifice: 10, narrador: 5 } },
-      { id: 'd', emoji: '📊', texto: 'Oficina de análisis o finanzas', scores: { interprete: 10, orquestador: 5 } },
-      { id: 'e', emoji: '🏗️', texto: 'Obra, fábrica o instalaciones', scores: { constructor: 10, custodio: 5 } },
-      { id: 'f', emoji: '🎓', texto: 'Aula, universidad o formación', scores: { catalizador: 10, narrador: 5 } },
-    ],
-  },
-
-  // ── SITUACIONAL 1 ─────────────────────────────────────────────────────────────
+  // Q1 — Estilo cognitivo ante lo nuevo (aprendizaje experiencial)
   {
     id: 'sit_1',
     tipo: 'situacional',
-    enunciado: 'Entrás a trabajar a un lugar nuevo. ¿Qué es lo primero que hacés?',
+    enunciado: 'Pensá en una vez que tuviste que aprender algo totalmente nuevo. ¿Qué hiciste naturalmente?',
+    subtext: 'No hay respuesta correcta. Elegí lo que más se parezca a cómo sos.',
     opciones: [
-      { id: 'a', texto: 'Pido que me expliquen cómo funciona el sistema completo.', scores: { arquitecto: 10, descubridor: 5 } },
-      { id: 'b', texto: 'Busco conectar con el equipo y entender a cada persona.', scores: { catalizador: 10, anfitrion: 5 } },
-      { id: 'c', texto: 'Identifico rápido qué procesos se pueden optimizar.', scores: { orquestador: 10, interprete: 5 } },
-      { id: 'd', texto: 'Observo sin meter mano hasta entender bien la dinámica.', scores: { arbitro: 10, custodio: 5 } },
+      { id: 'a', texto: 'Busqué entender los principios que explican cómo funciona, antes de hacer nada.', scores: { descubridor: 10, arquitecto: 5 } },
+      { id: 'b', texto: 'Me lancé a practicar. Aprendí cometiendo errores y ajustando sobre la marcha.', scores: { constructor: 10, artifice: 5 } },
+      { id: 'c', texto: 'Busqué a alguien que ya lo sabía y aprendí mirando cómo lo hacía.', scores: { catalizador: 10, anfitrion: 5 } },
+      { id: 'd', texto: 'Necesité entender para qué sirve y cómo encaja en algo más grande antes de empezar.', scores: { narrador: 10, arbitro: 5 } },
     ],
   },
 
-  // ── PAIRS 1 ──────────────────────────────────────────────────────────────────
+  // Q2 — Fuentes de energía (identificación de roles naturales)
   {
-    id: 'par_1',
-    tipo: 'pairs',
-    enunciado: 'Si tuvieras que elegir entre estos dos caminos:',
+    id: 'vis_1',
+    tipo: 'visual',
+    enunciado: '¿Cuál de estas situaciones te generaría más energía y motivación genuina?',
     opciones: [
-      { id: 'a', emoji: '⚙️', texto: 'Diseñar sistemas que funcionen solos y escalen', scores: { arquitecto: 10, interprete: 5 } },
-      { id: 'b', emoji: '🫂', texto: 'Acompañar a personas en procesos de cambio real', scores: { sanador: 10, catalizador: 5 } },
+      { id: 'a', emoji: '🔬', texto: 'Resolver algo técnico que nadie logró antes', scores: { descubridor: 10, arquitecto: 5 } },
+      { id: 'b', emoji: '🤝', texto: 'Ser la persona a quien todos acuden cuando tienen un problema', scores: { catalizador: 10, sanador: 5 } },
+      { id: 'c', emoji: '✏️', texto: 'Crear algo desde cero que lleva tu sello personal', scores: { artifice: 10, narrador: 5 } },
+      { id: 'd', emoji: '📐', texto: 'Diseñar un sistema que funcione perfecto sin supervisión constante', scores: { arquitecto: 10, interprete: 5 } },
+      { id: 'e', emoji: '🌿', texto: 'Proteger o recuperar algo valioso que está en riesgo', scores: { custodio: 10, sanador: 5 } },
+      { id: 'f', emoji: '🎙️', texto: 'Presentar una idea que cambia cómo la gente piensa sobre algo', scores: { narrador: 10, catalizador: 5 } },
     ],
   },
 
-  // ── SITUACIONAL 2 ─────────────────────────────────────────────────────────────
-  {
-    id: 'sit_2',
-    tipo: 'situacional',
-    enunciado: 'Te asignan un proyecto sin ninguna guía ni estructura. ¿Cómo reaccionás?',
-    opciones: [
-      { id: 'a', texto: 'Me emociona. Es la oportunidad de diseñar algo desde cero.', scores: { descubridor: 10, arquitecto: 5 } },
-      { id: 'b', texto: 'Armo un plan detallado antes de tocar nada.', scores: { arquitecto: 10, orquestador: 5 } },
-      { id: 'c', texto: 'Lo convierto en algo creativo e inesperado.', scores: { artifice: 10, narrador: 5 } },
-      { id: 'd', texto: 'Preferiría tener al menos una referencia para partir.', scores: { custodio: 10, arbitro: 5 } },
-    ],
-  },
-
-  // ── SCALE 1 ──────────────────────────────────────────────────────────────────
+  // Q3 — Necesidad de estructura (Conscientiousness aplicado al trabajo)
   {
     id: 'sca_1',
     tipo: 'scale',
-    enunciado: '¿Qué tan cómodo/a te sentís tomando decisiones cuando la situación es ambigua?',
+    enunciado: '¿Qué tan importante es para vos tener claridad sobre qué se espera de vos en el trabajo?',
+    subtext: 'No hay respuesta correcta: ambos extremos son igualmente válidos.',
     opciones: [
-      { id: '1', texto: 'Prefiero tener todos los datos antes de decidir', scores: { custodio: 3, arbitro: 3 } },
-      { id: '2', texto: '', scores: { custodio: 1 } },
+      { id: '1', texto: 'Prefiero definirme mis propios objetivos con total libertad', scores: { descubridor: 3, artifice: 2 } },
+      { id: '2', texto: '', scores: { arquitecto: 2 } },
       { id: '3', texto: '', scores: { orquestador: 1 } },
-      { id: '4', texto: '', scores: { arquitecto: 2, orquestador: 2 } },
-      { id: '5', texto: 'Es donde mejor me desempeño', scores: { arquitecto: 3, descubridor: 3 } },
+      { id: '4', texto: '', scores: { arbitro: 2 } },
+      { id: '5', texto: 'Necesito saber exactamente qué se espera para rendir bien', scores: { custodio: 3, arbitro: 2 } },
     ],
   },
 
-  // ── MULTISELECT 1 ────────────────────────────────────────────────────────────
+  // Q4 — Autonomía vs. conexión (SDT: autonomy vs. relatedness)
   {
-    id: 'mul_1',
-    tipo: 'multiselect',
-    enunciado: '¿Qué tres cosas son más importantes para vos en un trabajo?',
-    subtext: 'Elegí exactamente 3',
-    maxSelect: 3,
+    id: 'par_1',
+    tipo: 'pairs',
+    enunciado: 'Si tuvieras que elegir cómo trabajar la mayor parte del tiempo:',
     opciones: [
-      { id: 'a', texto: 'Creatividad e innovación constante', scores: { artifice: 5, descubridor: 5, narrador: 4 } },
-      { id: 'b', texto: 'Estabilidad y seguridad económica', scores: { custodio: 5, arbitro: 5 } },
-      { id: 'c', texto: 'Impacto social real y visible', scores: { catalizador: 5, sanador: 5, custodio: 4 } },
-      { id: 'd', texto: 'Autonomía para decidir cómo trabajo', scores: { descubridor: 5, arquitecto: 5 } },
-      { id: 'e', texto: 'Buen equipo y ambiente humano', scores: { anfitrion: 5, catalizador: 5 } },
-      { id: 'f', texto: 'Ingresos altos y reconocimiento', scores: { interprete: 5, orquestador: 5 } },
-      { id: 'g', texto: 'Aprendizaje y desafío intelectual', scores: { descubridor: 5, arquitecto: 4 } },
-      { id: 'h', texto: 'Liderazgo y posibilidad de crecer', scores: { orquestador: 5, narrador: 4 } },
+      { id: 'a', emoji: '⚡', texto: 'Solo, con total autonomía, sin tener que dar explicaciones', scores: { arquitecto: 10, descubridor: 5 } },
+      { id: 'b', emoji: '🤝', texto: 'En equipo, donde el resultado depende de la conexión entre personas', scores: { catalizador: 10, anfitrion: 5 } },
     ],
   },
 
-  // ── SITUACIONAL 3 ─────────────────────────────────────────────────────────────
+  // Q5 — Toma de decisiones bajo incertidumbre (tolerancia a la ambigüedad)
+  {
+    id: 'sit_2',
+    tipo: 'situacional',
+    enunciado: 'Necesitás tomar una decisión importante con información incompleta. ¿Qué hacés?',
+    opciones: [
+      { id: 'a', texto: 'Busco más datos hasta sentirme lo suficientemente seguro/a.', scores: { interprete: 10, arbitro: 5 } },
+      { id: 'b', texto: 'Decido con lo que tengo. Si me equivoco, ajusto.', scores: { arquitecto: 10, descubridor: 5 } },
+      { id: 'c', texto: 'Consulto con personas de confianza antes de decidir.', scores: { catalizador: 10, sanador: 5 } },
+      { id: 'd', texto: 'Evalúo qué consecuencias tiene cada opción para todos los involucrados.', scores: { arbitro: 10, orquestador: 5 } },
+    ],
+  },
+
+  // Q6 — Orientación al impacto (Career Anchors: service vs. challenge vs. legacy)
   {
     id: 'sit_3',
     tipo: 'situacional',
-    enunciado: 'Hay un conflicto serio entre dos personas de tu equipo. ¿Cómo actuás?',
+    enunciado: 'Dentro de 10 años mirás para atrás y sentís que tu trabajo valió la pena. ¿Cuál es la imagen?',
     opciones: [
-      { id: 'a', texto: 'Escucho a cada uno por separado y busco el punto en común.', scores: { catalizador: 10, sanador: 5 } },
-      { id: 'b', texto: 'Analizo la situación objetivamente y propongo una solución lógica.', scores: { arbitro: 10, interprete: 5 } },
-      { id: 'c', texto: 'Creo un espacio seguro para que se expresen y lleguen a un acuerdo.', scores: { anfitrion: 10, catalizador: 5 } },
-      { id: 'd', texto: 'Establezco límites claros y pido que se respeten las normas del equipo.', scores: { orquestador: 10, arquitecto: 5 } },
+      { id: 'a', texto: 'Construí algo que sigue funcionando solo: un sistema, una empresa, una tecnología.', scores: { arquitecto: 10, orquestador: 5 } },
+      { id: 'b', texto: 'Ayudé directamente a muchas personas a mejorar su situación de vida.', scores: { sanador: 10, catalizador: 5 } },
+      { id: 'c', texto: 'Generé conocimiento que otros usan como base para ir más lejos.', scores: { descubridor: 10, narrador: 5 } },
+      { id: 'd', texto: 'Creé algo original que tiene valor propio y sigue resonando.', scores: { artifice: 10, narrador: 5 } },
     ],
   },
 
-  // ── VISUAL 2 ─────────────────────────────────────────────────────────────────
+  // Q7 — Clarificación de valores (Super: importancia relativa de valores laborales)
+  {
+    id: 'mul_1',
+    tipo: 'multiselect',
+    enunciado: '¿Cuáles de estos aspectos son más importantes para vos en una carrera? (elegí 3)',
+    maxSelect: 3,
+    opciones: [
+      { id: 'a', texto: 'Que me desafíe intelectualmente', scores: { descubridor: 5, arquitecto: 4 } },
+      { id: 'b', texto: 'Que tenga impacto real en personas o comunidades', scores: { sanador: 5, catalizador: 4 } },
+      { id: 'c', texto: 'Que me dé libertad y autonomía para decidir', scores: { descubridor: 5, artifice: 4 } },
+      { id: 'd', texto: 'Que me brinde estabilidad y seguridad económica', scores: { custodio: 5, arbitro: 4 } },
+      { id: 'e', texto: 'Que me permita crear algo propio y expresarme', scores: { artifice: 5, narrador: 4 } },
+      { id: 'f', texto: 'Que esté bien remunerado', scores: { interprete: 5, orquestador: 4 } },
+      { id: 'g', texto: 'Que trabaje con personas que me inspiren', scores: { catalizador: 5, anfitrion: 4 } },
+      { id: 'h', texto: 'Que tenga reconocimiento y crecimiento profesional', scores: { orquestador: 5, narrador: 4 } },
+    ],
+  },
+
+  // Q8 — Roles naturales en grupos (identificación de fortalezas interpersonales)
   {
     id: 'vis_2',
     tipo: 'visual',
-    enunciado: '¿Cuál de estas situaciones te daría más satisfacción al final del día?',
+    enunciado: '¿Con cuál de estos roles te identificás más cuando trabajás con otras personas?',
     opciones: [
-      { id: 'a', emoji: '🧩', texto: 'Haber resuelto un problema técnico complejo', scores: { arquitecto: 10, descubridor: 5 } },
-      { id: 'b', emoji: '❤️', texto: 'Haber ayudado genuinamente a alguien', scores: { sanador: 10, catalizador: 5 } },
-      { id: 'c', emoji: '🎤', texto: 'Haber comunicado algo que impactó a una audiencia', scores: { narrador: 10, anfitrion: 5 } },
-      { id: 'd', emoji: '📜', texto: 'Haber defendido algo justo y ganado', scores: { arbitro: 10, catalizador: 5 } },
-      { id: 'e', emoji: '🌱', texto: 'Haber contribuido a algo más grande que yo', scores: { custodio: 10, sanador: 5 } },
-      { id: 'f', emoji: '🛠️', texto: 'Haber construido algo concreto y tangible', scores: { constructor: 10, artifice: 5 } },
+      { id: 'a', emoji: '🗺️', texto: 'El que tiene la visión y ve más lejos que los demás', scores: { arquitecto: 10, descubridor: 5 } },
+      { id: 'b', emoji: '🛠️', texto: 'El que se asegura de que las cosas realmente pasen', scores: { constructor: 10, orquestador: 5 } },
+      { id: 'c', emoji: '💬', texto: 'El que escucha, conecta y hace que el grupo funcione', scores: { catalizador: 10, anfitrion: 5 } },
+      { id: 'd', emoji: '🔎', texto: 'El que cuestiona, analiza y encuentra lo que no cierra', scores: { arbitro: 10, interprete: 5 } },
+      { id: 'e', emoji: '🎨', texto: 'El que propone cosas que nadie más pensó', scores: { artifice: 10, narrador: 5 } },
+      { id: 'f', emoji: '🌱', texto: 'El que cuida que el proceso sea justo y sostenible', scores: { custodio: 10, sanador: 5 } },
     ],
   },
 
-  // ── SCALE 2 ──────────────────────────────────────────────────────────────────
+  // Q9 — Orientación empática (Agreeableness / SDT: relatedness)
   {
     id: 'sca_2',
     tipo: 'scale',
-    enunciado: '¿Cuánto disfrutás trabajar directamente con personas (clientes, pacientes, alumnos)?',
+    enunciado: '¿Qué tan central es para vos el bienestar emocional de las personas con quienes trabajás?',
     opciones: [
-      { id: '1', texto: 'Prefiero mucho el trabajo independiente', scores: { arquitecto: 2, descubridor: 2 } },
-      { id: '2', texto: '', scores: { interprete: 2 } },
+      { id: '1', texto: 'Me foco en los resultados; cada uno maneja sus emociones', scores: { arquitecto: 2, interprete: 2 } },
+      { id: '2', texto: '', scores: { orquestador: 2 } },
       { id: '3', texto: '', scores: {} },
-      { id: '4', texto: '', scores: { catalizador: 2, anfitrion: 2 } },
-      { id: '5', texto: 'Es lo que le da sentido a todo lo que hago', scores: { sanador: 3, catalizador: 3, anfitrion: 3 } },
+      { id: '4', texto: '', scores: { catalizador: 2 } },
+      { id: '5', texto: 'El bienestar del equipo es tan importante como los resultados', scores: { sanador: 3, catalizador: 3, anfitrion: 2 } },
     ],
   },
 
-  // ── SITUACIONAL 4 ─────────────────────────────────────────────────────────────
+  // Q10 — Respuesta a la injusticia (valores morales en el trabajo)
   {
     id: 'sit_4',
     tipo: 'situacional',
-    enunciado: 'Descubrís una ineficiencia enorme en un proceso de tu trabajo. ¿Qué hacés?',
+    enunciado: 'Hay una situación claramente injusta en tu entorno de trabajo. ¿Cómo reaccionás?',
     opciones: [
-      { id: 'a', texto: 'Diseño una solución sistemática para eliminarlo de raíz.', scores: { arquitecto: 10, constructor: 5 } },
-      { id: 'b', texto: 'Lo documento y lo escalo a quien pueda cambiarlo formalmente.', scores: { arbitro: 10, orquestador: 5 } },
-      { id: 'c', texto: 'Construyo un prototipo rápido para probarlo yo mismo/a.', scores: { constructor: 10, descubridor: 5 } },
-      { id: 'd', texto: 'Hablo con el equipo antes de tocar nada para entender el contexto.', scores: { catalizador: 10, custodio: 5 } },
+      { id: 'a', texto: 'La señalo y argumento por qué está mal, aunque no sea popular hacerlo.', scores: { arbitro: 10, catalizador: 5 } },
+      { id: 'b', texto: 'Escucho a todos los involucrados y trato de entender antes de opinar.', scores: { sanador: 10, anfitrion: 5 } },
+      { id: 'c', texto: 'Analizo qué estructura o proceso genera esa situación y cómo cambiarla.', scores: { arquitecto: 10, descubridor: 5 } },
+      { id: 'd', texto: 'Movilizo a otros para que también lo vean y actuemos juntos.', scores: { catalizador: 10, narrador: 5 } },
     ],
   },
 
-  // ── PAIRS 2 ──────────────────────────────────────────────────────────────────
+  // Q11 — Profundidad vs. amplitud (especialización vs. generalismo)
   {
     id: 'par_2',
     tipo: 'pairs',
-    enunciado: '¿Con cuál de estos roles te identificás más naturalmente?',
+    enunciado: 'Si pudieras elegir cómo desarrollarte profesionalmente:',
     opciones: [
-      { id: 'a', emoji: '📊', texto: 'El que encuentra el error que nadie más vio en los datos', scores: { interprete: 10, arbitro: 5 } },
-      { id: 'b', emoji: '🎭', texto: 'El que crea algo que hace que la gente sienta algo', scores: { artifice: 10, narrador: 5 } },
+      { id: 'a', emoji: '🔭', texto: 'Ser un especialista profundo en algo que muy poca gente domina', scores: { descubridor: 10, arquitecto: 5 } },
+      { id: 'b', emoji: '🌐', texto: 'Tener un entendimiento amplio de muchas áreas y conectarlas', scores: { orquestador: 10, catalizador: 5 } },
     ],
   },
 
-  // ── SCALE 3 ──────────────────────────────────────────────────────────────────
+  // Q12 — Necesidad de expresión (Openness / identidad en el trabajo)
   {
     id: 'sca_3',
     tipo: 'scale',
-    enunciado: '¿Qué tan importante es para vos que tu trabajo tenga un impacto social visible?',
+    enunciado: '¿Qué tan importante es para vos que tu trabajo sea una forma de expresión personal?',
     opciones: [
-      { id: '1', texto: 'No es mi prioridad principal', scores: { arquitecto: 2, interprete: 2 } },
+      { id: '1', texto: 'No lo necesito; prefiero que sea funcional y eficiente', scores: { arquitecto: 2, interprete: 2 } },
       { id: '2', texto: '', scores: { constructor: 2 } },
       { id: '3', texto: '', scores: {} },
-      { id: '4', texto: '', scores: { catalizador: 2, custodio: 2 } },
-      { id: '5', texto: 'Es lo que me mueve a trabajar', scores: { sanador: 3, catalizador: 3, custodio: 3 } },
+      { id: '4', texto: '', scores: { artifice: 2, narrador: 2 } },
+      { id: '5', texto: 'Es fundamental; necesito que refleje quién soy', scores: { artifice: 3, narrador: 3 } },
     ],
   },
 
-  // ── SITUACIONAL 5 ─────────────────────────────────────────────────────────────
+  // Q13 — Tipo de reconocimiento (motivación intrínseca vs. extrínseca)
   {
     id: 'sit_5',
     tipo: 'situacional',
-    enunciado: 'Tenés que presentar algo ante un grupo grande. ¿Qué pensás antes de hacerlo?',
+    enunciado: '¿Qué tipo de reconocimiento te importa más genuinamente en el trabajo?',
     opciones: [
-      { id: 'a', texto: 'Me preparo con datos y estructura sólida. La forma importa menos que el argumento.', scores: { interprete: 10, arquitecto: 5 } },
-      { id: 'b', texto: 'Me foco en conectar emocionalmente con la audiencia.', scores: { narrador: 10, catalizador: 5 } },
-      { id: 'c', texto: 'Me pone nervioso/a pero lo acepto como desafío y aprendo de eso.', scores: { constructor: 10, custodio: 5 } },
-      { id: 'd', texto: 'Es algo que realmente disfruto y en lo que me destaco.', scores: { anfitrion: 10, narrador: 5 } },
+      { id: 'a', texto: 'Que los resultados hablen solos: sistemas que funcionan, problemas que ya no existen.', scores: { arquitecto: 10, constructor: 5 } },
+      { id: 'b', texto: 'Que las personas a quienes ayudé digan que su vida mejoró.', scores: { sanador: 10, catalizador: 5 } },
+      { id: 'c', texto: 'Que en tu campo te reconozcan como referente o experto.', scores: { descubridor: 10, interprete: 5 } },
+      { id: 'd', texto: 'Que algo que creaste persista en el tiempo por su propio valor.', scores: { artifice: 10, narrador: 5 } },
     ],
   },
 
-  // ── SITUACIONAL 6 ─────────────────────────────────────────────────────────────
+  // Q14 — Orientación social (Extraversion + social needs)
   {
     id: 'sit_6',
     tipo: 'situacional',
-    enunciado: 'Si pudieras elegir, ¿en qué proyecto trabajarías los próximos 3 años?',
+    enunciado: '¿Cuál describe mejor tu relación ideal con las personas en el trabajo?',
     opciones: [
-      { id: 'a', texto: 'Investigar algo que todavía nadie entiende bien y documentarlo.', scores: { descubridor: 10, narrador: 5 } },
-      { id: 'b', texto: 'Construir una empresa o emprendimiento desde cero.', scores: { orquestador: 10, catalizador: 5 } },
-      { id: 'c', texto: 'Desarrollar una tecnología o sistema que resuelva un problema real.', scores: { arquitecto: 10, constructor: 5 } },
-      { id: 'd', texto: 'Trabajar en algo que mejore la calidad de vida de comunidades.', scores: { sanador: 10, custodio: 5 } },
+      { id: 'a', texto: 'Trabajo solo. Las interacciones son bienvenidas pero secundarias.', scores: { arquitecto: 10, descubridor: 5 } },
+      { id: 'b', texto: 'Trabajo con un equipo pequeño muy complementario, donde el vínculo importa.', scores: { interprete: 10, constructor: 5 } },
+      { id: 'c', texto: 'Las personas son el núcleo de mi trabajo. Sin esa conexión no tiene sentido.', scores: { sanador: 10, anfitrion: 5 } },
+      { id: 'd', texto: 'Me gusta movilizar muchas personas hacia un objetivo común.', scores: { orquestador: 10, catalizador: 5 } },
     ],
   },
 
-  // ── MULTISELECT 2 ────────────────────────────────────────────────────────────
+  // Q15 — Actividades que generan flujo (Csikszentmihalyi: flow state)
   {
     id: 'mul_2',
     tipo: 'multiselect',
-    enunciado: '¿Cuáles de estas actividades disfrutarías hacer todos los días?',
-    subtext: 'Elegí exactamente 3',
+    enunciado: '¿Cuáles de estas actividades te generarían más satisfacción si fueran parte de tu trabajo diario? (elegí 3)',
     maxSelect: 3,
     opciones: [
-      { id: 'a', texto: 'Resolver problemas técnicos o lógicos complejos', scores: { arquitecto: 5, constructor: 4 } },
-      { id: 'b', texto: 'Cuidar o acompañar a otras personas', scores: { sanador: 5, anfitrion: 4 } },
-      { id: 'c', texto: 'Escribir, diseñar o crear contenido', scores: { narrador: 5, artifice: 5 } },
-      { id: 'd', texto: 'Analizar datos y encontrar patrones ocultos', scores: { interprete: 5, descubridor: 4 } },
-      { id: 'e', texto: 'Organizar equipos y coordinar proyectos', scores: { orquestador: 5, catalizador: 4 } },
-      { id: 'f', texto: 'Trabajar al aire libre o con elementos físicos', scores: { custodio: 5, constructor: 4 } },
-      { id: 'g', texto: 'Negociar, argumentar o defender posiciones', scores: { arbitro: 5, narrador: 4 } },
-      { id: 'h', texto: 'Enseñar, mentorear o guiar a otros', scores: { catalizador: 5, narrador: 4 } },
+      { id: 'a', texto: 'Analizar un problema complejo hasta entenderlo completamente', scores: { arquitecto: 5, descubridor: 4 } },
+      { id: 'b', texto: 'Tener conversaciones profundas que ayudan a alguien a resolver algo', scores: { sanador: 5, catalizador: 4 } },
+      { id: 'c', texto: 'Diseñar o construir algo que antes no existía', scores: { artifice: 5, constructor: 4 } },
+      { id: 'd', texto: 'Encontrar patrones en datos para tomar mejores decisiones', scores: { interprete: 5, arquitecto: 4 } },
+      { id: 'e', texto: 'Liderar equipos y coordinar que todo encaje', scores: { orquestador: 5, catalizador: 4 } },
+      { id: 'f', texto: 'Trabajar al aire libre o en contacto con el entorno físico real', scores: { custodio: 5, constructor: 4 } },
+      { id: 'g', texto: 'Escribir, producir contenido o comunicar ideas con impacto', scores: { narrador: 5, artifice: 4 } },
+      { id: 'h', texto: 'Defender una posición, negociar o argumentar ante otros', scores: { arbitro: 5, orquestador: 4 } },
     ],
   },
 
-  // ── SCALE 4 ──────────────────────────────────────────────────────────────────
+  // Q16 — Tolerancia a la incertidumbre (Risk tolerance / Neuroticism inverso)
   {
     id: 'sca_4',
     tipo: 'scale',
-    enunciado: '¿Cuánto te atrae la idea de crear cosas tangibles con tus manos o herramientas?',
+    enunciado: '¿Qué tan cómodo/a te sentís con la incertidumbre sobre el futuro de tu carrera?',
     opciones: [
-      { id: '1', texto: 'No es algo que me llame la atención', scores: { narrador: 2, interprete: 2 } },
-      { id: '2', texto: '', scores: { arquitecto: 2 } },
-      { id: '3', texto: '', scores: {} },
-      { id: '4', texto: '', scores: { constructor: 2, artifice: 2 } },
-      { id: '5', texto: 'Me encanta y es donde me siento más realizado/a', scores: { constructor: 3, artifice: 3 } },
+      { id: '1', texto: 'Necesito saber adónde voy. La incertidumbre me paraliza.', scores: { custodio: 3, arbitro: 2 } },
+      { id: '2', texto: '', scores: { interprete: 2 } },
+      { id: '3', texto: '', scores: { orquestador: 1 } },
+      { id: '4', texto: '', scores: { descubridor: 2 } },
+      { id: '5', texto: 'La incertidumbre me estimula. Prefiero construir el camino mientras camino.', scores: { descubridor: 3, artifice: 2 } },
     ],
   },
 
-  // ── SITUACIONAL 7 ─────────────────────────────────────────────────────────────
+  // Q17 — Encuadre ante problemas (Cognitive appraisal / frame of reference)
   {
     id: 'sit_7',
     tipo: 'situacional',
-    enunciado: 'Ves un problema social grave que te impacta. ¿Cuál es tu primer impulso?',
+    enunciado: '¿Cuál de estas frases describe mejor cómo te enfrentás a un problema que no tiene solución obvia?',
     opciones: [
-      { id: 'a', texto: 'Investigar sus causas raíz para entenderlo profundamente.', scores: { descubridor: 10, arbitro: 5 } },
-      { id: 'b', texto: 'Armar algo concreto para atacarlo: campaña, app, propuesta.', scores: { catalizador: 10, narrador: 5 } },
-      { id: 'c', texto: 'Involucrarme directamente con las personas afectadas.', scores: { sanador: 10, anfitrion: 5 } },
-      { id: 'd', texto: 'Proponer cambios en las reglas o sistemas que lo generan.', scores: { arbitro: 10, arquitecto: 5 } },
+      { id: 'a', texto: '"Necesito entenderlo completamente antes de proponer algo."', scores: { descubridor: 10, interprete: 5 } },
+      { id: 'b', texto: '"Lo que importa es encontrar algo que funcione y ajustar después."', scores: { constructor: 10, arquitecto: 5 } },
+      { id: 'c', texto: '"Primero necesito escuchar a las personas que lo están viviendo."', scores: { catalizador: 10, sanador: 5 } },
+      { id: 'd', texto: '"Me pregunto cómo este problema conecta con algo más profundo o estructural."', scores: { narrador: 10, arbitro: 5 } },
     ],
   },
 
-  // ── PAIRS 3 ──────────────────────────────────────────────────────────────────
+  // Q18 — Innovación vs. optimización (Career Anchors: entrepreneurial vs. technical)
   {
     id: 'par_3',
     tipo: 'pairs',
-    enunciado: 'A la hora de resolver un problema difícil, preferís:',
+    enunciado: '¿Cuál de estos tipos de trabajo te generaría más satisfacción profunda?',
     opciones: [
-      { id: 'a', emoji: '🔍', texto: 'Investigar a fondo hasta entender exactamente qué pasa', scores: { descubridor: 10, arquitecto: 5 } },
-      { id: 'b', emoji: '💬', texto: 'Hablar con todos los involucrados y entender su perspectiva', scores: { catalizador: 10, anfitrion: 5 } },
+      { id: 'a', emoji: '💡', texto: 'Crear algo nuevo que no existía, aunque implique fracasar muchas veces', scores: { artifice: 10, descubridor: 5 } },
+      { id: 'b', emoji: '⚙️', texto: 'Tomar algo que ya existe y hacerlo funcionar mucho mejor', scores: { arquitecto: 10, constructor: 5 } },
     ],
   },
 
-  // ── SITUACIONAL 8 ─────────────────────────────────────────────────────────────
+  // Q19 — Visión de largo plazo (Identity / Life Design)
   {
     id: 'sit_8',
     tipo: 'situacional',
-    enunciado: 'Tenés que elegir entre dos ofertas de trabajo. ¿Qué pesa más en tu decisión?',
+    enunciado: '¿Cuál de estas visiones de vida profesional te resuena más genuinamente?',
     opciones: [
-      { id: 'a', texto: 'Los desafíos técnicos y la complejidad de los problemas a resolver.', scores: { arquitecto: 10, descubridor: 5 } },
-      { id: 'b', texto: 'La cultura del equipo y la misión de la empresa.', scores: { catalizador: 10, sanador: 5 } },
-      { id: 'c', texto: 'La estabilidad, el sueldo y un rol bien definido.', scores: { custodio: 10, arbitro: 5 } },
-      { id: 'd', texto: 'La libertad creativa y la posibilidad de innovar.', scores: { artifice: 10, narrador: 5 } },
+      { id: 'a', texto: 'Dominar profundamente algo. Ser de las pocas personas que realmente lo entiende.', scores: { descubridor: 10, interprete: 5 } },
+      { id: 'b', texto: 'Construir algo que perdure: una empresa, una institución, un legado concreto.', scores: { orquestador: 10, arquitecto: 5 } },
+      { id: 'c', texto: 'Tener un impacto directo y sostenido en la vida de personas reales.', scores: { sanador: 10, catalizador: 5 } },
+      { id: 'd', texto: 'Vivir con autonomía, explorando y creando en mis propios términos.', scores: { artifice: 10, narrador: 5 } },
     ],
   },
 
-  // ── SITUACIONAL 9 ─────────────────────────────────────────────────────────────
+  // Q20 — Autopercepción de fortaleza central (self-concept / identidad laboral)
   {
     id: 'sit_9',
     tipo: 'situacional',
-    enunciado: 'Tu jefe te pide que definas cómo preferís trabajar. ¿Qué respondés?',
+    enunciado: 'Las personas que mejor te conocen dirían que tu mayor fortaleza en el trabajo es:',
     opciones: [
-      { id: 'a', texto: 'Solo y con total autonomía. Me comprometés con resultados y me dejás trabajar.', scores: { arquitecto: 10, descubridor: 5 } },
-      { id: 'b', texto: 'Liderando un equipo diverso con roles claros y complementarios.', scores: { orquestador: 10, catalizador: 5 } },
-      { id: 'c', texto: 'En colaboración creativa, iterando rápido con otros.', scores: { artifice: 10, interprete: 5 } },
-      { id: 'd', texto: 'Coordinando con especialistas externos y gestionando relaciones clave.', scores: { anfitrion: 10, narrador: 5 } },
-    ],
-  },
-
-  // ── SITUACIONAL 10 ────────────────────────────────────────────────────────────
-  {
-    id: 'sit_10',
-    tipo: 'situacional',
-    enunciado: '¿Con cuál de estas formas de ser te identificás más?',
-    opciones: [
-      { id: 'a', texto: 'El arquitecto: construye reglas y sistemas que funcionan solos.', scores: { arquitecto: 10, arbitro: 5 } },
-      { id: 'b', texto: 'El explorador: lo desconocido le genera más curiosidad que miedo.', scores: { descubridor: 10, custodio: 5 } },
-      { id: 'c', texto: 'El puente: conecta personas, ideas y mundos que no se veían.', scores: { catalizador: 10, narrador: 5 } },
-      { id: 'd', texto: 'El artesano: lo que hace lleva su firma, cada detalle es una decisión.', scores: { artifice: 10, constructor: 5 } },
+      { id: 'a', texto: 'Tu capacidad para encontrar soluciones donde otros ven solo problemas.', scores: { arquitecto: 10, descubridor: 5 } },
+      { id: 'b', texto: 'Tu habilidad para que la gente se sienta escuchada y acompañada.', scores: { sanador: 10, catalizador: 5 } },
+      { id: 'c', texto: 'Tu energía para llevar proyectos adelante y hacer que las cosas pasen.', scores: { orquestador: 10, constructor: 5 } },
+      { id: 'd', texto: 'Tu manera de conectar ideas y mundos que parecen no tener relación.', scores: { narrador: 10, arbitro: 5 } },
     ],
   },
 ];

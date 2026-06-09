@@ -3,9 +3,53 @@ export interface UserProfile {
   email: string;
   edad: string;
   provinciaId: string;
-  movilidad: 'si' | 'no' | 'virtual';
-  provinciasDestino: string[];
+  movilidad: 'si' | 'no' | 'nose';
 }
+
+export type PlanId = 'esencial' | 'universitario' | 'profesional';
+
+export const PLANES: Record<PlanId, {
+  nombre: string;
+  precio: string;
+  tagline: string;
+  popular?: boolean;
+  incluye: string[];
+}> = {
+  esencial: {
+    nombre: 'Esencial',
+    precio: '2.990',
+    tagline: 'Tu perfil + carreras',
+    incluye: [
+      'Descripción completa de tu arquetipo',
+      'Fortalezas, motivaciones y áreas de desarrollo',
+      '5–8 carreras afines con justificación',
+      'PDF descargable',
+    ],
+  },
+  universitario: {
+    nombre: 'Universitario',
+    precio: '4.990',
+    tagline: 'Tu camino académico',
+    popular: true,
+    incluye: [
+      'Todo lo del plan Esencial',
+      'Universidades donde se dicta cada carrera',
+      'Planes de estudio y modalidades',
+      'Duración real (no solo la oficial)',
+    ],
+  },
+  profesional: {
+    nombre: 'Profesional',
+    precio: '7.990',
+    tagline: 'Tu futuro laboral',
+    incluye: [
+      'Todo lo del plan Universitario',
+      'Salidas laborales concretas por carrera',
+      'Rangos salariales en Argentina 2025',
+      'Empresas argentinas que contratan estos perfiles',
+    ],
+  },
+};
 
 export const PROVINCIAS = [
   { id: 'CABA',   label: 'Ciudad de Buenos Aires',       dbName: 'Ciudad Autonoma de Buenos Aires' },
@@ -36,15 +80,7 @@ export const PROVINCIAS = [
 ];
 
 export function getProvinciasDisponibles(profile: UserProfile): string[] {
+  if (profile.movilidad === 'si') return []; // vacío = todas las provincias
   const home = PROVINCIAS.find(p => p.id === profile.provinciaId)?.dbName;
-  const homeList = home ? [home] : [];
-
-  if (profile.movilidad !== 'si') return homeList;
-
-  const destinations = profile.provinciasDestino
-    .map(id => PROVINCIAS.find(p => p.id === id)?.dbName)
-    .filter((d): d is string => !!d);
-
-  const all = [...new Set([...homeList, ...destinations])];
-  return all;
+  return home ? [home] : [];
 }

@@ -2,39 +2,27 @@ import { motion } from 'motion/react';
 import { Check, Lock, FileText, MapPin, TrendingUp, Shield } from 'lucide-react';
 import type { ScoringResult } from '../engine/scorer';
 import LogoIcon from '../../components/ui/LogoIcon';
+import { PLANES, type PlanId } from '../data/profile';
 
 interface CheckoutScreenProps {
   nombre: string;
   email: string;
   result: ScoringResult;
+  plan: PlanId;
   onBack: () => void;
 }
 
-const INCLUYE = [
-  'Descripción completa de tu arquetipo vocacional',
-  'Top 8 carreras con justificación personalizada',
-  'Universidades disponibles en tu provincia',
-  'Duración real de cada carrera (no solo la oficial)',
-  'Salidas laborales concretas y rangos salariales',
-  '"Lo que nadie te cuenta" — contras honestos',
-  'Guía de próximos pasos para explorar cada carrera',
-  'Comparativa entre tus 3 mejores opciones',
-  'Plan B vocacional — qué hacer si te equivocás',
-  'PDF descargable por 30 días',
-];
-
-export default function CheckoutScreen({ nombre, email, result, onBack }: CheckoutScreenProps) {
-  const { arquetipoPrimario, confianza } = result;
+export default function CheckoutScreen({ nombre, email, result, plan, onBack }: CheckoutScreenProps) {
+  const { primario, confianza } = result;
   const firstName = nombre.split(' ')[0];
+  const planData = PLANES[plan];
 
   const handlePago = () => {
-    // TODO: integrar Mercado Pago. Por ahora muestra el flujo visual.
     alert('Integración con Mercado Pago próximamente. Tu resultado fue guardado.');
   };
 
   return (
     <div className="min-h-screen bg-[#07111F]">
-      {/* Header */}
       <div className="flex items-center justify-between px-5 py-4 border-b border-white/6">
         <div className="flex items-center gap-2">
           <LogoIcon size={22} />
@@ -47,18 +35,16 @@ export default function CheckoutScreen({ nombre, email, result, onBack }: Checko
 
       <div className="max-w-xl mx-auto px-5 py-8 pb-32 space-y-6">
 
-        {/* Headline */}
         <motion.div initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.5 }}>
           <p className="text-white/40 text-[13px] font-medium mb-2">Tu informe está listo, {firstName}</p>
           <h1 className="font-display font-black text-[28px] text-white leading-tight tracking-tight">
-            Desbloqueá tu informe completo
+            Plan {planData.nombre}
           </h1>
           <p className="text-white/45 text-[14px] mt-2 leading-relaxed">
-            Basado en tu arquetipo <span className="text-white font-semibold">{arquetipoPrimario.nombre}</span> con {confianza}% de confianza.
+            Basado en tu arquetipo <span className="text-white font-semibold">{primario.nombre}</span> con {confianza}% de precisión.
           </p>
         </motion.div>
 
-        {/* Price card */}
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
@@ -66,13 +52,12 @@ export default function CheckoutScreen({ nombre, email, result, onBack }: Checko
           className="rounded-3xl border border-brand-lime/30 bg-brand-lime/5 p-6"
         >
           <div className="flex items-end gap-2 mb-1">
-            <span className="font-display font-black text-[42px] text-white leading-none">$4.900</span>
+            <span className="font-display font-black text-[42px] text-white leading-none">${planData.precio}</span>
             <span className="text-white/40 text-[14px] font-medium mb-2">ARS · pago único</span>
           </div>
-          <p className="text-white/40 text-[12px]">Equivale a menos de un café por año de carrera.</p>
+          <p className="text-white/40 text-[12px]">{planData.tagline}</p>
         </motion.div>
 
-        {/* Incluye */}
         <motion.div
           initial={{ opacity: 0, y: 16 }}
           animate={{ opacity: 1, y: 0 }}
@@ -81,7 +66,7 @@ export default function CheckoutScreen({ nombre, email, result, onBack }: Checko
         >
           <p className="text-[12px] font-bold text-white/50 tracking-widest uppercase mb-4">Tu informe incluye</p>
           <div className="space-y-3">
-            {INCLUYE.map(item => (
+            {planData.incluye.map(item => (
               <div key={item} className="flex items-start gap-3">
                 <Check size={14} className="text-brand-lime shrink-0 mt-0.5" />
                 <span className="text-[13px] text-white/65 font-medium leading-snug">{item}</span>
@@ -90,7 +75,6 @@ export default function CheckoutScreen({ nombre, email, result, onBack }: Checko
           </div>
         </motion.div>
 
-        {/* Email confirmation */}
         <motion.div
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
@@ -104,7 +88,6 @@ export default function CheckoutScreen({ nombre, email, result, onBack }: Checko
           </div>
         </motion.div>
 
-        {/* Trust badges */}
         <motion.div
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
@@ -126,7 +109,6 @@ export default function CheckoutScreen({ nombre, email, result, onBack }: Checko
 
       </div>
 
-      {/* Sticky CTA */}
       <div className="fixed bottom-0 left-0 right-0 px-5 pb-6 pt-4 bg-gradient-to-t from-[#07111F] via-[#07111F]/95 to-transparent">
         <button
           onClick={handlePago}
