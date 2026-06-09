@@ -76,11 +76,9 @@ export function recomendar(result: ScoringResult): CarreraRecomendada[] {
 
   const macroAreasActivas = new Set(Object.keys(macroAreaPeso));
 
-  const duracionFiltro = contexto.duracionPreferida === 'corta' ? 'corta' : 'nose';
-
   // Score each career
   const scored = CARRERAS_DB
-    .filter(entry => macroAreasActivas.has(entry.macroArea) && duracionCompatible(entry, duracionFiltro))
+    .filter(entry => macroAreasActivas.has(entry.macroArea))
     .map(entry => {
       const pesoPorMacro = macroAreaPeso[entry.macroArea] ?? 0;
       const univsEnProv = filtrarUniversidadesPorProvincia(entry, contexto.provinciasDisponibles);

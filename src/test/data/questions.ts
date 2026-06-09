@@ -293,18 +293,7 @@ export const QUESTIONS: Question[] = [
     ],
   },
 
-  // Q20 — Preferencia de duración de carrera (filtro de recomendación)
-  {
-    id: 'ctx_duracion',
-    tipo: 'pairs',
-    enunciado: 'Si pudieras elegir, ¿qué preferís para tu formación?',
-    opciones: [
-      { id: 'corta', emoji: '⚡', texto: 'Salir al mercado rápido. Me atrae una carrera de 2–3 años con salida concreta.', scores: {} },
-      { id: 'cualquiera', emoji: '🎓', texto: 'No me importa la duración si la carrera me interesa y tiene buenos resultados.', scores: {} },
-    ],
-  },
-
-  // Q21 — Autopercepción de fortaleza central (self-concept / identidad laboral)
+  // Q20 — Autopercepción de fortaleza central (self-concept / identidad laboral)
   {
     id: 'sit_9',
     tipo: 'situacional',
