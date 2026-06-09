@@ -1,0 +1,64 @@
+
+======================================
+VOCARIA V2 — SIMULACIÓN 10.000 ESTUDIANTES
+======================================
+
+DISTRIBUCIÓN PRIMARIA (arquetipo principal)
+─────────────────────────────────────────
+arquitecto      ████                   1799   (18.0%)
+custodio        ███                    1676   (16.8%)
+constructor     ███                    1588   (15.9%)
+descubridor     ██                     1055   (10.5%)
+narrador        ██                     1003   (10.0%)
+sanador         ██                      821   (8.2%)
+catalizador     █                       547   (5.5%)
+artifice        █                       432   (4.3%)
+arbitro         █                       407   (4.1%)
+orquestador     █                       263   (2.6%)
+anfitrion                               206   (2.1%)
+interprete                              203   (2.0%)
+
+DISTRIBUCIÓN COMBINACIONES (top 10)
+─────────────────────────────────────────
+arquitecto + descubridor      █                       665   (6.7%)
+constructor + custodio        █                       609   (6.1%)
+artifice + narrador           █                       420   (4.2%)
+arquitecto + constructor      █                       391   (3.9%)
+custodio + sanador            █                       282   (2.8%)
+arquitecto + interprete       █                       253   (2.5%)
+catalizador + sanador                                 208   (2.1%)
+anfitrion + custodio                                  198   (2.0%)
+narrador + orquestador                                176   (1.8%)
+constructor + descubridor                             174   (1.7%)
+
+CONFIANZA PROMEDIO POR ARQUETIPO
+─────────────────────────────────────────
+arquitecto      82.2  (n=1799)
+custodio        93.0  (n=1676)
+constructor     91.2  (n=1588)
+descubridor     91.0  (n=1055)
+narrador        91.6  (n=1003)
+sanador         94.5  (n=821)
+catalizador     87.2  (n=547)
+artifice        94.2  (n=432)
+arbitro         91.5  (n=407)
+orquestador     94.5  (n=263)
+anfitrion       87.5  (n=206)
+interprete      94.3  (n=203)
+
+ARQUETIPOS ACTIVOS PROMEDIO: 2.08
+
+ARQUETIPOS MÁS FRECUENTES COMO SECUNDARIO
+─────────────────────────────────────────
+descubridor       956   (9.6%)
+custodio          788   (7.9%)
+constructor       708   (7.1%)
+anfitrion         626   (6.3%)
+arquitecto        604   (6.0%)
+catalizador       521   (5.2%)
+narrador          497   (5.0%)
+orquestador       378   (3.8%)
+interprete        340   (3.4%)
+arbitro           305   (3.0%)
+artifice          240   (2.4%)
+sanador           153   (1.5%)
