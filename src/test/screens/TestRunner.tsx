@@ -23,6 +23,11 @@ export default function TestRunner({ nombre, profile, onComplete }: TestRunnerPr
   const currentQuestion = questions[currentIndex];
   const total = questions.length;
 
+  const HOOKS: Record<number, string> = {
+    6: 'Tu perfil empieza a tomar forma.',
+    12: 'Último tramo. Afinamos las recomendaciones.',
+  };
+
   const handleAnswer = useCallback((value: string) => {
     const newAnswers = { ...answers, [currentQuestion.id]: value };
     setAnswers(newAnswers);
@@ -77,11 +82,18 @@ export default function TestRunner({ nombre, profile, onComplete }: TestRunnerPr
             transition={{ duration: 0.28, ease: [0.16, 1, 0.3, 1] }}
           >
             {currentQuestion && (
-              <QuestionCard
-                question={currentQuestion}
-                onAnswer={handleAnswer}
-                currentAnswer={answers[currentQuestion.id]}
-              />
+              <>
+                {HOOKS[currentIndex] && (
+                  <p className="text-[11px] text-brand-lime/70 font-semibold tracking-widest uppercase mb-4">
+                    {HOOKS[currentIndex]}
+                  </p>
+                )}
+                <QuestionCard
+                  question={currentQuestion}
+                  onAnswer={handleAnswer}
+                  currentAnswer={answers[currentQuestion.id]}
+                />
+              </>
             )}
           </motion.div>
         </AnimatePresence>

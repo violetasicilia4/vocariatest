@@ -26,6 +26,16 @@ export interface ScoringResult {
   contexto: Contexto;
 }
 
+const ANTIPATRON_PENALTIES: Record<string, Partial<Record<string, number>>> = {
+  sangre:      { sanador: -30, descubridor: -8 },
+  matematica:  { interprete: -30, arquitecto: -20, descubridor: -15 },
+  exposicion:  { catalizador: -20, anfitrion: -30, narrador: -15 },
+  rutina:      { arbitro: -15, custodio: -10 },
+  ventas:      { orquestador: -15, anfitrion: -10 },
+  soledad:     { arquitecto: -20, descubridor: -15, interprete: -15 },
+  competencia: { orquestador: -10 },
+};
+
 function acumularScores(answers: Record<string, string>): Record<string, number> {
   const raw: Record<string, number> = {};
   for (const arq of ARQUETIPOS) raw[arq.id] = 0;
@@ -43,6 +53,18 @@ function acumularScores(answers: Record<string, string>): Record<string, number>
       if (!opcion?.scores) continue;
       for (const [arquetipoId, pts] of Object.entries(opcion.scores)) {
         if (arquetipoId in raw) raw[arquetipoId] += pts;
+      }
+    }
+  }
+
+  // Apply antipattern penalties
+  const antiRaw = answers['anti_1'];
+  if (antiRaw) {
+    for (const antiId of antiRaw.split(',').filter(Boolean)) {
+      const penalties = ANTIPATRON_PENALTIES[antiId];
+      if (!penalties) continue;
+      for (const [id, pts] of Object.entries(penalties)) {
+        if (id in raw) raw[id] = Math.max(0, raw[id] + pts);
       }
     }
   }

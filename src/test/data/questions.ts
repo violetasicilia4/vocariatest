@@ -20,19 +20,9 @@ export interface Question {
   maxSelect?: number;
 }
 
-/*
-  Base psicológica:
-  - Teoría de intereses vocacionales (Holland / Super)
-  - Self-Determination Theory: autonomía, competencia, relación
-  - Big Five aplicado al contexto laboral (apertura, responsabilidad, extraversión)
-  - Career Anchors (Schein): competencia técnica, gestión, servicio, autonomía, emprendimiento
-  - Cognitive style: analítico vs. intuitivo vs. relacional vs. estructurado
-  Las preguntas miden constructos latentes, no preferencias de carrera directas.
-*/
-
 export const QUESTIONS: Question[] = [
 
-  // Q1 — Estilo cognitivo ante lo nuevo (aprendizaje experiencial)
+  // Q1 — Estilo cognitivo ante lo nuevo
   {
     id: 'sit_1',
     tipo: 'situacional',
@@ -46,7 +36,7 @@ export const QUESTIONS: Question[] = [
     ],
   },
 
-  // Q2 — Fuentes de energía (identificación de roles naturales)
+  // Q2 — Fuentes de energía
   {
     id: 'vis_1',
     tipo: 'visual',
@@ -61,7 +51,7 @@ export const QUESTIONS: Question[] = [
     ],
   },
 
-  // Q3 — Necesidad de estructura (Conscientiousness aplicado al trabajo)
+  // Q3 — Necesidad de estructura (midpoints escritos)
   {
     id: 'sca_1',
     tipo: 'scale',
@@ -69,25 +59,14 @@ export const QUESTIONS: Question[] = [
     subtext: 'No hay respuesta correcta: ambos extremos son igualmente válidos.',
     opciones: [
       { id: '1', texto: 'Prefiero definirme mis propios objetivos con total libertad', scores: { descubridor: 3, artifice: 2 } },
-      { id: '2', texto: '', scores: { arquitecto: 2 } },
-      { id: '3', texto: '', scores: { orquestador: 1 } },
-      { id: '4', texto: '', scores: { arbitro: 2 } },
+      { id: '2', texto: 'Me gusta tener dirección general, pero con espacio para decidir', scores: { arquitecto: 2 } },
+      { id: '3', texto: 'Necesito cierta claridad, pero me adapto cuando el contexto cambia', scores: { orquestador: 1 } },
+      { id: '4', texto: 'Prefiero objetivos claros, aunque con algo de margen propio', scores: { arbitro: 2 } },
       { id: '5', texto: 'Necesito saber exactamente qué se espera para rendir bien', scores: { custodio: 3, arbitro: 2 } },
     ],
   },
 
-  // Q4 — Autonomía vs. conexión (SDT: autonomy vs. relatedness)
-  {
-    id: 'par_1',
-    tipo: 'pairs',
-    enunciado: 'Si tuvieras que elegir cómo trabajar la mayor parte del tiempo:',
-    opciones: [
-      { id: 'a', emoji: '⚡', texto: 'Solo, con total autonomía, sin tener que dar explicaciones', scores: { arquitecto: 10, descubridor: 5 } },
-      { id: 'b', emoji: '🤝', texto: 'En equipo, donde el resultado depende de la conexión entre personas', scores: { catalizador: 10, anfitrion: 5 } },
-    ],
-  },
-
-  // Q5 — Toma de decisiones bajo incertidumbre (tolerancia a la ambigüedad)
+  // Q4 — Toma de decisiones bajo incertidumbre
   {
     id: 'sit_2',
     tipo: 'situacional',
@@ -100,20 +79,7 @@ export const QUESTIONS: Question[] = [
     ],
   },
 
-  // Q6 — Orientación al impacto (Career Anchors: service vs. challenge vs. legacy)
-  {
-    id: 'sit_3',
-    tipo: 'situacional',
-    enunciado: 'Dentro de 10 años mirás para atrás y sentís que tu trabajo valió la pena. ¿Cuál es la imagen?',
-    opciones: [
-      { id: 'a', texto: 'Construí algo que sigue funcionando solo: un sistema, una empresa, una tecnología.', scores: { arquitecto: 10, orquestador: 5 } },
-      { id: 'b', texto: 'Ayudé directamente a muchas personas a mejorar su situación de vida.', scores: { sanador: 10, catalizador: 5 } },
-      { id: 'c', texto: 'Generé conocimiento que otros usan como base para ir más lejos.', scores: { descubridor: 10, narrador: 5 } },
-      { id: 'd', texto: 'Creé algo original que tiene valor propio y sigue resonando.', scores: { artifice: 10, narrador: 5 } },
-    ],
-  },
-
-  // Q7 — Clarificación de valores (Super: importancia relativa de valores laborales)
+  // Q5 — Valores de trabajo (opción F ajustada, sin sobre-atribuir arquetipo)
   {
     id: 'mul_1',
     tipo: 'multiselect',
@@ -125,13 +91,31 @@ export const QUESTIONS: Question[] = [
       { id: 'c', texto: 'Que me dé libertad y autonomía para decidir', scores: { descubridor: 5, artifice: 4 } },
       { id: 'd', texto: 'Que me brinde estabilidad y seguridad económica', scores: { custodio: 5, arbitro: 4 } },
       { id: 'e', texto: 'Que me permita crear algo propio y expresarme', scores: { artifice: 5, narrador: 4 } },
-      { id: 'f', texto: 'Que esté bien remunerado', scores: { interprete: 5, orquestador: 4 } },
+      { id: 'f', texto: 'Que esté bien remunerado', scores: { orquestador: 2, interprete: 2 } },
       { id: 'g', texto: 'Que trabaje con personas que me inspiren', scores: { catalizador: 5, anfitrion: 4 } },
       { id: 'h', texto: 'Que tenga reconocimiento y crecimiento profesional', scores: { orquestador: 5, narrador: 4 } },
     ],
   },
 
-  // Q8 — Roles naturales en grupos (identificación de fortalezas interpersonales)
+  // Q6 — Antipatrones (alimenta penalizaciones en el scorer)
+  {
+    id: 'anti_1',
+    tipo: 'multiselect',
+    enunciado: '¿Cuál de estos tipos de trabajo te generaría más rechazo o incomodidad genuina?',
+    subtext: 'Elegí los 2 que más te representen.',
+    maxSelect: 2,
+    opciones: [
+      { id: 'sangre',      texto: 'Trabajar con sangre, cuerpos o situaciones médicas de emergencia', scores: {} },
+      { id: 'matematica',  texto: 'Pasar horas resolviendo ecuaciones o modelos matemáticos complejos', scores: {} },
+      { id: 'exposicion',  texto: 'Estar expuesto constantemente a clientes, público amplio o cámaras', scores: {} },
+      { id: 'rutina',      texto: 'Trabajar en oficina haciendo exactamente lo mismo todos los días', scores: {} },
+      { id: 'ventas',      texto: 'Tener que cerrar ventas o convencer gente de comprar algo', scores: {} },
+      { id: 'soledad',     texto: 'Trabajar solo la mayor parte del tiempo sin equipo', scores: {} },
+      { id: 'competencia', texto: 'Trabajar en entornos muy competitivos con presión constante de resultados', scores: {} },
+    ],
+  },
+
+  // Q7 — Roles naturales en grupos
   {
     id: 'vis_2',
     tipo: 'visual',
@@ -146,21 +130,22 @@ export const QUESTIONS: Question[] = [
     ],
   },
 
-  // Q9 — Orientación empática (Agreeableness / SDT: relatedness)
+  // Q8 — Satisfacción concreta al final de semana (NUEVA — cubre constructor/custodio/anfitrion)
   {
-    id: 'sca_2',
-    tipo: 'scale',
-    enunciado: '¿Qué tan central es para vos el bienestar emocional de las personas con quienes trabajás?',
+    id: 'vis_sat',
+    tipo: 'visual',
+    enunciado: '¿Cuál de estos resultados al final de una semana de trabajo te daría más satisfacción?',
     opciones: [
-      { id: '1', texto: 'Me foco en los resultados; cada uno maneja sus emociones', scores: { arquitecto: 2, interprete: 2 } },
-      { id: '2', texto: '', scores: { orquestador: 2 } },
-      { id: '3', texto: '', scores: {} },
-      { id: '4', texto: '', scores: { catalizador: 2 } },
-      { id: '5', texto: 'El bienestar del equipo es tan importante como los resultados', scores: { sanador: 3, catalizador: 3, anfitrion: 2 } },
+      { id: 'a', emoji: '🧍', texto: 'Haber acompañado a alguien en un momento importante de su vida', scores: { sanador: 10, catalizador: 5 } },
+      { id: 'b', emoji: '📈', texto: 'Haber descubierto un patrón en datos que nadie había visto', scores: { interprete: 10, descubridor: 5 } },
+      { id: 'c', emoji: '🔩', texto: 'Haber resuelto un problema técnico concreto con herramientas o equipos', scores: { constructor: 10, custodio: 5 } },
+      { id: 'd', emoji: '💡', texto: 'Haber desarrollado una idea que va a cambiar cómo se hace algo', scores: { artifice: 10, narrador: 5 } },
+      { id: 'e', emoji: '🎪', texto: 'Haber organizado una experiencia que hizo que otros la pasen bien', scores: { anfitrion: 10, catalizador: 5 } },
+      { id: 'f', emoji: '⚖️', texto: 'Haber resuelto un conflicto de forma justa para todos los involucrados', scores: { arbitro: 10, orquestador: 5 } },
     ],
   },
 
-  // Q10 — Respuesta a la injusticia (valores morales en el trabajo)
+  // Q9 — Respuesta a la injusticia
   {
     id: 'sit_4',
     tipo: 'situacional',
@@ -173,7 +158,7 @@ export const QUESTIONS: Question[] = [
     ],
   },
 
-  // Q11 — Profundidad vs. amplitud (especialización vs. generalismo)
+  // Q10 — Especialista vs. generalista
   {
     id: 'par_2',
     tipo: 'pairs',
@@ -184,47 +169,34 @@ export const QUESTIONS: Question[] = [
     ],
   },
 
-  // Q12 — Necesidad de expresión (Openness / identidad en el trabajo)
+  // Q11 — Expresión personal en el trabajo (midpoints escritos)
   {
     id: 'sca_3',
     tipo: 'scale',
     enunciado: '¿Qué tan importante es para vos que tu trabajo sea una forma de expresión personal?',
     opciones: [
       { id: '1', texto: 'No lo necesito; prefiero que sea funcional y eficiente', scores: { arquitecto: 2, interprete: 2 } },
-      { id: '2', texto: '', scores: { constructor: 2 } },
-      { id: '3', texto: '', scores: {} },
-      { id: '4', texto: '', scores: { artifice: 2, narrador: 2 } },
+      { id: '2', texto: 'Me resulta irrelevante si el trabajo tiene buen impacto', scores: { constructor: 2 } },
+      { id: '3', texto: 'Está bien si el trabajo lo permite, pero no es indispensable', scores: {} },
+      { id: '4', texto: 'Me importa bastante; disfruto cuando el trabajo tiene mi sello', scores: { artifice: 2, narrador: 2 } },
       { id: '5', texto: 'Es fundamental; necesito que refleje quién soy', scores: { artifice: 3, narrador: 3 } },
     ],
   },
 
-  // Q13 — Tipo de reconocimiento (motivación intrínseca vs. extrínseca)
-  {
-    id: 'sit_5',
-    tipo: 'situacional',
-    enunciado: '¿Qué tipo de reconocimiento te importa más genuinamente en el trabajo?',
-    opciones: [
-      { id: 'a', texto: 'Que los resultados hablen solos: sistemas que funcionan, problemas que ya no existen.', scores: { arquitecto: 10, constructor: 5 } },
-      { id: 'b', texto: 'Que las personas a quienes ayudé digan que su vida mejoró.', scores: { sanador: 10, catalizador: 5 } },
-      { id: 'c', texto: 'Que en tu campo te reconozcan como referente o experto.', scores: { descubridor: 10, interprete: 5 } },
-      { id: 'd', texto: 'Que algo que creaste persista en el tiempo por su propio valor.', scores: { artifice: 10, narrador: 5 } },
-    ],
-  },
-
-  // Q14 — Orientación social (Extraversion + social needs)
+  // Q12 — Relación ideal con personas en el trabajo (opción B corregida)
   {
     id: 'sit_6',
     tipo: 'situacional',
     enunciado: '¿Cuál describe mejor tu relación ideal con las personas en el trabajo?',
     opciones: [
       { id: 'a', texto: 'Trabajo solo. Las interacciones son bienvenidas pero secundarias.', scores: { arquitecto: 10, descubridor: 5 } },
-      { id: 'b', texto: 'Trabajo con un equipo pequeño muy complementario, donde el vínculo importa.', scores: { interprete: 10, constructor: 5 } },
+      { id: 'b', texto: 'Trabajo con un equipo pequeño muy complementario, donde el vínculo importa.', scores: { catalizador: 8, arquitecto: 5 } },
       { id: 'c', texto: 'Las personas son el núcleo de mi trabajo. Sin esa conexión no tiene sentido.', scores: { sanador: 10, anfitrion: 5 } },
       { id: 'd', texto: 'Me gusta movilizar muchas personas hacia un objetivo común.', scores: { orquestador: 10, catalizador: 5 } },
     ],
   },
 
-  // Q15 — Actividades que generan flujo (Csikszentmihalyi: flow state)
+  // Q13 — Actividades que generan flow
   {
     id: 'mul_2',
     tipo: 'multiselect',
@@ -242,34 +214,21 @@ export const QUESTIONS: Question[] = [
     ],
   },
 
-  // Q16 — Tolerancia a la incertidumbre (Risk tolerance / Neuroticism inverso)
+  // Q14 — Tolerancia a la incertidumbre (midpoints escritos)
   {
     id: 'sca_4',
     tipo: 'scale',
     enunciado: '¿Qué tan cómodo/a te sentís con la incertidumbre sobre el futuro de tu carrera?',
     opciones: [
       { id: '1', texto: 'Necesito saber adónde voy. La incertidumbre me paraliza.', scores: { custodio: 3, arbitro: 2 } },
-      { id: '2', texto: '', scores: { interprete: 2 } },
-      { id: '3', texto: '', scores: { orquestador: 1 } },
-      { id: '4', texto: '', scores: { descubridor: 2 } },
+      { id: '2', texto: 'Prefiero tener un plan claro, aunque pueda ajustarlo sobre la marcha', scores: { interprete: 2 } },
+      { id: '3', texto: 'Me adapto según el contexto: a veces la incertidumbre me activa', scores: { orquestador: 1 } },
+      { id: '4', texto: 'Me manejo bien con lo incierto si tengo cierta autonomía', scores: { descubridor: 2 } },
       { id: '5', texto: 'La incertidumbre me estimula. Prefiero construir el camino mientras camino.', scores: { descubridor: 3, artifice: 2 } },
     ],
   },
 
-  // Q17 — Encuadre ante problemas (Cognitive appraisal / frame of reference)
-  {
-    id: 'sit_7',
-    tipo: 'situacional',
-    enunciado: '¿Cuál de estas frases describe mejor cómo te enfrentás a un problema que no tiene solución obvia?',
-    opciones: [
-      { id: 'a', texto: '"Necesito entenderlo completamente antes de proponer algo."', scores: { descubridor: 10, interprete: 5 } },
-      { id: 'b', texto: '"Lo que importa es encontrar algo que funcione y ajustar después."', scores: { constructor: 10, arquitecto: 5 } },
-      { id: 'c', texto: '"Primero necesito escuchar a las personas que lo están viviendo."', scores: { catalizador: 10, sanador: 5 } },
-      { id: 'd', texto: '"Me pregunto cómo este problema conecta con algo más profundo o estructural."', scores: { narrador: 10, arbitro: 5 } },
-    ],
-  },
-
-  // Q18 — Innovación vs. optimización (Career Anchors: entrepreneurial vs. technical)
+  // Q15 — Innovación vs. optimización
   {
     id: 'par_3',
     tipo: 'pairs',
@@ -280,7 +239,20 @@ export const QUESTIONS: Question[] = [
     ],
   },
 
-  // Q19 — Visión de largo plazo (Identity / Life Design)
+  // Q16 — Mundo físico vs. abstracto (NUEVA — diferencia arquitecto/constructor/interprete/orquestador)
+  {
+    id: 'sit_fis',
+    tipo: 'situacional',
+    enunciado: '¿En cuál de estos proyectos te imaginarías más motivado/a?',
+    opciones: [
+      { id: 'a', texto: 'Diseñar el sistema de software que controla una planta industrial.', scores: { arquitecto: 10, descubridor: 5 } },
+      { id: 'b', texto: 'Construir físicamente algo: una estructura, una instalación, una máquina.', scores: { constructor: 10, custodio: 5 } },
+      { id: 'c', texto: 'Analizar los datos de producción y encontrar cómo mejorar la eficiencia.', scores: { interprete: 10, arquitecto: 5 } },
+      { id: 'd', texto: 'Coordinar al equipo que integra todas esas partes en un proyecto funcional.', scores: { orquestador: 10, constructor: 5 } },
+    ],
+  },
+
+  // Q17 — Visión de largo plazo
   {
     id: 'sit_8',
     tipo: 'situacional',
@@ -293,7 +265,7 @@ export const QUESTIONS: Question[] = [
     ],
   },
 
-  // Q20 — Autopercepción de fortaleza central (self-concept / identidad laboral)
+  // Q18 — Autopercepción de fortaleza central
   {
     id: 'sit_9',
     tipo: 'situacional',
@@ -305,4 +277,5 @@ export const QUESTIONS: Question[] = [
       { id: 'd', texto: 'Tu manera de conectar ideas y mundos que parecen no tener relación.', scores: { narrador: 10, arbitro: 5 } },
     ],
   },
+
 ];
