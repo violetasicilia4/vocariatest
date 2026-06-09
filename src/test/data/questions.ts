@@ -1,5 +1,4 @@
-export type Bloque = 'contexto' | 'situacional';
-export type QuestionType = 'situacional' | 'context';
+export type QuestionType = 'situacional' | 'scale' | 'visual' | 'pairs' | 'multiselect';
 
 export interface ArquetipoScores {
   [arquetipoId: string]: number;
@@ -8,406 +7,305 @@ export interface ArquetipoScores {
 export interface Opcion {
   id: string;
   texto: string;
+  emoji?: string;
   scores?: ArquetipoScores;
 }
 
 export interface Question {
   id: string;
-  bloque: Bloque;
   tipo: QuestionType;
   enunciado: string;
   subtext?: string;
   opciones: Opcion[];
+  maxSelect?: number;
 }
 
 export const QUESTIONS: Question[] = [
 
-  // ── CONTEXTO ─────────────────────────────────────────────────────────────────
-
+  // ── VISUAL 1 ─────────────────────────────────────────────────────────────────
   {
-    id: 'ctx_1',
-    bloque: 'contexto',
-    tipo: 'context',
-    enunciado: '¿En qué provincia vivís actualmente?',
-    subtext: 'Usamos esto para recomendarte universidades accesibles desde tu ubicación.',
+    id: 'vis_1',
+    tipo: 'visual',
+    enunciado: '¿En cuál de estos entornos te imaginás trabajando?',
     opciones: [
-      { id: 'CABA',   texto: 'Ciudad de Buenos Aires' },
-      { id: 'GBA',    texto: 'Gran Buenos Aires (Conurbano)' },
-      { id: 'BAPROV', texto: 'Buenos Aires (interior de provincia)' },
-      { id: 'COR',    texto: 'Córdoba' },
-      { id: 'SF',     texto: 'Santa Fe' },
-      { id: 'MZA',    texto: 'Mendoza' },
-      { id: 'TUC',    texto: 'Tucumán' },
-      { id: 'OTRA',   texto: 'Otra provincia' },
+      { id: 'a', emoji: '🔬', texto: 'Laboratorio o investigación', scores: { descubridor: 10, arquitecto: 5 } },
+      { id: 'b', emoji: '🏥', texto: 'Clínica, hospital o consultorio', scores: { sanador: 10, anfitrion: 5 } },
+      { id: 'c', emoji: '🎨', texto: 'Estudio creativo o agencia', scores: { artifice: 10, narrador: 5 } },
+      { id: 'd', emoji: '📊', texto: 'Oficina de análisis o finanzas', scores: { interprete: 10, orquestador: 5 } },
+      { id: 'e', emoji: '🏗️', texto: 'Obra, fábrica o instalaciones', scores: { constructor: 10, custodio: 5 } },
+      { id: 'f', emoji: '🎓', texto: 'Aula, universidad o formación', scores: { catalizador: 10, narrador: 5 } },
     ],
   },
 
-  {
-    id: 'ctx_2',
-    bloque: 'contexto',
-    tipo: 'context',
-    enunciado: '¿Podrías mudarte o viajar para estudiar si encontraras la carrera ideal?',
-    subtext: 'Sin compromiso — es solo para calibrar las recomendaciones.',
-    opciones: [
-      { id: 'si_total', texto: 'Sí, sin problema. Podría mudarme o viajar.' },
-      { id: 'si_beca',  texto: 'Si consigo beca o apoyo económico, sí.' },
-      { id: 'virtual',  texto: 'Prefiero opciones virtuales o semipresenciales.' },
-      { id: 'no',       texto: 'No, necesito estudiar cerca de donde vivo.' },
-    ],
-  },
-
-  {
-    id: 'ctx_3',
-    bloque: 'contexto',
-    tipo: 'context',
-    enunciado: '¿Cuánto tiempo estás dispuesto/a a invertir en estudiar una carrera?',
-    opciones: [
-      { id: 'corta',  texto: 'Corta (1–3 años): quiero salida rápida al mercado.' },
-      { id: 'media',  texto: 'Media (3–5 años): estoy dispuesto/a a una carrera de grado.' },
-      { id: 'larga',  texto: 'Larga (+5 años): no me importa si es lo que quiero.' },
-      { id: 'nose',   texto: 'No lo sé todavía.' },
-    ],
-  },
-
-  // ── SITUACIONALES ─────────────────────────────────────────────────────────────
-
+  // ── SITUACIONAL 1 ─────────────────────────────────────────────────────────────
   {
     id: 'sit_1',
-    bloque: 'situacional',
     tipo: 'situacional',
-    enunciado: 'Tenés un fin de semana libre y ganas de hacer algo productivo. ¿Qué arrancás?',
+    enunciado: 'Entrás a trabajar a un lugar nuevo. ¿Qué es lo primero que hacés?',
     opciones: [
-      { id: 'a', texto: 'Aprender a programar algo, automatizar una tarea o armar un sistema propio.',
-        scores: { arquitecto: 10, interprete: 5 } },
-      { id: 'b', texto: 'Construir, reparar o mejorar algo físico en casa.',
-        scores: { constructor: 10, custodio: 5 } },
-      { id: 'c', texto: 'Escribir, dibujar, componer o producir algo creativo.',
-        scores: { artifice: 10, narrador: 5 } },
-      { id: 'd', texto: 'Organizar una actividad, salida o experiencia para otras personas.',
-        scores: { anfitrion: 10, catalizador: 5 } },
+      { id: 'a', texto: 'Pido que me expliquen cómo funciona el sistema completo.', scores: { arquitecto: 10, descubridor: 5 } },
+      { id: 'b', texto: 'Busco conectar con el equipo y entender a cada persona.', scores: { catalizador: 10, anfitrion: 5 } },
+      { id: 'c', texto: 'Identifico rápido qué procesos se pueden optimizar.', scores: { orquestador: 10, interprete: 5 } },
+      { id: 'd', texto: 'Observo sin meter mano hasta entender bien la dinámica.', scores: { arbitro: 10, custodio: 5 } },
     ],
   },
 
+  // ── PAIRS 1 ──────────────────────────────────────────────────────────────────
+  {
+    id: 'par_1',
+    tipo: 'pairs',
+    enunciado: 'Si tuvieras que elegir entre estos dos caminos:',
+    opciones: [
+      { id: 'a', emoji: '⚙️', texto: 'Diseñar sistemas que funcionen solos y escalen', scores: { arquitecto: 10, interprete: 5 } },
+      { id: 'b', emoji: '🫂', texto: 'Acompañar a personas en procesos de cambio real', scores: { sanador: 10, catalizador: 5 } },
+    ],
+  },
+
+  // ── SITUACIONAL 2 ─────────────────────────────────────────────────────────────
   {
     id: 'sit_2',
-    bloque: 'situacional',
     tipo: 'situacional',
-    enunciado: 'Un problema que no podés sacarte de la cabeza, aunque no sea tu responsabilidad resolverlo:',
+    enunciado: 'Te asignan un proyecto sin ninguna guía ni estructura. ¿Cómo reaccionás?',
     opciones: [
-      { id: 'a', texto: 'Un proceso que claramente podría automatizarse o mejorarse con tecnología.',
-        scores: { arquitecto: 10, constructor: 5 } },
-      { id: 'b', texto: 'Alguien que está siendo tratado injustamente y nadie lo ve.',
-        scores: { arbitro: 10, sanador: 5 } },
-      { id: 'c', texto: 'Un ecosistema, especie o recurso natural que se está degradando.',
-        scores: { custodio: 10, descubridor: 5 } },
-      { id: 'd', texto: 'Una idea creativa o narrativa que nadie está explorando todavía.',
-        scores: { artifice: 10, narrador: 5 } },
+      { id: 'a', texto: 'Me emociona. Es la oportunidad de diseñar algo desde cero.', scores: { descubridor: 10, arquitecto: 5 } },
+      { id: 'b', texto: 'Armo un plan detallado antes de tocar nada.', scores: { arquitecto: 10, orquestador: 5 } },
+      { id: 'c', texto: 'Lo convierto en algo creativo e inesperado.', scores: { artifice: 10, narrador: 5 } },
+      { id: 'd', texto: 'Preferiría tener al menos una referencia para partir.', scores: { custodio: 10, arbitro: 5 } },
     ],
   },
 
+  // ── SCALE 1 ──────────────────────────────────────────────────────────────────
+  {
+    id: 'sca_1',
+    tipo: 'scale',
+    enunciado: '¿Qué tan cómodo/a te sentís tomando decisiones cuando la situación es ambigua?',
+    opciones: [
+      { id: '1', texto: 'Prefiero tener todos los datos antes de decidir', scores: { custodio: 3, arbitro: 3 } },
+      { id: '2', texto: '', scores: { custodio: 1 } },
+      { id: '3', texto: '', scores: { orquestador: 1 } },
+      { id: '4', texto: '', scores: { arquitecto: 2, orquestador: 2 } },
+      { id: '5', texto: 'Es donde mejor me desempeño', scores: { arquitecto: 3, descubridor: 3 } },
+    ],
+  },
+
+  // ── MULTISELECT 1 ────────────────────────────────────────────────────────────
+  {
+    id: 'mul_1',
+    tipo: 'multiselect',
+    enunciado: '¿Qué tres cosas son más importantes para vos en un trabajo?',
+    subtext: 'Elegí exactamente 3',
+    maxSelect: 3,
+    opciones: [
+      { id: 'a', texto: 'Creatividad e innovación constante', scores: { artifice: 5, descubridor: 5, narrador: 4 } },
+      { id: 'b', texto: 'Estabilidad y seguridad económica', scores: { custodio: 5, arbitro: 5 } },
+      { id: 'c', texto: 'Impacto social real y visible', scores: { catalizador: 5, sanador: 5, custodio: 4 } },
+      { id: 'd', texto: 'Autonomía para decidir cómo trabajo', scores: { descubridor: 5, arquitecto: 5 } },
+      { id: 'e', texto: 'Buen equipo y ambiente humano', scores: { anfitrion: 5, catalizador: 5 } },
+      { id: 'f', texto: 'Ingresos altos y reconocimiento', scores: { interprete: 5, orquestador: 5 } },
+      { id: 'g', texto: 'Aprendizaje y desafío intelectual', scores: { descubridor: 5, arquitecto: 4 } },
+      { id: 'h', texto: 'Liderazgo y posibilidad de crecer', scores: { orquestador: 5, narrador: 4 } },
+    ],
+  },
+
+  // ── SITUACIONAL 3 ─────────────────────────────────────────────────────────────
   {
     id: 'sit_3',
-    bloque: 'situacional',
     tipo: 'situacional',
-    enunciado: 'Tu jornada de trabajo ideal se parece más a:',
+    enunciado: 'Hay un conflicto serio entre dos personas de tu equipo. ¿Cómo actuás?',
     opciones: [
-      { id: 'a', texto: 'Foco profundo: construir, programar o analizar sin interrupciones.',
-        scores: { arquitecto: 10, interprete: 5 } },
-      { id: 'b', texto: 'Acompañar personas: escuchar, orientar, trabajar con quienes lo necesitan.',
-        scores: { sanador: 10, catalizador: 5 } },
-      { id: 'c', texto: 'Trabajo de campo: movimiento, contacto con el entorno real y las personas.',
-        scores: { constructor: 10, custodio: 5 } },
-      { id: 'd', texto: 'Crear y diseñar: producir algo propio con libertad de forma y contenido.',
-        scores: { artifice: 10, narrador: 5 } },
+      { id: 'a', texto: 'Escucho a cada uno por separado y busco el punto en común.', scores: { catalizador: 10, sanador: 5 } },
+      { id: 'b', texto: 'Analizo la situación objetivamente y propongo una solución lógica.', scores: { arbitro: 10, interprete: 5 } },
+      { id: 'c', texto: 'Creo un espacio seguro para que se expresen y lleguen a un acuerdo.', scores: { anfitrion: 10, catalizador: 5 } },
+      { id: 'd', texto: 'Establezco límites claros y pido que se respeten las normas del equipo.', scores: { orquestador: 10, arquitecto: 5 } },
     ],
   },
 
+  // ── VISUAL 2 ─────────────────────────────────────────────────────────────────
+  {
+    id: 'vis_2',
+    tipo: 'visual',
+    enunciado: '¿Cuál de estas situaciones te daría más satisfacción al final del día?',
+    opciones: [
+      { id: 'a', emoji: '🧩', texto: 'Haber resuelto un problema técnico complejo', scores: { arquitecto: 10, descubridor: 5 } },
+      { id: 'b', emoji: '❤️', texto: 'Haber ayudado genuinamente a alguien', scores: { sanador: 10, catalizador: 5 } },
+      { id: 'c', emoji: '🎤', texto: 'Haber comunicado algo que impactó a una audiencia', scores: { narrador: 10, anfitrion: 5 } },
+      { id: 'd', emoji: '📜', texto: 'Haber defendido algo justo y ganado', scores: { arbitro: 10, catalizador: 5 } },
+      { id: 'e', emoji: '🌱', texto: 'Haber contribuido a algo más grande que yo', scores: { custodio: 10, sanador: 5 } },
+      { id: 'f', emoji: '🛠️', texto: 'Haber construido algo concreto y tangible', scores: { constructor: 10, artifice: 5 } },
+    ],
+  },
+
+  // ── SCALE 2 ──────────────────────────────────────────────────────────────────
+  {
+    id: 'sca_2',
+    tipo: 'scale',
+    enunciado: '¿Cuánto disfrutás trabajar directamente con personas (clientes, pacientes, alumnos)?',
+    opciones: [
+      { id: '1', texto: 'Prefiero mucho el trabajo independiente', scores: { arquitecto: 2, descubridor: 2 } },
+      { id: '2', texto: '', scores: { interprete: 2 } },
+      { id: '3', texto: '', scores: {} },
+      { id: '4', texto: '', scores: { catalizador: 2, anfitrion: 2 } },
+      { id: '5', texto: 'Es lo que le da sentido a todo lo que hago', scores: { sanador: 3, catalizador: 3, anfitrion: 3 } },
+    ],
+  },
+
+  // ── SITUACIONAL 4 ─────────────────────────────────────────────────────────────
   {
     id: 'sit_4',
-    bloque: 'situacional',
     tipo: 'situacional',
-    enunciado: '¿Cuándo sentiste más orgullo o satisfacción por algo que lograste?',
+    enunciado: 'Descubrís una ineficiencia enorme en un proceso de tu trabajo. ¿Qué hacés?',
     opciones: [
-      { id: 'a', texto: 'Cuando resolví algo técnico complejo que nadie más había podido.',
-        scores: { arquitecto: 10, descubridor: 5 } },
-      { id: 'b', texto: 'Cuando alguien mejoró, creció o superó algo gracias a mí.',
-        scores: { sanador: 10, catalizador: 5 } },
-      { id: 'c', texto: 'Cuando algo que organicé salió perfecto y todos lo valoraron.',
-        scores: { orquestador: 10, anfitrion: 5 } },
-      { id: 'd', texto: 'Cuando algo que hice o creé fue reconocido o generó impacto propio.',
-        scores: { artifice: 10, narrador: 5 } },
+      { id: 'a', texto: 'Diseño una solución sistemática para eliminarlo de raíz.', scores: { arquitecto: 10, constructor: 5 } },
+      { id: 'b', texto: 'Lo documento y lo escalo a quien pueda cambiarlo formalmente.', scores: { arbitro: 10, orquestador: 5 } },
+      { id: 'c', texto: 'Construyo un prototipo rápido para probarlo yo mismo/a.', scores: { constructor: 10, descubridor: 5 } },
+      { id: 'd', texto: 'Hablo con el equipo antes de tocar nada para entender el contexto.', scores: { catalizador: 10, custodio: 5 } },
     ],
   },
 
+  // ── PAIRS 2 ──────────────────────────────────────────────────────────────────
+  {
+    id: 'par_2',
+    tipo: 'pairs',
+    enunciado: '¿Con cuál de estos roles te identificás más naturalmente?',
+    opciones: [
+      { id: 'a', emoji: '📊', texto: 'El que encuentra el error que nadie más vio en los datos', scores: { interprete: 10, arbitro: 5 } },
+      { id: 'b', emoji: '🎭', texto: 'El que crea algo que hace que la gente sienta algo', scores: { artifice: 10, narrador: 5 } },
+    ],
+  },
+
+  // ── SCALE 3 ──────────────────────────────────────────────────────────────────
+  {
+    id: 'sca_3',
+    tipo: 'scale',
+    enunciado: '¿Qué tan importante es para vos que tu trabajo tenga un impacto social visible?',
+    opciones: [
+      { id: '1', texto: 'No es mi prioridad principal', scores: { arquitecto: 2, interprete: 2 } },
+      { id: '2', texto: '', scores: { constructor: 2 } },
+      { id: '3', texto: '', scores: {} },
+      { id: '4', texto: '', scores: { catalizador: 2, custodio: 2 } },
+      { id: '5', texto: 'Es lo que me mueve a trabajar', scores: { sanador: 3, catalizador: 3, custodio: 3 } },
+    ],
+  },
+
+  // ── SITUACIONAL 5 ─────────────────────────────────────────────────────────────
   {
     id: 'sit_5',
-    bloque: 'situacional',
     tipo: 'situacional',
-    enunciado: 'Cuando necesitás aprender algo nuevo, ¿cómo preferís hacerlo?',
+    enunciado: 'Tenés que presentar algo ante un grupo grande. ¿Qué pensás antes de hacerlo?',
     opciones: [
-      { id: 'a', texto: 'Experimentando: rompiendo cosas, probando y llegando solo/a a la solución.',
-        scores: { arquitecto: 10, descubridor: 5 } },
-      { id: 'b', texto: 'Leyendo e investigando en profundidad antes de tocar nada.',
-        scores: { descubridor: 10, interprete: 5 } },
-      { id: 'c', texto: 'Viendo cómo lo hace alguien con experiencia y replicándolo.',
-        scores: { constructor: 10, catalizador: 5 } },
-      { id: 'd', texto: 'Aprendiéndolo en contexto real, con alguien que me guíe mientras hago.',
-        scores: { anfitrion: 10, sanador: 5 } },
+      { id: 'a', texto: 'Me preparo con datos y estructura sólida. La forma importa menos que el argumento.', scores: { interprete: 10, arquitecto: 5 } },
+      { id: 'b', texto: 'Me foco en conectar emocionalmente con la audiencia.', scores: { narrador: 10, catalizador: 5 } },
+      { id: 'c', texto: 'Me pone nervioso/a pero lo acepto como desafío y aprendo de eso.', scores: { constructor: 10, custodio: 5 } },
+      { id: 'd', texto: 'Es algo que realmente disfruto y en lo que me destaco.', scores: { anfitrion: 10, narrador: 5 } },
     ],
   },
 
+  // ── SITUACIONAL 6 ─────────────────────────────────────────────────────────────
   {
     id: 'sit_6',
-    bloque: 'situacional',
     tipo: 'situacional',
-    enunciado: '¿En qué entorno trabajarías mejor?',
+    enunciado: 'Si pudieras elegir, ¿en qué proyecto trabajarías los próximos 3 años?',
     opciones: [
-      { id: 'a', texto: 'Silencioso, autónomo, con foco largo y pocas interrupciones.',
-        scores: { arquitecto: 10, descubridor: 5 } },
-      { id: 'b', texto: 'Dinámico, con personas distintas, donde cada día es diferente.',
-        scores: { anfitrion: 10, narrador: 5 } },
-      { id: 'c', texto: 'Colaborativo pero con espacio para trabajar en profundidad cuando lo necesito.',
-        scores: { catalizador: 10, artifice: 5 } },
-      { id: 'd', texto: 'Estructurado, con roles claros y procesos bien definidos.',
-        scores: { arbitro: 10, interprete: 5 } },
+      { id: 'a', texto: 'Investigar algo que todavía nadie entiende bien y documentarlo.', scores: { descubridor: 10, narrador: 5 } },
+      { id: 'b', texto: 'Construir una empresa o emprendimiento desde cero.', scores: { orquestador: 10, catalizador: 5 } },
+      { id: 'c', texto: 'Desarrollar una tecnología o sistema que resuelva un problema real.', scores: { arquitecto: 10, constructor: 5 } },
+      { id: 'd', texto: 'Trabajar en algo que mejore la calidad de vida de comunidades.', scores: { sanador: 10, custodio: 5 } },
     ],
   },
 
+  // ── MULTISELECT 2 ────────────────────────────────────────────────────────────
+  {
+    id: 'mul_2',
+    tipo: 'multiselect',
+    enunciado: '¿Cuáles de estas actividades disfrutarías hacer todos los días?',
+    subtext: 'Elegí exactamente 3',
+    maxSelect: 3,
+    opciones: [
+      { id: 'a', texto: 'Resolver problemas técnicos o lógicos complejos', scores: { arquitecto: 5, constructor: 4 } },
+      { id: 'b', texto: 'Cuidar o acompañar a otras personas', scores: { sanador: 5, anfitrion: 4 } },
+      { id: 'c', texto: 'Escribir, diseñar o crear contenido', scores: { narrador: 5, artifice: 5 } },
+      { id: 'd', texto: 'Analizar datos y encontrar patrones ocultos', scores: { interprete: 5, descubridor: 4 } },
+      { id: 'e', texto: 'Organizar equipos y coordinar proyectos', scores: { orquestador: 5, catalizador: 4 } },
+      { id: 'f', texto: 'Trabajar al aire libre o con elementos físicos', scores: { custodio: 5, constructor: 4 } },
+      { id: 'g', texto: 'Negociar, argumentar o defender posiciones', scores: { arbitro: 5, narrador: 4 } },
+      { id: 'h', texto: 'Enseñar, mentorear o guiar a otros', scores: { catalizador: 5, narrador: 4 } },
+    ],
+  },
+
+  // ── SCALE 4 ──────────────────────────────────────────────────────────────────
+  {
+    id: 'sca_4',
+    tipo: 'scale',
+    enunciado: '¿Cuánto te atrae la idea de crear cosas tangibles con tus manos o herramientas?',
+    opciones: [
+      { id: '1', texto: 'No es algo que me llame la atención', scores: { narrador: 2, interprete: 2 } },
+      { id: '2', texto: '', scores: { arquitecto: 2 } },
+      { id: '3', texto: '', scores: {} },
+      { id: '4', texto: '', scores: { constructor: 2, artifice: 2 } },
+      { id: '5', texto: 'Me encanta y es donde me siento más realizado/a', scores: { constructor: 3, artifice: 3 } },
+    ],
+  },
+
+  // ── SITUACIONAL 7 ─────────────────────────────────────────────────────────────
   {
     id: 'sit_7',
-    bloque: 'situacional',
     tipo: 'situacional',
-    enunciado: '¿Qué tipo de impacto te gustaría tener en el mundo?',
+    enunciado: 'Ves un problema social grave que te impacta. ¿Cuál es tu primer impulso?',
     opciones: [
-      { id: 'a', texto: 'Crear herramientas o sistemas que usen o necesiten miles de personas.',
-        scores: { arquitecto: 10, orquestador: 5 } },
-      { id: 'b', texto: 'Mejorar directamente la vida de personas en su momento más vulnerable.',
-        scores: { sanador: 10, catalizador: 5 } },
-      { id: 'c', texto: 'Proteger algo valioso que se puede perder: la naturaleza, la justicia, la cultura.',
-        scores: { custodio: 10, arbitro: 5 } },
-      { id: 'd', texto: 'Generar conocimiento nuevo que cambie cómo entendemos algo.',
-        scores: { descubridor: 10, narrador: 5 } },
+      { id: 'a', texto: 'Investigar sus causas raíz para entenderlo profundamente.', scores: { descubridor: 10, arbitro: 5 } },
+      { id: 'b', texto: 'Armar algo concreto para atacarlo: campaña, app, propuesta.', scores: { catalizador: 10, narrador: 5 } },
+      { id: 'c', texto: 'Involucrarme directamente con las personas afectadas.', scores: { sanador: 10, anfitrion: 5 } },
+      { id: 'd', texto: 'Proponer cambios en las reglas o sistemas que lo generan.', scores: { arbitro: 10, arquitecto: 5 } },
     ],
   },
 
+  // ── PAIRS 3 ──────────────────────────────────────────────────────────────────
+  {
+    id: 'par_3',
+    tipo: 'pairs',
+    enunciado: 'A la hora de resolver un problema difícil, preferís:',
+    opciones: [
+      { id: 'a', emoji: '🔍', texto: 'Investigar a fondo hasta entender exactamente qué pasa', scores: { descubridor: 10, arquitecto: 5 } },
+      { id: 'b', emoji: '💬', texto: 'Hablar con todos los involucrados y entender su perspectiva', scores: { catalizador: 10, anfitrion: 5 } },
+    ],
+  },
+
+  // ── SITUACIONAL 8 ─────────────────────────────────────────────────────────────
   {
     id: 'sit_8',
-    bloque: 'situacional',
     tipo: 'situacional',
-    enunciado: 'Cuando ves algo que está mal, ¿qué hacés?',
+    enunciado: 'Tenés que elegir entre dos ofertas de trabajo. ¿Qué pesa más en tu decisión?',
     opciones: [
-      { id: 'a', texto: 'Analizo la causa raíz y propongo una solución sistemática.',
-        scores: { arquitecto: 10, interprete: 5 } },
-      { id: 'b', texto: 'Lo enfrento directamente: busco que se haga lo correcto.',
-        scores: { arbitro: 10, orquestador: 5 } },
-      { id: 'c', texto: 'Busco a las personas involucradas y trato de mediar o acompañar.',
-        scores: { sanador: 10, catalizador: 5 } },
-      { id: 'd', texto: 'Lo documentás, lo escribís, lo hacés visible para que otros lo vean.',
-        scores: { narrador: 10, orquestador: 5 } },
+      { id: 'a', texto: 'Los desafíos técnicos y la complejidad de los problemas a resolver.', scores: { arquitecto: 10, descubridor: 5 } },
+      { id: 'b', texto: 'La cultura del equipo y la misión de la empresa.', scores: { catalizador: 10, sanador: 5 } },
+      { id: 'c', texto: 'La estabilidad, el sueldo y un rol bien definido.', scores: { custodio: 10, arbitro: 5 } },
+      { id: 'd', texto: 'La libertad creativa y la posibilidad de innovar.', scores: { artifice: 10, narrador: 5 } },
     ],
   },
 
+  // ── SITUACIONAL 9 ─────────────────────────────────────────────────────────────
   {
     id: 'sit_9',
-    bloque: 'situacional',
     tipo: 'situacional',
-    enunciado: '¿Qué relación tenés con los números y los datos?',
+    enunciado: 'Tu jefe te pide que definas cómo preferís trabajar. ¿Qué respondés?',
     opciones: [
-      { id: 'a', texto: 'Los amo. Son mi forma natural de entender cómo funciona el mundo.',
-        scores: { interprete: 10, arquitecto: 5 } },
-      { id: 'b', texto: 'Los uso como herramienta cuando son necesarios, sin amor ni rechazo.',
-        scores: { constructor: 10, orquestador: 5 } },
-      { id: 'c', texto: 'Prefiero trabajar con personas, ideas o formas visuales.',
-        scores: { sanador: 10, artifice: 5 } },
-      { id: 'd', texto: 'Me interesa más el contexto, la historia y el significado detrás del número.',
-        scores: { narrador: 10, descubridor: 5 } },
+      { id: 'a', texto: 'Solo y con total autonomía. Me comprometés con resultados y me dejás trabajar.', scores: { arquitecto: 10, descubridor: 5 } },
+      { id: 'b', texto: 'Liderando un equipo diverso con roles claros y complementarios.', scores: { orquestador: 10, catalizador: 5 } },
+      { id: 'c', texto: 'En colaboración creativa, iterando rápido con otros.', scores: { artifice: 10, interprete: 5 } },
+      { id: 'd', texto: 'Coordinando con especialistas externos y gestionando relaciones clave.', scores: { anfitrion: 10, narrador: 5 } },
     ],
   },
 
+  // ── SITUACIONAL 10 ────────────────────────────────────────────────────────────
   {
     id: 'sit_10',
-    bloque: 'situacional',
     tipo: 'situacional',
-    enunciado: '¿Cuánto tiempo podés pasar en un mismo espacio cerrado trabajando?',
+    enunciado: '¿Con cuál de estas formas de ser te identificás más?',
     opciones: [
-      { id: 'a', texto: 'Mucho tiempo: es donde más me concentro y más rindo.',
-        scores: { arquitecto: 10, interprete: 5 } },
-      { id: 'b', texto: 'Necesito alternar: el campo, el aire libre o el movimiento me recarga.',
-        scores: { custodio: 10, constructor: 5 } },
-      { id: 'c', texto: 'No me importa el lugar mientras el proyecto cambie y me desafíe.',
-        scores: { orquestador: 10, narrador: 5 } },
-      { id: 'd', texto: 'Prefiero estar en movimiento, en contacto con personas en contextos distintos.',
-        scores: { anfitrion: 10, sanador: 5 } },
-    ],
-  },
-
-  {
-    id: 'sit_11',
-    bloque: 'situacional',
-    tipo: 'situacional',
-    enunciado: 'Si tuvieras que crear algo que dure 20 años, ¿qué sería?',
-    opciones: [
-      { id: 'a', texto: 'Un sistema, software o plataforma digital que resuelva un problema real.',
-        scores: { arquitecto: 10, orquestador: 5 } },
-      { id: 'b', texto: 'Una obra física: infraestructura, edificio o producto tangible.',
-        scores: { constructor: 10, custodio: 5 } },
-      { id: 'c', texto: 'Un libro, serie, obra de arte o producción cultural que perdure.',
-        scores: { narrador: 10, artifice: 5 } },
-      { id: 'd', texto: 'Una organización, movimiento o institución que cambie algo en la sociedad.',
-        scores: { orquestador: 10, arbitro: 5 } },
-    ],
-  },
-
-  {
-    id: 'sit_12',
-    bloque: 'situacional',
-    tipo: 'situacional',
-    enunciado: '¿Cómo describirías tu relación con las personas en el trabajo?',
-    opciones: [
-      { id: 'a', texto: 'Prefiero trabajar solo/a o en equipos pequeños y muy autónomos.',
-        scores: { arquitecto: 10, descubridor: 5 } },
-      { id: 'b', texto: 'Las personas son el núcleo de mi trabajo: sin eso no tiene sentido.',
-        scores: { sanador: 10, catalizador: 5 } },
-      { id: 'c', texto: 'Me gusta liderar y orientar a otros hacia un objetivo concreto.',
-        scores: { orquestador: 10, catalizador: 5 } },
-      { id: 'd', texto: 'Disfruto el intercambio creativo pero no necesito que sea el eje.',
-        scores: { artifice: 10, narrador: 5 } },
-    ],
-  },
-
-  {
-    id: 'sit_13',
-    bloque: 'situacional',
-    tipo: 'situacional',
-    enunciado: '¿Qué tipo de problema te genera más ganas de resolver?',
-    opciones: [
-      { id: 'a', texto: 'Algo técnico y complejo que requiere lógica, experimentación y creatividad.',
-        scores: { descubridor: 10, arquitecto: 5 } },
-      { id: 'b', texto: 'Un conflicto humano que necesita escucha activa, empatía y presencia.',
-        scores: { sanador: 10, catalizador: 5 } },
-      { id: 'c', texto: 'Un sistema injusto o ineficiente que tiene que cambiar desde adentro.',
-        scores: { arbitro: 10, orquestador: 5 } },
-      { id: 'd', texto: 'Un vacío cultural, educativo o narrativo que nadie está llenando.',
-        scores: { narrador: 10, catalizador: 5 } },
-    ],
-  },
-
-  {
-    id: 'sit_14',
-    bloque: 'situacional',
-    tipo: 'situacional',
-    enunciado: '¿Cuál de estas frases te resuena más a la hora de tomar decisiones?',
-    opciones: [
-      { id: 'a', texto: '"Si lo pude medir, lo pude entender."',
-        scores: { interprete: 10, arquitecto: 5 } },
-      { id: 'b', texto: '"Lo que funciona en la práctica importa más que la teoría."',
-        scores: { constructor: 10, anfitrion: 5 } },
-      { id: 'c', texto: '"El contexto lo cambia todo. No hay reglas absolutas."',
-        scores: { narrador: 10, descubridor: 5 } },
-      { id: 'd', texto: '"Las normas existen por algo y son necesarias para que todo funcione."',
-        scores: { arbitro: 10, interprete: 5 } },
-    ],
-  },
-
-  {
-    id: 'sit_15',
-    bloque: 'situacional',
-    tipo: 'situacional',
-    enunciado: 'En 10 años, ¿qué querés que digan de vos en tu trabajo?',
-    opciones: [
-      { id: 'a', texto: '"Resolvía lo que nadie más podía resolver."',
-        scores: { arquitecto: 10, descubridor: 5 } },
-      { id: 'b', texto: '"Siempre estuvo para ayudar. Fue clave en el desarrollo de muchos."',
-        scores: { sanador: 10, catalizador: 5 } },
-      { id: 'c', texto: '"Tenía una visión y la ejecutaba. Movía equipos y generaba resultados."',
-        scores: { orquestador: 10, constructor: 5 } },
-      { id: 'd', texto: '"Lo que creó sigue vivo. Tiene valor propio."',
-        scores: { artifice: 10, narrador: 5 } },
-    ],
-  },
-
-  {
-    id: 'sit_16',
-    bloque: 'situacional',
-    tipo: 'situacional',
-    enunciado: '¿Qué pregunta te parece más interesante y urgente?',
-    opciones: [
-      { id: 'a', texto: '¿Cómo podemos usar la tecnología para resolver mejor esto?',
-        scores: { arquitecto: 10, descubridor: 5 } },
-      { id: 'b', texto: '¿Por qué algunas personas tienen acceso a esto y otras no?',
-        scores: { catalizador: 10, arbitro: 5 } },
-      { id: 'c', texto: '¿Cómo protegemos lo que todavía no perdimos?',
-        scores: { custodio: 10, narrador: 5 } },
-      { id: 'd', texto: '¿Qué está cambiando en la economía y cómo aprovecharlo bien?',
-        scores: { interprete: 10, orquestador: 5 } },
-    ],
-  },
-
-  {
-    id: 'sit_17',
-    bloque: 'situacional',
-    tipo: 'situacional',
-    enunciado: '¿Qué actividad, si pudiera ocupar el 80% de tu semana, te haría sentir que vivís bien?',
-    opciones: [
-      { id: 'a', texto: 'Programar, construir sistemas o analizar datos en profundidad.',
-        scores: { arquitecto: 10, interprete: 5 } },
-      { id: 'b', texto: 'Acompañar, escuchar, enseñar o ayudar a personas.',
-        scores: { sanador: 10, catalizador: 5 } },
-      { id: 'c', texto: 'Investigar, experimentar, leer y generar conocimiento nuevo.',
-        scores: { descubridor: 10, interprete: 5 } },
-      { id: 'd', texto: 'Crear, producir o expresar algo que comunica una idea con fuerza.',
-        scores: { artifice: 10, narrador: 5 } },
-    ],
-  },
-
-  {
-    id: 'sit_18',
-    bloque: 'situacional',
-    tipo: 'situacional',
-    enunciado: '¿Cómo te imaginás trabajando a los 30–35 años?',
-    opciones: [
-      { id: 'a', texto: 'Frente a pantallas, en proyectos complejos, con autonomía total.',
-        scores: { arquitecto: 10, narrador: 5 } },
-      { id: 'b', texto: 'En contacto directo con personas o entornos reales, en movimiento.',
-        scores: { sanador: 10, anfitrion: 5 } },
-      { id: 'c', texto: 'Liderando equipos hacia algo que yo ayudé a diseñar o construir.',
-        scores: { orquestador: 10, constructor: 5 } },
-      { id: 'd', texto: 'Con autonomía y tiempo para investigar, crear o explorar nuevos territorios.',
-        scores: { descubridor: 10, artifice: 5 } },
-    ],
-  },
-
-  {
-    id: 'sit_19',
-    bloque: 'situacional',
-    tipo: 'situacional',
-    enunciado: 'Te ofrecen dos trabajos: uno muy estable, otro incierto pero apasionante. ¿Qué hacés?',
-    opciones: [
-      { id: 'a', texto: 'Me quedo con el incierto sin dudarlo. La pasión primero.',
-        scores: { artifice: 10, descubridor: 5 } },
-      { id: 'b', texto: 'Elijo el estable: la seguridad me libera para hacer lo que quiero fuera del trabajo.',
-        scores: { interprete: 10, arbitro: 5 } },
-      { id: 'c', texto: 'Negocio algo del apasionante para que tenga más estabilidad.',
-        scores: { orquestador: 10, arquitecto: 5 } },
-      { id: 'd', texto: 'Evalúo cuál tiene más impacto real, independientemente de lo que me genere.',
-        scores: { catalizador: 10, custodio: 5 } },
-    ],
-  },
-
-  {
-    id: 'sit_20',
-    bloque: 'situacional',
-    tipo: 'situacional',
-    enunciado: '¿Con cuál de estas imágenes te identificás más como forma de ser?',
-    opciones: [
-      { id: 'a', texto: 'Un arquitecto de sistemas: construye reglas que funcionan solas.',
-        scores: { arquitecto: 10, arbitro: 5 } },
-      { id: 'b', texto: 'Un explorador: lo desconocido le genera más curiosidad que miedo.',
-        scores: { descubridor: 10, custodio: 5 } },
-      { id: 'c', texto: 'Un puente: conecta personas, ideas y mundos que no se veían.',
-        scores: { catalizador: 10, narrador: 5 } },
-      { id: 'd', texto: 'Un artesano: lo que hace lleva su firma, cada detalle es una decisión.',
-        scores: { artifice: 10, constructor: 5 } },
+      { id: 'a', texto: 'El arquitecto: construye reglas y sistemas que funcionan solos.', scores: { arquitecto: 10, arbitro: 5 } },
+      { id: 'b', texto: 'El explorador: lo desconocido le genera más curiosidad que miedo.', scores: { descubridor: 10, custodio: 5 } },
+      { id: 'c', texto: 'El puente: conecta personas, ideas y mundos que no se veían.', scores: { catalizador: 10, narrador: 5 } },
+      { id: 'd', texto: 'El artesano: lo que hace lleva su firma, cada detalle es una decisión.', scores: { artifice: 10, constructor: 5 } },
     ],
   },
 ];

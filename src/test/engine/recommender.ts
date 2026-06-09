@@ -35,11 +35,11 @@ function duracionCompatible(entry: CarreraEntry, preferencia?: string): boolean 
 
 function filtrarUniversidadesPorProvincia(
   entry: CarreraEntry,
-  provincia: string | undefined,
-  movilidad: string | undefined
+  provinciasDisponibles: string[],
 ): UniversidadEntry[] {
-  if (!provincia || movilidad === 'si_total') return entry.universidades.slice(0, 6);
-  return entry.universidades.filter(u => u.provincia === provincia).slice(0, 6);
+  if (provinciasDisponibles.length === 0) return entry.universidades.slice(0, 6);
+  const set = new Set(provinciasDisponibles);
+  return entry.universidades.filter(u => set.has(u.provincia)).slice(0, 6);
 }
 
 function getDuracionDisplay(entry: CarreraEntry): string | null {
@@ -79,12 +79,11 @@ export function recomendar(result: ScoringResult): CarreraRecomendada[] {
   // Score each career
   const scored = CARRERAS_DB
     .filter(entry => macroAreasActivas.has(entry.macroArea))
-    .filter(entry => duracionCompatible(entry, contexto.duracion))
     .map(entry => {
       const pesoPorMacro = macroAreaPeso[entry.macroArea] ?? 0;
-      const univsEnProv = filtrarUniversidadesPorProvincia(entry, contexto.provincia, contexto.movilidad);
+      const univsEnProv = filtrarUniversidadesPorProvincia(entry, contexto.provinciasDisponibles);
       const disponibleEnProv = univsEnProv.length > 0;
-      const provBonus = contexto.provincia && disponibleEnProv ? 15 : 0;
+      const provBonus = disponibleEnProv ? 15 : 0;
       const score = pesoPorMacro + provBonus;
 
       return { entry, score, univsEnProv, disponibleEnProv };

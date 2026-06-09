@@ -5,6 +5,7 @@ import type { CarreraRecomendada } from '../engine/recommender';
 import { recomendar } from '../engine/recommender';
 import { formatSalario } from '../data/salarios';
 import LogoIcon from '../../components/ui/LogoIcon';
+import type { Arquetipo } from '../data/arquetipos';
 
 interface ResultPreviewProps {
   nombre: string;
@@ -25,22 +26,17 @@ function ConfianzaBadge({ confianza }: { confianza: number }) {
   );
 }
 
-function ArquetipoBar({ nombre, pct, color, isPrimario }: { nombre: string; pct: number; color: string; isPrimario: boolean }) {
+function ArquetipoSecundarioCard({ arq }: { arq: Arquetipo }) {
   return (
-    <div className="flex items-center gap-3">
-      <span className={`text-[11px] font-medium w-28 shrink-0 truncate ${isPrimario ? 'text-white/80' : 'text-white/40'}`}>
-        {nombre.replace('El ', '').replace('La ', '')}
-      </span>
-      <div className="flex-1 h-1.5 bg-white/10 rounded-full overflow-hidden">
-        <motion.div
-          className="h-full rounded-full"
-          style={{ backgroundColor: isPrimario ? color : `${color}99` }}
-          initial={{ width: 0 }}
-          animate={{ width: `${pct}%` }}
-          transition={{ duration: 0.8, delay: 0.2, ease: [0.16, 1, 0.3, 1] }}
-        />
+    <div
+      className="flex items-center gap-3 px-4 py-3 rounded-2xl border border-white/10"
+      style={{ background: `${arq.color}10` }}
+    >
+      <span className="text-2xl">{arq.emoji}</span>
+      <div className="min-w-0">
+        <p className="font-display font-bold text-[13px] text-white truncate">{arq.nombre}</p>
+        <p className="text-[11px] text-white/40 font-medium leading-snug">{arq.tagline}</p>
       </div>
-      <span className="text-[11px] text-white/25 font-mono w-8 text-right">{pct}%</span>
     </div>
   );
 }
@@ -74,9 +70,7 @@ function CarreraCard({ item, locked }: { item: CarreraRecomendada; locked: boole
           )}
         </div>
         <div className="flex flex-wrap items-center gap-3 text-[11px] text-white/35">
-          {item.duracion && (
-            <span>{item.duracion}</span>
-          )}
+          {item.duracion && <span>{item.duracion}</span>}
           {item.universidadesEnProvincia.length > 0 ? (
             <span className="flex items-center gap-1 text-emerald-400/70">
               <MapPin size={10} />
@@ -101,7 +95,7 @@ function CarreraCard({ item, locked }: { item: CarreraRecomendada; locked: boole
 }
 
 export default function ResultPreview({ nombre, result, onGetFullReport }: ResultPreviewProps) {
-  const { primario, secundario, tercero, combinacion, activos, ranking, confianza, advertencias } = result;
+  const { primario, secundario, tercero, combinacion, confianza, advertencias } = result;
 
   const carreras = recomendar(result);
   const top = carreras[0];
@@ -109,12 +103,8 @@ export default function ResultPreview({ nombre, result, onGetFullReport }: Resul
 
   const firstName = nombre.split(' ')[0];
 
-  // Top 5 archetypes for the bar chart
-  const topRanking = ranking.slice(0, 5);
-
   return (
     <div className="min-h-screen bg-[#07111F]">
-      {/* Header */}
       <div className="flex items-center gap-2 px-5 py-4 border-b border-white/6">
         <LogoIcon size={22} />
         <span className="font-display font-bold text-[13px] text-white/60">Vocaria</span>
@@ -128,7 +118,7 @@ export default function ResultPreview({ nombre, result, onGetFullReport }: Resul
           <ConfianzaBadge confianza={confianza} />
         </motion.div>
 
-        {/* Arquetipo card */}
+        {/* Arquetipo principal */}
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
@@ -165,36 +155,28 @@ export default function ResultPreview({ nombre, result, onGetFullReport }: Resul
           </p>
         </motion.div>
 
-        {/* Perfil de arquetipos */}
-        <motion.div
-          initial={{ opacity: 0, y: 16 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.5, delay: 0.2 }}
-          className="rounded-2xl border border-white/8 bg-white/3 p-5"
-        >
-          <p className="text-[12px] font-bold text-white/50 tracking-widest uppercase mb-4">Tu perfil de afinidades</p>
-          <div className="space-y-3">
-            {topRanking.map((item, i) => {
-              const arq = [primario, secundario, tercero].find(a => a?.id === item.id) ??
-                { nombre: item.id, color: '#ffffff' };
-              return (
-                <ArquetipoBar
-                  key={item.id}
-                  nombre={arq.nombre}
-                  pct={item.pct}
-                  color={arq.color}
-                  isPrimario={i === 0}
-                />
-              );
-            })}
-          </div>
-        </motion.div>
+        {/* Arquetipos secundarios */}
+        {(secundario || tercero) && (
+          <motion.div
+            initial={{ opacity: 0, y: 16 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.5, delay: 0.15 }}
+          >
+            <p className="text-[12px] font-bold text-white/50 tracking-widest uppercase mb-3">
+              También resonás con
+            </p>
+            <div className="space-y-2">
+              {secundario && <ArquetipoSecundarioCard arq={secundario} />}
+              {tercero && <ArquetipoSecundarioCard arq={tercero} />}
+            </div>
+          </motion.div>
+        )}
 
         {/* Highlight stat */}
         <motion.div
           initial={{ opacity: 0, y: 16 }}
           animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.5, delay: 0.25 }}
+          transition={{ duration: 0.5, delay: 0.2 }}
           className="rounded-2xl bg-brand-lime/10 border border-brand-lime/20 p-4 flex items-center gap-4"
         >
           <Briefcase size={20} className="text-brand-lime shrink-0" />
@@ -212,7 +194,7 @@ export default function ResultPreview({ nombre, result, onGetFullReport }: Resul
         <motion.div
           initial={{ opacity: 0, y: 16 }}
           animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.5, delay: 0.3 }}
+          transition={{ duration: 0.5, delay: 0.25 }}
         >
           <p className="text-[12px] font-bold text-white/50 tracking-widest uppercase mb-3">Carreras recomendadas</p>
           <div className="space-y-2.5">
@@ -228,7 +210,7 @@ export default function ResultPreview({ nombre, result, onGetFullReport }: Resul
           <motion.div
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
-            transition={{ delay: 0.4 }}
+            transition={{ delay: 0.3 }}
             className="rounded-2xl border border-yellow-500/20 bg-yellow-500/5 p-4"
           >
             <p className="text-[12px] font-bold text-yellow-400/70 mb-2 tracking-wide uppercase">Nota sobre tu perfil</p>
@@ -242,7 +224,7 @@ export default function ResultPreview({ nombre, result, onGetFullReport }: Resul
         <motion.div
           initial={{ opacity: 0, y: 16 }}
           animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 0.35 }}
+          transition={{ delay: 0.3 }}
           className="rounded-2xl border border-white/8 bg-white/3 p-5"
         >
           <p className="text-[12px] font-bold text-white/50 tracking-widest uppercase mb-3">Tus fortalezas clave</p>

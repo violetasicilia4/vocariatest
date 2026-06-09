@@ -1,16 +1,17 @@
 import { QUESTIONS } from '../data/questions';
-import { ARQUETIPOS, COMBINACIONES, getArquetipo, getCombinacion, type Arquetipo, type Combinacion } from '../data/arquetipos';
+import { ARQUETIPOS, getArquetipo, getCombinacion, type Arquetipo, type Combinacion } from '../data/arquetipos';
+import { type UserProfile, PROVINCIAS, getProvinciasDisponibles } from '../data/profile';
 
 export interface ArquetipoScore {
   id: string;
   score: number;
-  pct: number; // 0-100, porcentaje del máximo posible
+  pct: number;
 }
 
 export interface Contexto {
   provincia?: string;
-  movilidad?: string;
-  duracion?: string;
+  provinciasDisponibles: string[];
+  movilidad: UserProfile['movilidad'];
 }
 
 export interface ScoringResult {
@@ -25,54 +26,47 @@ export interface ScoringResult {
   contexto: Contexto;
 }
 
-const PROVINCIA_MAP: Record<string, string> = {
-  CABA:   'Ciudad Autonoma de Buenos Aires',
-  GBA:    'Buenos Aires',
-  BAPROV: 'Buenos Aires',
-  COR:    'Córdoba',
-  SF:     'Santa Fé',
-  MZA:    'Mendoza',
-  TUC:    'Tucumán',
-};
-
 function acumularScores(answers: Record<string, string>): Record<string, number> {
   const raw: Record<string, number> = {};
   for (const arq of ARQUETIPOS) raw[arq.id] = 0;
 
-  const situacionales = QUESTIONS.filter(q => q.bloque === 'situacional');
-  for (const q of situacionales) {
+  for (const q of QUESTIONS) {
     const answerId = answers[q.id];
     if (!answerId) continue;
-    const opcion = q.opciones.find(o => o.id === answerId);
-    if (!opcion?.scores) continue;
-    for (const [arquetipoId, pts] of Object.entries(opcion.scores)) {
-      if (arquetipoId in raw) raw[arquetipoId] += pts;
+
+    const ids = q.tipo === 'multiselect'
+      ? answerId.split(',').filter(Boolean)
+      : [answerId];
+
+    for (const selectedId of ids) {
+      const opcion = q.opciones.find(o => o.id === selectedId);
+      if (!opcion?.scores) continue;
+      for (const [arquetipoId, pts] of Object.entries(opcion.scores)) {
+        if (arquetipoId in raw) raw[arquetipoId] += pts;
+      }
     }
   }
+
   return raw;
 }
 
-export function calcularResultado(answers: Record<string, string>): ScoringResult {
+export function calcularResultado(
+  answers: Record<string, string>,
+  profile: UserProfile,
+): ScoringResult {
   const raw = acumularScores(answers);
 
-  // Máximo posible: cada pregunta da 10 pts al primario
-  const situacionalesRespondidas = QUESTIONS.filter(
-    q => q.bloque === 'situacional' && answers[q.id]
-  ).length;
-  const maxPosible = Math.max(situacionalesRespondidas * 10, 1);
+  const maxScore = Math.max(...Object.values(raw), 1);
 
-  // Ranking normalizado
   const ranking: ArquetipoScore[] = ARQUETIPOS
     .map(arq => ({
       id: arq.id,
       score: raw[arq.id],
-      pct: Math.min(100, Math.round((raw[arq.id] / maxPosible) * 100)),
+      pct: Math.round((raw[arq.id] / maxScore) * 100),
     }))
     .sort((a, b) => b.score - a.score);
 
   const top = ranking[0];
-
-  // Arquetipos activos: los que superan el 50% del score del top
   const umbral = top.score * 0.5;
   const activos = ranking.filter(a => a.score >= umbral && a.score > 0);
 
@@ -80,35 +74,36 @@ export function calcularResultado(answers: Record<string, string>): ScoringResul
   const secundario = activos.length >= 2 ? getArquetipo(activos[1].id)! : null;
   const tercero = activos.length >= 3 ? getArquetipo(activos[2].id)! : null;
 
-  // Buscar combinación nombrada
   const combinacion = secundario
     ? getCombinacion(primario.id, secundario.id) ?? null
     : null;
 
-  // Confianza
+  const secondScore = ranking[1]?.score ?? 0;
+  const gap = top.score > 0 ? (top.score - secondScore) / top.score : 0;
+
   let confianza = 85;
-  const topPct = top.pct;
-  if (topPct < 30) confianza = 60;
-  else if (topPct < 45) confianza = 72;
-  else if (topPct >= 60) confianza = 92;
+  if (gap < 0.1) confianza = 60;
+  else if (gap < 0.2) confianza = 72;
+  else if (gap >= 0.4) confianza = 92;
 
-  if (situacionalesRespondidas < 15) confianza = Math.min(confianza, 65);
+  const respondidas = QUESTIONS.filter(q => answers[q.id]).length;
+  if (respondidas < Math.ceil(QUESTIONS.length * 0.7)) {
+    confianza = Math.min(confianza, 65);
+  }
 
-  // Advertencias
   const advertencias: string[] = [];
   if (activos.length >= 3) {
     advertencias.push('Tu perfil es amplio y multidimensional. Hay varias áreas que te interesan genuinamente — el informe completo te ayuda a priorizar.');
   }
-  if (situacionalesRespondidas < 20) {
+  if (respondidas < QUESTIONS.length * 0.8) {
     advertencias.push('Respondiste algunas preguntas sin completar el test. Más respuestas mejoran la precisión del resultado.');
   }
 
-  // Contexto
-  const provinciaId = answers['ctx_1'];
+  const provinciaInfo = PROVINCIAS.find(p => p.id === profile.provinciaId);
   const contexto: Contexto = {
-    provincia: PROVINCIA_MAP[provinciaId] ?? undefined,
-    movilidad: answers['ctx_2'],
-    duracion: answers['ctx_3'],
+    provincia: provinciaInfo?.dbName,
+    provinciasDisponibles: getProvinciasDisponibles(profile),
+    movilidad: profile.movilidad,
   };
 
   return {

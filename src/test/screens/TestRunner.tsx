@@ -1,45 +1,40 @@
 import { useState, useCallback } from 'react';
 import { motion, AnimatePresence } from 'motion/react';
-import { QUESTIONS, type Question } from '../data/questions';
+import { QUESTIONS } from '../data/questions';
 import ProgressBar from '../components/ProgressBar';
 import QuestionCard from '../components/QuestionCard';
 import LogoIcon from '../../components/ui/LogoIcon';
 import type { ScoringResult } from '../engine/scorer';
 import { calcularResultado } from '../engine/scorer';
+import type { UserProfile } from '../data/profile';
 
 interface TestRunnerProps {
   nombre: string;
+  profile: UserProfile;
   onComplete: (answers: Record<string, string>, result: ScoringResult) => void;
 }
 
-function getVisibleQuestions(answers: Record<string, string>, needsAdaptive: boolean): Question[] {
-  const base = QUESTIONS.filter(q => q.bloque !== 'adaptativa');
-  if (!needsAdaptive) return base;
-  return [...base, ...QUESTIONS.filter(q => q.bloque === 'adaptativa').slice(0, 2)];
-}
-
-export default function TestRunner({ nombre, onComplete }: TestRunnerProps) {
+export default function TestRunner({ nombre, profile, onComplete }: TestRunnerProps) {
   const [answers, setAnswers] = useState<Record<string, string>>({});
   const [currentIndex, setCurrentIndex] = useState(0);
-  const [direction, setDirection] = useState(1); // 1 = forward, -1 = back
-  const [needsAdaptive] = useState(false);
+  const [direction, setDirection] = useState(1);
 
-  const questions = getVisibleQuestions(answers, needsAdaptive);
+  const questions = QUESTIONS;
   const currentQuestion = questions[currentIndex];
   const total = questions.length;
 
-  const handleAnswer = useCallback((optionId: string) => {
-    const newAnswers = { ...answers, [currentQuestion.id]: optionId };
+  const handleAnswer = useCallback((value: string) => {
+    const newAnswers = { ...answers, [currentQuestion.id]: value };
     setAnswers(newAnswers);
 
     if (currentIndex < total - 1) {
       setDirection(1);
       setCurrentIndex(i => i + 1);
     } else {
-      const result = calcularResultado(newAnswers);
+      const result = calcularResultado(newAnswers, profile);
       onComplete(newAnswers, result);
     }
-  }, [answers, currentQuestion, currentIndex, total, onComplete]);
+  }, [answers, currentQuestion, currentIndex, total, profile, onComplete]);
 
   const handleBack = () => {
     if (currentIndex > 0) {
@@ -56,7 +51,6 @@ export default function TestRunner({ nombre, onComplete }: TestRunnerProps) {
 
   return (
     <div className="min-h-screen bg-[#07111F] flex flex-col">
-      {/* Header */}
       <div className="flex items-center justify-between px-5 py-4 border-b border-white/6">
         <div className="flex items-center gap-2">
           <LogoIcon size={22} />
@@ -67,16 +61,10 @@ export default function TestRunner({ nombre, onComplete }: TestRunnerProps) {
         </span>
       </div>
 
-      {/* Progress */}
       <div className="px-5 pt-5">
-        <ProgressBar
-          current={currentIndex + 1}
-          total={total}
-          bloque={currentQuestion?.bloque}
-        />
+        <ProgressBar current={currentIndex + 1} total={total} />
       </div>
 
-      {/* Question */}
       <div className="flex-1 flex flex-col justify-center px-5 py-8 max-w-xl mx-auto w-full">
         <AnimatePresence mode="wait" custom={direction}>
           <motion.div
@@ -99,7 +87,6 @@ export default function TestRunner({ nombre, onComplete }: TestRunnerProps) {
         </AnimatePresence>
       </div>
 
-      {/* Back button */}
       {currentIndex > 0 && (
         <div className="px-5 pb-6 flex justify-start">
           <button
