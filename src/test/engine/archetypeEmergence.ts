@@ -6,6 +6,7 @@
  */
 
 import type { VectorVocacional } from './signals';
+import { signalPercentile } from './signalCalibration';
 
 export interface ArquetipoEmergencia {
   id: string;
@@ -45,9 +46,9 @@ const ARCHETYPE_RULES: ArchetypeRule[] = [
   {
     id: 'arquitecto',
     primary: [
-      { signal: 'pensamiento_sistemico',   threshold: 60, weight: 1.2 },
-      { signal: 'orientacion_logro',        threshold: 50, weight: 0.8 },
-      { signal: 'pensamiento_abstracto',    threshold: 55, weight: 1.0 },
+      { signal: 'pensamiento_sistemico',   threshold: 52, weight: 1.2 },
+      { signal: 'orientacion_logro',        threshold: 45, weight: 0.8 },
+      { signal: 'pensamiento_abstracto',    threshold: 48, weight: 1.0 },
     ],
     secondary: [
       { signal: 'interes_datos',            threshold: 50, weight: 0.5 },
@@ -78,8 +79,8 @@ const ARCHETYPE_RULES: ArchetypeRule[] = [
   {
     id: 'sanador',
     primary: [
-      { signal: 'empatia_funcional',        threshold: 70, weight: 1.3 },
-      { signal: 'interes_personas',         threshold: 65, weight: 1.1 },
+      { signal: 'empatia_funcional',        threshold: 73, weight: 1.3 },
+      { signal: 'interes_personas',         threshold: 68, weight: 1.1 },
       { signal: 'vocacion_servicio',        threshold: 60, weight: 1.0 },
     ],
     secondary: [
@@ -94,9 +95,9 @@ const ARCHETYPE_RULES: ArchetypeRule[] = [
   {
     id: 'catalizador',
     primary: [
-      { signal: 'impacto_social',           threshold: 65, weight: 1.2 },
-      { signal: 'orientacion_social',       threshold: 60, weight: 1.0 },
-      { signal: 'busqueda_impacto',         threshold: 60, weight: 1.0 },
+      { signal: 'impacto_social',           threshold: 55, weight: 1.2 },
+      { signal: 'orientacion_social',       threshold: 52, weight: 1.0 },
+      { signal: 'busqueda_impacto',         threshold: 52, weight: 1.0 },
     ],
     secondary: [
       { signal: 'liderazgo',                threshold: 50, weight: 0.5 },
@@ -111,8 +112,8 @@ const ARCHETYPE_RULES: ArchetypeRule[] = [
   {
     id: 'artifice',
     primary: [
-      { signal: 'creatividad_generativa',   threshold: 70, weight: 1.4 },
-      { signal: 'expresion_personal',       threshold: 70, weight: 1.3 },
+      { signal: 'creatividad_generativa',   threshold: 75, weight: 1.4 },
+      { signal: 'expresion_personal',       threshold: 75, weight: 1.3 },
     ],
     secondary: [
       { signal: 'sensibilidad_estetica',    threshold: 60, weight: 0.7 },
@@ -127,8 +128,8 @@ const ARCHETYPE_RULES: ArchetypeRule[] = [
   {
     id: 'interprete',
     primary: [
-      { signal: 'interes_datos',            threshold: 70, weight: 1.3 },
-      { signal: 'orientacion_analitica',    threshold: 70, weight: 1.3 },
+      { signal: 'interes_datos',            threshold: 74, weight: 1.3 },
+      { signal: 'orientacion_analitica',    threshold: 74, weight: 1.3 },
     ],
     secondary: [
       { signal: 'pensamiento_abstracto',    threshold: 55, weight: 0.5 },
@@ -143,8 +144,8 @@ const ARCHETYPE_RULES: ArchetypeRule[] = [
   {
     id: 'orquestador',
     primary: [
-      { signal: 'liderazgo',                threshold: 65, weight: 1.3 },
-      { signal: 'orientacion_logro',        threshold: 65, weight: 1.1 },
+      { signal: 'liderazgo',                threshold: 70, weight: 1.3 },
+      { signal: 'orientacion_logro',        threshold: 70, weight: 1.1 },
     ],
     secondary: [
       { signal: 'persuasion_influencia',    threshold: 55, weight: 0.6 },
@@ -162,7 +163,7 @@ const ARCHETYPE_RULES: ArchetypeRule[] = [
     secondary: [
       { signal: 'pensamiento_abstracto',    threshold: 60, weight: 0.6 },
       { signal: 'tolerancia_incertidumbre', threshold: 60, weight: 0.5 },
-      { signal: 'profundidad_vs_amplitud',  threshold: 25, weight: 0.4 },
+      { signal: 'profundidad_vs_amplitud',  threshold: 55, weight: 0.4 },
     ],
     notIf: [
       { signal: 'orientacion_practica',     threshold: 80, penalty: 0.15 },
@@ -173,9 +174,9 @@ const ARCHETYPE_RULES: ArchetypeRule[] = [
   {
     id: 'arbitro',
     primary: [
-      { signal: 'pensamiento_critico',      threshold: 70, weight: 1.3 },
-      { signal: 'impacto_social',           threshold: 55, weight: 0.9 },
-      { signal: 'necesidad_estructura',     threshold: 50, weight: 0.8 },
+      { signal: 'pensamiento_critico',      threshold: 60, weight: 1.3 },
+      { signal: 'impacto_social',           threshold: 50, weight: 0.9 },
+      { signal: 'necesidad_estructura',     threshold: 45, weight: 0.8 },
     ],
     secondary: [
       { signal: 'orientacion_largo_plazo',  threshold: 55, weight: 0.5 },
@@ -187,8 +188,8 @@ const ARCHETYPE_RULES: ArchetypeRule[] = [
   {
     id: 'custodio',
     primary: [
-      { signal: 'interes_naturaleza',       threshold: 65, weight: 1.4 },
-      { signal: 'orientacion_largo_plazo',  threshold: 65, weight: 1.2 },
+      { signal: 'interes_naturaleza',       threshold: 55, weight: 1.4 },
+      { signal: 'orientacion_largo_plazo',  threshold: 55, weight: 1.2 },
     ],
     secondary: [
       { signal: 'necesidad_estabilidad',    threshold: 50, weight: 0.5 },
@@ -238,8 +239,16 @@ const ARCHETYPE_RULES: ArchetypeRule[] = [
 // Emergence algorithm
 // ---------------------------------------------------------------------------
 
+/**
+ * Valor de señal en escala de percentil poblacional (0-100).
+ * Los umbrales de las reglas se interpretan en esta escala: threshold 70
+ * significa "top 30% de la población en esa señal", igual para todas.
+ * Sin esta transformación los umbrales absolutos eran inalcanzables para
+ * algunas señales (p.ej. empatia_funcional rara vez supera 40) y triviales
+ * para otras, lo que sesgaba estructuralmente el motor.
+ */
 function getSignalValue(v: VectorVocacional, signal: keyof VectorVocacional): number {
-  return v[signal] as number;
+  return signalPercentile(signal, v[signal] as number);
 }
 
 function conditionMet(v: VectorVocacional, cond: SignalCondition): boolean {

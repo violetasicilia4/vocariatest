@@ -6,6 +6,7 @@
  */
 
 import type { VectorVocacional } from './signals';
+import { signalPercentile } from './signalCalibration';
 
 export type FamilySignature = Partial<Record<keyof VectorVocacional, number>>;
 
@@ -148,11 +149,13 @@ export const FAMILIA_FIRMA: Record<string, FamilySignature> = {
     pensamiento_critico: 0.55,
   },
 
+  // Familia de gestión de personas: pide liderazgo/logro además de lo social,
+  // para distinguirla de las familias de cuidado (empatía/servicio).
   'RRHH y desarrollo organizacional': {
-    empatia_funcional: 0.80,
-    liderazgo: 0.75,
+    liderazgo: 0.85,
     orientacion_social: 0.75,
-    impacto_social: 0.65,
+    empatia_funcional: 0.60,
+    orientacion_logro: 0.60,
     energia_interpersonal: 0.65,
   },
 
@@ -164,20 +167,22 @@ export const FAMILIA_FIRMA: Record<string, FamilySignature> = {
     impacto_social: 0.60,
   },
 
+  // Hospitalidad: energía social + logro/operación, menos peso del cuidado
+  // emocional profundo (eso es de las familias de salud/acompañamiento).
   'Turismo, hotelería y gastronomía': {
     energia_interpersonal: 0.90,
-    orientacion_social: 0.85,
+    orientacion_social: 0.75,
+    orientacion_logro: 0.65,
     creatividad_generativa: 0.60,
-    orientacion_logro: 0.55,
-    vocacion_servicio: 0.55,
+    orientacion_practica: 0.55,
   },
 
   'Turismo, hotelería, eventos y gastronomía': {
     energia_interpersonal: 0.90,
-    orientacion_social: 0.85,
+    orientacion_social: 0.75,
+    orientacion_logro: 0.65,
     creatividad_generativa: 0.60,
-    orientacion_logro: 0.55,
-    vocacion_servicio: 0.55,
+    orientacion_practica: 0.55,
   },
 
   'Filosofía, historia y humanidades': {
@@ -265,12 +270,14 @@ export const FAMILIA_FIRMA: Record<string, FamilySignature> = {
     interes_datos: 0.65,
   },
 
+  // Requiere orientación práctica/física fuerte y conducción de grupos,
+  // no solo calidez social (eso solo la hacía top para cualquier perfil cálido).
   'Educación física y deporte': {
+    orientacion_practica: 0.90,
     energia_interpersonal: 0.80,
-    orientacion_social: 0.75,
-    orientacion_practica: 0.70,
-    vocacion_servicio: 0.65,
-    busqueda_impacto: 0.55,
+    orientacion_social: 0.65,
+    liderazgo: 0.55,
+    vocacion_servicio: 0.55,
   },
 
   'Electrónica, electricidad y telecomunicaciones': {
@@ -400,35 +407,31 @@ export const FAMILIA_FIRMA: Record<string, FamilySignature> = {
 // ---------------------------------------------------------------------------
 
 /**
- * Map bipolar signals (-100..+100) to 0-100 for cosine computation.
+ * Valor de señal en percentil poblacional (0-100), igual que en el motor de
+ * arquetipos. Sin esta transformación las señales con rango alcanzable bajo
+ * (p.ej. interes_naturaleza) pesaban menos que las fáciles de acumular,
+ * sesgando el fit hacia las mismas familias para todo el mundo.
+ * Las bipolares también: la tabla de percentiles cubre su rango -100..100.
  */
 function getSignalValue(vector: VectorVocacional, key: keyof VectorVocacional): number {
-  const v = vector[key] as number;
-  // Bipolar signals arrive as -100..+100; map to 0-100 for similarity calculation
-  if (key === 'profundidad_vs_amplitud' || key === 'reflexion_vs_accion') {
-    return (v + 100) / 2;
-  }
-  return v;
+  return signalPercentile(key, vector[key] as number);
 }
 
 /**
- * Weighted dot product between (user vector / 100) and signature weights,
- * normalised by signature magnitude. Returns 0-100.
+ * Promedio ponderado de los percentiles de las señales de la firma.
+ * 0-100: un usuario promedio ronda 50; un perfil muy alineado supera 75.
  */
 export function computeFamilyFit(vector: VectorVocacional, familia: string): number {
   const sig = FAMILIA_FIRMA[familia];
   if (!sig) return 0;
 
   let dot = 0;
-  let sigMag = 0;
+  let weightSum = 0;
 
   for (const [key, weight] of Object.entries(sig) as [keyof VectorVocacional, number][]) {
-    const vVal = getSignalValue(vector, key);
-    const vNorm = vVal / 100;
-    dot += vNorm * weight;
-    sigMag += weight * weight;
+    dot += getSignalValue(vector, key) * weight;
+    weightSum += weight;
   }
 
-  const similarity = sigMag > 0 ? dot / Math.sqrt(sigMag) : 0;
-  return Math.round(Math.min(similarity * 140, 100));
+  return weightSum > 0 ? Math.round(dot / weightSum) : 0;
 }

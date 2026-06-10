@@ -6,6 +6,7 @@ import { emergerArquetipos } from './archetypeEmergence';
 import { extractPreferences, type CareerPreferences } from './preferences';
 import { detectarTensiones, type Tension } from './tensions';
 import { calcularConfianza, type ConfidenceBreakdown } from './confidence';
+import { applyAdaptiveAnswers, contestedArchetypes, isAdaptiveQuestion } from './adaptive';
 
 export interface ArquetipoScore {
   id: string;
@@ -17,6 +18,12 @@ export interface Contexto {
   provincia?: string;
   provinciasDisponibles: string[];
   movilidad: 'si' | 'no' | 'nose';
+}
+
+/** Registro de la fase adaptativa: qué arquetipos estaban peleados y cuántos duelos hubo. */
+export interface DisputaResuelta {
+  entre: string[]; // ids de arquetipos en disputa al terminar el núcleo
+  duelos: number;  // preguntas de precisión respondidas
 }
 
 export interface ScoringResult {
@@ -34,6 +41,7 @@ export interface ScoringResult {
   antipatrones: string[];
   contexto: Contexto;
   vector: VectorVocacional;
+  disputaResuelta: DisputaResuelta | null;
 }
 
 export function calcularResultado(
@@ -47,7 +55,7 @@ export function calcularResultado(
   const arquetiposEmergentes = emergerArquetipos(vector);
 
   // Build ranking from emergence scores (0-100 already)
-  const ranking: ArquetipoScore[] = arquetiposEmergentes
+  let ranking: ArquetipoScore[] = arquetiposEmergentes
     .map(e => ({
       id: e.id,
       score: e.emergencia,
@@ -62,6 +70,20 @@ export function calcularResultado(
       ranking.push({ id: arq.id, score: 0, pct: 0 });
     }
   }
+
+  // Adaptive tie-break answers (if the user got an adaptive phase).
+  // Capture the pre-adaptive dispute so the result screen can narrate it.
+  const duelosRespondidos = Object.keys(answers).filter(
+    id => isAdaptiveQuestion(id) && answers[id],
+  ).length;
+  let disputaResuelta: DisputaResuelta | null = null;
+  if (duelosRespondidos > 0) {
+    const enDisputa = contestedArchetypes(ranking);
+    if (enDisputa.length >= 2) {
+      disputaResuelta = { entre: enDisputa, duelos: duelosRespondidos };
+    }
+  }
+  ranking = applyAdaptiveAnswers(ranking, answers);
 
   const top = ranking[0];
   const umbral = top.score * 0.4; // 40% of top — richer secondary set than V1
@@ -124,5 +146,6 @@ export function calcularResultado(
     antipatrones,
     contexto,
     vector,
+    disputaResuelta,
   };
 }

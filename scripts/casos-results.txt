@@ -1,0 +1,125 @@
+═══════════════════════════════════════════════════════════
+CASOS DE PRUEBA — FLUJO COMPLETO — 2026-06-10
+═══════════════════════════════════════════════════════════
+
+■ Valentina (17, GBA)
+  Quiere trabajar ayudando personas de cerca. Empática, paciente, odia la matemática.
+  ─────────────────────────────────────────────────────
+  Preguntas: 18 núcleo + 0 duelos = 18
+  Resultado: sanador (99)  ·  catalizador (82)  ·  anfitrion (81)
+  Confianza: 83%  ⚠ 1 advertencia(s)
+  Carreras (top 5 de 9):
+    ★ Licenciado en Obstetricia  [fit 89, 5 univ. en su provincia]
+    · Licenciado en Enfermería  [fit 85, 1 univ. en su provincia]
+    · Licenciado en Terapia Ocupacional  [fit 84, 1 univ. en su provincia]
+    · Licenciado en Educación Física  [fit 83, 3 univ. en su provincia]
+    · Profesor Universitario en Educación Física  [fit 83, 2 univ. en su provincia]
+
+■ Tomás (19, Córdoba)
+  De taller: arregla motos, arma cosas. Práctico, concreto, odia exponerse y vender.
+  ─────────────────────────────────────────────────────
+  Preguntas: 18 núcleo + 0 duelos = 18
+  Resultado: constructor (92)  ·  custodio (54)  ·  arquitecto (41)
+  Confianza: 94%  ⚠ 1 advertencia(s)
+  Carreras (top 5 de 9):
+    ★ Ingeniero Civil  [fit 96, 1 univ. en su provincia]
+    · Ingeniero Mecánico  [fit 96, 2 univ. en su provincia]
+    · Ingeniero Electromecánico  [fit 96, 1 univ. en su provincia]
+    · Técnico/a Universitario/a en Jardinería y Floricultura  [fit 87, 1 univ. en su provincia]
+    · Ingeniero Industrial  [fit 84, 1 univ. en su provincia]
+
+■ Julieta (18, CABA)
+  Creativa: dibuja, escribe, hace videos. Necesita expresarse, alérgica a la rutina.
+  ─────────────────────────────────────────────────────
+  Preguntas: 18 núcleo + 2 duelos = 20
+  Duelos elegidos: crear, finde
+  Disputa al entrar: artifice 100 vs narrador 86
+  Resultado: artifice (100)  ·  narrador (89)  ·  arquitecto (42)
+  Confianza: 80%  ⚠ 1 advertencia(s)
+  Carreras (top 5 de 9):
+    ★ Licenciado en Artes Visuales  [fit 99, 6 univ. en su provincia]
+    · Profesor de Teatro  [fit 99, 3 univ. en su provincia]
+    · Diseñador Gráfico  [fit 97, 6 univ. en su provincia]
+    · Licenciado en Diseño Gráfico  [fit 97, 6 univ. en su provincia]
+    · Licenciado en Inglés  [fit 87, 4 univ. en su provincia]
+
+■ Federico (20, Santa Fe)
+  Le fascinan los datos y los sistemas. Introvertido, riguroso, quiere trabajar tranquilo.
+  ─────────────────────────────────────────────────────
+  Preguntas: 18 núcleo + 3 duelos = 21
+  Duelos elegidos: lectura, rechazo, entorno
+  Disputa al entrar: interprete 93 vs descubridor 86
+  Resultado: interprete (100)  ·  descubridor (86)  ·  arquitecto (81)
+  Confianza: 80%  ⚠ 1 advertencia(s)
+  Carreras (top 5 de 9):
+    ★ Licenciado/a en Ciencias de Datos  [fit 96, 1 univ. en su provincia]
+    · Ingeniero/a en Inteligencia Artificial  [fit 96, 1 univ. en su provincia]
+    · Ingeniero en Sistemas de Información  [fit 90, 1 univ. en su provincia]
+    · Ingeniero/a en Informática  [fit 90, 1 univ. en su provincia]
+    · Contador Público  [fit 85, 2 univ. en su provincia]
+
+■ Martina (22, Mendoza)
+  Organiza todo: el centro de estudiantes, los viajes, las campañas. Energía social y de mando.
+  ─────────────────────────────────────────────────────
+  Preguntas: 18 núcleo + 0 duelos = 18
+  Resultado: orquestador (97)  ·  anfitrion (79)  ·  catalizador (78)
+  Confianza: 78%  ⚠ 1 advertencia(s)
+  Carreras (top 5 de 9):
+    ★ Licenciado en Recursos Humanos  [fit 93, 6 univ. en su provincia]
+    · Licenciado en Gestión de Recursos Humanos  [fit 93, 6 univ. en su provincia]
+    · Licenciado en Relaciones Internacionales  [fit 84, 6 univ. en su provincia]
+    · Licenciado en Educación Física  [fit 84, 6 univ. en su provincia]
+    · Profesor Universitario en Educación Física  [fit 84, 6 univ. en su provincia]
+
+■ Nico (18, Misiones)
+  Ama el monte, los animales, estar afuera. Tranquilo, constante, piensa a largo plazo.
+  ─────────────────────────────────────────────────────
+  Preguntas: 18 núcleo + 0 duelos = 18
+  Resultado: custodio (91)  ·  catalizador (72)  ·  sanador (69)
+  Confianza: 77%  ⚠ 1 advertencia(s)
+  Carreras (top 5 de 9):
+    ★ Técnico Universitario en Producción Agropecuaria  [fit 96, 1 univ. en su provincia]
+    · Licenciado en Obstetricia  [fit 90, 1 univ. en su provincia]
+    · Licenciado en Psicología  [fit 89, 1 univ. en su provincia]
+    · Licenciado/a en Ciencias Ambientales  [fit 84, 1 univ. en su provincia]
+    · Licenciado en Bromatología  [fit 81, sin univ. en su provincia]
+
+■ Agustina (17, Tucumán) — caso AMBIGUO
+  Le gusta todo un poco: ciencia, gente, crear. Perfil genuinamente indefinido.
+  ─────────────────────────────────────────────────────
+  Preguntas: 18 núcleo + 5 duelos = 23
+  Duelos elegidos: exito, elogio, lectura, entorno, rechazo
+  Disputa al entrar: sanador 87 vs descubridor 87
+  Resultado: descubridor (100)  ·  sanador (87)  ·  catalizador (67)
+  Confianza: 72%  ⚠ 1 advertencia(s)
+  Carreras (top 5 de 9):
+    ★ Bioquímico/a  [fit 86, 1 univ. en su provincia]
+    · Farmacéutico/a  [fit 86, 1 univ. en su provincia]
+    · Licenciado/a en Física  [fit 85, 1 univ. en su provincia]
+    · Psicólogo  [fit 85, 1 univ. en su provincia]
+    · Licenciado/a en Ciencias Biológicas  [fit 80, 1 univ. en su provincia]
+
+■ Lautaro (19, Chaco) — caso CAÓTICO
+  Respondió rápido y contradictorio (autonomía total + estructura total, social + solitario).
+  ─────────────────────────────────────────────────────
+  Preguntas: 18 núcleo + 0 duelos = 18
+  Resultado: orquestador (56)  ·  custodio (40)  ·  constructor (34)
+  Confianza: 45%  ⚠ 1 advertencia(s)
+  Carreras (top 5 de 9):
+    ★ Licenciado en Relaciones Públicas e Institucionales  [fit 63, 1 univ. en su provincia]
+    · Licenciado en Administración - MD  [fit 60, 1 univ. en su provincia]
+    · Licenciado/a en Administración  [fit 60, 1 univ. en su provincia]
+    · Licenciado en Ciencia Política y de Gobierno  [fit 54, 1 univ. en su provincia]
+    · Ingeniero Electromecánico  [fit 53, 1 univ. en su provincia]
+
+═══════════════════════════════════════════════════════════
+CRUCE ENTRE CASOS
+───────────────────────────────────────────────────────────
+  Primarios distintos: 7 de 8 casos
+  Rango de preguntas: 18–23
+  Rango de confianza: 45%–94%
+
+  Solapamiento de carreras entre pares de casos (de 8-9 recomendadas):
+    Promedio general: 0.3 carreras en común por par de casos
+
+═══════════════════════════════════════════════════════════
