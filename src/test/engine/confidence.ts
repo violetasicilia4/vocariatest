@@ -55,14 +55,19 @@ export function calcularConfianza(
   const pctTop = ranking[0]?.pct ?? 0;
   const pctSecond = ranking[1]?.pct ?? 0;
 
-  // Gap contribution: 0-50 points
-  const gap = pctTop - pctSecond;
-  const gapContrib = clamp(gap * 2, 0, 50);
+  // Escalas calibradas contra la distribución empírica de respuestas
+  // aleatorias (gap: mediana 11, p90 29; concentración: mediana 0,21,
+  // p95 0,30 — ver scripts/diagnose.ts). Un perfil ruidoso debe caer en
+  // ~55-75 y solo los perfiles consistentes acercarse al tope.
 
-  // Concentration contribution: 0-30 points
+  // Gap contribution: 0-30 points
+  const gap = pctTop - pctSecond;
+  const gapContrib = clamp(gap * 0.9, 0, 30);
+
+  // Concentration contribution: 0-15 points
   const sumAll = ranking.reduce((acc, r) => acc + r.pct, 0);
   const concentration = sumAll > 0 ? pctTop / sumAll : 0;
-  const concContrib = clamp((concentration - 0.08) * 400, 0, 30);
+  const concContrib = clamp((concentration - 0.16) * 100, 0, 15);
 
   // Completion penalty: 0-35 points deducted
   const answered = Object.values(answers).filter(v => v && v.trim() !== '').length;
@@ -75,7 +80,7 @@ export function calcularConfianza(
   const contradictions = detectContradictions(answers);
   const contradictionPenalty = contradictions * 7;
 
-  const base = 52;
+  const base = 50;
   const rawScore = base + gapContrib + concContrib - completionPenalty - contradictionPenalty;
   const score = clamp(Math.round(rawScore), 45, 97);
 
