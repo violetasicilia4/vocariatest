@@ -1,6 +1,6 @@
 import { CARRERAS_DB, type CarreraEntry, type UniversidadEntry } from '../data/db';
 import { getSalarioByMacroArea, type SalarioFamilia } from '../data/salarios';
-import { ARQUETIPOS, getArquetipo } from '../data/arquetipos';
+import { ARQUETIPOS } from '../data/arquetipos';
 import { computeFamilyFit } from './familySignatures';
 import { explicarCarrera } from './explainability';
 import type { ScoringResult } from './scorer';
@@ -66,6 +66,77 @@ function clamp(v: number, min: number, max: number): number {
   return Math.max(min, Math.min(max, v));
 }
 
+/**
+ * Los mapas por familia usan claves sin comas; la DB trae los nombres con
+ * comas ("Software, sistemas e informática"). Normalizar al buscar evita
+ * que los bonus/penalizaciones queden silenciosamente sin efecto.
+ */
+function normFamilia(familia: string): string {
+  return familia.replace(/,/g, '');
+}
+
+/**
+ * Título normalizado para deduplicar variantes de la misma carrera
+ * ("Licenciado en Obstetricia" vs "Licenciado/a en Obstetricia",
+ * "Médico Veterinario" vs "Veterinario").
+ */
+function normTitulo(titulo: string): string {
+  let t = titulo
+    .toLowerCase()
+    .normalize('NFD')
+    .replace(/[̀-ͯ]/g, '') // sin tildes
+    .replace(/\/a\b/g, '')           // "licenciado/a" → "licenciado"
+    .replace(/\s+/g, ' ')
+    .trim();
+  for (const prefijo of ['licenciado en ', 'licenciada en ', 'licenciatura en ', 'medico ', 'medica ']) {
+    if (t.startsWith(prefijo) && t.length > prefijo.length) {
+      t = t.slice(prefijo.length);
+      break;
+    }
+  }
+  return t;
+}
+
+/**
+ * Penalización por antipatrón declarado (anti_1): si el usuario marcó
+ * rechazo genuino a algo central de la familia, la carrera baja en el
+ * ranking (además de la alerta textual que ya genera explainability).
+ */
+function computeAntipatternPenalty(familia: string, antipatrones: string[]): number {
+  const antiPenaltyMap: Record<string, Record<string, number>> = {
+    'Medicina y atención clínica':     { sangre: 20 },
+    'Enfermería':                      { sangre: 20 },
+    'Rehabilitación y terapias':       { sangre: 10 },
+    'Técnicas y servicios de salud':   { sangre: 10 },
+    'Odontología':                     { sangre: 15 },
+    'Laboratorio farmacia y bioquímica': { sangre: 8 },
+    'Software sistemas e informática': { matematica: 8 },
+    'Datos IA estadística y matemática': { matematica: 15 },
+    'Economía finanzas y banca':       { matematica: 10 },
+    'Física ciencias básicas y aplicadas': { matematica: 15 },
+    'Contabilidad auditoría e impuestos': { matematica: 8 },
+    'Bioingeniería':                   { matematica: 12 },
+    'Ingenierías generales':           { matematica: 10 },
+    'Civil obras e infraestructura':   { matematica: 8 },
+    'Mecánica electromecánica y mecatrónica': { matematica: 8 },
+    'Química':                         { matematica: 8 },
+    'Marketing publicidad y ventas':   { ventas: 15, exposicion: 8 },
+    'Comunicación y medios digitales': { exposicion: 10 },
+    'Periodismo y redacción':          { exposicion: 12 },
+    'Turismo hotelería y gastronomía': { exposicion: 8, ventas: 5 },
+    'Turismo hotelería eventos y gastronomía': { exposicion: 8, ventas: 5 },
+  };
+
+  const penalties = antiPenaltyMap[normFamilia(familia)];
+  if (!penalties) return 0;
+  const antiSet = new Set(antipatrones);
+  let total = 0;
+  for (const [antiId, penalty] of Object.entries(penalties)) {
+    if (antiSet.has(antiId)) total += penalty;
+  }
+  return total;
+}
+
 // ---------------------------------------------------------------------------
 // Archetype → macro-area lookup (built from ARQUETIPOS data)
 // ---------------------------------------------------------------------------
@@ -116,7 +187,7 @@ function computePreferenceBonus(
     "Videojuegos y simulación":            ['creatividad', 'ideas'],
   };
 
-  const dims = dimMap[familia];
+  const dims = dimMap[normFamilia(familia)];
   if (!dims || dims.length === 0) return 0;
 
   const avg = dims.reduce((sum, d) => sum + prefs[d], 0) / dims.length;
@@ -161,31 +232,35 @@ export function recomendar(result: ScoringResult): CarreraRecomendada[] {
       // Step 4: Preference bonus (subtle, 0–10)
       const prefBonus = computePreferenceBonus(entry.familia, preferences);
 
-      // Step 5: Total
-      const careerScore = familyFit * 0.75 + provBonus + prefBonus;
+      // Step 5: Antipattern penalty — declared rejections push careers down
+      const antiPenalty = computeAntipatternPenalty(entry.familia, antipatrones);
+
+      // Step 6: Total
+      const careerScore = familyFit * 0.75 + provBonus + prefBonus - antiPenalty;
 
       return { entry, careerScore, univsEnProv, disponibleEnProv };
     })
     .sort((a, b) => b.careerScore - a.careerScore);
 
-  // Normalize careerScore to fitScore (0–100)
-  const maxCareerScore = Math.max(...scored.map(s => s.careerScore), 1);
-
-  // ── Diversity: max 3 per macroArea ────────────────────────────────────────
+  // ── Diversity: max 3 per macroArea, max 2 per familia ─────────────────────
   const resultado: CarreraRecomendada[] = [];
   const macroUsada: Record<string, number> = {};
+  const familiaUsada: Record<string, number> = {};
   const titulosUsados = new Set<string>();
 
 
   for (const { entry, careerScore, univsEnProv, disponibleEnProv } of scored) {
     if (resultado.length >= 8) break;
-    if (titulosUsados.has(entry.titulo)) continue;
+    if (titulosUsados.has(normTitulo(entry.titulo))) continue;
 
     const count = macroUsada[entry.macroArea] ?? 0;
     if (count >= 3) continue;
+    const famCount = familiaUsada[entry.familia] ?? 0;
+    if (famCount >= 2) continue;
 
     macroUsada[entry.macroArea] = count + 1;
-    titulosUsados.add(entry.titulo);
+    familiaUsada[entry.familia] = famCount + 1;
+    titulosUsados.add(normTitulo(entry.titulo));
 
     // Determine origin archetype
     let origenId = primario.id;
@@ -201,8 +276,9 @@ export function recomendar(result: ScoringResult): CarreraRecomendada[] {
       }
     }
 
-    const fitScore = Math.round((careerScore / maxCareerScore) * 100);
-    const origenArquetipo = getArquetipo(origenId);
+    // Fit honesto: el score real de la carrera (0-100), sin normalizar al
+    // máximo (eso hacía que el top fuera siempre "100" y aplanaba el resto).
+    const fitScore = clamp(Math.round(careerScore), 5, 99);
     const secundarioArquetipo = secundario ? { id: secundario.id, nombre: secundario.nombre } : null;
 
     const explicacion = explicarCarrera(
@@ -225,7 +301,7 @@ export function recomendar(result: ScoringResult): CarreraRecomendada[] {
       salario: getSalarioByMacroArea(entry.macroArea) ?? null,
       tag: 'alternativa',
       arquetipoOrigen: origenId,
-      fitScore: explicacion.fitScore > 0 ? explicacion.fitScore : fitScore,
+      fitScore,
       razon: explicacion.razon,
       alerta: explicacion.alerta,
     });
@@ -237,12 +313,12 @@ export function recomendar(result: ScoringResult): CarreraRecomendada[] {
     ({ entry }) =>
       !macroEnResultado.has(entry.macroArea) &&
       macroAreasActivas.has(entry.macroArea) &&
-      !titulosUsados.has(entry.titulo),
+      !titulosUsados.has(normTitulo(entry.titulo)),
   );
 
   if (sorpresaCandidata && resultado.length < 9) {
     const { entry, careerScore, univsEnProv, disponibleEnProv } = sorpresaCandidata;
-    const fitScore = Math.round((careerScore / maxCareerScore) * 100);
+    const fitScore = clamp(Math.round(careerScore), 5, 99);
     const explicacion = explicarCarrera(
       { titulo: entry.titulo, familia: entry.familia, macroArea: entry.macroArea },
       { id: primario.id, nombre: primario.nombre },
@@ -263,7 +339,7 @@ export function recomendar(result: ScoringResult): CarreraRecomendada[] {
       salario: getSalarioByMacroArea(entry.macroArea) ?? null,
       tag: 'sorpresa',
       arquetipoOrigen: primario.id,
-      fitScore: explicacion.fitScore > 0 ? explicacion.fitScore : fitScore,
+      fitScore,
       razon: explicacion.razon,
       alerta: explicacion.alerta,
     });

@@ -3,7 +3,6 @@ import type { CareerPreferences } from './preferences';
 export interface CarreraExplicacion {
   razon: string;          // Why this career appears. 1 sentence. Specific.
   alerta: string | null;  // Warning if relevant. null if none.
-  fitScore: number;       // 0-100 match score
 }
 
 // ---------------------------------------------------------------------------
@@ -13,7 +12,6 @@ export interface CarreraExplicacion {
 interface ExplicacionTemplate {
   razon: (primario: string, secundario: string | null) => string;
   alerta?: (antipatrones: string[], preferences: CareerPreferences, provinceAvailable: boolean) => string | null;
-  fitBonus?: number; // extra fit points for this family
 }
 
 const TEMPLATES: Record<string, ExplicacionTemplate> = {
@@ -24,7 +22,6 @@ const TEMPLATES: Record<string, ExplicacionTemplate> = {
       anti.includes('matematica')
         ? 'Requiere fundamentos matemáticos. Si el rechazo es por el estilo pedagógico, muchos programadores describen la matemática aplicada como muy diferente a la escolar.'
         : null,
-    fitBonus: 5,
   },
 
   "Datos IA estadística y matemática": {
@@ -54,7 +51,6 @@ const TEMPLATES: Record<string, ExplicacionTemplate> = {
       anti.includes('sangre')
         ? 'Esta carrera incluye trabajo directo con pacientes y situaciones clínicas. Si el rechazo a situaciones médicas es fuerte, considerá las otras opciones del área.'
         : null,
-    fitBonus: 3,
   },
 
   "Enfermería": {
@@ -162,7 +158,6 @@ const TEMPLATES: Record<string, ExplicacionTemplate> = {
     razon: (p) =>
       `Aparece porque tu perfil de ${p} combina curiosidad científica con una orientación hacia la protección de los sistemas naturales.`,
     alerta: null,
-    fitBonus: 2,
   },
 
   "Biología genética y biotecnología": {
@@ -424,78 +419,6 @@ const TEMPLATES: Record<string, ExplicacionTemplate> = {
 };
 
 // ---------------------------------------------------------------------------
-// Fit score computation
-// ---------------------------------------------------------------------------
-
-function computeFitScore(
-  familia: string,
-  primario: { id: string; nombre: string },
-  secondary: { id: string; nombre: string } | null,
-  preferences: CareerPreferences,
-  antipatrones: string[],
-  provinceAvailable: boolean,
-): number {
-  let base = 60;
-
-  const template = TEMPLATES[familia];
-  if (template?.fitBonus) base += template.fitBonus;
-
-  // Province bonus
-  if (provinceAvailable) base += 10;
-
-  // Antipattern penalties per family
-  const antiSet = new Set(antipatrones);
-  const antiPenaltyMap: Record<string, Record<string, number>> = {
-    "Medicina y atención clínica":    { sangre: 20 },
-    "Enfermería":                     { sangre: 20 },
-    "Rehabilitación y terapias":      { sangre: 10 },
-    "Técnicas y servicios de salud":  { sangre: 10 },
-    "Odontología":                    { sangre: 15 },
-    "Laboratorio farmacia y bioquímica": { sangre: 8 },
-    "Software sistemas e informática":  { matematica: 8 },
-    "Datos IA estadística y matemática": { matematica: 15 },
-    "Economía finanzas y banca":       { matematica: 10 },
-    "Física ciencias básicas y aplicadas": { matematica: 15 },
-    "Contabilidad auditoría e impuestos": { matematica: 8 },
-    "Marketing publicidad y ventas":   { ventas: 15, exposicion: 8 },
-    "Comunicación y medios digitales": { exposicion: 10 },
-    "Periodismo y redacción":          { exposicion: 12 },
-    "Turismo hotelería y gastronomía": { exposicion: 8, ventas: 5 },
-    "Turismo hotelería eventos y gastronomía": { exposicion: 8, ventas: 5 },
-  };
-
-  const penalties = antiPenaltyMap[familia];
-  if (penalties) {
-    for (const [antiId, penalty] of Object.entries(penalties)) {
-      if (antiSet.has(antiId)) base -= penalty;
-    }
-  }
-
-  // Preference bonuses (subtle, 10% max)
-  const prefBonusMap: Record<string, Partial<Record<keyof CareerPreferences, number>>> = {
-    "Software sistemas e informática": { datos: 0.05, ideas: 0.05 },
-    "Psicología":          { personas: 0.08, impactoSocial: 0.05 },
-    "Medicina y atención clínica": { personas: 0.06, impactoSocial: 0.06 },
-    "Arte música teatro y audiovisual": { creatividad: 0.08, autonomia: 0.04 },
-    "Diseño gráfico industrial y digital": { creatividad: 0.07, ideas: 0.05 },
-    "Administración gestión y negocios": { liderazgo: 0.06, estructura: 0.04 },
-    "Datos IA estadística y matemática": { datos: 0.08, teoria: 0.04 },
-    "Educación física y deporte": { personas: 0.07, impactoSocial: 0.05 },
-    "RRHH y desarrollo organizacional": { personas: 0.07, liderazgo: 0.05 },
-    "Gobierno política y RRII": { liderazgo: 0.07, impactoSocial: 0.05 },
-  };
-
-  const prefMap = prefBonusMap[familia];
-  if (prefMap) {
-    for (const [dim, coeff] of Object.entries(prefMap) as [keyof CareerPreferences, number][]) {
-      base += preferences[dim] * coeff;
-    }
-  }
-
-  return Math.round(Math.min(100, Math.max(0, base)));
-}
-
-// ---------------------------------------------------------------------------
 // Main export
 // ---------------------------------------------------------------------------
 
@@ -507,7 +430,9 @@ export function explicarCarrera(
   antipatrones: string[],
   provinceAvailable: boolean,
 ): CarreraExplicacion {
-  const template = TEMPLATES[career.familia];
+  // Las claves de TEMPLATES no llevan comas; la DB sí ("Software, sistemas e
+  // informática"). Sin esta normalización ningún template personalizado aplicaba.
+  const template = TEMPLATES[career.familia.replace(/,/g, '')];
 
   const razon = template
     ? template.razon(primario.nombre, secundario?.nombre ?? null)
@@ -517,14 +442,5 @@ export function explicarCarrera(
     ? template.alerta(antipatrones, preferences, provinceAvailable)
     : null;
 
-  const fitScore = computeFitScore(
-    career.familia,
-    primario,
-    secundario,
-    preferences,
-    antipatrones,
-    provinceAvailable,
-  );
-
-  return { razon, alerta: alerta ?? null, fitScore };
+  return { razon, alerta: alerta ?? null };
 }

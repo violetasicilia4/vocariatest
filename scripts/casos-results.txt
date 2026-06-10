@@ -9,11 +9,11 @@ CASOS DE PRUEBA — FLUJO COMPLETO — 2026-06-10
   Resultado: sanador (99)  ·  catalizador (82)  ·  anfitrion (81)
   Confianza: 77%  ⚠ 1 advertencia(s)
   Carreras (top 5 de 9):
-    ★ Licenciado en Psicología  [fit 83, 2 univ. en su provincia]
-    · Licenciado en Obstetricia  [fit 85, 5 univ. en su provincia]
-    · Ingeniero Biomédico  [fit 85, 2 univ. en su provincia]
-    · Licenciado/a en Obstetricia  [fit 85, 2 univ. en su provincia]
-    · Profesor en Psicología  [fit 83, 1 univ. en su provincia]
+    ★ Licenciado en Educación Física  [fit 93, 3 univ. en su provincia]
+    · Profesor Universitario en Educación Física  [fit 93, 2 univ. en su provincia]
+    · Licenciado en Obstetricia  [fit 89, 5 univ. en su provincia]
+    · Licenciado en Enfermería  [fit 85, 1 univ. en su provincia]
+    · Licenciado en Terapia Ocupacional  [fit 84, 1 univ. en su provincia]
 
 ■ Tomás (19, Córdoba)
   De taller: arregla motos, arma cosas. Práctico, concreto, odia exponerse y vender.
@@ -22,11 +22,11 @@ CASOS DE PRUEBA — FLUJO COMPLETO — 2026-06-10
   Resultado: constructor (92)  ·  custodio (54)  ·  arquitecto (41)
   Confianza: 95%  ⚠ 1 advertencia(s)
   Carreras (top 5 de 9):
-    ★ Ingeniero Industrial  [fit 70, 1 univ. en su provincia]
-    · Arquitecto  [fit 70, 2 univ. en su provincia]
-    · Ingeniero Agrónomo  [fit 70, 1 univ. en su provincia]
-    · Ingeniero Civil  [fit 70, 1 univ. en su provincia]
-    · Ingeniero Mecánico  [fit 70, 2 univ. en su provincia]
+    ★ Ingeniero Civil  [fit 96, 1 univ. en su provincia]
+    · Ingeniero Mecánico  [fit 96, 2 univ. en su provincia]
+    · Ingeniero Electromecánico  [fit 96, 1 univ. en su provincia]
+    · Técnico/a Universitario/a en Jardinería y Floricultura  [fit 87, 1 univ. en su provincia]
+    · Ingeniero Industrial  [fit 84, 1 univ. en su provincia]
 
 ■ Julieta (18, CABA)
   Creativa: dibuja, escribe, hace videos. Necesita expresarse, alérgica a la rutina.
@@ -37,11 +37,11 @@ CASOS DE PRUEBA — FLUJO COMPLETO — 2026-06-10
   Resultado: artifice (100)  ·  narrador (89)  ·  arquitecto (42)
   Confianza: 75%  ⚠ 1 advertencia(s)
   Carreras (top 5 de 9):
-    ★ Técnico Universitario en Desarrollo de Videojuegos  [fit 70, 3 univ. en su provincia]
-    · Licenciado en Comunicación Social  [fit 70, 6 univ. en su provincia]
-    · Licenciado en Periodismo  [fit 70, 6 univ. en su provincia]
-    · Licenciado en Ciencias de la Comunicación  [fit 70, 6 univ. en su provincia]
-    · Licenciado en Historia  [fit 70, 6 univ. en su provincia]
+    ★ Licenciado en Artes Visuales  [fit 99, 6 univ. en su provincia]
+    · Profesor de Teatro  [fit 99, 3 univ. en su provincia]
+    · Diseñador Gráfico  [fit 97, 6 univ. en su provincia]
+    · Licenciado en Diseño Gráfico  [fit 97, 6 univ. en su provincia]
+    · Licenciado en Inglés  [fit 87, 4 univ. en su provincia]
 
 ■ Federico (20, Santa Fe)
   Le fascinan los datos y los sistemas. Introvertido, riguroso, quiere trabajar tranquilo.
@@ -52,11 +52,11 @@ CASOS DE PRUEBA — FLUJO COMPLETO — 2026-06-10
   Resultado: interprete (100)  ·  descubridor (86)  ·  arquitecto (81)
   Confianza: 73%  ⚠ 1 advertencia(s)
   Carreras (top 5 de 9):
-    ★ Técnico Universitario en Desarrollo de Videojuegos  [fit 70, 1 univ. en su provincia]
-    · Contador Público  [fit 70, 2 univ. en su provincia]
-    · Licenciado en Economía  [fit 70, 1 univ. en su provincia]
-    · Ingeniero Químico  [fit 70, 1 univ. en su provincia]
-    · Ingeniero en Sistemas de Información  [fit 70, 1 univ. en su provincia]
+    ★ Licenciado/a en Ciencias de Datos  [fit 96, 1 univ. en su provincia]
+    · Ingeniero/a en Inteligencia Artificial  [fit 96, 1 univ. en su provincia]
+    · Ingeniero en Sistemas de Información  [fit 90, 1 univ. en su provincia]
+    · Ingeniero/a en Informática  [fit 90, 1 univ. en su provincia]
+    · Contador Público  [fit 85, 2 univ. en su provincia]
 
 ■ Martina (22, Mendoza)
   Organiza todo: el centro de estudiantes, los viajes, las campañas. Energía social y de mando.
@@ -65,11 +65,11 @@ CASOS DE PRUEBA — FLUJO COMPLETO — 2026-06-10
   Resultado: orquestador (97)  ·  anfitrion (79)  ·  catalizador (78)
   Confianza: 66%  ⚠ 1 advertencia(s)
   Carreras (top 5 de 9):
-    ★ Licenciado en Recursos Humanos  [fit 82, 6 univ. en su provincia]
-    · Licenciado en Gestión de Recursos Humanos  [fit 82, 6 univ. en su provincia]
-    · Licenciado en Administración de Recursos Humanos  [fit 82, 4 univ. en su provincia]
-    · Licenciado en Educación Física  [fit 81, 6 univ. en su provincia]
-    · Profesor Universitario en Educación Física  [fit 81, 6 univ. en su provincia]
+    ★ Licenciado en Recursos Humanos  [fit 87, 6 univ. en su provincia]
+    · Licenciado en Gestión de Recursos Humanos  [fit 87, 6 univ. en su provincia]
+    · Licenciado en Relaciones Internacionales  [fit 84, 6 univ. en su provincia]
+    · Licenciado en Ciencias Políticas  [fit 84, 5 univ. en su provincia]
+    · Licenciado en Marketing  [fit 83, 6 univ. en su provincia]
 
 ■ Nico (18, Misiones)
   Ama el monte, los animales, estar afuera. Tranquilo, constante, piensa a largo plazo.
@@ -78,11 +78,11 @@ CASOS DE PRUEBA — FLUJO COMPLETO — 2026-06-10
   Resultado: custodio (91)  ·  catalizador (72)  ·  sanador (69)
   Confianza: 75%  ⚠ 1 advertencia(s)
   Carreras (top 5 de 9):
-    ★ Licenciado en Obstetricia  [fit 85, 1 univ. en su provincia]
-    · Profesor en Física  [fit 70, 1 univ. en su provincia]
-    · Licenciado en Psicología  [fit 70, 1 univ. en su provincia]
-    · Odontólogo/a  [fit 70, 1 univ. en su provincia]
-    · Profesor en Biología  [fit 70, 1 univ. en su provincia]
+    ★ Técnico Universitario en Producción Agropecuaria  [fit 96, 1 univ. en su provincia]
+    · Licenciado en Obstetricia  [fit 90, 1 univ. en su provincia]
+    · Licenciado en Psicología  [fit 89, 1 univ. en su provincia]
+    · Licenciado/a en Ciencias Ambientales  [fit 84, 1 univ. en su provincia]
+    · Licenciado en Bromatología  [fit 81, sin univ. en su provincia]
 
 ■ Agustina (17, Tucumán) — caso AMBIGUO
   Le gusta todo un poco: ciencia, gente, crear. Perfil genuinamente indefinido.
@@ -93,11 +93,11 @@ CASOS DE PRUEBA — FLUJO COMPLETO — 2026-06-10
   Resultado: descubridor (100)  ·  sanador (87)  ·  catalizador (67)
   Confianza: 65%  ⚠ 1 advertencia(s)
   Carreras (top 5 de 9):
-    ★ Ingeniero Biomédico  [fit 84, 1 univ. en su provincia]
-    · Psicólogo  [fit 82, 1 univ. en su provincia]
-    · Licenciado en Terapia Ocupacional  [fit 70, 1 univ. en su provincia]
-    · Profesor en Filosofía  [fit 70, 1 univ. en su provincia]
-    · Licenciado en Ciencia Política  [fit 70, 1 univ. en su provincia]
+    ★ Bioquímico/a  [fit 86, 1 univ. en su provincia]
+    · Farmacéutico/a  [fit 86, 1 univ. en su provincia]
+    · Licenciado/a en Física  [fit 85, 1 univ. en su provincia]
+    · Psicólogo  [fit 85, 1 univ. en su provincia]
+    · Licenciado/a en Ciencias Biológicas  [fit 80, 1 univ. en su provincia]
 
 ■ Lautaro (19, Chaco) — caso CAÓTICO
   Respondió rápido y contradictorio (autonomía total + estructura total, social + solitario).
@@ -106,11 +106,11 @@ CASOS DE PRUEBA — FLUJO COMPLETO — 2026-06-10
   Resultado: orquestador (56)  ·  custodio (40)  ·  constructor (34)
   Confianza: 68%  ⚠ 1 advertencia(s)
   Carreras (top 5 de 9):
-    ★ Médico Veterinario  [fit 70, 1 univ. en su provincia]
-    · Licenciado en Diseño Industrial  [fit 70, 1 univ. en su provincia]
-    · Veterinario  [fit 60, sin univ. en su provincia]
-    · Ingeniero Agrónomo  [fit 60, sin univ. en su provincia]
-    · Licenciado en Ciencia Política y de Gobierno  [fit 70, 1 univ. en su provincia]
+    ★ Licenciado en Relaciones Públicas e Institucionales  [fit 63, 1 univ. en su provincia]
+    · Licenciado en Administración - MD  [fit 60, 1 univ. en su provincia]
+    · Licenciado/a en Administración  [fit 60, 1 univ. en su provincia]
+    · Licenciado en Ciencia Política y de Gobierno  [fit 54, 1 univ. en su provincia]
+    · Ingeniero Electromecánico  [fit 53, 1 univ. en su provincia]
 
 ═══════════════════════════════════════════════════════════
 CRUCE ENTRE CASOS
@@ -120,7 +120,7 @@ CRUCE ENTRE CASOS
   Rango de confianza: 65%–95%
 
   Solapamiento de carreras entre pares de casos (de 8-9 recomendadas):
-    ⚠ Valentina y Martina: 4 carreras en común
+    ⚠ Valentina y Martina: 5 carreras en común
     Promedio general: 0.4 carreras en común por par de casos
 
 ═══════════════════════════════════════════════════════════

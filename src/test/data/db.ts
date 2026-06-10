@@ -1671,7 +1671,7 @@ export const CARRERAS_DB: CarreraEntry[] = [
     id: "ingeniero_biom_dico",
     titulo: "Ingeniero Biomédico",
     macroArea: "Medicina y Salud",
-    familia: "Medicina y atención clínica",
+    familia: "Bioingeniería",
     universidades: [
     { nombre: "Universidad Austral", provincia: "Buenos Aires", web: "http://www.austral.edu.ar/ingenieria/", duracion: "4 años" },
     { nombre: "Universidad Favaloro", provincia: "Ciudad Autonoma de Buenos Aires", web: "www.favaloro.edu.ar", duracion: "5 años" },

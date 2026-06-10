@@ -6,6 +6,7 @@
  */
 
 import type { VectorVocacional } from './signals';
+import { signalPercentile } from './signalCalibration';
 
 export type FamilySignature = Partial<Record<keyof VectorVocacional, number>>;
 
@@ -400,35 +401,31 @@ export const FAMILIA_FIRMA: Record<string, FamilySignature> = {
 // ---------------------------------------------------------------------------
 
 /**
- * Map bipolar signals (-100..+100) to 0-100 for cosine computation.
+ * Valor de señal en percentil poblacional (0-100), igual que en el motor de
+ * arquetipos. Sin esta transformación las señales con rango alcanzable bajo
+ * (p.ej. interes_naturaleza) pesaban menos que las fáciles de acumular,
+ * sesgando el fit hacia las mismas familias para todo el mundo.
+ * Las bipolares también: la tabla de percentiles cubre su rango -100..100.
  */
 function getSignalValue(vector: VectorVocacional, key: keyof VectorVocacional): number {
-  const v = vector[key] as number;
-  // Bipolar signals arrive as -100..+100; map to 0-100 for similarity calculation
-  if (key === 'profundidad_vs_amplitud' || key === 'reflexion_vs_accion') {
-    return (v + 100) / 2;
-  }
-  return v;
+  return signalPercentile(key, vector[key] as number);
 }
 
 /**
- * Weighted dot product between (user vector / 100) and signature weights,
- * normalised by signature magnitude. Returns 0-100.
+ * Promedio ponderado de los percentiles de las señales de la firma.
+ * 0-100: un usuario promedio ronda 50; un perfil muy alineado supera 75.
  */
 export function computeFamilyFit(vector: VectorVocacional, familia: string): number {
   const sig = FAMILIA_FIRMA[familia];
   if (!sig) return 0;
 
   let dot = 0;
-  let sigMag = 0;
+  let weightSum = 0;
 
   for (const [key, weight] of Object.entries(sig) as [keyof VectorVocacional, number][]) {
-    const vVal = getSignalValue(vector, key);
-    const vNorm = vVal / 100;
-    dot += vNorm * weight;
-    sigMag += weight * weight;
+    dot += getSignalValue(vector, key) * weight;
+    weightSum += weight;
   }
 
-  const similarity = sigMag > 0 ? dot / Math.sqrt(sigMag) : 0;
-  return Math.round(Math.min(similarity * 140, 100));
+  return weightSum > 0 ? Math.round(dot / weightSum) : 0;
 }
