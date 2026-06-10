@@ -6,7 +6,7 @@ import { emergerArquetipos } from './archetypeEmergence';
 import { extractPreferences, type CareerPreferences } from './preferences';
 import { detectarTensiones, type Tension } from './tensions';
 import { calcularConfianza, type ConfidenceBreakdown } from './confidence';
-import { applyAdaptiveAnswers } from './adaptive';
+import { applyAdaptiveAnswers, contestedArchetypes, isAdaptiveQuestion } from './adaptive';
 
 export interface ArquetipoScore {
   id: string;
@@ -18,6 +18,12 @@ export interface Contexto {
   provincia?: string;
   provinciasDisponibles: string[];
   movilidad: 'si' | 'no' | 'nose';
+}
+
+/** Registro de la fase adaptativa: qué arquetipos estaban peleados y cuántos duelos hubo. */
+export interface DisputaResuelta {
+  entre: string[]; // ids de arquetipos en disputa al terminar el núcleo
+  duelos: number;  // preguntas de precisión respondidas
 }
 
 export interface ScoringResult {
@@ -35,6 +41,7 @@ export interface ScoringResult {
   antipatrones: string[];
   contexto: Contexto;
   vector: VectorVocacional;
+  disputaResuelta: DisputaResuelta | null;
 }
 
 export function calcularResultado(
@@ -64,7 +71,18 @@ export function calcularResultado(
     }
   }
 
-  // Adaptive tie-break answers (if the user got an adaptive phase)
+  // Adaptive tie-break answers (if the user got an adaptive phase).
+  // Capture the pre-adaptive dispute so the result screen can narrate it.
+  const duelosRespondidos = Object.keys(answers).filter(
+    id => isAdaptiveQuestion(id) && answers[id],
+  ).length;
+  let disputaResuelta: DisputaResuelta | null = null;
+  if (duelosRespondidos > 0) {
+    const enDisputa = contestedArchetypes(ranking);
+    if (enDisputa.length >= 2) {
+      disputaResuelta = { entre: enDisputa, duelos: duelosRespondidos };
+    }
+  }
   ranking = applyAdaptiveAnswers(ranking, answers);
 
   const top = ranking[0];
@@ -128,5 +146,6 @@ export function calcularResultado(
     antipatrones,
     contexto,
     vector,
+    disputaResuelta,
   };
 }

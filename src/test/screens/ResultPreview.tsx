@@ -1,8 +1,8 @@
 import { motion } from 'motion/react';
-import { Lock, Check, Star } from 'lucide-react';
+import { Lock, Check, Star, Scale } from 'lucide-react';
 import type { ScoringResult } from '../engine/scorer';
 import LogoIcon from '../../components/ui/LogoIcon';
-import type { Arquetipo } from '../data/arquetipos';
+import { getArquetipo, type Arquetipo } from '../data/arquetipos';
 import { PLANES, type PlanId } from '../data/profile';
 
 interface ResultPreviewProps {
@@ -21,6 +21,44 @@ function ConfianzaBadge({ confianza }: { confianza: number }) {
       <span className={`w-1.5 h-1.5 rounded-full inline-block ${bg}`} />
       {label} · {confianza}%
     </span>
+  );
+}
+
+function DisputaCard({ result }: { result: ScoringResult }) {
+  const disputa = result.disputaResuelta;
+  if (!disputa) return null;
+
+  const nombres = disputa.entre
+    .map(id => getArquetipo(id)?.nombre)
+    .filter((n): n is string => Boolean(n));
+  if (nombres.length < 2) return null;
+
+  const lista =
+    nombres.length === 2
+      ? `${nombres[0]} y ${nombres[1]}`
+      : `${nombres.slice(0, -1).join(', ')} y ${nombres[nombres.length - 1]}`;
+
+  return (
+    <motion.div
+      initial={{ opacity: 0, y: 16 }}
+      animate={{ opacity: 1, y: 0 }}
+      transition={{ duration: 0.5, delay: 0.12 }}
+      className="rounded-2xl border border-white/8 bg-white/3 p-4 flex items-start gap-3"
+    >
+      <span className="shrink-0 mt-0.5 w-7 h-7 rounded-full bg-brand-lime/10 flex items-center justify-center">
+        <Scale size={13} className="text-brand-lime/80" />
+      </span>
+      <div>
+        <p className="text-[11px] font-bold text-white/40 tracking-widest uppercase mb-1">
+          Un resultado afinado para vos
+        </p>
+        <p className="text-[12px] text-white/50 leading-relaxed">
+          Tu perfil estaba genuinamente entre <span className="text-white/75 font-semibold">{lista}</span>.
+          Tus respuestas a las {disputa.duelos} preguntas de precisión definieron tu camino —
+          pocas personas reciben este nivel de ajuste.
+        </p>
+      </div>
+    </motion.div>
   );
 }
 
@@ -155,6 +193,9 @@ export default function ResultPreview({ nombre, result, onGetFullReport }: Resul
             {primario.descripcion}
           </p>
         </motion.div>
+
+        {/* Resolución del duelo (solo si hubo fase adaptativa) */}
+        <DisputaCard result={result} />
 
         {/* Fortalezas (parcial) */}
         <motion.div
