@@ -7,20 +7,20 @@ CASOS DE PRUEBA — FLUJO COMPLETO — 2026-06-10
   ─────────────────────────────────────────────────────
   Preguntas: 18 núcleo + 0 duelos = 18
   Resultado: sanador (99)  ·  catalizador (82)  ·  anfitrion (81)
-  Confianza: 77%  ⚠ 1 advertencia(s)
+  Confianza: 83%  ⚠ 1 advertencia(s)
   Carreras (top 5 de 9):
-    ★ Licenciado en Educación Física  [fit 93, 3 univ. en su provincia]
-    · Profesor Universitario en Educación Física  [fit 93, 2 univ. en su provincia]
-    · Licenciado en Obstetricia  [fit 89, 5 univ. en su provincia]
+    ★ Licenciado en Obstetricia  [fit 89, 5 univ. en su provincia]
     · Licenciado en Enfermería  [fit 85, 1 univ. en su provincia]
     · Licenciado en Terapia Ocupacional  [fit 84, 1 univ. en su provincia]
+    · Licenciado en Educación Física  [fit 83, 3 univ. en su provincia]
+    · Profesor Universitario en Educación Física  [fit 83, 2 univ. en su provincia]
 
 ■ Tomás (19, Córdoba)
   De taller: arregla motos, arma cosas. Práctico, concreto, odia exponerse y vender.
   ─────────────────────────────────────────────────────
   Preguntas: 18 núcleo + 0 duelos = 18
   Resultado: constructor (92)  ·  custodio (54)  ·  arquitecto (41)
-  Confianza: 95%  ⚠ 1 advertencia(s)
+  Confianza: 94%  ⚠ 1 advertencia(s)
   Carreras (top 5 de 9):
     ★ Ingeniero Civil  [fit 96, 1 univ. en su provincia]
     · Ingeniero Mecánico  [fit 96, 2 univ. en su provincia]
@@ -35,7 +35,7 @@ CASOS DE PRUEBA — FLUJO COMPLETO — 2026-06-10
   Duelos elegidos: crear, finde
   Disputa al entrar: artifice 100 vs narrador 86
   Resultado: artifice (100)  ·  narrador (89)  ·  arquitecto (42)
-  Confianza: 75%  ⚠ 1 advertencia(s)
+  Confianza: 80%  ⚠ 1 advertencia(s)
   Carreras (top 5 de 9):
     ★ Licenciado en Artes Visuales  [fit 99, 6 univ. en su provincia]
     · Profesor de Teatro  [fit 99, 3 univ. en su provincia]
@@ -50,7 +50,7 @@ CASOS DE PRUEBA — FLUJO COMPLETO — 2026-06-10
   Duelos elegidos: lectura, rechazo, entorno
   Disputa al entrar: interprete 93 vs descubridor 86
   Resultado: interprete (100)  ·  descubridor (86)  ·  arquitecto (81)
-  Confianza: 73%  ⚠ 1 advertencia(s)
+  Confianza: 80%  ⚠ 1 advertencia(s)
   Carreras (top 5 de 9):
     ★ Licenciado/a en Ciencias de Datos  [fit 96, 1 univ. en su provincia]
     · Ingeniero/a en Inteligencia Artificial  [fit 96, 1 univ. en su provincia]
@@ -63,20 +63,20 @@ CASOS DE PRUEBA — FLUJO COMPLETO — 2026-06-10
   ─────────────────────────────────────────────────────
   Preguntas: 18 núcleo + 0 duelos = 18
   Resultado: orquestador (97)  ·  anfitrion (79)  ·  catalizador (78)
-  Confianza: 66%  ⚠ 1 advertencia(s)
+  Confianza: 78%  ⚠ 1 advertencia(s)
   Carreras (top 5 de 9):
-    ★ Licenciado en Recursos Humanos  [fit 87, 6 univ. en su provincia]
-    · Licenciado en Gestión de Recursos Humanos  [fit 87, 6 univ. en su provincia]
+    ★ Licenciado en Recursos Humanos  [fit 93, 6 univ. en su provincia]
+    · Licenciado en Gestión de Recursos Humanos  [fit 93, 6 univ. en su provincia]
     · Licenciado en Relaciones Internacionales  [fit 84, 6 univ. en su provincia]
-    · Licenciado en Ciencias Políticas  [fit 84, 5 univ. en su provincia]
-    · Licenciado en Marketing  [fit 83, 6 univ. en su provincia]
+    · Licenciado en Educación Física  [fit 84, 6 univ. en su provincia]
+    · Profesor Universitario en Educación Física  [fit 84, 6 univ. en su provincia]
 
 ■ Nico (18, Misiones)
   Ama el monte, los animales, estar afuera. Tranquilo, constante, piensa a largo plazo.
   ─────────────────────────────────────────────────────
   Preguntas: 18 núcleo + 0 duelos = 18
   Resultado: custodio (91)  ·  catalizador (72)  ·  sanador (69)
-  Confianza: 75%  ⚠ 1 advertencia(s)
+  Confianza: 77%  ⚠ 1 advertencia(s)
   Carreras (top 5 de 9):
     ★ Técnico Universitario en Producción Agropecuaria  [fit 96, 1 univ. en su provincia]
     · Licenciado en Obstetricia  [fit 90, 1 univ. en su provincia]
@@ -91,7 +91,7 @@ CASOS DE PRUEBA — FLUJO COMPLETO — 2026-06-10
   Duelos elegidos: exito, elogio, lectura, entorno, rechazo
   Disputa al entrar: sanador 87 vs descubridor 87
   Resultado: descubridor (100)  ·  sanador (87)  ·  catalizador (67)
-  Confianza: 65%  ⚠ 1 advertencia(s)
+  Confianza: 72%  ⚠ 1 advertencia(s)
   Carreras (top 5 de 9):
     ★ Bioquímico/a  [fit 86, 1 univ. en su provincia]
     · Farmacéutico/a  [fit 86, 1 univ. en su provincia]
@@ -104,7 +104,7 @@ CASOS DE PRUEBA — FLUJO COMPLETO — 2026-06-10
   ─────────────────────────────────────────────────────
   Preguntas: 18 núcleo + 0 duelos = 18
   Resultado: orquestador (56)  ·  custodio (40)  ·  constructor (34)
-  Confianza: 68%  ⚠ 1 advertencia(s)
+  Confianza: 45%  ⚠ 1 advertencia(s)
   Carreras (top 5 de 9):
     ★ Licenciado en Relaciones Públicas e Institucionales  [fit 63, 1 univ. en su provincia]
     · Licenciado en Administración - MD  [fit 60, 1 univ. en su provincia]
@@ -117,10 +117,9 @@ CRUCE ENTRE CASOS
 ───────────────────────────────────────────────────────────
   Primarios distintos: 7 de 8 casos
   Rango de preguntas: 18–23
-  Rango de confianza: 65%–95%
+  Rango de confianza: 45%–94%
 
   Solapamiento de carreras entre pares de casos (de 8-9 recomendadas):
-    ⚠ Valentina y Martina: 5 carreras en común
-    Promedio general: 0.4 carreras en común por par de casos
+    Promedio general: 0.3 carreras en común por par de casos
 
 ═══════════════════════════════════════════════════════════

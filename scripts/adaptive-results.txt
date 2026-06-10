@@ -16,7 +16,7 @@ VALIDACIÓN FASE ADAPTATIVA — 2026-06-10
 3) RESOLUCIÓN DE LA DISPUTA (solo usuarios con fase adaptativa)
 ───────────────────────────────────────────────────────────
   Brecha top1-top2:  6.5 → 11.6 puntos
-  Confianza:         59.8% → 64.6%
+  Confianza:         53.1% → 61.1%
   La fase adaptativa cambió el arquetipo primario en: 31.2% de los casos activados
 
 4) SENSIBILIDAD (cambiar UNA respuesta núcleo, 2.000 muestras)
