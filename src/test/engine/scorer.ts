@@ -6,6 +6,7 @@ import { emergerArquetipos } from './archetypeEmergence';
 import { extractPreferences, type CareerPreferences } from './preferences';
 import { detectarTensiones, type Tension } from './tensions';
 import { calcularConfianza, type ConfidenceBreakdown } from './confidence';
+import { applyAdaptiveAnswers } from './adaptive';
 
 export interface ArquetipoScore {
   id: string;
@@ -47,7 +48,7 @@ export function calcularResultado(
   const arquetiposEmergentes = emergerArquetipos(vector);
 
   // Build ranking from emergence scores (0-100 already)
-  const ranking: ArquetipoScore[] = arquetiposEmergentes
+  let ranking: ArquetipoScore[] = arquetiposEmergentes
     .map(e => ({
       id: e.id,
       score: e.emergencia,
@@ -62,6 +63,9 @@ export function calcularResultado(
       ranking.push({ id: arq.id, score: 0, pct: 0 });
     }
   }
+
+  // Adaptive tie-break answers (if the user got an adaptive phase)
+  ranking = applyAdaptiveAnswers(ranking, answers);
 
   const top = ranking[0];
   const umbral = top.score * 0.4; // 40% of top — richer secondary set than V1

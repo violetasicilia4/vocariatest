@@ -1,11 +1,12 @@
 import { useState, useCallback } from 'react';
 import { motion, AnimatePresence } from 'motion/react';
-import { QUESTIONS } from '../data/questions';
+import { QUESTIONS, type Question } from '../data/questions';
 import ProgressBar from '../components/ProgressBar';
 import QuestionCard from '../components/QuestionCard';
 import LogoIcon from '../../components/ui/LogoIcon';
 import type { ScoringResult } from '../engine/scorer';
 import { calcularResultado } from '../engine/scorer';
+import { selectAdaptiveQuestions } from '../engine/adaptive';
 import type { UserProfile } from '../data/profile';
 
 interface TestRunnerProps {
@@ -18,14 +19,18 @@ export default function TestRunner({ nombre, profile, onComplete }: TestRunnerPr
   const [answers, setAnswers] = useState<Record<string, string>>({});
   const [currentIndex, setCurrentIndex] = useState(0);
   const [direction, setDirection] = useState(1);
+  // Preguntas de desempate elegidas según el ranking interino tras el núcleo.
+  // null = todavía no se decidió; [] = ganador claro, no hace falta.
+  const [adaptiveQuestions, setAdaptiveQuestions] = useState<Question[] | null>(null);
 
-  const questions = QUESTIONS;
+  const questions: Question[] = adaptiveQuestions ? [...QUESTIONS, ...adaptiveQuestions] : QUESTIONS;
   const currentQuestion = questions[currentIndex];
   const total = questions.length;
 
   const HOOKS: Record<number, string> = {
     6: 'Tu perfil empieza a tomar forma.',
     12: 'Último tramo. Afinamos las recomendaciones.',
+    [QUESTIONS.length]: 'Tu perfil está entre pocos caminos. Estas preguntas definen cuál.',
   };
 
   const handleAnswer = useCallback((value: string) => {
@@ -35,11 +40,27 @@ export default function TestRunner({ nombre, profile, onComplete }: TestRunnerPr
     if (currentIndex < total - 1) {
       setDirection(1);
       setCurrentIndex(i => i + 1);
-    } else {
-      const result = calcularResultado(newAnswers, profile);
-      onComplete(newAnswers, result);
+      return;
     }
-  }, [answers, currentQuestion, currentIndex, total, profile, onComplete]);
+
+    // Fin del núcleo: si el resultado quedó peleado, abrir fase adaptativa
+    // (solo una vez; el set elegido no cambia aunque el usuario vuelva atrás).
+    if (adaptiveQuestions === null) {
+      const interim = calcularResultado(newAnswers, profile);
+      const extra = selectAdaptiveQuestions(interim.ranking);
+      setAdaptiveQuestions(extra);
+      if (extra.length > 0) {
+        setDirection(1);
+        setCurrentIndex(i => i + 1);
+        return;
+      }
+      onComplete(newAnswers, interim);
+      return;
+    }
+
+    const result = calcularResultado(newAnswers, profile);
+    onComplete(newAnswers, result);
+  }, [answers, currentQuestion, currentIndex, total, adaptiveQuestions, profile, onComplete]);
 
   const handleBack = () => {
     if (currentIndex > 0) {
