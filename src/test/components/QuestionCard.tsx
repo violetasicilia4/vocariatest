@@ -1,7 +1,9 @@
 import { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'motion/react';
+import { Check, ArrowRight } from 'lucide-react';
 import type { Question } from '../data/questions';
-import { CTA_PRIMARY, OPTION_IDLE, OPTION_ACTIVE, OPTION_DISABLED } from '../ui/theme';
+import { iconForEmoji } from '../ui/icons';
+import { CTA_PRIMARY, OPTION_IDLE, OPTION_ACTIVE, OPTION_DISABLED, EASE } from '../ui/theme';
 
 interface QuestionCardProps {
   question: Question;
@@ -24,7 +26,7 @@ export default function QuestionCard({ question, onAnswer, currentAnswer }: Ques
 
   const handleAutoSelect = (id: string) => {
     setSelected(id);
-    setTimeout(() => onAnswer(id), 220);
+    setTimeout(() => onAnswer(id), 240);
   };
 
   const handleScaleConfirm = () => {
@@ -49,12 +51,12 @@ export default function QuestionCard({ question, onAnswer, currentAnswer }: Ques
 
   return (
     <div className="w-full">
-      <div className="mb-6 sm:mb-8">
-        <p className="font-display font-bold text-[19px] sm:text-[23px] text-slate-900 leading-snug tracking-tight">
+      <div className="mb-7 sm:mb-9">
+        <h2 className="font-serif font-semibold text-[23px] sm:text-[27px] text-ink leading-[1.22] tracking-[-0.01em]">
           {question.enunciado}
-        </p>
+        </h2>
         {question.subtext && (
-          <p className="mt-2 text-[13px] text-slate-500 font-medium leading-relaxed">
+          <p className="mt-3 text-[13.5px] text-ink/55 font-medium leading-relaxed">
             {question.subtext}
           </p>
         )}
@@ -106,6 +108,24 @@ export default function QuestionCard({ question, onAnswer, currentAnswer }: Ques
   );
 }
 
+// ── CTA "Siguiente" reutilizable ──────────────────────────────────────────────
+
+function NextButton({ onClick, className = '' }: { onClick: () => void; className?: string }) {
+  return (
+    <motion.button
+      initial={{ opacity: 0, y: 8 }}
+      animate={{ opacity: 1, y: 0 }}
+      exit={{ opacity: 0 }}
+      transition={{ duration: 0.2, ease: EASE }}
+      onClick={onClick}
+      className={`flex items-center justify-center gap-2 py-4 text-[15px] ${CTA_PRIMARY} ${className}`}
+    >
+      Siguiente
+      <ArrowRight size={17} strokeWidth={2.5} />
+    </motion.button>
+  );
+}
+
 // ── Scale (1-5) ───────────────────────────────────────────────────────────────
 
 function ScaleOptions({
@@ -117,14 +137,15 @@ function ScaleOptions({
   onConfirm: () => void;
 }) {
   const anchors = [opciones[0]?.texto, opciones[opciones.length - 1]?.texto];
+  const activeOpt = opciones.find(o => o.id === selected);
 
   return (
     <div>
-      <div className="flex justify-between mb-3 px-1">
-        <span className="text-[11px] text-slate-400 font-medium max-w-[40%] leading-tight">{anchors[0]}</span>
-        <span className="text-[11px] text-slate-400 font-medium max-w-[40%] text-right leading-tight">{anchors[1]}</span>
+      <div className="flex justify-between mb-3 px-0.5 gap-4">
+        <span className="text-[11.5px] text-ink/45 font-medium max-w-[44%] leading-snug">{anchors[0]}</span>
+        <span className="text-[11.5px] text-ink/45 font-medium max-w-[44%] text-right leading-snug">{anchors[1]}</span>
       </div>
-      <div className="flex gap-2 sm:gap-3 justify-between mb-6">
+      <div className="flex gap-2 sm:gap-2.5 justify-between mb-4">
         {opciones.map(op => {
           const active = selected === op.id;
           return (
@@ -132,10 +153,11 @@ function ScaleOptions({
               key={op.id}
               onClick={() => onSelect(op.id)}
               aria-pressed={active}
-              className={`flex-1 aspect-square rounded-2xl font-display font-bold text-sm transition-all duration-150 flex items-center justify-center border
+              aria-label={op.texto}
+              className={`flex-1 min-h-[60px] aspect-square rounded-2xl font-display font-bold text-[17px] transition-all duration-200 flex items-center justify-center border
                 ${active
-                  ? 'bg-[#07111F] text-white border-[#07111F] scale-105 shadow-[0_8px_24px_rgba(5,8,22,0.18)]'
-                  : 'bg-white text-slate-500 border-slate-200 hover:border-slate-400 hover:text-slate-700'
+                  ? 'bg-ink text-paper border-ink scale-[1.04] shadow-[0_8px_22px_rgba(28,26,22,0.18)]'
+                  : 'bg-paper-raised text-ink/45 border-line hover:border-line-strong hover:text-ink/70'
                 }`}
             >
               {op.id}
@@ -143,24 +165,32 @@ function ScaleOptions({
           );
         })}
       </div>
+
+      <div className="min-h-[18px] mb-4">
+        <AnimatePresence mode="wait">
+          {activeOpt && (
+            <motion.p
+              key={activeOpt.id}
+              initial={{ opacity: 0, y: 4 }}
+              animate={{ opacity: 1, y: 0 }}
+              exit={{ opacity: 0 }}
+              transition={{ duration: 0.18 }}
+              className="text-[12.5px] text-ink/60 font-medium text-center leading-snug px-2"
+            >
+              {activeOpt.texto}
+            </motion.p>
+          )}
+        </AnimatePresence>
+      </div>
+
       <AnimatePresence>
-        {selected && (
-          <motion.button
-            initial={{ opacity: 0, y: 8 }}
-            animate={{ opacity: 1, y: 0 }}
-            exit={{ opacity: 0 }}
-            onClick={onConfirm}
-            className={`w-full py-3.5 text-sm ${CTA_PRIMARY}`}
-          >
-            Siguiente →
-          </motion.button>
-        )}
+        {selected && <NextButton onClick={onConfirm} className="w-full" />}
       </AnimatePresence>
     </div>
   );
 }
 
-// ── Visual (emoji grid 2×3) ───────────────────────────────────────────────────
+// ── Visual (icon grid 2×N) ────────────────────────────────────────────────────
 
 function VisualOptions({
   opciones, selected, onSelect,
@@ -170,30 +200,36 @@ function VisualOptions({
   onSelect: (id: string) => void;
 }) {
   return (
-    <div className="grid grid-cols-2 gap-2.5">
+    <div className="grid grid-cols-2 gap-3">
       {opciones.map(op => {
         const active = selected === op.id;
+        const Icon = iconForEmoji(op.emoji);
         return (
           <button
             key={op.id}
             onClick={() => onSelect(op.id)}
             aria-pressed={active}
-            className={`relative flex flex-col items-center justify-center gap-2 p-4 rounded-2xl border transition-all duration-150 text-center active:scale-[0.98]
+            className={`relative flex flex-col items-start gap-3 p-4 min-h-[124px] rounded-[20px] border transition-all duration-200 text-left active:scale-[0.985]
               ${active ? OPTION_ACTIVE : OPTION_IDLE}`}
           >
-            <span className="text-3xl">{op.emoji}</span>
-            <span className={`font-display text-[12px] font-semibold leading-snug ${active ? 'text-white' : 'text-slate-600'}`}>
+            <span
+              className={`w-10 h-10 rounded-full flex items-center justify-center transition-colors
+                ${active ? 'bg-white/12 text-paper' : 'bg-clay-soft text-clay-deep'}`}
+            >
+              <Icon size={19} strokeWidth={1.9} />
+            </span>
+            <span className={`font-display text-[12.5px] font-semibold leading-snug ${active ? 'text-paper' : 'text-ink/75'}`}>
               {op.texto}
             </span>
             {active && (
-              <motion.div
-                layoutId="visual-check"
-                className="absolute top-2.5 right-2.5 w-4 h-4 rounded-full bg-brand-lime flex items-center justify-center"
+              <motion.span
+                className="absolute top-3 right-3 w-5 h-5 rounded-full bg-clay flex items-center justify-center"
                 initial={{ scale: 0 }}
                 animate={{ scale: 1 }}
+                transition={{ type: 'spring', stiffness: 500, damping: 22 }}
               >
-                <span className="text-[#07111F] text-[9px] font-black">✓</span>
-              </motion.div>
+                <Check size={11} strokeWidth={3} className="text-white" />
+              </motion.span>
             )}
           </button>
         );
@@ -215,16 +251,22 @@ function PairsOptions({
     <div className="space-y-3">
       {opciones.map(op => {
         const active = selected === op.id;
+        const Icon = iconForEmoji(op.emoji);
         return (
           <button
             key={op.id}
             onClick={() => onSelect(op.id)}
             aria-pressed={active}
-            className={`w-full flex items-center gap-4 px-5 py-5 rounded-2xl border transition-all duration-150 text-left active:scale-[0.99]
+            className={`w-full flex items-center gap-4 px-5 py-5 rounded-[20px] border transition-all duration-200 text-left active:scale-[0.99]
               ${active ? OPTION_ACTIVE : OPTION_IDLE}`}
           >
-            <span className="text-4xl shrink-0">{op.emoji}</span>
-            <span className={`font-display font-bold text-[15px] leading-snug ${active ? 'text-white' : 'text-slate-800'}`}>
+            <span
+              className={`shrink-0 w-12 h-12 rounded-2xl flex items-center justify-center transition-colors
+                ${active ? 'bg-white/12 text-paper' : 'bg-clay-soft text-clay-deep'}`}
+            >
+              <Icon size={22} strokeWidth={1.9} />
+            </span>
+            <span className={`font-display font-semibold text-[15px] leading-snug ${active ? 'text-paper' : 'text-ink/90'}`}>
               {op.texto}
             </span>
           </button>
@@ -250,7 +292,7 @@ function MultiSelectOptions({
 
   return (
     <div>
-      <div className="flex flex-wrap gap-2 mb-5">
+      <div className="flex flex-col gap-2.5 mb-5">
         {opciones.map(op => {
           const active = selected.includes(op.id);
           const disabled = !active && count >= maxSelect;
@@ -260,32 +302,28 @@ function MultiSelectOptions({
               onClick={() => onToggle(op.id)}
               disabled={disabled}
               aria-pressed={active}
-              className={`px-4 py-2.5 rounded-xl font-display text-[13px] font-semibold transition-all border ${
+              className={`w-full flex items-center gap-3 px-4 py-3.5 rounded-2xl font-display text-[14px] font-semibold transition-all duration-200 text-left border ${
                 active ? OPTION_ACTIVE : disabled ? OPTION_DISABLED : OPTION_IDLE
               }`}
             >
-              {op.texto}
+              <span
+                className={`shrink-0 w-5 h-5 rounded-md border flex items-center justify-center transition-colors
+                  ${active ? 'bg-clay border-clay' : disabled ? 'border-ink/15' : 'border-line-strong'}`}
+              >
+                {active && <Check size={12} strokeWidth={3} className="text-white" />}
+              </span>
+              <span className="leading-snug">{op.texto}</span>
             </button>
           );
         })}
       </div>
 
       <div className="flex items-center gap-4">
-        <span className="text-[12px] text-slate-400 font-medium font-display whitespace-nowrap">
-          {count}/{maxSelect} elegidos
+        <span className="text-[12px] text-ink/45 font-semibold font-display whitespace-nowrap tabular-nums">
+          {count} / {maxSelect}
         </span>
         <AnimatePresence>
-          {ready && (
-            <motion.button
-              initial={{ opacity: 0, x: 8 }}
-              animate={{ opacity: 1, x: 0 }}
-              exit={{ opacity: 0 }}
-              onClick={onConfirm}
-              className={`flex-1 py-3.5 text-sm ${CTA_PRIMARY}`}
-            >
-              Siguiente →
-            </motion.button>
-          )}
+          {ready && <NextButton onClick={onConfirm} className="flex-1" />}
         </AnimatePresence>
       </div>
     </div>
@@ -310,16 +348,16 @@ function ChoiceOptions({
             key={op.id}
             onClick={() => onSelect(op.id)}
             aria-pressed={active}
-            className={`w-full text-left px-4 py-3.5 rounded-2xl border font-display text-[14px] font-medium transition-all duration-150 flex items-start gap-3 active:scale-[0.99]
+            className={`w-full text-left px-4 py-4 rounded-[18px] border font-display text-[14.5px] font-medium transition-all duration-200 flex items-start gap-3.5 active:scale-[0.99]
               ${active ? OPTION_ACTIVE : OPTION_IDLE}`}
           >
             <span
-              className={`shrink-0 w-6 h-6 rounded-full flex items-center justify-center font-mono text-[11px] font-bold mt-0.5
-                ${active ? 'bg-brand-lime text-[#07111F]' : 'bg-slate-100 text-slate-400'}`}
+              className={`shrink-0 w-7 h-7 rounded-full flex items-center justify-center font-display text-[12px] font-bold mt-px transition-colors
+                ${active ? 'bg-clay text-white' : 'bg-clay-soft text-clay-deep'}`}
             >
-              {op.id}
+              {op.id.toUpperCase()}
             </span>
-            <span className="leading-snug">{op.texto}</span>
+            <span className="leading-snug pt-0.5">{op.texto}</span>
           </button>
         );
       })}

@@ -1,5 +1,6 @@
 import { useState, useCallback } from 'react';
 import { AnimatePresence, motion } from 'motion/react';
+import { X } from 'lucide-react';
 import ProfileCapture from './screens/ProfileCapture';
 import TestRunner from './screens/TestRunner';
 import ProcessingScreen from './screens/ProcessingScreen';
@@ -46,14 +47,14 @@ export default function TestFlow({ onExit }: TestFlowProps) {
   }, []);
 
   return (
-    <div className="fixed inset-0 z-[100] bg-[#F8FAFC] overflow-y-auto">
+    <div className="fixed inset-0 z-[100] bg-paper overflow-y-auto">
       {step === 'profile' && (
         <button
           onClick={onExit}
-          className="fixed top-4 right-4 z-[110] text-slate-400 hover:text-slate-700 text-[13px] font-medium font-display transition-colors"
+          className="fixed top-4 right-4 z-[110] w-9 h-9 rounded-full flex items-center justify-center text-ink/40 hover:text-ink hover:bg-line/60 transition-colors"
           aria-label="Cerrar"
         >
-          ✕
+          <X size={18} strokeWidth={2.2} />
         </button>
       )}
 

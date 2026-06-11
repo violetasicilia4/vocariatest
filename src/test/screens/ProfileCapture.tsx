@@ -1,9 +1,10 @@
 import { useState } from 'react';
 import { motion, AnimatePresence } from 'motion/react';
-import { ChevronRight } from 'lucide-react';
+import { ChevronDown, ChevronLeft, ArrowRight, Plane, House, HelpCircle } from 'lucide-react';
+import type { LucideIcon } from 'lucide-react';
 import LogoIcon from '../../components/ui/LogoIcon';
 import { type UserProfile, PROVINCIAS } from '../data/profile';
-import { INPUT, LABEL, CTA_PRIMARY, OPTION_IDLE } from '../ui/theme';
+import { INPUT, LABEL, CTA_PRIMARY, OPTION_IDLE, EASE } from '../ui/theme';
 
 interface ProfileCaptureProps {
   onStart: (profile: UserProfile) => void;
@@ -11,10 +12,10 @@ interface ProfileCaptureProps {
 
 const AGES = Array.from({ length: 37 }, (_, i) => String(i + 14));
 
-const MOVILIDAD_OPTS: { id: UserProfile['movilidad']; emoji: string; titulo: string; sub: string }[] = [
-  { id: 'si',   emoji: '✈️', titulo: 'Sí, me mudaría', sub: 'Si encuentro la carrera ideal, sin problema.' },
-  { id: 'no',   emoji: '🏠', titulo: 'Prefiero quedarme', sub: 'Necesito estudiar cerca de donde vivo.' },
-  { id: 'nose', emoji: '🤔', titulo: 'Todavía no lo sé', sub: 'No quiero comprometerte con eso ahora.' },
+const MOVILIDAD_OPTS: { id: UserProfile['movilidad']; icon: LucideIcon; titulo: string; sub: string }[] = [
+  { id: 'si',   icon: Plane,      titulo: 'Sí, me mudaría',      sub: 'Si encuentro la carrera ideal, sin problema.' },
+  { id: 'no',   icon: House,      titulo: 'Prefiero quedarme',   sub: 'Necesito estudiar cerca de donde vivo.' },
+  { id: 'nose', icon: HelpCircle, titulo: 'Todavía no lo sé',    sub: 'No quiero comprometerme con eso ahora.' },
 ];
 
 type Step = 'datos' | 'movilidad';
@@ -50,28 +51,28 @@ export default function ProfileCapture({ onStart }: ProfileCaptureProps) {
   };
 
   const variants = {
-    enter: (dir: number) => ({ x: dir > 0 ? 40 : -40, opacity: 0 }),
+    enter: (dir: number) => ({ x: dir > 0 ? 28 : -28, opacity: 0 }),
     center: { x: 0, opacity: 1 },
-    exit: (dir: number) => ({ x: dir > 0 ? -40 : 40, opacity: 0 }),
+    exit: (dir: number) => ({ x: dir > 0 ? -28 : 28, opacity: 0 }),
   };
 
   return (
-    <div className="min-h-screen bg-[#F8FAFC] flex flex-col items-center justify-center px-5 py-12">
+    <div className="min-h-screen bg-paper flex flex-col items-center justify-center px-5 py-12">
       <div className="w-full max-w-md">
-        <div className="flex items-center gap-2.5 mb-10 text-[#07111F]">
-          <LogoIcon size={26} />
-          <span className="font-display font-bold text-[15px] text-slate-900 tracking-tight">Vocaria</span>
+        <div className="flex items-center gap-2.5 mb-9 text-ink">
+          <LogoIcon size={24} />
+          <span className="font-display font-bold text-[15px] tracking-tight">Vocaria</span>
         </div>
 
-        {/* Progress */}
-        <div className="flex gap-1.5 mb-8">
-          <div className={`h-1 rounded-full flex-1 transition-all duration-300 ${step === 'datos' ? 'bg-brand-lime' : 'bg-brand-lime/40'}`} />
-          <div className={`h-1 rounded-full flex-1 transition-all duration-300 ${step === 'movilidad' ? 'bg-brand-lime' : 'bg-slate-200'}`} />
+        {/* Progreso del onboarding */}
+        <div className="flex gap-1.5 mb-9">
+          <div className={`h-[5px] rounded-full flex-1 transition-all duration-400 ${step === 'datos' ? 'bg-clay' : 'bg-clay/40'}`} />
+          <div className={`h-[5px] rounded-full flex-1 transition-all duration-400 ${step === 'movilidad' ? 'bg-clay' : 'bg-line'}`} />
         </div>
 
         <AnimatePresence mode="wait" custom={direction}>
 
-          {/* Step 1: Datos personales (todo en una pantalla) */}
+          {/* Paso 1: Datos */}
           {step === 'datos' && (
             <motion.div
               key="datos"
@@ -80,19 +81,16 @@ export default function ProfileCapture({ onStart }: ProfileCaptureProps) {
               initial="enter"
               animate="center"
               exit="exit"
-              transition={{ duration: 0.28, ease: [0.16, 1, 0.3, 1] }}
+              transition={{ duration: 0.3, ease: EASE }}
             >
-              <h1 className="font-display font-black text-[28px] sm:text-[34px] text-slate-900 leading-tight tracking-tight mb-2">
-                Antes de empezar,
-                <br />
-                contanos <span className="underline decoration-brand-lime decoration-[3px] underline-offset-[4px]">sobre vos</span>
+              <h1 className="font-serif font-semibold text-[31px] sm:text-[37px] text-ink leading-[1.1] tracking-[-0.01em] mb-3">
+                Antes de empezar,<br />contanos sobre vos
               </h1>
-              <p className="text-slate-500 text-sm font-medium leading-relaxed mb-7">
-                Sin spam. Tu resultado llegará a tu mail.
+              <p className="text-ink/55 text-[14px] font-medium leading-relaxed mb-8">
+                Sin spam. Tu resultado va a llegar a tu mail.
               </p>
 
               <div className="space-y-4">
-                {/* Nombre */}
                 <div>
                   <label className={LABEL}>Nombre</label>
                   <input
@@ -105,7 +103,6 @@ export default function ProfileCapture({ onStart }: ProfileCaptureProps) {
                   />
                 </div>
 
-                {/* Email */}
                 <div>
                   <label className={LABEL}>Email</label>
                   <input
@@ -117,7 +114,6 @@ export default function ProfileCapture({ onStart }: ProfileCaptureProps) {
                   />
                 </div>
 
-                {/* Edad + Provincia en fila */}
                 <div className="grid grid-cols-2 gap-3">
                   <div>
                     <label className={LABEL}>Edad</label>
@@ -125,14 +121,12 @@ export default function ProfileCapture({ onStart }: ProfileCaptureProps) {
                       <select
                         value={edad}
                         onChange={e => setEdad(e.target.value)}
-                        className={`${INPUT} pr-8 appearance-none cursor-pointer`}
+                        className={`${INPUT} pr-9 appearance-none cursor-pointer`}
                       >
                         <option value="">--</option>
-                        {AGES.map(a => (
-                          <option key={a} value={a}>{a} años</option>
-                        ))}
+                        {AGES.map(a => <option key={a} value={a}>{a} años</option>)}
                       </select>
-                      <ChevronRight size={14} className="absolute right-3 top-1/2 -translate-y-1/2 text-slate-400 rotate-90 pointer-events-none" />
+                      <ChevronDown size={15} className="absolute right-3 top-1/2 -translate-y-1/2 text-ink/40 pointer-events-none" />
                     </div>
                   </div>
 
@@ -142,37 +136,39 @@ export default function ProfileCapture({ onStart }: ProfileCaptureProps) {
                       <select
                         value={provinciaId}
                         onChange={e => setProvinciaId(e.target.value)}
-                        className={`${INPUT} pr-8 appearance-none cursor-pointer`}
+                        className={`${INPUT} pr-9 appearance-none cursor-pointer`}
                       >
                         <option value="">--</option>
-                        {PROVINCIAS.map(p => (
-                          <option key={p.id} value={p.id}>{p.label}</option>
-                        ))}
+                        {PROVINCIAS.map(p => <option key={p.id} value={p.id}>{p.label}</option>)}
                       </select>
-                      <ChevronRight size={14} className="absolute right-3 top-1/2 -translate-y-1/2 text-slate-400 rotate-90 pointer-events-none" />
+                      <ChevronDown size={15} className="absolute right-3 top-1/2 -translate-y-1/2 text-ink/40 pointer-events-none" />
                     </div>
                   </div>
                 </div>
 
-                {error && <p className="text-red-500 text-[13px] font-medium">{error}</p>}
+                {error && <p className="text-clay-deep text-[13px] font-semibold">{error}</p>}
 
                 <button
                   onClick={handleDatosNext}
-                  className={`w-full py-4 text-[15px] mt-1 ${CTA_PRIMARY}`}
+                  className={`w-full py-4 text-[15px] mt-1 flex items-center justify-center gap-2 ${CTA_PRIMARY}`}
                 >
-                  Continuar →
+                  Continuar
+                  <ArrowRight size={17} strokeWidth={2.5} />
                 </button>
               </div>
 
-              <div className="flex items-center gap-4 mt-6">
+              <div className="flex items-center gap-3 mt-6 flex-wrap">
                 {['~12 min', 'Sin respuestas correctas', 'Resultado gratis'].map(t => (
-                  <span key={t} className="text-[11px] text-slate-400 font-medium">{t}</span>
+                  <span key={t} className="text-[11px] text-ink/40 font-medium flex items-center gap-1.5">
+                    <span className="w-1 h-1 rounded-full bg-clay/60" />
+                    {t}
+                  </span>
                 ))}
               </div>
             </motion.div>
           )}
 
-          {/* Step 2: Movilidad */}
+          {/* Paso 2: Movilidad */}
           {step === 'movilidad' && (
             <motion.div
               key="movilidad"
@@ -181,37 +177,42 @@ export default function ProfileCapture({ onStart }: ProfileCaptureProps) {
               initial="enter"
               animate="center"
               exit="exit"
-              transition={{ duration: 0.28, ease: [0.16, 1, 0.3, 1] }}
+              transition={{ duration: 0.3, ease: EASE }}
             >
-              <h1 className="font-display font-black text-[26px] sm:text-[30px] text-slate-900 leading-tight tracking-tight mb-2">
-                ¿Estarías dispuesto/a a
-                <span className="underline decoration-brand-lime decoration-[3px] underline-offset-[4px]"> mudarte para estudiar?</span>
+              <h1 className="font-serif font-semibold text-[28px] sm:text-[33px] text-ink leading-[1.12] tracking-[-0.01em] mb-3">
+                ¿Estarías dispuesto/a a mudarte para estudiar?
               </h1>
-              <p className="text-slate-500 text-sm font-medium mb-7">
+              <p className="text-ink/55 text-[14px] font-medium mb-8 leading-relaxed">
                 Lo usamos para recomendarte universidades accesibles para vos.
               </p>
 
-              <div className="space-y-3 mb-6">
-                {MOVILIDAD_OPTS.map(opt => (
-                  <button
-                    key={opt.id}
-                    onClick={() => handleMovilidadSelect(opt.id)}
-                    className={`w-full text-left px-5 py-4 rounded-2xl border transition-all flex items-center gap-4 active:scale-[0.99] ${OPTION_IDLE}`}
-                  >
-                    <span className="text-2xl shrink-0">{opt.emoji}</span>
-                    <div>
-                      <p className="font-display font-bold text-[14px] text-slate-900">{opt.titulo}</p>
-                      <p className="text-[12px] text-slate-500 font-medium mt-0.5">{opt.sub}</p>
-                    </div>
-                  </button>
-                ))}
+              <div className="space-y-3 mb-7">
+                {MOVILIDAD_OPTS.map(opt => {
+                  const Icon = opt.icon;
+                  return (
+                    <button
+                      key={opt.id}
+                      onClick={() => handleMovilidadSelect(opt.id)}
+                      className={`w-full text-left px-5 py-4 rounded-[20px] border transition-all duration-200 flex items-center gap-4 active:scale-[0.99] ${OPTION_IDLE}`}
+                    >
+                      <span className="shrink-0 w-11 h-11 rounded-2xl bg-clay-soft text-clay-deep flex items-center justify-center">
+                        <Icon size={20} strokeWidth={1.9} />
+                      </span>
+                      <div>
+                        <p className="font-display font-bold text-[14.5px] text-ink">{opt.titulo}</p>
+                        <p className="text-[12.5px] text-ink/55 font-medium mt-0.5">{opt.sub}</p>
+                      </div>
+                    </button>
+                  );
+                })}
               </div>
 
               <button
                 onClick={() => { setDirection(-1); setStep('datos'); }}
-                className="text-slate-400 hover:text-slate-700 text-[13px] font-medium font-display transition-colors"
+                className="text-ink/40 hover:text-ink text-[13px] font-medium font-display transition-colors flex items-center gap-1"
               >
-                ← Anterior
+                <ChevronLeft size={15} strokeWidth={2.4} />
+                Anterior
               </button>
             </motion.div>
           )}

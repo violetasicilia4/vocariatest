@@ -1,72 +1,80 @@
 /**
- * Tokens de UI del flujo del test — derivados del design system del HOME
- * (fuente de verdad). Tema CLARO: fondos claros, cards blancas, texto slate,
- * acento lime para CTAs y avance, dark #07111F para selección (igual que la
- * muestra de test del home).
+ * Tokens de UI del flujo del test — sistema "Editorial Calm".
  *
- * Reglas:
- *  - CTA de avance  → pill lime (como el hero/CTA del home).
- *  - Opción elegida → fondo dark #07111F + texto blanco (como MuestraTest).
- *  - Cards          → blancas, borde slate-200, sombra azulada sutil.
- *  - Tipografía     → font-display (Plus Jakarta) en títulos/labels.
+ * Objetivo: que el test se sienta humano, premium, cálido y confiable —
+ * NO una startup tech/fintech. Se evoluciona el design system del home
+ * (manteniendo el logo y la marca) hacia una identidad propia, más editorial
+ * y orientada al autodescubrimiento.
+ *
+ * Reglas del sistema:
+ *  - Fondo         → papel cálido (#F6F3EC), no el gris frío anterior.
+ *  - Titulares     → serif (Fraunces): editorial, humano, legible en preguntas largas.
+ *  - UI / cuerpo   → sans (Plus Jakarta / Inter).
+ *  - Acento        → arcilla (#C45D3A) desaturado, usado con moderación
+ *                    (progreso, detalles, checks). Nunca grandes superficies saturadas.
+ *  - CTA primario  → pill tinta (ink) con texto papel: decisivo, calmo, Apple-like.
+ *  - Selección     → fill tinta + texto papel: feedback claro sin agresividad cromática.
+ *  - Cards         → blanco cálido, borde hairline cálido, sombra suave neutra.
  */
 
-/** Fondo base de las pantallas del test (gris muy claro, como FAQ/MuestraTest del home). */
-export const PAGE_BG = 'bg-[#F8FAFC]';
+/** Fondo base de las pantallas del test (papel cálido). */
+export const PAGE_BG = 'bg-paper';
 
-/** Marca dark de Vocaria, usada para texto fuerte y superficies de selección. */
-export const INK = '#07111F';
+/** Tinta cálida de marca para el test: texto fuerte y superficies de selección. */
+export const INK = '#1c1a16';
+/** Acento arcilla (warm clay) — progreso, detalles, micro-feedback. */
+export const CLAY = '#c45d3a';
 
-/** Sombra azulada sutil para cards en reposo (igual que las cards del home). */
-export const CARD_SHADOW = '0 4px 24px rgba(30,60,100,0.06)';
-/** Sombra azulada elevada (cards destacadas / modales). */
-export const CARD_SHADOW_LG = '0 12px 40px rgba(30,60,100,0.12)';
-/** Sombra del CTA lime (igual que el CTA de cierre del home). */
-export const LIME_SHADOW = '0 10px 28px rgba(213,255,63,0.30)';
+/** Sombra suave para cards en reposo (neutra cálida, sin tinte azul). */
+export const CARD_SHADOW = '0 1px 2px rgba(28,26,22,0.04), 0 8px 28px rgba(28,26,22,0.05)';
+/** Sombra elevada (cards destacadas / overlays). */
+export const CARD_SHADOW_LG = '0 12px 44px rgba(28,26,22,0.12)';
 
-/** CTA primario de avance: pill lime sobre dark. */
+/** CTA primario de avance: pill tinta sobre papel. */
 export const CTA_PRIMARY =
-  'bg-brand-lime text-[#07111F] font-display font-black tracking-wide rounded-full ' +
-  'hover:brightness-105 hover:scale-[1.01] active:scale-[0.98] ' +
-  'transition-[transform,filter,box-shadow] duration-200 ' +
-  'shadow-[0_10px_28px_rgba(213,255,63,0.30)] ' +
-  'focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#07111F]/25';
+  'bg-ink text-paper font-display font-bold tracking-tight rounded-full ' +
+  'hover:bg-[#2a2722] active:scale-[0.985] ' +
+  'transition-[transform,background-color] duration-200 ease-out ' +
+  'shadow-[0_8px_24px_rgba(28,26,22,0.16)] ' +
+  'focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-clay/40 focus-visible:ring-offset-2 focus-visible:ring-offset-paper';
 
-/** CTA secundario dark (alternativa, como el botón oscuro del home). */
+/** CTA secundario (outline cálido, sobre papel). */
 export const CTA_DARK =
-  'bg-[#07111F] text-white font-display font-black tracking-wide rounded-full ' +
-  'hover:bg-brand-lime hover:text-[#07111F] active:scale-[0.97] ' +
-  'transition-[background-color,color,transform] duration-200 ' +
-  'shadow-[0_8px_24px_rgba(5,8,22,0.18)] ' +
-  'focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#07111F]/25';
+  'bg-paper-raised text-ink border border-line-strong font-display font-bold tracking-tight rounded-full ' +
+  'hover:border-ink hover:bg-white active:scale-[0.985] ' +
+  'transition-[transform,background-color,border-color] duration-200 ease-out ' +
+  'focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-clay/40';
 
-/** Card blanca estándar. */
+/** Card estándar (blanco cálido). */
 export const CARD =
-  'bg-white border border-slate-200 rounded-[20px]';
+  'bg-paper-raised border border-line rounded-[22px]';
 
-/** Opción NO seleccionada (card blanca interactiva). */
+/** Opción NO seleccionada (card interactiva). */
 export const OPTION_IDLE =
-  'bg-white border border-slate-200 text-slate-700 ' +
-  'hover:border-slate-400 hover:bg-slate-50';
+  'bg-paper-raised border border-line text-ink/80 ' +
+  'hover:border-line-strong hover:bg-white';
 
-/** Opción seleccionada (dark, como la muestra de test del home). */
+/** Opción seleccionada (fill tinta). */
 export const OPTION_ACTIVE =
-  'bg-[#07111F] border-[#07111F] text-white shadow-[0_8px_24px_rgba(5,8,22,0.18)]';
+  'bg-ink border-ink text-paper shadow-[0_8px_24px_rgba(28,26,22,0.18)]';
 
 /** Opción deshabilitada. */
 export const OPTION_DISABLED =
-  'bg-slate-50 border-slate-100 text-slate-300 cursor-not-allowed';
+  'bg-[#efeae0] border-[#efeae0] text-ink/25 cursor-not-allowed';
 
 /** Input de formulario. */
 export const INPUT =
-  'w-full px-4 py-3.5 rounded-xl bg-white border border-slate-200 text-slate-900 ' +
-  'placeholder:text-slate-400 font-display text-sm transition-all ' +
-  'focus:outline-none focus:border-[#07111F] focus:ring-2 focus:ring-[#07111F]/10';
+  'w-full px-4 py-3.5 rounded-2xl bg-paper-raised border border-line text-ink ' +
+  'placeholder:text-ink/35 font-display text-[15px] transition-all ' +
+  'focus:outline-none focus:border-ink focus:ring-2 focus:ring-clay/15';
 
 /** Label de formulario (eyebrow uppercase). */
 export const LABEL =
-  'block text-slate-500 text-[11px] font-semibold mb-1.5 tracking-widest uppercase';
+  'block text-ink/45 text-[11px] font-bold mb-1.5 tracking-[0.12em] uppercase';
 
 /** Foco visible accesible para elementos interactivos sin estilo propio. */
 export const FOCUS_RING =
-  'focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#07111F]/25 focus-visible:ring-offset-2 focus-visible:ring-offset-[#F8FAFC]';
+  'focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-clay/40 focus-visible:ring-offset-2 focus-visible:ring-offset-paper';
+
+/** Curva de easing premium compartida (Apple/Linear-like). */
+export const EASE = [0.22, 1, 0.36, 1] as const;

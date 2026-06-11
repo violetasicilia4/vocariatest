@@ -1,13 +1,26 @@
-@import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@900&family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,500;9..144,600;9..144,700&family=Montserrat:wght@900&family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap');
 @import "tailwindcss";
 
 @theme {
   --font-sans: "Inter", ui-sans-serif, system-ui, sans-serif;
   --font-display: "Plus Jakarta Sans", "Inter", sans-serif;
+  --font-serif: "Fraunces", Georgia, "Times New Roman", serif;
   --font-mono: "JetBrains Mono", ui-monospace, monospace;
   --color-brand-lime: #d5ff3f; /* Precise high-fidelity lime yellow from the screenshots */
   --color-brand-sky: #258ef9; /* Precise bright sky blue from the screenshots */
   --color-brand-dark: #0e1118; /* Dark charcoal/navy color used in screenshots */
+
+  /* ── Test flow · "Editorial Calm" palette ──────────────────────────────
+     Warm, human, premium — deliberately not startup/fintech. Warm paper +
+     warm ink, with a single restrained clay accent for progress/selection. */
+  --color-paper: #f6f3ec;       /* warm bone — screen background */
+  --color-paper-raised: #fffdf9; /* card surface (warm white) */
+  --color-ink: #1c1a16;         /* warm near-black — text & selection fills */
+  --color-clay: #c45d3a;        /* restrained warm accent — progress, highlights */
+  --color-clay-deep: #a84d2e;   /* clay pressed/hover */
+  --color-clay-soft: #f1e3d9;   /* clay wash */
+  --color-line: #e8e1d4;        /* warm hairline border */
+  --color-line-strong: #d8cfbd; /* warm border, emphasized */
 }
 
 /* Custom easing curves */

@@ -21,26 +21,24 @@ export default function EmailCapture({ onStart }: EmailCaptureProps) {
   };
 
   return (
-    <div className="min-h-screen bg-[#F8FAFC] flex flex-col items-center justify-center px-5 py-12">
+    <div className="min-h-screen bg-paper flex flex-col items-center justify-center px-5 py-12">
       <motion.div
         initial={{ opacity: 0, y: 24 }}
         animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.5, ease: [0.16, 1, 0.3, 1] }}
+        transition={{ duration: 0.5, ease: [0.22, 1, 0.36, 1] }}
         className="w-full max-w-md"
       >
         {/* Logo */}
-        <div className="flex items-center gap-2.5 mb-10 text-[#07111F]">
-          <LogoIcon size={26} />
-          <span className="font-display font-bold text-[15px] text-slate-900 tracking-tight">Vocaria</span>
+        <div className="flex items-center gap-2.5 mb-9 text-ink">
+          <LogoIcon size={24} />
+          <span className="font-display font-bold text-[15px] tracking-tight">Vocaria</span>
         </div>
 
         {/* Headline */}
-        <h1 className="font-display font-black text-[30px] sm:text-[36px] text-slate-900 leading-tight tracking-tight mb-3">
-          Antes de empezar,
-          <br />
-          ¿<span className="underline decoration-brand-lime decoration-[3px] underline-offset-[4px]">cómo te llamás?</span>
+        <h1 className="font-serif font-semibold text-[30px] sm:text-[36px] text-ink leading-[1.1] tracking-[-0.01em] mb-3">
+          Antes de empezar, ¿cómo te llamás?
         </h1>
-        <p className="text-slate-500 text-sm font-medium leading-relaxed mb-8">
+        <p className="text-ink/55 text-[14px] font-medium leading-relaxed mb-8">
           Guardamos tu progreso y te enviamos el resultado al mail. Sin spam, prometido.
         </p>
 
@@ -69,21 +67,24 @@ export default function EmailCapture({ onStart }: EmailCaptureProps) {
           </div>
 
           {error && (
-            <p className="text-red-500 text-[13px] font-medium">{error}</p>
+            <p className="text-clay-deep text-[13px] font-semibold">{error}</p>
           )}
 
           <button
             type="submit"
             className={`w-full py-4 text-[15px] mt-2 ${CTA_PRIMARY}`}
           >
-            Empezar el test →
+            Empezar el test
           </button>
         </form>
 
         {/* Trust */}
-        <div className="flex items-center gap-4 mt-6">
+        <div className="flex items-center gap-3 mt-6 flex-wrap">
           {['~12 min', 'Sin respuestas correctas', 'Resultado gratis'].map(t => (
-            <span key={t} className="text-[11px] text-slate-400 font-medium">{t}</span>
+            <span key={t} className="text-[11px] text-ink/40 font-medium flex items-center gap-1.5">
+              <span className="w-1 h-1 rounded-full bg-clay/60" />
+              {t}
+            </span>
           ))}
         </div>
       </motion.div>
