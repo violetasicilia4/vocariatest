@@ -1,13 +1,15 @@
 ═══════════════════════════════════════════════════════════
-CASOS DE PRUEBA — FLUJO COMPLETO — 2026-06-10
+CASOS DE PRUEBA — FLUJO COMPLETO — 2026-06-11
 ═══════════════════════════════════════════════════════════
 
 ■ Valentina (17, GBA)
   Quiere trabajar ayudando personas de cerca. Empática, paciente, odia la matemática.
   ─────────────────────────────────────────────────────
-  Preguntas: 18 núcleo + 0 duelos = 18
-  Resultado: sanador (99)  ·  catalizador (82)  ·  anfitrion (81)
-  Confianza: 83%  ⚠ 1 advertencia(s)
+  Preguntas: 18 núcleo + 3 duelos = 21
+  Duelos elegidos: ayuda, equipo, elogio
+  Disputa al entrar: sanador 99 vs catalizador 82
+  Resultado: sanador (100)  ·  anfitrion (92)  ·  catalizador (85)
+  Confianza: 75%  ⚠ 1 advertencia(s)
   Carreras (top 5 de 9):
     ★ Licenciado en Obstetricia  [fit 89, 5 univ. en su provincia]
     · Licenciado en Enfermería  [fit 85, 1 univ. en su provincia]
@@ -19,14 +21,14 @@ CASOS DE PRUEBA — FLUJO COMPLETO — 2026-06-10
   De taller: arregla motos, arma cosas. Práctico, concreto, odia exponerse y vender.
   ─────────────────────────────────────────────────────
   Preguntas: 18 núcleo + 0 duelos = 18
-  Resultado: constructor (92)  ·  custodio (54)  ·  arquitecto (41)
+  Resultado: constructor (92)  ·  custodio (51)  ·  arquitecto (42)
   Confianza: 94%  ⚠ 1 advertencia(s)
   Carreras (top 5 de 9):
     ★ Ingeniero Civil  [fit 96, 1 univ. en su provincia]
     · Ingeniero Mecánico  [fit 96, 2 univ. en su provincia]
     · Ingeniero Electromecánico  [fit 96, 1 univ. en su provincia]
+    · Ingeniero Agrónomo  [fit 87, 1 univ. en su provincia]
     · Técnico/a Universitario/a en Jardinería y Floricultura  [fit 87, 1 univ. en su provincia]
-    · Ingeniero Industrial  [fit 84, 1 univ. en su provincia]
 
 ■ Julieta (18, CABA)
   Creativa: dibuja, escribe, hace videos. Necesita expresarse, alérgica a la rutina.
@@ -48,9 +50,9 @@ CASOS DE PRUEBA — FLUJO COMPLETO — 2026-06-10
   ─────────────────────────────────────────────────────
   Preguntas: 18 núcleo + 3 duelos = 21
   Duelos elegidos: lectura, rechazo, entorno
-  Disputa al entrar: interprete 93 vs descubridor 86
-  Resultado: interprete (100)  ·  descubridor (86)  ·  arquitecto (81)
-  Confianza: 80%  ⚠ 1 advertencia(s)
+  Disputa al entrar: interprete 93 vs descubridor 84
+  Resultado: interprete (100)  ·  descubridor (84)  ·  arquitecto (77)
+  Confianza: 81%  ⚠ 1 advertencia(s)
   Carreras (top 5 de 9):
     ★ Licenciado/a en Ciencias de Datos  [fit 96, 1 univ. en su provincia]
     · Ingeniero/a en Inteligencia Artificial  [fit 96, 1 univ. en su provincia]
@@ -61,9 +63,11 @@ CASOS DE PRUEBA — FLUJO COMPLETO — 2026-06-10
 ■ Martina (22, Mendoza)
   Organiza todo: el centro de estudiantes, los viajes, las campañas. Energía social y de mando.
   ─────────────────────────────────────────────────────
-  Preguntas: 18 núcleo + 0 duelos = 18
-  Resultado: orquestador (97)  ·  anfitrion (79)  ·  catalizador (78)
-  Confianza: 78%  ⚠ 1 advertencia(s)
+  Preguntas: 18 núcleo + 5 duelos = 23
+  Duelos elegidos: equipo, ayuda, elogio, legado, exito
+  Disputa al entrar: orquestador 97 vs anfitrion 80
+  Resultado: orquestador (100)  ·  catalizador (90)  ·  anfitrion (83)
+  Confianza: 72%  ⚠ 1 advertencia(s)
   Carreras (top 5 de 9):
     ★ Licenciado en Recursos Humanos  [fit 93, 6 univ. en su provincia]
     · Licenciado en Gestión de Recursos Humanos  [fit 93, 6 univ. en su provincia]
@@ -74,36 +78,40 @@ CASOS DE PRUEBA — FLUJO COMPLETO — 2026-06-10
 ■ Nico (18, Misiones)
   Ama el monte, los animales, estar afuera. Tranquilo, constante, piensa a largo plazo.
   ─────────────────────────────────────────────────────
-  Preguntas: 18 núcleo + 0 duelos = 18
-  Resultado: custodio (91)  ·  catalizador (72)  ·  sanador (69)
-  Confianza: 77%  ⚠ 1 advertencia(s)
+  Preguntas: 18 núcleo + 5 duelos = 23
+  Duelos elegidos: ayuda, finde, rechazo, legado, lunes
+  Disputa al entrar: custodio 91 vs catalizador 72
+  Resultado: custodio (100)  ·  constructor (84)  ·  catalizador (72)
+  Confianza: 78%  ⚠ 1 advertencia(s)
   Carreras (top 5 de 9):
     ★ Técnico Universitario en Producción Agropecuaria  [fit 96, 1 univ. en su provincia]
-    · Licenciado en Obstetricia  [fit 90, 1 univ. en su provincia]
-    · Licenciado en Psicología  [fit 89, 1 univ. en su provincia]
     · Licenciado/a en Ciencias Ambientales  [fit 84, 1 univ. en su provincia]
     · Licenciado en Bromatología  [fit 81, sin univ. en su provincia]
+    · Ingeniero Electromecánico  [fit 75, 1 univ. en su provincia]
+    · Ingeniero/a Mecatrónico/a  [fit 75, 1 univ. en su provincia]
 
 ■ Agustina (17, Tucumán) — caso AMBIGUO
   Le gusta todo un poco: ciencia, gente, crear. Perfil genuinamente indefinido.
   ─────────────────────────────────────────────────────
   Preguntas: 18 núcleo + 5 duelos = 23
   Duelos elegidos: exito, elogio, lectura, entorno, rechazo
-  Disputa al entrar: sanador 87 vs descubridor 87
-  Resultado: descubridor (100)  ·  sanador (87)  ·  catalizador (67)
-  Confianza: 72%  ⚠ 1 advertencia(s)
+  Disputa al entrar: descubridor 87 vs sanador 80
+  Resultado: descubridor (100)  ·  sanador (80)  ·  catalizador (67)
+  Confianza: 77%  ⚠ 1 advertencia(s)
   Carreras (top 5 de 9):
     ★ Bioquímico/a  [fit 86, 1 univ. en su provincia]
     · Farmacéutico/a  [fit 86, 1 univ. en su provincia]
     · Licenciado/a en Física  [fit 85, 1 univ. en su provincia]
+    · Licenciado en Psicología  [fit 85, 1 univ. en su provincia]
     · Psicólogo  [fit 85, 1 univ. en su provincia]
-    · Licenciado/a en Ciencias Biológicas  [fit 80, 1 univ. en su provincia]
 
 ■ Lautaro (19, Chaco) — caso CAÓTICO
   Respondió rápido y contradictorio (autonomía total + estructura total, social + solitario).
   ─────────────────────────────────────────────────────
-  Preguntas: 18 núcleo + 0 duelos = 18
-  Resultado: orquestador (56)  ·  custodio (40)  ·  constructor (34)
+  Preguntas: 18 núcleo + 5 duelos = 23
+  Duelos elegidos: equipo, lectura, legado, decision, ayuda
+  Disputa al entrar: orquestador 38 vs custodio 36
+  Resultado: orquestador (38)  ·  custodio (36)  ·  constructor (34)
   Confianza: 45%  ⚠ 1 advertencia(s)
   Carreras (top 5 de 9):
     ★ Licenciado en Relaciones Públicas e Institucionales  [fit 63, 1 univ. en su provincia]
@@ -120,6 +128,6 @@ CRUCE ENTRE CASOS
   Rango de confianza: 45%–94%
 
   Solapamiento de carreras entre pares de casos (de 8-9 recomendadas):
-    Promedio general: 0.3 carreras en común por par de casos
+    Promedio general: 0.2 carreras en común por par de casos
 
 ═══════════════════════════════════════════════════════════

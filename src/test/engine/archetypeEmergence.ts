@@ -240,19 +240,23 @@ const ARCHETYPE_RULES: ArchetypeRule[] = [
 // ---------------------------------------------------------------------------
 
 /**
- * Valor de señal en escala de percentil poblacional (0-100).
- * Los umbrales de las reglas se interpretan en esta escala: threshold 70
- * significa "top 30% de la población en esa señal", igual para todas.
- * Sin esta transformación los umbrales absolutos eran inalcanzables para
- * algunas señales (p.ej. empatia_funcional rara vez supera 40) y triviales
- * para otras, lo que sesgaba estructuralmente el motor.
+ * Ancho de la rampa de los umbrales. Antes los umbrales eran acantilados
+ * (signal > threshold: todo o nada): una señal que cruzaba el umbral por 1
+ * punto encendía de golpe toda su contribución, y cambiar UNA respuesta
+ * podía dar vuelta el arquetipo. Con la rampa, la contribución entra
+ * gradualmente entre (threshold - W) y (threshold + W): 0 abajo, 50% en el
+ * umbral, 100% arriba. Misma semántica en promedio, sin discontinuidades.
  */
+const SOFT_WIDTH = 12;
+
 function getSignalValue(v: VectorVocacional, signal: keyof VectorVocacional): number {
   return signalPercentile(signal, v[signal] as number);
 }
 
-function conditionMet(v: VectorVocacional, cond: SignalCondition): boolean {
-  return getSignalValue(v, cond.signal) > cond.threshold;
+/** Grado de cumplimiento de una condición: 0-1 con rampa alrededor del umbral. */
+function conditionFactor(v: VectorVocacional, cond: SignalCondition): number {
+  const value = getSignalValue(v, cond.signal);
+  return Math.max(0, Math.min(1, (value - cond.threshold + SOFT_WIDTH) / (2 * SOFT_WIDTH)));
 }
 
 export function emergerArquetipos(v: VectorVocacional): ArquetipoEmergencia[] {
@@ -264,8 +268,9 @@ export function emergerArquetipos(v: VectorVocacional): ArquetipoEmergencia[] {
     let primaryWeightTotal = 0;
     for (const cond of rule.primary) {
       primaryWeightTotal += cond.weight;
-      if (conditionMet(v, cond)) {
-        primaryWeightedSum += (getSignalValue(v, cond.signal) * cond.weight) / 100;
+      const factor = conditionFactor(v, cond);
+      if (factor > 0) {
+        primaryWeightedSum += (factor * getSignalValue(v, cond.signal) * cond.weight) / 100;
       }
     }
     const primaryScore = primaryWeightTotal > 0 ? primaryWeightedSum / primaryWeightTotal : 0;
@@ -275,8 +280,9 @@ export function emergerArquetipos(v: VectorVocacional): ArquetipoEmergencia[] {
     let secondaryWeightTotal = 0;
     for (const cond of rule.secondary) {
       secondaryWeightTotal += cond.weight;
-      if (conditionMet(v, cond)) {
-        secondaryWeightedSum += (getSignalValue(v, cond.signal) * cond.weight) / 100;
+      const factor = conditionFactor(v, cond);
+      if (factor > 0) {
+        secondaryWeightedSum += (factor * getSignalValue(v, cond.signal) * cond.weight) / 100;
       }
     }
     const secondaryScore = secondaryWeightTotal > 0 ? secondaryWeightedSum / secondaryWeightTotal : 0;
@@ -284,15 +290,15 @@ export function emergerArquetipos(v: VectorVocacional): ArquetipoEmergencia[] {
     // Combine
     let emergenciaRaw = primaryScore * 0.7 + secondaryScore * 0.3;
 
-    // NOT_IF penalties
+    // NOT_IF penalties — también con rampa, para evitar saltos
     if (rule.notIf) {
       for (const notIf of rule.notIf) {
         const val = getSignalValue(v, notIf.signal);
-        const violated = notIf.direction === 'lt'
-          ? val < notIf.threshold
-          : val > notIf.threshold;
-        if (violated) {
-          emergenciaRaw *= (1 - notIf.penalty);
+        const grado = notIf.direction === 'lt'
+          ? Math.max(0, Math.min(1, (notIf.threshold + SOFT_WIDTH - val) / (2 * SOFT_WIDTH)))
+          : Math.max(0, Math.min(1, (val - notIf.threshold + SOFT_WIDTH) / (2 * SOFT_WIDTH)));
+        if (grado > 0) {
+          emergenciaRaw *= (1 - notIf.penalty * grado);
         }
       }
     }
