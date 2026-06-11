@@ -21,15 +21,15 @@ export default function ProgressBar({ current, total, bloque }: ProgressBarProps
     <div className="w-full">
       <div className="flex items-center justify-between mb-2">
         {bloque && (
-          <span className="text-[11px] font-semibold text-white/40 tracking-widest uppercase">
+          <span className="text-[11px] font-semibold text-slate-400 tracking-widest uppercase">
             {bloqueLabel[bloque] ?? bloque}
           </span>
         )}
-        <span className="ml-auto text-[11px] font-mono text-white/30">
+        <span className="ml-auto text-[11px] font-mono text-slate-400">
           {current}/{total}
         </span>
       </div>
-      <div className="h-[3px] w-full rounded-full bg-white/10 overflow-hidden">
+      <div className="h-[4px] w-full rounded-full bg-slate-200 overflow-hidden">
         <motion.div
           className="h-full rounded-full bg-brand-lime"
           initial={{ width: 0 }}

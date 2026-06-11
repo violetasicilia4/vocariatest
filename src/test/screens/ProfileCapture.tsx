@@ -3,6 +3,7 @@ import { motion, AnimatePresence } from 'motion/react';
 import { ChevronRight } from 'lucide-react';
 import LogoIcon from '../../components/ui/LogoIcon';
 import { type UserProfile, PROVINCIAS } from '../data/profile';
+import { INPUT, LABEL, CTA_PRIMARY, OPTION_IDLE } from '../ui/theme';
 
 interface ProfileCaptureProps {
   onStart: (profile: UserProfile) => void;
@@ -55,17 +56,17 @@ export default function ProfileCapture({ onStart }: ProfileCaptureProps) {
   };
 
   return (
-    <div className="min-h-screen bg-[#07111F] flex flex-col items-center justify-center px-5 py-12">
+    <div className="min-h-screen bg-[#F8FAFC] flex flex-col items-center justify-center px-5 py-12">
       <div className="w-full max-w-md">
-        <div className="flex items-center gap-2.5 mb-10">
+        <div className="flex items-center gap-2.5 mb-10 text-[#07111F]">
           <LogoIcon size={26} />
-          <span className="font-display font-bold text-[15px] text-white tracking-tight">Vocaria</span>
+          <span className="font-display font-bold text-[15px] text-slate-900 tracking-tight">Vocaria</span>
         </div>
 
         {/* Progress */}
         <div className="flex gap-1.5 mb-8">
           <div className={`h-1 rounded-full flex-1 transition-all duration-300 ${step === 'datos' ? 'bg-brand-lime' : 'bg-brand-lime/40'}`} />
-          <div className={`h-1 rounded-full flex-1 transition-all duration-300 ${step === 'movilidad' ? 'bg-brand-lime' : 'bg-white/10'}`} />
+          <div className={`h-1 rounded-full flex-1 transition-all duration-300 ${step === 'movilidad' ? 'bg-brand-lime' : 'bg-slate-200'}`} />
         </div>
 
         <AnimatePresence mode="wait" custom={direction}>
@@ -81,85 +82,83 @@ export default function ProfileCapture({ onStart }: ProfileCaptureProps) {
               exit="exit"
               transition={{ duration: 0.28, ease: [0.16, 1, 0.3, 1] }}
             >
-              <h1 className="font-display font-black text-[28px] sm:text-[34px] text-white leading-tight tracking-tight mb-2">
+              <h1 className="font-display font-black text-[28px] sm:text-[34px] text-slate-900 leading-tight tracking-tight mb-2">
                 Antes de empezar,
                 <br />
-                <span className="text-brand-lime">contanos sobre vos</span>
+                contanos <span className="underline decoration-brand-lime decoration-[3px] underline-offset-[4px]">sobre vos</span>
               </h1>
-              <p className="text-white/40 text-sm font-medium leading-relaxed mb-7">
+              <p className="text-slate-500 text-sm font-medium leading-relaxed mb-7">
                 Sin spam. Tu resultado llegará a tu mail.
               </p>
 
               <div className="space-y-4">
                 {/* Nombre */}
                 <div>
-                  <label className="block text-white/50 text-[11px] font-semibold mb-1.5 tracking-widest uppercase">Nombre</label>
+                  <label className={LABEL}>Nombre</label>
                   <input
                     type="text"
                     placeholder="Ej: Martina"
                     value={nombre}
                     onChange={e => setNombre(e.target.value)}
-                    className="w-full px-4 py-3.5 rounded-2xl bg-white/8 border border-white/12 text-white placeholder:text-white/25 font-display text-sm focus:outline-none focus:border-brand-lime/60 focus:bg-white/10 transition-all"
+                    className={INPUT}
                     autoFocus
                   />
                 </div>
 
                 {/* Email */}
                 <div>
-                  <label className="block text-white/50 text-[11px] font-semibold mb-1.5 tracking-widest uppercase">Email</label>
+                  <label className={LABEL}>Email</label>
                   <input
                     type="email"
                     placeholder="tucorreo@email.com"
                     value={email}
                     onChange={e => setEmail(e.target.value)}
-                    className="w-full px-4 py-3.5 rounded-2xl bg-white/8 border border-white/12 text-white placeholder:text-white/25 font-display text-sm focus:outline-none focus:border-brand-lime/60 focus:bg-white/10 transition-all"
+                    className={INPUT}
                   />
                 </div>
 
                 {/* Edad + Provincia en fila */}
                 <div className="grid grid-cols-2 gap-3">
                   <div>
-                    <label className="block text-white/50 text-[11px] font-semibold mb-1.5 tracking-widest uppercase">Edad</label>
+                    <label className={LABEL}>Edad</label>
                     <div className="relative">
                       <select
                         value={edad}
                         onChange={e => setEdad(e.target.value)}
-                        className="w-full px-4 py-3.5 pr-8 rounded-2xl bg-white/8 border border-white/12 text-white font-display text-sm focus:outline-none focus:border-brand-lime/60 appearance-none cursor-pointer"
-                        style={{ colorScheme: 'dark' }}
+                        className={`${INPUT} pr-8 appearance-none cursor-pointer`}
                       >
-                        <option value="" style={{ background: '#07111F' }}>--</option>
+                        <option value="">--</option>
                         {AGES.map(a => (
-                          <option key={a} value={a} style={{ background: '#07111F' }}>{a} años</option>
+                          <option key={a} value={a}>{a} años</option>
                         ))}
                       </select>
-                      <ChevronRight size={14} className="absolute right-3 top-1/2 -translate-y-1/2 text-white/25 rotate-90 pointer-events-none" />
+                      <ChevronRight size={14} className="absolute right-3 top-1/2 -translate-y-1/2 text-slate-400 rotate-90 pointer-events-none" />
                     </div>
                   </div>
 
                   <div>
-                    <label className="block text-white/50 text-[11px] font-semibold mb-1.5 tracking-widest uppercase">Provincia</label>
+                    <label className={LABEL}>Provincia</label>
                     <div className="relative">
                       <select
                         value={provinciaId}
                         onChange={e => setProvinciaId(e.target.value)}
-                        className="w-full px-4 py-3.5 pr-8 rounded-2xl bg-white/8 border border-white/12 text-white font-display text-sm focus:outline-none focus:border-brand-lime/60 appearance-none cursor-pointer"
-                        style={{ colorScheme: 'dark' }}
+                        className={`${INPUT} pr-8 appearance-none cursor-pointer`}
                       >
-                        <option value="" style={{ background: '#07111F' }}>--</option>
+                        <option value="">--</option>
                         {PROVINCIAS.map(p => (
-                          <option key={p.id} value={p.id} style={{ background: '#07111F' }}>{p.label}</option>
+                          <option key={p.id} value={p.id}>{p.label}</option>
                         ))}
                       </select>
-                      <ChevronRight size={14} className="absolute right-3 top-1/2 -translate-y-1/2 text-white/25 rotate-90 pointer-events-none" />
+                      <ChevronRight size={14} className="absolute right-3 top-1/2 -translate-y-1/2 text-slate-400 rotate-90 pointer-events-none" />
                     </div>
                   </div>
                 </div>
 
-                {error && <p className="text-red-400 text-[13px] font-medium">{error}</p>}
+                {error && <p className="text-red-500 text-[13px] font-medium">{error}</p>}
 
                 <button
                   onClick={handleDatosNext}
-                  className="w-full py-4 rounded-2xl bg-brand-lime text-slate-950 font-display font-black text-[15px] tracking-wide hover:brightness-105 active:scale-[0.98] transition-all shadow-[0_8px_32px_rgba(213,255,63,0.25)] mt-1"
+                  className={`w-full py-4 text-[15px] mt-1 ${CTA_PRIMARY}`}
                 >
                   Continuar →
                 </button>
@@ -167,7 +166,7 @@ export default function ProfileCapture({ onStart }: ProfileCaptureProps) {
 
               <div className="flex items-center gap-4 mt-6">
                 {['~12 min', 'Sin respuestas correctas', 'Resultado gratis'].map(t => (
-                  <span key={t} className="text-[11px] text-white/25 font-medium">{t}</span>
+                  <span key={t} className="text-[11px] text-slate-400 font-medium">{t}</span>
                 ))}
               </div>
             </motion.div>
@@ -184,11 +183,11 @@ export default function ProfileCapture({ onStart }: ProfileCaptureProps) {
               exit="exit"
               transition={{ duration: 0.28, ease: [0.16, 1, 0.3, 1] }}
             >
-              <h1 className="font-display font-black text-[26px] sm:text-[30px] text-white leading-tight tracking-tight mb-2">
+              <h1 className="font-display font-black text-[26px] sm:text-[30px] text-slate-900 leading-tight tracking-tight mb-2">
                 ¿Estarías dispuesto/a a
-                <span className="text-brand-lime"> mudarte para estudiar?</span>
+                <span className="underline decoration-brand-lime decoration-[3px] underline-offset-[4px]"> mudarte para estudiar?</span>
               </h1>
-              <p className="text-white/40 text-sm font-medium mb-7">
+              <p className="text-slate-500 text-sm font-medium mb-7">
                 Lo usamos para recomendarte universidades accesibles para vos.
               </p>
 
@@ -197,12 +196,12 @@ export default function ProfileCapture({ onStart }: ProfileCaptureProps) {
                   <button
                     key={opt.id}
                     onClick={() => handleMovilidadSelect(opt.id)}
-                    className="w-full text-left px-5 py-4 rounded-2xl border border-white/10 bg-white/5 hover:border-white/25 hover:bg-white/8 transition-all flex items-center gap-4 active:scale-[0.99]"
+                    className={`w-full text-left px-5 py-4 rounded-2xl border transition-all flex items-center gap-4 active:scale-[0.99] ${OPTION_IDLE}`}
                   >
                     <span className="text-2xl shrink-0">{opt.emoji}</span>
                     <div>
-                      <p className="font-display font-bold text-[14px] text-white">{opt.titulo}</p>
-                      <p className="text-[12px] text-white/40 font-medium mt-0.5">{opt.sub}</p>
+                      <p className="font-display font-bold text-[14px] text-slate-900">{opt.titulo}</p>
+                      <p className="text-[12px] text-slate-500 font-medium mt-0.5">{opt.sub}</p>
                     </div>
                   </button>
                 ))}
@@ -210,7 +209,7 @@ export default function ProfileCapture({ onStart }: ProfileCaptureProps) {
 
               <button
                 onClick={() => { setDirection(-1); setStep('datos'); }}
-                className="text-white/30 hover:text-white/60 text-[13px] font-medium font-display transition-colors"
+                className="text-slate-400 hover:text-slate-700 text-[13px] font-medium font-display transition-colors"
               >
                 ← Anterior
               </button>

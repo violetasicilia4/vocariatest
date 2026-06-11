@@ -76,13 +76,13 @@ export default function TestRunner({ nombre, profile, onComplete }: TestRunnerPr
   };
 
   return (
-    <div className="min-h-screen bg-[#07111F] flex flex-col">
-      <div className="flex items-center justify-between px-5 py-4 border-b border-white/6">
-        <div className="flex items-center gap-2">
+    <div className="min-h-screen bg-[#F8FAFC] flex flex-col">
+      <div className="flex items-center justify-between px-5 py-4 border-b border-slate-200 bg-white/70 backdrop-blur-md sticky top-0 z-10">
+        <div className="flex items-center gap-2 text-[#07111F]">
           <LogoIcon size={22} />
-          <span className="font-display font-bold text-[13px] text-white/60 tracking-tight">Vocaria</span>
+          <span className="font-display font-bold text-[13px] text-slate-700 tracking-tight">Vocaria</span>
         </div>
-        <span className="text-[12px] text-white/30 font-medium font-display">
+        <span className="text-[12px] text-slate-400 font-medium font-display">
           {nombre && `Hola, ${nombre.split(' ')[0]}`}
         </span>
       </div>
@@ -105,7 +105,7 @@ export default function TestRunner({ nombre, profile, onComplete }: TestRunnerPr
             {currentQuestion && (
               <>
                 {HOOKS[currentIndex] && (
-                  <p className="text-[11px] text-brand-lime/70 font-semibold tracking-widest uppercase mb-4">
+                  <p className="text-[11px] text-brand-sky font-bold tracking-widest uppercase mb-4">
                     {HOOKS[currentIndex]}
                   </p>
                 )}
@@ -121,10 +121,10 @@ export default function TestRunner({ nombre, profile, onComplete }: TestRunnerPr
       </div>
 
       {currentIndex > 0 && (
-        <div className="px-5 pb-6 flex justify-start">
+        <div className="px-5 pb-6 flex justify-start max-w-xl mx-auto w-full">
           <button
             onClick={handleBack}
-            className="text-white/30 hover:text-white/60 text-[13px] font-medium font-display transition-colors flex items-center gap-1.5"
+            className="text-slate-400 hover:text-slate-700 text-[13px] font-medium font-display transition-colors flex items-center gap-1.5"
           >
             ← Anterior
           </button>
