@@ -46,11 +46,11 @@ export default function TestFlow({ onExit }: TestFlowProps) {
   }, []);
 
   return (
-    <div className="fixed inset-0 z-[100] bg-[#07111F] overflow-y-auto">
+    <div className="fixed inset-0 z-[100] bg-[#F8FAFC] overflow-y-auto">
       {step === 'profile' && (
         <button
           onClick={onExit}
-          className="fixed top-4 right-4 z-[110] text-white/30 hover:text-white/60 text-[13px] font-medium font-display transition-colors"
+          className="fixed top-4 right-4 z-[110] text-slate-400 hover:text-slate-700 text-[13px] font-medium font-display transition-colors"
           aria-label="Cerrar"
         >
           ✕

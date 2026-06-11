@@ -28,7 +28,7 @@ export default function ProcessingScreen({ nombre, onDone }: ProcessingScreenPro
   }, [onDone]);
 
   return (
-    <div className="min-h-screen bg-[#07111F] flex flex-col items-center justify-center px-5">
+    <div className="min-h-screen bg-[#F8FAFC] flex flex-col items-center justify-center px-5">
       {/* Animated orb */}
       <div className="relative mb-12">
         <motion.div
@@ -48,7 +48,7 @@ export default function ProcessingScreen({ nombre, onDone }: ProcessingScreenPro
         />
       </div>
 
-      <h2 className="font-display font-black text-[22px] text-white text-center mb-4 tracking-tight">
+      <h2 className="font-display font-black text-[22px] text-slate-900 text-center mb-4 tracking-tight">
         {nombre ? `Calculando tu perfil, ${nombre.split(' ')[0]}...` : 'Calculando tu perfil...'}
       </h2>
 
@@ -60,7 +60,7 @@ export default function ProcessingScreen({ nombre, onDone }: ProcessingScreenPro
             animate={{ opacity: 1, y: 0 }}
             exit={{ opacity: 0, y: -10 }}
             transition={{ duration: 0.35 }}
-            className="text-white/40 text-[14px] font-medium text-center"
+            className="text-slate-500 text-[14px] font-medium text-center"
           >
             {STEPS[stepIndex]}
           </motion.p>
@@ -72,8 +72,8 @@ export default function ProcessingScreen({ nombre, onDone }: ProcessingScreenPro
         {STEPS.map((_, i) => (
           <motion.div
             key={i}
-            className="h-1.5 rounded-full bg-white/20"
-            animate={{ width: i <= stepIndex ? 24 : 8, backgroundColor: i <= stepIndex ? '#d5ff3f' : 'rgba(255,255,255,0.15)' }}
+            className="h-1.5 rounded-full"
+            animate={{ width: i <= stepIndex ? 24 : 8, backgroundColor: i <= stepIndex ? '#d5ff3f' : '#e2e8f0' }}
             transition={{ duration: 0.4 }}
           />
         ))}

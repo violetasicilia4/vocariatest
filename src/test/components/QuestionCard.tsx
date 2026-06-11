@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'motion/react';
 import type { Question } from '../data/questions';
+import { CTA_PRIMARY, OPTION_IDLE, OPTION_ACTIVE, OPTION_DISABLED } from '../ui/theme';
 
 interface QuestionCardProps {
   question: Question;
@@ -49,11 +50,11 @@ export default function QuestionCard({ question, onAnswer, currentAnswer }: Ques
   return (
     <div className="w-full">
       <div className="mb-6 sm:mb-8">
-        <p className="font-display font-bold text-[18px] sm:text-[22px] text-white leading-snug tracking-tight">
+        <p className="font-display font-bold text-[19px] sm:text-[23px] text-slate-900 leading-snug tracking-tight">
           {question.enunciado}
         </p>
         {question.subtext && (
-          <p className="mt-2 text-[13px] text-white/40 font-medium leading-relaxed">
+          <p className="mt-2 text-[13px] text-slate-500 font-medium leading-relaxed">
             {question.subtext}
           </p>
         )}
@@ -120,22 +121,21 @@ function ScaleOptions({
   return (
     <div>
       <div className="flex justify-between mb-3 px-1">
-        <span className="text-[11px] text-white/35 font-medium max-w-[40%] leading-tight">{anchors[0]}</span>
-        <span className="text-[11px] text-white/35 font-medium max-w-[40%] text-right leading-tight">{anchors[1]}</span>
+        <span className="text-[11px] text-slate-400 font-medium max-w-[40%] leading-tight">{anchors[0]}</span>
+        <span className="text-[11px] text-slate-400 font-medium max-w-[40%] text-right leading-tight">{anchors[1]}</span>
       </div>
       <div className="flex gap-2 sm:gap-3 justify-between mb-6">
-        {opciones.map((op, i) => {
+        {opciones.map(op => {
           const active = selected === op.id;
-          const size = i === 0 || i === opciones.length - 1 ? 'sm' : 'md';
-          void size;
           return (
             <button
               key={op.id}
               onClick={() => onSelect(op.id)}
-              className={`flex-1 aspect-square rounded-xl font-display font-bold text-sm transition-all duration-150 flex items-center justify-center
+              aria-pressed={active}
+              className={`flex-1 aspect-square rounded-2xl font-display font-bold text-sm transition-all duration-150 flex items-center justify-center border
                 ${active
-                  ? 'bg-brand-lime text-slate-950 scale-105 shadow-[0_0_20px_rgba(213,255,63,0.3)]'
-                  : 'bg-white/8 text-white/50 hover:bg-white/14 hover:text-white border border-white/10'
+                  ? 'bg-[#07111F] text-white border-[#07111F] scale-105 shadow-[0_8px_24px_rgba(5,8,22,0.18)]'
+                  : 'bg-white text-slate-500 border-slate-200 hover:border-slate-400 hover:text-slate-700'
                 }`}
             >
               {op.id}
@@ -150,7 +150,7 @@ function ScaleOptions({
             animate={{ opacity: 1, y: 0 }}
             exit={{ opacity: 0 }}
             onClick={onConfirm}
-            className="w-full py-3.5 rounded-2xl bg-brand-lime text-slate-950 font-display font-black text-sm tracking-wide hover:brightness-105 active:scale-[0.98] transition-all"
+            className={`w-full py-3.5 text-sm ${CTA_PRIMARY}`}
           >
             Siguiente →
           </motion.button>
@@ -177,14 +177,12 @@ function VisualOptions({
           <button
             key={op.id}
             onClick={() => onSelect(op.id)}
+            aria-pressed={active}
             className={`relative flex flex-col items-center justify-center gap-2 p-4 rounded-2xl border transition-all duration-150 text-center active:scale-[0.98]
-              ${active
-                ? 'border-brand-lime bg-brand-lime/12 shadow-[0_0_20px_rgba(213,255,63,0.15)]'
-                : 'border-white/10 bg-white/5 hover:border-white/25 hover:bg-white/8'
-              }`}
+              ${active ? OPTION_ACTIVE : OPTION_IDLE}`}
           >
             <span className="text-3xl">{op.emoji}</span>
-            <span className={`font-display text-[12px] font-semibold leading-snug ${active ? 'text-white' : 'text-white/60'}`}>
+            <span className={`font-display text-[12px] font-semibold leading-snug ${active ? 'text-white' : 'text-slate-600'}`}>
               {op.texto}
             </span>
             {active && (
@@ -194,7 +192,7 @@ function VisualOptions({
                 initial={{ scale: 0 }}
                 animate={{ scale: 1 }}
               >
-                <span className="text-slate-950 text-[9px] font-black">✓</span>
+                <span className="text-[#07111F] text-[9px] font-black">✓</span>
               </motion.div>
             )}
           </button>
@@ -221,14 +219,12 @@ function PairsOptions({
           <button
             key={op.id}
             onClick={() => onSelect(op.id)}
+            aria-pressed={active}
             className={`w-full flex items-center gap-4 px-5 py-5 rounded-2xl border transition-all duration-150 text-left active:scale-[0.99]
-              ${active
-                ? 'border-brand-lime/60 bg-brand-lime/10 shadow-[0_0_24px_rgba(213,255,63,0.12)]'
-                : 'border-white/10 bg-white/5 hover:border-white/25 hover:bg-white/8'
-              }`}
+              ${active ? OPTION_ACTIVE : OPTION_IDLE}`}
           >
             <span className="text-4xl shrink-0">{op.emoji}</span>
-            <span className={`font-display font-bold text-[15px] leading-snug ${active ? 'text-white' : 'text-white/75'}`}>
+            <span className={`font-display font-bold text-[15px] leading-snug ${active ? 'text-white' : 'text-slate-800'}`}>
               {op.texto}
             </span>
           </button>
@@ -263,12 +259,9 @@ function MultiSelectOptions({
               key={op.id}
               onClick={() => onToggle(op.id)}
               disabled={disabled}
+              aria-pressed={active}
               className={`px-4 py-2.5 rounded-xl font-display text-[13px] font-semibold transition-all border ${
-                active
-                  ? 'bg-brand-lime text-slate-950 border-brand-lime shadow-[0_0_16px_rgba(213,255,63,0.2)]'
-                  : disabled
-                  ? 'bg-white/3 text-white/20 border-white/8 cursor-not-allowed'
-                  : 'bg-white/6 text-white/65 border-white/10 hover:border-white/30 hover:bg-white/10'
+                active ? OPTION_ACTIVE : disabled ? OPTION_DISABLED : OPTION_IDLE
               }`}
             >
               {op.texto}
@@ -278,7 +271,7 @@ function MultiSelectOptions({
       </div>
 
       <div className="flex items-center gap-4">
-        <span className="text-[12px] text-white/35 font-medium font-display">
+        <span className="text-[12px] text-slate-400 font-medium font-display whitespace-nowrap">
           {count}/{maxSelect} elegidos
         </span>
         <AnimatePresence>
@@ -288,7 +281,7 @@ function MultiSelectOptions({
               animate={{ opacity: 1, x: 0 }}
               exit={{ opacity: 0 }}
               onClick={onConfirm}
-              className="flex-1 py-3.5 rounded-2xl bg-brand-lime text-slate-950 font-display font-black text-sm tracking-wide hover:brightness-105 active:scale-[0.98] transition-all"
+              className={`flex-1 py-3.5 text-sm ${CTA_PRIMARY}`}
             >
               Siguiente →
             </motion.button>
@@ -316,15 +309,13 @@ function ChoiceOptions({
           <button
             key={op.id}
             onClick={() => onSelect(op.id)}
+            aria-pressed={active}
             className={`w-full text-left px-4 py-3.5 rounded-2xl border font-display text-[14px] font-medium transition-all duration-150 flex items-start gap-3 active:scale-[0.99]
-              ${active
-                ? 'bg-brand-lime text-slate-950 border-brand-lime shadow-[0_0_20px_rgba(213,255,63,0.2)]'
-                : 'bg-white/5 text-white/80 border-white/10 hover:border-white/30 hover:bg-white/10'
-              }`}
+              ${active ? OPTION_ACTIVE : OPTION_IDLE}`}
           >
             <span
               className={`shrink-0 w-6 h-6 rounded-full flex items-center justify-center font-mono text-[11px] font-bold mt-0.5
-                ${active ? 'bg-slate-900/20 text-slate-900' : 'bg-white/10 text-white/40'}`}
+                ${active ? 'bg-brand-lime text-[#07111F]' : 'bg-slate-100 text-slate-400'}`}
             >
               {op.id}
             </span>
