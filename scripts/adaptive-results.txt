@@ -1,27 +1,28 @@
 ═══════════════════════════════════════════════════════════
-VALIDACIÓN FASE ADAPTATIVA — 2026-06-10
+VALIDACIÓN FASE ADAPTATIVA — 2026-06-11
 ═══════════════════════════════════════════════════════════
 
 1) ACTIVACIÓN
 ───────────────────────────────────────────────────────────
-  Usuarios que reciben fase adaptativa: 42.8%
-  Duelos promedio cuando se activa: 4.1 preguntas
-  Largo del test: 18 preguntas (57.2% de usuarios) / 22 (42.8%)
+  Usuarios que reciben fase adaptativa: 53.2%
+  Duelos promedio cuando se activa: 4.3 preguntas
+  Largo del test: 18 preguntas (46.8% de usuarios) / 22 (53.2%)
 
 2) PRECISIÓN (usuarios tipo puro con ruido, verdad conocida)
 ───────────────────────────────────────────────────────────
-  Arquetipo correcto SIN fase adaptativa: 70.1%
-  Arquetipo correcto CON fase adaptativa: 79.7%
+  Arquetipo correcto SIN fase adaptativa: 71.3%
+  Arquetipo correcto CON fase adaptativa: 81.3%
 
 3) RESOLUCIÓN DE LA DISPUTA (solo usuarios con fase adaptativa)
 ───────────────────────────────────────────────────────────
-  Brecha top1-top2:  6.5 → 11.6 puntos
-  Confianza:         53.1% → 61.1%
-  La fase adaptativa cambió el arquetipo primario en: 31.2% de los casos activados
+  Brecha top1-top2:  8.3 → 12.6 puntos
+  Confianza:         52.9% → 60.1%
+  La fase adaptativa cambió el arquetipo primario en: 27.9% de los casos activados
 
 4) SENSIBILIDAD (cambiar UNA respuesta núcleo, 2.000 muestras)
 ───────────────────────────────────────────────────────────
-  Cambia el arquetipo SIN adaptativa: 21.9%
-  Cambia el arquetipo CON adaptativa: 21.3%
+  Cambia el arquetipo SIN adaptativa: 21.1%
+  Cambia el arquetipo CON adaptativa: 21.5%
+  CON adaptativa, solo usuarios con perfil real: 14.0%
 
 ═══════════════════════════════════════════════════════════

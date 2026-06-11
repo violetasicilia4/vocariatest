@@ -811,7 +811,7 @@ export const CARRERAS_DB: CarreraEntry[] = [
     id: "licenciado_en_gesti_n_ambiental",
     titulo: "Licenciado en Gestión Ambiental",
     macroArea: "Administración y Negocios",
-    familia: "Administración, gestión y negocios",
+    familia: "Ambiente, biodiversidad y recursos naturales",
     universidades: [
     { nombre: "Universidad Autónoma de Entre Ríos", provincia: "Entre Ríos", web: "http://fcyt.uader.edu.ar/web", duracion: "4 años" },
     { nombre: "Universidad Blas Pascal", provincia: "Córdoba", web: "http://www.ubp.edu.ar/", duracion: "4 años" },
@@ -937,7 +937,7 @@ export const CARRERAS_DB: CarreraEntry[] = [
     id: "dise_ador_industrial",
     titulo: "Diseñador Industrial",
     macroArea: "Ingeniería Industrial y Producción",
-    familia: "Industrial, procesos y logística",
+    familia: "Diseño gráfico, industrial y digital",
     universidades: [
     { nombre: "Universidad Católica de Salta", provincia: "Salta", web: "http://www.ucasal.net", duracion: "4 años" },
     { nombre: "Universidad de Buenos Aires", provincia: "Buenos Aires", web: "https://www.cbc.uba.ar/", duracion: "6 años" },
@@ -1099,7 +1099,7 @@ export const CARRERAS_DB: CarreraEntry[] = [
     id: "licenciado_en_dise_o_industrial",
     titulo: "Licenciado en Diseño Industrial",
     macroArea: "Ingeniería Industrial y Producción",
-    familia: "Industrial, procesos y logística",
+    familia: "Diseño gráfico, industrial y digital",
     universidades: [
     { nombre: "Universidad Argentina de la Empresa", provincia: "Ciudad Autonoma de Buenos Aires", web: "www.uade.edu.ar", duracion: "4 años" },
     { nombre: "Universidad Católica de Santa Fe", provincia: "Santa Fé", web: "http://www.ucsf.edu.ar/", duracion: "5 años" },
@@ -1279,7 +1279,7 @@ export const CARRERAS_DB: CarreraEntry[] = [
     id: "ingeniero_ambiental",
     titulo: "Ingeniero Ambiental",
     macroArea: "Ingeniería y Tecnología",
-    familia: "Ingenierías generales",
+    familia: "Ambiente, biodiversidad y recursos naturales",
     universidades: [
     { nombre: "Pontificia Universidad Católica Argentina Santa María de los Buenos Aires", provincia: "Ciudad Autonoma de Buenos Aires", web: "http://uca.edu.ar/es/facultades/facultad-de-ingenieria-y-ciencias-agrarias", duracion: "5 años" },
     { nombre: "Universidad Católica de La Plata", provincia: "Buenos Aires", web: "www.ucalp.edu.ar", duracion: "5 años" },
@@ -1545,7 +1545,7 @@ export const CARRERAS_DB: CarreraEntry[] = [
     id: "licenciado_en_psicolog_a_2",
     titulo: "Licenciado en Psicología",
     macroArea: "Medicina y Salud",
-    familia: "Técnicas y servicios de salud",
+    familia: "Psicología",
     universidades: [
     { nombre: "Universidad Argentina de la Empresa", provincia: "Ciudad Autonoma de Buenos Aires", web: "www.uade.edu.ar", duracion: "4 años" },
     { nombre: "Universidad Católica de Córdoba", provincia: "Córdoba", web: "www.ucc.edu.ar", duracion: "5 años" },
@@ -2373,7 +2373,7 @@ export const CARRERAS_DB: CarreraEntry[] = [
     id: "licenciado_en_turismo_3",
     titulo: "Licenciado en Turismo",
     macroArea: "Humanidades, Filosofía y Religión",
-    familia: "Filosofía, historia y humanidades",
+    familia: "Turismo, hotelería y gastronomía",
     universidades: [
     { nombre: "Universidad Nacional de Cuyo", provincia: "Mendoza", web: "www.ffyl.uncuyo.edu.ar", duracion: "4 años" },
     { nombre: "Universidad Nacional de Jujuy", provincia: "Jujuy", web: "http://www.fhycs.unju.edu.ar/", duracion: "4 años" },
@@ -2578,7 +2578,7 @@ export const CARRERAS_DB: CarreraEntry[] = [
     id: "licenciado_en_gesti_n_ambiental_md",
     titulo: "Licenciado en Gestión Ambiental - MD",
     macroArea: "Administración y Negocios",
-    familia: "Administración, gestión y negocios",
+    familia: "Ambiente, biodiversidad y recursos naturales",
     universidades: [
     { nombre: "Universidad Blas Pascal", provincia: "Córdoba", web: "http://www.ubp.edu.ar/", duracion: "4 años" },
     { nombre: "Universidad CAECE", provincia: "Ciudad Autonoma de Buenos Aires", web: "www.ucaece.edu.ar", duracion: "4 años" },
@@ -3295,7 +3295,7 @@ export const CARRERAS_DB: CarreraEntry[] = [
     id: "licenciado_a_en_enfermer_a_2",
     titulo: "Licenciado/a en Enfermería",
     macroArea: "Seguridad, Criminalística y Defensa",
-    familia: "Seguridad, criminalística y fuerzas",
+    familia: "Enfermería",
     universidades: [
     { nombre: "Instituto Universitario de la Policía Federal Argentina", provincia: "Ciudad Autonoma de Buenos Aires", web: "www.iupfa.edu.ar", duracion: "5 años" },
     { nombre: "Universidad de la Defensa Nacional", provincia: "Buenos Aires", web: "https://fe.undef.edu.ar/cmn-colegio-militar-de-la-nacion/", duracion: "4 años" },
@@ -3798,7 +3798,7 @@ export const CARRERAS_DB: CarreraEntry[] = [
     id: "ingeniero_agr_nomo_2",
     titulo: "Ingeniero Agrónomo",
     macroArea: "Veterinaria",
-    familia: "Veterinaria y salud animal",
+    familia: "Agronomía, agro y producción",
     universidades: [
     { nombre: "Universidad de Ciencias Empresariales y Sociales", provincia: "Buenos Aires", web: "www.uces.edu.ar", duracion: "4.5 años" },
     { nombre: "Universidad Nacional de Río Cuarto", provincia: "Córdoba", web: "www.unrc.edu.ar, www.ayv.unrc.edu.ar", duracion: "5 años" }
@@ -3828,7 +3828,7 @@ export const CARRERAS_DB: CarreraEntry[] = [
     id: "ingeniero_aeron_utico",
     titulo: "Ingeniero Aeronáutico",
     macroArea: "Seguridad, Criminalística y Defensa",
-    familia: "Seguridad, criminalística y fuerzas",
+    familia: "Mecánica, electromecánica y mecatrónica",
     universidades: [
     { nombre: "Universidad de la Defensa Nacional", provincia: "Córdoba", web: "https://www.iua.edu.ar/", duracion: "5 años" },
     { nombre: "Universidad Tecnológica Nacional", provincia: "Ciudad Autonoma de Buenos Aires", web: "www.frba.utn.edu.ar/", duracion: "5.5 años" }
@@ -3838,7 +3838,7 @@ export const CARRERAS_DB: CarreraEntry[] = [
     id: "ingeniero_electr_nico_2",
     titulo: "Ingeniero Electrónico",
     macroArea: "Seguridad, Criminalística y Defensa",
-    familia: "Seguridad, criminalística y fuerzas",
+    familia: "Electrónica, electricidad y telecomunicaciones",
     universidades: [
     { nombre: "Universidad de la Defensa Nacional", provincia: "Córdoba", web: "https://www.iua.edu.ar/", duracion: "5 años" },
     { nombre: "Universidad de la Defensa Nacional", provincia: "Ciudad Autonoma de Buenos Aires", web: "http://www.fie.undef.edu.ar/", duracion: "5 años" }
@@ -3848,7 +3848,7 @@ export const CARRERAS_DB: CarreraEntry[] = [
     id: "ingeniero_en_inform_tica_3",
     titulo: "Ingeniero en Informática",
     macroArea: "Seguridad, Criminalística y Defensa",
-    familia: "Seguridad, criminalística y fuerzas",
+    familia: "Software, sistemas e informática",
     universidades: [
     { nombre: "Universidad de la Defensa Nacional", provincia: "Córdoba", web: "https://www.iua.edu.ar/", duracion: "5 años" },
     { nombre: "Universidad de la Defensa Nacional", provincia: "Ciudad Autonoma de Buenos Aires", web: "http://www.fie.undef.edu.ar/", duracion: "5 años" }
@@ -3978,7 +3978,7 @@ export const CARRERAS_DB: CarreraEntry[] = [
     id: "licenciado_a_en_dise_o_industrial",
     titulo: "Licenciado/a en Diseño Industrial",
     macroArea: "Ingeniería Industrial y Producción",
-    familia: "Industrial, procesos y logística",
+    familia: "Diseño gráfico, industrial y digital",
     universidades: [
     { nombre: "Universidad Nacional del Litoral", provincia: "Santa Fé", web: "www.fadu.unl.edu.ar", duracion: "4.5 años" },
     { nombre: "Universidad Nacional de Rosario", provincia: "Santa Fé", web: "www.fapyd.unr.edu.ar", duracion: "5 años" }
@@ -4188,7 +4188,7 @@ export const CARRERAS_DB: CarreraEntry[] = [
     id: "licenciado_en_psicolog_a_3",
     titulo: "Licenciado en Psicología",
     macroArea: "Psicología y Comportamiento Humano",
-    familia: "Psicopedagogía",
+    familia: "Psicología",
     universidades: [
     { nombre: "Pontificia Universidad Católica Argentina Santa María de los Buenos Aires", provincia: "Ciudad Autonoma de Buenos Aires", web: "www.uca.edu.ar", duracion: "5 años" },
     { nombre: "Universidad del Salvador", provincia: "Ciudad Autonoma de Buenos Aires", web: "www.usal.edu.ar", duracion: "5 años" }
@@ -4568,7 +4568,7 @@ export const CARRERAS_DB: CarreraEntry[] = [
     id: "t_cnico_en_turismo_rural",
     titulo: "Técnico en Turismo Rural",
     macroArea: "Agropecuarias y Producción Alimentaria",
-    familia: "Agronomía, agro y producción",
+    familia: "Turismo, hotelería y gastronomía",
     universidades: [
     { nombre: "Universidad de Buenos Aires", provincia: "Buenos Aires", web: "https://www.cbc.uba.ar/", duracion: "3 años" },
     { nombre: "Universidad de Buenos Aires", provincia: "Ciudad Autonoma de Buenos Aires", web: "https://www.cbc.uba.ar/", duracion: "3 años" }
@@ -4648,7 +4648,7 @@ export const CARRERAS_DB: CarreraEntry[] = [
     id: "licenciado_en_turismo_4",
     titulo: "Licenciado en Turismo",
     macroArea: "Comunicación y Medios",
-    familia: "Comunicación y medios digitales",
+    familia: "Turismo, hotelería y gastronomía",
     universidades: [
     { nombre: "Universidad de la Marina Mercante", provincia: "Ciudad Autonoma de Buenos Aires", web: "www.udemm.edu.ar", duracion: "4 años" },
     { nombre: "Universidad de Morón", provincia: "Buenos Aires", web: "www.unimoron.edu.ar", duracion: "4 años" }
@@ -4768,7 +4768,7 @@ export const CARRERAS_DB: CarreraEntry[] = [
     id: "t_cnico_universitario_en_producci_n_agro_2",
     titulo: "Técnico Universitario en Producción Agropecuaria",
     macroArea: "Ingeniería Industrial y Producción",
-    familia: "Industrial, procesos y logística",
+    familia: "Agronomía, agro y producción",
     universidades: [
     { nombre: "Pontificia Universidad Católica Argentina Santa María de los Buenos Aires", provincia: "Ciudad Autonoma de Buenos Aires", web: "http://uca.edu.ar/es/facultades/facultad-de-ingenieria-y-ciencias-agrarias", duracion: "2 años" }
     ],
@@ -4786,7 +4786,7 @@ export const CARRERAS_DB: CarreraEntry[] = [
     id: "ingeniero_ambiental_2",
     titulo: "Ingeniero Ambiental",
     macroArea: "Ingeniería Química y de Alimentos",
-    familia: "Química, alimentos y procesos",
+    familia: "Ambiente, biodiversidad y recursos naturales",
     universidades: [
     { nombre: "Pontificia Universidad Católica Argentina Santa María de los Buenos Aires", provincia: "Santa Fé", web: "www.uca.edu.ar/quimicarosario", duracion: "5 años" }
     ],
@@ -4795,7 +4795,7 @@ export const CARRERAS_DB: CarreraEntry[] = [
     id: "licenciado_a_en_dise_o_2",
     titulo: "Licenciado/a en Diseño",
     macroArea: "Ingeniería Química y de Alimentos",
-    familia: "Química, alimentos y procesos",
+    familia: "Diseño gráfico, industrial y digital",
     universidades: [
     { nombre: "Pontificia Universidad Católica Argentina Santa María de los Buenos Aires", provincia: "Santa Fé", web: "www.uca.edu.ar/quimicarosario", duracion: "4 años" }
     ],
@@ -4858,7 +4858,7 @@ export const CARRERAS_DB: CarreraEntry[] = [
     id: "licenciado_en_producci_n_y_gesti_n_agrop",
     titulo: "Licenciado en Producción y Gestión Agropecuaria",
     macroArea: "Ingeniería Industrial y Producción",
-    familia: "Industrial, procesos y logística",
+    familia: "Agronomía, agro y producción",
     universidades: [
     { nombre: "Universidad Argentina de la Empresa", provincia: "Ciudad Autonoma de Buenos Aires", web: "www.uade.edu.ar", duracion: "4 años" }
     ],
@@ -5281,7 +5281,7 @@ export const CARRERAS_DB: CarreraEntry[] = [
     id: "t_cnico_superior_universitario_en_produc",
     titulo: "Técnico Superior Universitario en Producción Agropecuaria",
     macroArea: "Veterinaria",
-    familia: "Veterinaria y salud animal",
+    familia: "Agronomía, agro y producción",
     universidades: [
     { nombre: "Universidad Nacional de La Plata", provincia: "Buenos Aires", web: "www.fcv.unlp.edu.ar", duracion: "3 años" }
     ],
@@ -5344,7 +5344,7 @@ export const CARRERAS_DB: CarreraEntry[] = [
     id: "ingeniero_a_agr_nomo_a_2",
     titulo: "Ingeniero/a Agrónomo/a",
     macroArea: "Veterinaria",
-    familia: "Veterinaria y salud animal",
+    familia: "Agronomía, agro y producción",
     universidades: [
     { nombre: "Universidad Nacional de Tucumán", provincia: "Tucumán", web: "faz.unt.edu.ar", duracion: "5 años" }
     ],
@@ -5389,7 +5389,7 @@ export const CARRERAS_DB: CarreraEntry[] = [
     id: "t_cnico_universitario_en_gesti_n_y_audit",
     titulo: "Técnico Universitario en Gestión y Auditorías Ambientales - MD",
     macroArea: "Contabilidad e Impuestos",
-    familia: "Contabilidad, auditoría e impuestos",
+    familia: "Ambiente, biodiversidad y recursos naturales",
     universidades: [
     { nombre: "Universidad Empresarial Siglo 21", provincia: "Córdoba", web: "www.21.edu.ar", duracion: "2.5 años" }
     ],
@@ -5398,7 +5398,7 @@ export const CARRERAS_DB: CarreraEntry[] = [
     id: "licenciado_en_ciencias_ambientales_2",
     titulo: "Licenciado en Ciencias Ambientales",
     macroArea: "Veterinaria",
-    familia: "Veterinaria y salud animal",
+    familia: "Ambiente, biodiversidad y recursos naturales",
     universidades: [
     { nombre: "Universidad Juan Agustín Maza", provincia: "Mendoza", web: "http://www.umaza.edu.ar", duracion: "4 años" }
     ],
@@ -5731,7 +5731,7 @@ export const CARRERAS_DB: CarreraEntry[] = [
     id: "escribano",
     titulo: "Escribano",
     macroArea: "Gobierno, Política y Relaciones Internacionales",
-    familia: "Gobierno, política y RRII",
+    familia: "Derecho, notariado y bienes",
     universidades: [
     { nombre: "Universidad Católica de Santiago del Estero", provincia: "Santiago Del Estero", web: "http://www.ucse.edu.ar/web/sede_sgo/fcpsj/sc%20fcpsj.htm", duracion: "5 años" }
     ],
@@ -5848,7 +5848,7 @@ export const CARRERAS_DB: CarreraEntry[] = [
     id: "licenciado_en_turismo_5",
     titulo: "Licenciado en Turismo",
     macroArea: "Deportes y Actividad Física",
-    familia: "Educación física y deporte",
+    familia: "Turismo, hotelería y gastronomía",
     universidades: [
     { nombre: "Universidad Metropolitana para la Educación y el Trabajo", provincia: "Ciudad Autonoma de Buenos Aires", web: "www.umet.edu.ar", duracion: "4 años" }
     ],

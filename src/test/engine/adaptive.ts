@@ -18,7 +18,7 @@ export interface RankingEntry {
 }
 
 /** Brecha (en puntos de emergencia) bajo la cual dos arquetipos se consideran en disputa. */
-const CONTESTED_GAP = 15;
+const CONTESTED_GAP = 20;
 /** Máximo de arquetipos en disputa a considerar. */
 const MAX_CONTESTED = 4;
 /** Máximo de preguntas adaptativas por usuario. */
@@ -26,7 +26,7 @@ const MAX_QUESTIONS = 5;
 /**
  * Escala de los puntos de desempate. Con 5 duelos consistentes un arquetipo
  * suma como máximo 8 * 5 * 1.0 = 40 puntos: suficiente para resolver una
- * disputa (gap < 15) pero no para destronar a un ganador claro, que nunca
+ * disputa (gap < 20) pero no para destronar a un ganador claro, que nunca
  * entra en fase adaptativa.
  */
 const ADAPTIVE_SCALE = 1.0;

@@ -240,6 +240,7 @@ out('─────────────────────────
   const sRng = mulberry32(9999);
   const SAMPLE = 2000;
   let flipsSin = 0, flipsCon = 0;
+  let flipsConTyped = 0, typedTrials = 0;
   for (let i = 0; i < SAMPLE; i++) {
     const { core, trueArq } = users[Math.floor(sRng() * users.length)];
     const q = QUESTIONS[Math.floor(sRng() * QUESTIONS.length)];
@@ -257,10 +258,16 @@ out('─────────────────────────
     const aRng2 = mulberry32(1000 + i);
     const conBase = runFullFlow(core, trueArq, aRng1);
     const conMut = runFullFlow(mutated, trueArq, aRng2);
-    if (conBase.final.primario.id !== conMut.final.primario.id) flipsCon++;
+    const flipped = conBase.final.primario.id !== conMut.final.primario.id;
+    if (flipped) flipsCon++;
+    if (trueArq) {
+      typedTrials++;
+      if (flipped) flipsConTyped++;
+    }
   }
   out(`  Cambia el arquetipo SIN adaptativa: ${pct(flipsSin, SAMPLE)}`);
   out(`  Cambia el arquetipo CON adaptativa: ${pct(flipsCon, SAMPLE)}`);
+  out(`  CON adaptativa, solo usuarios con perfil real: ${pct(flipsConTyped, typedTrials)}`);
 }
 out();
 out('═══════════════════════════════════════════════════════════');
