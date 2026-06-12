@@ -1,4 +1,4 @@
-import { useState, useCallback } from 'react';
+import { useState, useCallback, useEffect } from 'react';
 import { AnimatePresence, motion } from 'motion/react';
 import { X } from 'lucide-react';
 import ProfileCapture from './screens/ProfileCapture';
@@ -8,6 +8,7 @@ import ResultPreview from './screens/ResultPreview';
 import CheckoutScreen from './screens/CheckoutScreen';
 import type { ScoringResult } from './engine/scorer';
 import type { UserProfile, PlanId } from './data/profile';
+import { saveTestResult } from '../services/leads';
 
 type Step = 'profile' | 'test' | 'processing' | 'result' | 'checkout';
 
@@ -32,6 +33,23 @@ export default function TestFlow({ onExit }: TestFlowProps) {
     setResult(res);
     setStep('processing');
   }, []);
+
+  // Persiste el resultado completo cuando termina el test (para análisis de
+  // demanda y para poder reconstruir el informe). Best-effort: si falla, se encola.
+  useEffect(() => {
+    if (!result || !profile) return;
+    void saveTestResult({
+      email: profile.email,
+      nombre: profile.nombre,
+      arquetipo_primario: result.primario.nombre,
+      arquetipo_secundario: result.secundario?.nombre ?? null,
+      confianza: result.confianza,
+      preferences: result.preferences as unknown as Record<string, number>,
+      answers,
+    });
+    // Sólo cuando aparece el resultado, no en cada render.
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [result, profile]);
 
   const handleProcessingDone = useCallback(() => {
     setStep('result');

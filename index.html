@@ -3,7 +3,7 @@
 <html lang="es">
   <head>
     <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
 
     <!-- ═══════════════════════════════════════════════
          TITLE & DESCRIPTION
@@ -13,7 +13,7 @@
     <meta name="description" content="Vocaria analiza cómo pensás, qué te motiva y qué contexto tenés para mostrarte carreras que podrían tener sentido para vos. No una etiqueta: un mapa orientado a la realidad de Argentina." />
 
     <!-- Canonical — cambiar por dominio propio cuando esté disponible -->
-    <link rel="canonical" href="https://vocariatest.netlify.app/" />
+    <link rel="canonical" href="https://vocariatest.vercel.app/" />
 
     <!-- Robots -->
     <meta name="robots" content="index, follow" />
@@ -27,12 +27,14 @@
          OPEN GRAPH (Facebook, WhatsApp, LinkedIn)
     ════════════════════════════════════════════════ -->
     <meta property="og:type" content="website" />
-    <meta property="og:url" content="https://vocariatest.netlify.app/" />
+    <meta property="og:url" content="https://vocariatest.vercel.app/" />
     <meta property="og:site_name" content="Vocaria" />
     <meta property="og:title" content="Vocaria — Test vocacional para elegir carrera en Argentina" />
     <meta property="og:description" content="Respondé preguntas sobre cómo pensás y qué te motiva. Vocaria cruza tu perfil con más de 130 carreras argentinas y te muestra las que más sentido podrían tener para vos." />
-    <!-- og:image: reemplazar por /og-image.png real cuando esté disponible (1200x630) -->
-    <meta property="og:image" content="https://vocariatest.netlify.app/favicon.svg" />
+    <meta property="og:image" content="https://vocariatest.vercel.app/og-image.png" />
+    <meta property="og:image:width" content="1200" />
+    <meta property="og:image:height" content="630" />
+    <meta property="og:image:alt" content="Vocaria — Test vocacional para elegir carrera en Argentina" />
     <meta property="og:locale" content="es_AR" />
 
     <!-- ═══════════════════════════════════════════════
@@ -42,7 +44,7 @@
     <meta name="twitter:site" content="@vocaria_ar" />
     <meta name="twitter:title" content="Vocaria — Test vocacional para elegir carrera en Argentina" />
     <meta name="twitter:description" content="No una etiqueta: un mapa. Vocaria cruza cómo pensás con carreras reales de universidades argentinas." />
-    <meta name="twitter:image" content="https://vocariatest.netlify.app/favicon.svg" />
+    <meta name="twitter:image" content="https://vocariatest.vercel.app/og-image.png" />
 
     <!-- ═══════════════════════════════════════════════
          FAVICON
@@ -62,9 +64,9 @@
       "@graph": [
         {
           "@type": "Organization",
-          "@id": "https://vocariatest.netlify.app/#organization",
+          "@id": "https://vocariatest.vercel.app/#organization",
           "name": "Vocaria",
-          "url": "https://vocariatest.netlify.app/",
+          "url": "https://vocariatest.vercel.app/",
           "description": "Test vocacional digital orientado a jóvenes argentinos que están eligiendo carrera o considerando un cambio.",
           "areaServed": {
             "@type": "Country",
@@ -74,9 +76,9 @@
         },
         {
           "@type": "WebApplication",
-          "@id": "https://vocariatest.netlify.app/#app",
+          "@id": "https://vocariatest.vercel.app/#app",
           "name": "Vocaria — Test Vocacional",
-          "url": "https://vocariatest.netlify.app/",
+          "url": "https://vocariatest.vercel.app/",
           "applicationCategory": "EducationalApplication",
           "operatingSystem": "Web",
           "offers": {
@@ -94,11 +96,11 @@
         },
         {
           "@type": "WebPage",
-          "@id": "https://vocariatest.netlify.app/#webpage",
-          "url": "https://vocariatest.netlify.app/",
+          "@id": "https://vocariatest.vercel.app/#webpage",
+          "url": "https://vocariatest.vercel.app/",
           "name": "Vocaria — Test vocacional para elegir carrera en Argentina",
           "description": "Vocaria analiza cómo pensás, qué te motiva y qué contexto tenés para mostrarte carreras que podrían tener sentido para vos.",
-          "isPartOf": { "@id": "https://vocariatest.netlify.app/#organization" },
+          "isPartOf": { "@id": "https://vocariatest.vercel.app/#organization" },
           "inLanguage": "es-AR"
         }
       ]

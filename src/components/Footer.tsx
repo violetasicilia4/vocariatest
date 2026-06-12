@@ -27,13 +27,21 @@ export default function Footer({ onContactClick }: FooterProps) {
           © 2026 Vocaria. Todos los derechos reservados.
         </p>
 
-        {/* Link contacto */}
-        <button
-          onClick={onContactClick}
-          className="text-[11px] font-semibold text-white/40 hover:text-white transition-colors"
-        >
-          Contacto
-        </button>
+        {/* Links */}
+        <div className="flex items-center gap-5">
+          <a
+            href="/privacidad"
+            className="text-[11px] font-semibold text-white/40 hover:text-white transition-colors"
+          >
+            Privacidad
+          </a>
+          <button
+            onClick={onContactClick}
+            className="text-[11px] font-semibold text-white/40 hover:text-white transition-colors"
+          >
+            Contacto
+          </button>
+        </div>
 
       </div>
     </footer>

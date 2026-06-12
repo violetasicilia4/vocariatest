@@ -5,6 +5,8 @@ import type { LucideIcon } from 'lucide-react';
 import LogoIcon from '../../components/ui/LogoIcon';
 import { type UserProfile, PROVINCIAS } from '../data/profile';
 import { INPUT, LABEL, CTA_PRIMARY, OPTION_IDLE, EASE } from '../ui/theme';
+import { TEST_DURATION } from '../../config/copy';
+import { captureLead } from '../../services/leads';
 
 interface ProfileCaptureProps {
   onStart: (profile: UserProfile) => void;
@@ -28,6 +30,7 @@ export default function ProfileCapture({ onStart }: ProfileCaptureProps) {
   const [email, setEmail] = useState('');
   const [edad, setEdad] = useState('');
   const [provinciaId, setProvinciaId] = useState('');
+  const [consent, setConsent] = useState(false);
   const [error, setError] = useState('');
 
   const handleDatosNext = () => {
@@ -35,7 +38,17 @@ export default function ProfileCapture({ onStart }: ProfileCaptureProps) {
     if (!email.includes('@') || !email.includes('.')) { setError('Ingresá un email válido.'); return; }
     if (!edad) { setError('Seleccioná tu edad.'); return; }
     if (!provinciaId) { setError('Seleccioná la provincia donde vivís.'); return; }
+    if (!consent) { setError('Necesitamos tu consentimiento para guardar tus datos.'); return; }
     setError('');
+    // Captura el lead apenas tenemos los datos (no esperamos a que termine el test).
+    void captureLead({
+      email: email.trim().toLowerCase(),
+      nombre: nombre.trim(),
+      source: 'test_start',
+      edad,
+      provincia_id: provinciaId,
+      consent: true,
+    });
     setDirection(1);
     setStep('movilidad');
   };
@@ -146,6 +159,22 @@ export default function ProfileCapture({ onStart }: ProfileCaptureProps) {
                   </div>
                 </div>
 
+                <label className="flex items-start gap-2.5 cursor-pointer pt-1">
+                  <input
+                    type="checkbox"
+                    checked={consent}
+                    onChange={e => setConsent(e.target.checked)}
+                    className="mt-0.5 w-4 h-4 shrink-0 accent-sky-deep cursor-pointer"
+                  />
+                  <span className="text-[12px] text-ink/50 leading-snug">
+                    Acepto que Vocaria use mis datos para darme el resultado y enviármelo por mail.
+                    Ver la{' '}
+                    <a href="/privacidad" target="_blank" rel="noopener noreferrer" className="text-ink/70 font-semibold underline">
+                      política de privacidad
+                    </a>.
+                  </span>
+                </label>
+
                 {error && <p className="text-red-500 text-[13px] font-semibold">{error}</p>}
 
                 <button
@@ -158,7 +187,7 @@ export default function ProfileCapture({ onStart }: ProfileCaptureProps) {
               </div>
 
               <div className="flex items-center gap-3 mt-6 flex-wrap">
-                {['~12 min', 'Sin respuestas correctas', 'Resultado gratis'].map(t => (
+                {[TEST_DURATION, 'Sin respuestas correctas', 'Resultado gratis'].map(t => (
                   <span key={t} className="text-[11px] text-ink/40 font-medium flex items-center gap-1.5">
                     <span className="w-1 h-1 rounded-full bg-brand-sky/60" />
                     {t}

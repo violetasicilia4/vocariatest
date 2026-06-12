@@ -8,7 +8,7 @@ const faqs = [
   },
   {
     pregunta: '¿Cuánto tiempo lleva?',
-    respuesta: 'Entre 5 y 7 minutos. Las preguntas son situacionales y no tienen respuestas correctas.',
+    respuesta: 'Unos 7 minutos. Las preguntas son situacionales y no tienen respuestas correctas.',
   },
   {
     pregunta: '¿El resultado me dice exactamente qué estudiar?',

@@ -10,4 +10,4 @@ Disallow: /node_modules/
 Disallow: /src/
 
 # Sitemap — cambiar dominio cuando esté disponible
-Sitemap: https://vocariatest.netlify.app/sitemap.xml
+Sitemap: https://vocariatest.vercel.app/sitemap.xml

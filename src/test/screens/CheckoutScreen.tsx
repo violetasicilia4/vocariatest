@@ -1,9 +1,11 @@
+import { useState } from 'react';
 import { motion } from 'motion/react';
-import { Check, Lock, FileText, MapPin, TrendingUp, Shield, ChevronLeft, ArrowRight } from 'lucide-react';
+import { Check, Lock, FileText, MapPin, TrendingUp, Shield, ChevronLeft, ArrowRight, CheckCircle2 } from 'lucide-react';
 import type { ScoringResult } from '../engine/scorer';
 import LogoIcon from '../../components/ui/LogoIcon';
 import { PLANES, type PlanId } from '../data/profile';
 import { CARD, CARD_SHADOW, CTA_PRIMARY, EASE } from '../ui/theme';
+import { captureLead } from '../../services/leads';
 
 interface CheckoutScreenProps {
   nombre: string;
@@ -18,8 +20,23 @@ export default function CheckoutScreen({ nombre, email, result, plan, onBack }: 
   const firstName = nombre.split(' ')[0];
   const planData = PLANES[plan];
 
-  const handlePago = () => {
-    alert('Integración con Mercado Pago próximamente. Tu resultado fue guardado.');
+  const [sending, setSending] = useState(false);
+  const [intentSent, setIntentSent] = useState(false);
+
+  // Mercado Pago todavía no está integrado (requiere verificación server-side del
+  // webhook). En lugar de simular un cobro inexistente, registramos la intención
+  // de compra real — eso instrumenta demanda y evita prometer un entregable que aún
+  // no se puede cobrar. El cobro real se conecta cuando exista el backend.
+  const handlePago = async () => {
+    setSending(true);
+    await captureLead({
+      email,
+      nombre,
+      source: 'purchase_intent',
+      consent: true,
+    });
+    setSending(false);
+    setIntentSent(true);
   };
 
   return (
@@ -88,7 +105,7 @@ export default function CheckoutScreen({ nombre, email, result, plan, onBack }: 
         >
           <FileText size={16} className="text-ink/40 shrink-0" />
           <div>
-            <p className="text-[13px] text-ink/50 font-medium">PDF enviado a</p>
+            <p className="text-[13px] text-ink/50 font-medium">Tu informe llegará a</p>
             <p className="text-[13px] text-ink font-bold">{email}</p>
           </div>
         </motion.div>
@@ -115,16 +132,33 @@ export default function CheckoutScreen({ nombre, email, result, plan, onBack }: 
       </div>
 
       <div className="fixed bottom-0 left-0 right-0 px-5 pb-6 pt-6 bg-gradient-to-t from-paper via-paper to-transparent">
-        <button
-          onClick={handlePago}
-          className={`w-full max-w-xl mx-auto flex items-center justify-center gap-2 py-4 text-[16px] ${CTA_PRIMARY}`}
-        >
-          Pagar con Mercado Pago
-          <ArrowRight size={18} strokeWidth={2.5} />
-        </button>
-        <p className="text-center text-[11px] text-ink/40 mt-2.5 font-medium">
-          Acceso inmediato después del pago
-        </p>
+        {intentSent ? (
+          <div className="w-full max-w-xl mx-auto rounded-[20px] border border-sky bg-sky-soft/60 px-5 py-4 flex items-start gap-3">
+            <CheckCircle2 size={20} className="text-sky-deep shrink-0 mt-0.5" />
+            <div>
+              <p className="text-[14px] font-bold text-ink">Te reservamos el lugar, {firstName}.</p>
+              <p className="text-[12.5px] text-ink/60 leading-snug mt-0.5">
+                Estamos habilitando el pago con Mercado Pago. Te escribimos a{' '}
+                <span className="text-ink font-semibold">{email}</span> apenas esté listo
+                tu informe completo, sin costo de reserva.
+              </p>
+            </div>
+          </div>
+        ) : (
+          <>
+            <button
+              onClick={handlePago}
+              disabled={sending}
+              className={`w-full max-w-xl mx-auto flex items-center justify-center gap-2 py-4 text-[16px] disabled:opacity-60 ${CTA_PRIMARY}`}
+            >
+              {sending ? 'Reservando...' : 'Reservar mi informe completo'}
+              {!sending && <ArrowRight size={18} strokeWidth={2.5} />}
+            </button>
+            <p className="text-center text-[11px] text-ink/40 mt-2.5 font-medium">
+              Pago con Mercado Pago en proceso de habilitación · te avisamos al mail
+            </p>
+          </>
+        )}
       </div>
     </div>
   );

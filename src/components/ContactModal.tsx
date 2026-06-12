@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { motion, AnimatePresence } from 'motion/react';
 import { X, CheckCircle2 } from 'lucide-react';
+import { captureLead } from '../services/leads';
 
 interface ContactModalProps {
   isOpen: boolean;
@@ -9,23 +10,31 @@ interface ContactModalProps {
 
 export default function ContactModal({ isOpen, onClose }: ContactModalProps) {
   const [email, setEmail] = useState('');
+  const [consent, setConsent] = useState(false);
+  const [error, setError] = useState('');
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [submitted, setSubmitted] = useState(false);
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!email.trim()) return;
+    if (!consent) { setError('Necesitamos tu consentimiento para guardar tu mail.'); return; }
+    setError('');
 
     setIsSubmitting(true);
-    // Placeholder: acá iría la integración real (ej: Mailchimp, Brevo, etc.)
-    setTimeout(() => {
-      setIsSubmitting(false);
-      setSubmitted(true);
-    }, 1200);
+    await captureLead({
+      email: email.trim().toLowerCase(),
+      source: 'waitlist',
+      consent: true,
+    });
+    setIsSubmitting(false);
+    setSubmitted(true);
   };
 
   const handleClose = () => {
     setEmail('');
+    setConsent(false);
+    setError('');
     setSubmitted(false);
     onClose();
   };
@@ -98,6 +107,25 @@ export default function ContactModal({ isOpen, onClose }: ContactModalProps) {
                       className="w-full bg-slate-50 hover:bg-white focus:bg-white border border-slate-200 focus:border-brand-sky focus:ring-1 focus:ring-brand-sky/20 rounded-xl px-4 py-3 text-sm font-medium text-slate-900 focus:outline-none transition-all placeholder-slate-400"
                     />
                   </div>
+
+                  {/* Consentimiento (Ley 25.326) */}
+                  <label className="flex items-start gap-2.5 cursor-pointer">
+                    <input
+                      type="checkbox"
+                      checked={consent}
+                      onChange={(e) => setConsent(e.target.checked)}
+                      className="mt-0.5 w-4 h-4 shrink-0 accent-[#07111F] cursor-pointer"
+                    />
+                    <span className="text-[11px] text-slate-500 leading-snug">
+                      Acepto que Vocaria guarde mi mail para avisarme cuando el test esté listo.
+                      Ver la{' '}
+                      <a href="/privacidad" target="_blank" rel="noopener noreferrer" className="text-slate-700 font-semibold underline">
+                        política de privacidad
+                      </a>.
+                    </span>
+                  </label>
+
+                  {error && <p className="text-red-500 text-[12px] font-semibold">{error}</p>}
 
                   {/* Botón enviar */}
                   <button

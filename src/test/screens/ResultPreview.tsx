@@ -1,11 +1,113 @@
 import { motion } from 'motion/react';
-import { Lock, Check, Star, Scale, ArrowRight } from 'lucide-react';
+import { Lock, Check, Star, Scale, ArrowRight, Fingerprint } from 'lucide-react';
 import type { ScoringResult } from '../engine/scorer';
+import type { CareerPreferences } from '../engine/preferences';
 import LogoIcon from '../../components/ui/LogoIcon';
 import { getArquetipo, type Arquetipo } from '../data/arquetipos';
 import { iconForEmoji } from '../ui/icons';
 import { PLANES, type PlanId } from '../data/profile';
 import { CARD, CARD_SHADOW, CTA_PRIMARY, CTA_DARK, EASE } from '../ui/theme';
+import { openPrintableReport } from '../report/printableReport';
+import { Download } from 'lucide-react';
+
+// Etiquetas legibles para las dimensiones de preferencia (preferences.ts).
+const PREF_LABELS: Record<keyof CareerPreferences, string> = {
+  personas: 'Trabajar con personas',
+  datos: 'Análisis y datos',
+  objetos: 'Cosas tangibles',
+  ideas: 'Ideas y sistemas',
+  creatividad: 'Expresión creativa',
+  estructura: 'Orden y método',
+  autonomia: 'Autonomía',
+  estabilidad: 'Estabilidad',
+  teoria: 'Lo conceptual',
+  practica: 'Lo práctico',
+  liderazgo: 'Liderar',
+  colaboracion: 'Colaborar en equipo',
+  impactoSocial: 'Impacto social',
+  ingresos: 'Recompensa económica',
+};
+
+function topPreferences(prefs: CareerPreferences, n: number) {
+  return (Object.entries(prefs) as [keyof CareerPreferences, number][])
+    .sort((a, b) => b[1] - a[1])
+    .slice(0, n)
+    .map(([key, value]) => ({ key, label: PREF_LABELS[key], value: Math.round(value) }));
+}
+
+/** Bloque "Tu huella": la tensión más fuerte (texto personalizado por usuario). */
+function HuellaCard({ result }: { result: ScoringResult }) {
+  const tension = [...result.tensiones].sort((a, b) => b.score - a.score)[0];
+  const tops = topPreferences(result.preferences, 3);
+
+  // Si no hay tensión marcada, armamos una frase a partir de lo que más define al perfil.
+  const fallback = tops.length >= 2
+    ? `Lo que más te mueve es ${tops[0].label.toLowerCase()} y ${tops[1].label.toLowerCase()} — eso orienta el tipo de carrera que tiene sentido para vos.`
+    : null;
+
+  if (!tension && !fallback) return null;
+
+  return (
+    <motion.div
+      initial={{ opacity: 0, y: 16 }}
+      animate={{ opacity: 1, y: 0 }}
+      transition={{ duration: 0.5, delay: 0.13, ease: EASE }}
+      className={`${CARD} p-5`}
+      style={{ boxShadow: CARD_SHADOW }}
+    >
+      <div className="flex items-center gap-2.5 mb-3">
+        <span className="w-8 h-8 rounded-full bg-sky-soft flex items-center justify-center">
+          <Fingerprint size={15} strokeWidth={1.9} className="text-sky-deep" />
+        </span>
+        <p className="text-[11px] font-bold text-ink/40 tracking-[0.12em] uppercase">Lo que te hace distinto</p>
+      </div>
+      <p className="text-[14px] text-ink/80 leading-relaxed font-medium">
+        {tension ? tension.mensaje : fallback}
+      </p>
+      {tension && (
+        <p className="text-[12.5px] text-ink/55 leading-relaxed mt-2.5 pt-2.5 border-t border-line">
+          {tension.consejo}
+        </p>
+      )}
+    </motion.div>
+  );
+}
+
+/** Barras de las dimensiones más fuertes — vuelve concreto el claim "37 dimensiones". */
+function PreferencesCard({ prefs }: { prefs: CareerPreferences }) {
+  const tops = topPreferences(prefs, 5);
+  if (tops.length === 0) return null;
+
+  return (
+    <motion.div
+      initial={{ opacity: 0, y: 16 }}
+      animate={{ opacity: 1, y: 0 }}
+      transition={{ duration: 0.5, delay: 0.16, ease: EASE }}
+      className={`${CARD} p-5`}
+      style={{ boxShadow: CARD_SHADOW }}
+    >
+      <p className="text-[11px] font-bold text-ink/40 tracking-[0.12em] uppercase mb-4">Tu perfil en detalle</p>
+      <div className="space-y-3">
+        {tops.map(({ key, label, value }) => (
+          <div key={key}>
+            <div className="flex items-center justify-between mb-1">
+              <span className="text-[12.5px] text-ink/70 font-semibold">{label}</span>
+              <span className="text-[11px] text-ink/45 font-bold">{value}%</span>
+            </div>
+            <div className="h-1.5 rounded-full bg-line overflow-hidden">
+              <motion.div
+                initial={{ width: 0 }}
+                animate={{ width: `${value}%` }}
+                transition={{ duration: 0.7, delay: 0.2, ease: EASE }}
+                className="h-full rounded-full bg-sky-deep"
+              />
+            </div>
+          </div>
+        ))}
+      </div>
+    </motion.div>
+  );
+}
 
 interface ResultPreviewProps {
   nombre: string;
@@ -204,6 +306,12 @@ export default function ResultPreview({ nombre, result, onGetFullReport }: Resul
         {/* Resolución del duelo */}
         <DisputaCard result={result} />
 
+        {/* Insight personalizado — la tensión/huella propia del usuario */}
+        <HuellaCard result={result} />
+
+        {/* Perfil en dimensiones — concreta el "37 dimensiones" */}
+        <PreferencesCard prefs={result.preferences} />
+
         {/* Fortalezas (parcial) */}
         <motion.div
           initial={{ opacity: 0, y: 16 }}
@@ -255,6 +363,18 @@ export default function ResultPreview({ nombre, result, onGetFullReport }: Resul
             ))}
           </motion.div>
         )}
+
+        {/* Entregable gratuito: descargar el resultado en PDF */}
+        <motion.button
+          initial={{ opacity: 0, y: 16 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.5, delay: 0.22, ease: EASE }}
+          onClick={() => openPrintableReport(nombre, result)}
+          className={`w-full flex items-center justify-center gap-2 py-3.5 text-[14px] ${CTA_DARK}`}
+        >
+          <Download size={16} strokeWidth={2.3} />
+          Descargar mi resultado (PDF)
+        </motion.button>
 
         {/* Planes */}
         <motion.div
