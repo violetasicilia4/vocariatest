@@ -1,7 +1,7 @@
 import { useEffect, useState, useRef } from 'react';
 import { motion, AnimatePresence } from 'motion/react';
 import type { Checkpoint } from '../data/stages';
-import { CTA_PRIMARY, CARD_SHADOW_LG, EASE } from '../ui/theme';
+import { CARD_SHADOW_LG, EASE } from '../ui/theme';
 
 interface CheckpointModalProps {
   checkpoint: Checkpoint;
@@ -11,6 +11,8 @@ interface CheckpointModalProps {
 
 /** Duración del "build" antes del reveal — el suspenso que hace que el hito pese. */
 const ANALYZE_MS = 1900;
+/** Tiempo que el hallazgo queda en pantalla antes de cerrarse solo. */
+const HOLD_MS = 3200;
 
 /** Cuenta ascendente con easing, en sync con el anillo. */
 function useCountUp(target: number, duration: number, start: number): number {
@@ -37,8 +39,11 @@ function useCountUp(target: number, duration: number, start: number): number {
  * Jerarquía: el número manda. Es lo más grande de la escena, dentro de un
  * anillo que se lee como "nivel de confianza alcanzado" (no como progreso): un
  * trazo grueso con degradé sky→lima y un halo que respira al revelarse. Debajo,
- * la etiqueta que nombra esa cifra, el título del hito y una sola línea de copy
- * que respira. Sin confeti, sin puntos, sin emojis.
+ * la etiqueta que nombra esa cifra, el título del hito y el copy que lo explica.
+ *
+ * Es un momento autónomo: entra, analiza, revela y se cierra solo —el usuario
+ * no tiene que tocar nada para volver al test. Un hilo de tiempo discreto avisa
+ * que va a continuar. Sin confeti, sin puntos, sin emojis.
  */
 export default function CheckpointModal({ checkpoint, confidence, onContinue }: CheckpointModalProps) {
   const startVal = Math.max(8, Math.round(confidence * 0.5));
@@ -50,7 +55,14 @@ export default function CheckpointModal({ checkpoint, confidence, onContinue }: 
     return () => clearTimeout(t);
   }, []);
 
-  // Solo se puede cerrar después del reveal (que el build siempre termine).
+  // El hito se cierra solo cuando termina el reveal. El usuario no toca nada.
+  useEffect(() => {
+    if (!revealed) return;
+    const t = setTimeout(onContinue, HOLD_MS);
+    return () => clearTimeout(t);
+  }, [revealed, onContinue]);
+
+  // …pero si quiere adelantarse, tocar o una tecla lo cierra antes.
   useEffect(() => {
     if (!revealed) return;
     const onKey = (e: KeyboardEvent) => {
@@ -78,7 +90,7 @@ export default function CheckpointModal({ checkpoint, confidence, onContinue }: 
         animate={{ opacity: 1, y: 0, scale: 1 }}
         exit={{ opacity: 0, y: 10, scale: 0.98 }}
         transition={{ duration: 0.45, ease: EASE }}
-        onClick={e => e.stopPropagation()}
+        onClick={e => { e.stopPropagation(); if (revealed) onContinue(); }}
         role="dialog"
         aria-modal="true"
         aria-label={checkpoint.title}
@@ -155,19 +167,23 @@ export default function CheckpointModal({ checkpoint, confidence, onContinue }: 
               <p className="text-[11px] font-bold text-ink/40 tracking-[0.16em] uppercase mb-3">
                 Confianza del perfil
               </p>
-              <h3 className="font-display font-black text-[21px] text-ink tracking-tight leading-[1.15] mb-2">
+              <h3 className="font-display font-black text-[21px] text-ink tracking-tight leading-[1.15] mb-2.5">
                 {checkpoint.title}
               </h3>
-              <p className="text-[14px] text-ink/55 font-medium leading-[1.5] mb-7 mx-auto max-w-[270px]">
+              <p className="text-[14.5px] text-ink/65 font-medium leading-[1.55] mx-auto max-w-[280px]">
                 {checkpoint.text}
               </p>
-              <button
-                onClick={onContinue}
-                autoFocus
-                className={`w-full py-3.5 text-[15px] ${CTA_PRIMARY}`}
-              >
-                Continuar
-              </button>
+
+              {/* Hilo de tiempo: avisa, sin botón, que el hito se va a cerrar solo */}
+              <div className="mt-7 h-[3px] w-full rounded-full bg-line overflow-hidden">
+                <motion.div
+                  className="h-full rounded-full bg-brand-sky/70"
+                  style={{ transformOrigin: 'left' }}
+                  initial={{ scaleX: 1 }}
+                  animate={{ scaleX: 0 }}
+                  transition={{ duration: HOLD_MS / 1000, ease: 'linear' }}
+                />
+              </div>
             </motion.div>
           )}
         </AnimatePresence>
