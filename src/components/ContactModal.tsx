@@ -117,10 +117,12 @@ export default function ContactModal({ isOpen, onClose }: ContactModalProps) {
                       className="mt-0.5 w-4 h-4 shrink-0 accent-[#07111F] cursor-pointer"
                     />
                     <span className="text-[11px] text-slate-500 leading-snug">
-                      Acepto que Vocaria guarde mi mail para avisarme cuando el test esté listo.
-                      Ver la{' '}
+                      Tengo 16 años o más y acepto que Vocaria guarde mi mail para avisarme cuando el test esté listo. Ver{' '}
+                      <a href="/terminos" target="_blank" rel="noopener noreferrer" className="text-slate-700 font-semibold underline">
+                        Términos
+                      </a>{' '}y{' '}
                       <a href="/privacidad" target="_blank" rel="noopener noreferrer" className="text-slate-700 font-semibold underline">
-                        política de privacidad
+                        Política de Privacidad
                       </a>.
                     </span>
                   </label>

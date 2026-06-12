@@ -30,6 +30,12 @@ export default function Footer({ onContactClick }: FooterProps) {
         {/* Links */}
         <div className="flex items-center gap-5">
           <a
+            href="/terminos"
+            className="text-[11px] font-semibold text-white/40 hover:text-white transition-colors"
+          >
+            Términos
+          </a>
+          <a
             href="/privacidad"
             className="text-[11px] font-semibold text-white/40 hover:text-white transition-colors"
           >

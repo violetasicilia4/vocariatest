@@ -12,7 +12,10 @@ interface ProfileCaptureProps {
   onStart: (profile: UserProfile) => void;
 }
 
-const AGES = Array.from({ length: 37 }, (_, i) => String(i + 14));
+// Edad mínima: 16. Vocaria es para personas que eligen carrera y, por base
+// legal de consentimiento, no recolectamos datos de menores de 16.
+const MIN_AGE = 16;
+const AGES = Array.from({ length: 50 - MIN_AGE + 1 }, (_, i) => String(i + MIN_AGE));
 
 const MOVILIDAD_OPTS: { id: UserProfile['movilidad']; icon: LucideIcon; titulo: string; sub: string }[] = [
   { id: 'si',   icon: Plane,      titulo: 'Sí, me mudaría',      sub: 'Si encuentro la carrera ideal, sin problema.' },
@@ -37,8 +40,9 @@ export default function ProfileCapture({ onStart }: ProfileCaptureProps) {
     if (!nombre.trim()) { setError('Escribí tu nombre para continuar.'); return; }
     if (!email.includes('@') || !email.includes('.')) { setError('Ingresá un email válido.'); return; }
     if (!edad) { setError('Seleccioná tu edad.'); return; }
+    if (Number(edad) < MIN_AGE) { setError(`Vocaria está disponible para personas de ${MIN_AGE} años o más.`); return; }
     if (!provinciaId) { setError('Seleccioná la provincia donde vivís.'); return; }
-    if (!consent) { setError('Necesitamos tu consentimiento para guardar tus datos.'); return; }
+    if (!consent) { setError('Necesitamos tu confirmación de edad y consentimiento para continuar.'); return; }
     setError('');
     // Captura el lead apenas tenemos los datos (no esperamos a que termine el test).
     void captureLead({
@@ -167,10 +171,12 @@ export default function ProfileCapture({ onStart }: ProfileCaptureProps) {
                     className="mt-0.5 w-4 h-4 shrink-0 accent-sky-deep cursor-pointer"
                   />
                   <span className="text-[12px] text-ink/50 leading-snug">
-                    Acepto que Vocaria use mis datos para darme el resultado y enviármelo por mail.
-                    Ver la{' '}
+                    Confirmo que tengo 16 años o más y acepto los{' '}
+                    <a href="/terminos" target="_blank" rel="noopener noreferrer" className="text-ink/70 font-semibold underline">
+                      Términos
+                    </a>{' '}y la{' '}
                     <a href="/privacidad" target="_blank" rel="noopener noreferrer" className="text-ink/70 font-semibold underline">
-                      política de privacidad
+                      Política de Privacidad
                     </a>.
                   </span>
                 </label>
