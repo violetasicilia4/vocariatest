@@ -37,8 +37,7 @@ export default function ProfilePanel({ snapshot }: { snapshot: ProfileSnapshot }
       </div>
 
       <p className="text-[11px] text-ink/35 font-medium leading-relaxed mt-5">
-        El sistema reajusta tu perfil con cada respuesta. Ninguna dimensión
-        define el resultado por sí sola.
+        Se reajusta con cada respuesta.
       </p>
     </div>
   );

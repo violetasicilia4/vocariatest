@@ -51,12 +51,12 @@ export default function QuestionCard({ question, onAnswer, currentAnswer }: Ques
 
   return (
     <div className="w-full">
-      <div className="mb-7 sm:mb-9">
-        <h2 className="font-display font-extrabold text-[23px] sm:text-[28px] text-ink leading-[1.18] tracking-tight">
+      <div className="mb-5 sm:mb-7">
+        <h2 className="font-display font-extrabold text-[22px] sm:text-[27px] text-ink leading-[1.16] tracking-tight">
           {question.enunciado}
         </h2>
         {question.subtext && (
-          <p className="mt-3 text-[13.5px] text-ink/55 font-medium leading-relaxed">
+          <p className="mt-2.5 text-[13px] text-ink/55 font-medium leading-relaxed">
             {question.subtext}
           </p>
         )}
@@ -200,7 +200,7 @@ function VisualOptions({
   onSelect: (id: string) => void;
 }) {
   return (
-    <div className="grid grid-cols-2 gap-3">
+    <div className="grid grid-cols-2 gap-2.5">
       {opciones.map(op => {
         const active = selected === op.id;
         const Icon = iconForEmoji(op.emoji);
@@ -210,14 +210,14 @@ function VisualOptions({
             onClick={() => onSelect(op.id)}
             aria-pressed={active}
             whileTap={{ scale: 0.97 }}
-            className={`relative flex flex-col items-start gap-3 p-4 min-h-[124px] rounded-[20px] border transition-[border-color,background-color,box-shadow] duration-200 text-left
+            className={`relative flex flex-col items-start gap-2.5 p-3.5 min-h-[102px] rounded-[18px] border transition-[border-color,background-color,box-shadow] duration-200 text-left
               ${active ? OPTION_ACTIVE : OPTION_IDLE}`}
           >
             <span
-              className={`w-10 h-10 rounded-full flex items-center justify-center transition-colors
+              className={`w-9 h-9 rounded-full flex items-center justify-center transition-colors
                 ${active ? 'bg-white/15 text-white' : 'bg-sky-soft text-sky-deep'}`}
             >
-              <Icon size={19} strokeWidth={1.9} />
+              <Icon size={17} strokeWidth={1.9} />
             </span>
             <span className={`font-display text-[12.5px] font-semibold leading-snug ${active ? 'text-white' : 'text-ink/75'}`}>
               {op.texto}
@@ -259,14 +259,14 @@ function PairsOptions({
             onClick={() => onSelect(op.id)}
             aria-pressed={active}
             whileTap={{ scale: 0.99 }}
-            className={`w-full flex items-center gap-4 px-5 py-5 rounded-[20px] border transition-[border-color,background-color,box-shadow] duration-200 text-left
+            className={`w-full flex items-center gap-3.5 px-4 py-4 rounded-[18px] border transition-[border-color,background-color,box-shadow] duration-200 text-left
               ${active ? OPTION_ACTIVE : OPTION_IDLE}`}
           >
             <span
-              className={`shrink-0 w-12 h-12 rounded-2xl flex items-center justify-center transition-colors
+              className={`shrink-0 w-11 h-11 rounded-2xl flex items-center justify-center transition-colors
                 ${active ? 'bg-white/15 text-white' : 'bg-sky-soft text-sky-deep'}`}
             >
-              <Icon size={22} strokeWidth={1.9} />
+              <Icon size={21} strokeWidth={1.9} />
             </span>
             <span className={`font-display font-semibold text-[15px] leading-snug ${active ? 'text-white' : 'text-ink/90'}`}>
               {op.texto}
@@ -294,7 +294,7 @@ function MultiSelectOptions({
 
   return (
     <div>
-      <div className="flex flex-col gap-2.5 mb-5">
+      <div className="flex flex-col gap-2 mb-4">
         {opciones.map(op => {
           const active = selected.includes(op.id);
           const disabled = !active && count >= maxSelect;
@@ -304,7 +304,7 @@ function MultiSelectOptions({
               onClick={() => onToggle(op.id)}
               disabled={disabled}
               aria-pressed={active}
-              className={`w-full flex items-center gap-3 px-4 py-3.5 rounded-2xl font-display text-[14px] font-semibold transition-all duration-200 text-left border ${
+              className={`w-full flex items-center gap-3 px-4 py-2.5 rounded-xl font-display text-[14px] font-semibold transition-all duration-200 text-left border ${
                 active ? OPTION_ACTIVE : disabled ? OPTION_DISABLED : OPTION_IDLE
               }`}
             >
@@ -351,7 +351,7 @@ function ChoiceOptions({
             onClick={() => onSelect(op.id)}
             aria-pressed={active}
             whileTap={{ scale: 0.99 }}
-            className={`w-full text-left px-4 py-4 rounded-[18px] border font-display text-[14.5px] font-medium transition-[border-color,background-color,box-shadow] duration-200 flex items-start gap-3.5
+            className={`w-full text-left px-4 py-3.5 rounded-[16px] border font-display text-[14.5px] font-medium transition-[border-color,background-color,box-shadow] duration-200 flex items-start gap-3
               ${active ? OPTION_ACTIVE : OPTION_IDLE}`}
           >
             <span

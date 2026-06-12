@@ -6,9 +6,9 @@ import ProgressBar from '../components/ProgressBar';
 import ProgressInsight from '../components/ProgressInsight';
 import ProfilePanel from '../components/ProfilePanel';
 import QuestionCard from '../components/QuestionCard';
-import ChapterTransition from '../components/ChapterTransition';
+import CheckpointModal from '../components/Checkpoint';
 import LogoIcon from '../../components/ui/LogoIcon';
-import { getChapterPosition, TOTAL_CHAPTERS, type Chapter } from '../data/chapters';
+import { CHECKPOINTS, confidenceForPct, type Checkpoint } from '../data/stages';
 import { getCurrentInsight } from '../data/insights';
 import { readProfile } from '../engine/profileSignals';
 import { EASE } from '../ui/theme';
@@ -32,33 +32,43 @@ export default function TestRunner({ nombre, profile, onComplete }: TestRunnerPr
   // Preguntas de desempate elegidas según el ranking interino tras el núcleo.
   const [adaptiveQuestions, setAdaptiveQuestions] = useState<Question[] | null>(null);
 
-  // Transición de capítulo: se muestra una sola vez por capítulo.
-  const [shownChapters, setShownChapters] = useState<Set<string>>(() => new Set(['pensar']));
-  const [chapterOverlay, setChapterOverlay] = useState<Chapter | null>(null);
+  // Checkpoints ya mostrados (se disparan una sola vez al cruzar su umbral).
+  const [shownCheckpoints, setShownCheckpoints] = useState<Set<number>>(() => new Set());
+  const [checkpoint, setCheckpoint] = useState<Checkpoint | null>(null);
 
   const questions: Question[] = adaptiveQuestions ? [...QUESTIONS, ...adaptiveQuestions] : QUESTIONS;
   const currentQuestion = questions[currentIndex];
   const total = questions.length;
-  const position = getChapterPosition(currentIndex, CORE_LENGTH);
   const isAdaptive = currentIndex >= CORE_LENGTH;
 
-  // Avance global (0–100) para el header, alineado con el relleno de la barra.
-  const chapterFraction = position.countInChapter > 0
-    ? Math.min(1, (position.indexInChapter - 1) / position.countInChapter + 1 / position.countInChapter)
-    : 0.5;
-  const overallPct = ((position.chapter.numero - 1) + chapterFraction) / TOTAL_CHAPTERS * 100;
+  // Avance global (0–100): el núcleo cubre 0→92, la fase adaptativa 92→100.
+  let pct: number;
+  if (!isAdaptive) {
+    pct = CORE_LENGTH > 1 ? (currentIndex / (CORE_LENGTH - 1)) * 92 : 0;
+  } else {
+    const aStep = currentIndex - CORE_LENGTH;
+    const aTotal = adaptiveQuestions?.length ?? 1;
+    pct = 92 + ((aStep + 1) / (aTotal + 1)) * 8;
+  }
+  pct = Math.min(100, Math.round(pct));
+  const confidence = confidenceForPct(pct);
 
-  // Mensaje inteligente vigente (hook por % o copy adaptativo rotativo).
-  const insight = getCurrentInsight(overallPct, isAdaptive, currentIndex - CORE_LENGTH);
+  // Microcopy de inteligencia: solo en la fase adaptativa (recorrido único).
+  const insight = getCurrentInsight(pct, isAdaptive, currentIndex - CORE_LENGTH);
 
   // Lectura en vivo del perfil (read-only sobre el vector, sin spoilear).
-  const snapshot = readProfile(answers, overallPct / 100);
+  const snapshot = readProfile(answers, pct / 100);
 
-  // Al entrar a un capítulo nuevo (no el primero), mostrar el respiro de transición.
+  // Checkpoints: al cruzar un umbral nuevo, interrumpir con el modal premium.
   useEffect(() => {
-    if (position.isFirstOfChapter && currentIndex > 0 && !shownChapters.has(position.chapter.id)) {
-      setChapterOverlay(position.chapter);
-      setShownChapters(prev => new Set(prev).add(position.chapter.id));
+    const crossed = CHECKPOINTS.filter(c => pct >= c.at && !shownCheckpoints.has(c.at));
+    if (crossed.length > 0) {
+      setCheckpoint(crossed[crossed.length - 1]);
+      setShownCheckpoints(prev => {
+        const next = new Set(prev);
+        crossed.forEach(c => next.add(c.at));
+        return next;
+      });
     }
   }, [currentIndex]); // eslint-disable-line react-hooks/exhaustive-deps
 
@@ -98,9 +108,9 @@ export default function TestRunner({ nombre, profile, onComplete }: TestRunnerPr
   };
 
   const variants = {
-    enter: (dir: number) => ({ x: dir > 0 ? 28 : -28, opacity: 0 }),
+    enter: (dir: number) => ({ x: dir > 0 ? 26 : -26, opacity: 0 }),
     center: { x: 0, opacity: 1 },
-    exit: (dir: number) => ({ x: dir > 0 ? -28 : 28, opacity: 0 }),
+    exit: (dir: number) => ({ x: dir > 0 ? -26 : 26, opacity: 0 }),
   };
 
   const firstName = nombre ? nombre.split(' ')[0] : '';
@@ -120,8 +130,8 @@ export default function TestRunner({ nombre, profile, onComplete }: TestRunnerPr
           )}
         </div>
 
-        <ProgressBar position={position} overallPct={overallPct} />
-        <ProgressInsight insight={insight} />
+        <ProgressBar pct={pct} confidence={confidence} />
+        {isAdaptive && <ProgressInsight insight={insight} />}
 
         <div className="mt-9 pt-8 border-t border-line">
           <ProfilePanel snapshot={snapshot} />
@@ -136,25 +146,25 @@ export default function TestRunner({ nombre, profile, onComplete }: TestRunnerPr
       {/* ── Columna principal ── */}
       <div className="flex-1 flex flex-col min-h-screen">
 
-        {/* Header persistente (solo mobile/tablet) */}
-        <header className="lg:hidden sticky top-0 z-10 bg-paper/85 backdrop-blur-xl border-b border-line/70">
-          <div className="max-w-xl mx-auto w-full px-5 pt-3.5 pb-3">
-            <div className="flex items-center justify-between mb-3">
-              <div className="flex items-center gap-2 text-ink">
-                <LogoIcon size={20} />
-                <span className="font-display font-bold text-[13px] tracking-tight">Vocaria</span>
+        {/* Header compacto (solo mobile/tablet) */}
+        <header className="lg:hidden sticky top-0 z-10 bg-paper/90 backdrop-blur-xl border-b border-line/70">
+          <div className="max-w-xl mx-auto w-full px-5 pt-3 pb-3">
+            <div className="flex items-center justify-between mb-2.5">
+              <div className="flex items-center gap-1.5 text-ink">
+                <LogoIcon size={17} />
+                <span className="font-display font-bold text-[12px] tracking-tight">Vocaria</span>
               </div>
               {firstName && (
-                <span className="text-[12px] text-ink/40 font-medium font-display">{firstName}</span>
+                <span className="text-[11px] text-ink/35 font-medium font-display">{firstName}</span>
               )}
             </div>
-            <ProgressBar position={position} overallPct={overallPct} />
-            <ProgressInsight insight={insight} />
+            <ProgressBar pct={pct} confidence={confidence} />
+            {isAdaptive && <ProgressInsight insight={insight} />}
           </div>
         </header>
 
         {/* Pregunta */}
-        <div className="flex-1 flex flex-col justify-center px-5 lg:px-14 py-9 lg:py-12 w-full">
+        <div className="flex-1 flex flex-col justify-center px-5 lg:px-14 py-5 lg:py-12 w-full">
           <div className="max-w-xl mx-auto w-full">
             <AnimatePresence mode="wait" custom={direction}>
               <motion.div
@@ -164,7 +174,7 @@ export default function TestRunner({ nombre, profile, onComplete }: TestRunnerPr
                 initial="enter"
                 animate="center"
                 exit="exit"
-                transition={{ duration: 0.32, ease: EASE }}
+                transition={{ duration: 0.3, ease: EASE }}
               >
                 {currentQuestion && (
                   <QuestionCard
@@ -180,7 +190,7 @@ export default function TestRunner({ nombre, profile, onComplete }: TestRunnerPr
 
         {/* Volver */}
         {currentIndex > 0 && (
-          <div className="px-5 lg:px-14 pb-7 flex justify-start w-full">
+          <div className="px-5 lg:px-14 pb-5 flex justify-start w-full">
             <div className="max-w-xl mx-auto w-full">
               <button
                 onClick={handleBack}
@@ -194,12 +204,13 @@ export default function TestRunner({ nombre, profile, onComplete }: TestRunnerPr
         )}
       </div>
 
-      {/* Respiro de transición entre capítulos */}
+      {/* Checkpoint premium — interrumpe el flujo en los hitos clave */}
       <AnimatePresence>
-        {chapterOverlay && (
-          <ChapterTransition
-            chapter={chapterOverlay}
-            onContinue={() => setChapterOverlay(null)}
+        {checkpoint && (
+          <CheckpointModal
+            checkpoint={checkpoint}
+            confidence={confidence}
+            onContinue={() => setCheckpoint(null)}
           />
         )}
       </AnimatePresence>

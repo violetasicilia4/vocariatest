@@ -151,8 +151,8 @@ export default function ResultPreview({ nombre, result, onGetFullReport }: Resul
           <p className="text-ink/50 text-[13px] font-medium mb-2">Tu perfil vocacional, {firstName}</p>
           <ConfianzaBadge confianza={confianza} />
           <p className="text-[12px] text-ink/40 font-medium mt-3 leading-relaxed">
-            Construido analizando tus respuestas en <span className="text-ink/60 font-semibold">37 dimensiones de personalidad</span>
-            {result.disputaResuelta ? ', con un recorrido afinado especialmente para vos.' : '.'}
+            Analizado en <span className="text-ink/60 font-semibold">37 dimensiones</span>
+            {result.disputaResuelta ? ', con un recorrido afinado para vos.' : '.'}
           </p>
         </motion.div>
 

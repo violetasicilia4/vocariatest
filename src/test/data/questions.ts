@@ -26,8 +26,7 @@ export const QUESTIONS: Question[] = [
   {
     id: 'sit_1',
     tipo: 'situacional',
-    enunciado: 'Pensá en una vez que tuviste que aprender algo totalmente nuevo. ¿Qué hiciste naturalmente?',
-    subtext: 'No hay respuesta correcta. Elegí lo que más se parezca a cómo sos.',
+    enunciado: 'Pensá en una vez que tuviste que aprender algo nuevo. ¿Qué hiciste naturalmente?',
     opciones: [
       { id: 'a', texto: 'Busqué entender los principios que explican cómo funciona, antes de hacer nada.', scores: { descubridor: 10, arquitecto: 5 } },
       { id: 'b', texto: 'Me lancé a practicar. Aprendí cometiendo errores y ajustando sobre la marcha.', scores: { constructor: 10, artifice: 5 } },
@@ -56,7 +55,6 @@ export const QUESTIONS: Question[] = [
     id: 'sca_1',
     tipo: 'scale',
     enunciado: 'Arrancás en un lugar nuevo. ¿Cómo te gustaría que fuera tu primer día?',
-    subtext: 'No hay respuesta correcta: los dos extremos son igualmente válidos.',
     opciones: [
       { id: '1', texto: 'Que me tiren al agua: "arreglate y mostranos qué sabés hacer"', scores: { descubridor: 3, artifice: 2 } },
       { id: '2', texto: 'Una dirección general y libertad para encararlo a mi modo', scores: { arquitecto: 2 } },
@@ -101,8 +99,7 @@ export const QUESTIONS: Question[] = [
   {
     id: 'anti_1',
     tipo: 'multiselect',
-    enunciado: '¿Cuál de estos tipos de trabajo te generaría más rechazo o incomodidad genuina?',
-    subtext: 'Elegí los 2 que más te representen.',
+    enunciado: '¿Qué tipo de trabajo te generaría más rechazo? Elegí 2.',
     maxSelect: 2,
     opciones: [
       { id: 'sangre',      texto: 'Trabajar con sangre, cuerpos o situaciones médicas de emergencia', scores: {} },
@@ -150,7 +147,6 @@ export const QUESTIONS: Question[] = [
     id: 'xv_impacto',
     tipo: 'situacional',
     enunciado: 'Un proyecto en el que pusiste mucho finalmente sale. ¿Qué es lo primero que mirás para saber si valió la pena?',
-    subtext: 'Elegí lo que de verdad te haría sentir que el esfuerzo tuvo sentido.',
     opciones: [
       { id: 'a', texto: 'Si mejoró concretamente la vida de las personas que lo iban a usar.', scores: { sanador: 10, catalizador: 5 } },
       { id: 'b', texto: 'Si los números y la calidad técnica dieron lo que esperaba.', scores: { interprete: 10, arquitecto: 5 } },

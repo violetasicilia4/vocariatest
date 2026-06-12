@@ -7,10 +7,10 @@ interface ProcessingScreenProps {
 }
 
 const STEPS = [
-  'Analizando tu perfil vocacional',
-  'Cruzando tus dimensiones con las carreras',
+  'Analizando tu forma de decidir',
+  'Cruzando con 130+ carreras',
   'Identificando tu arquetipo',
-  'Preparando tu resultado personalizado',
+  'Generando tu resultado',
 ];
 
 export default function ProcessingScreen({ nombre, onDone }: ProcessingScreenProps) {
