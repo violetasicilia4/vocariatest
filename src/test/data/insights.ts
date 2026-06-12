@@ -1,48 +1,54 @@
 /**
- * Mensajes inteligentes de progreso.
+ * Mensajes inteligentes de progreso — hooks psicológicos.
  *
- * Cada 4–5 preguntas el test "habla": confirma que está leyendo al usuario y
- * que su perfil se vuelve más nítido. Es lo que separa un formulario de una
- * experiencia guiada de autodescubrimiento — sube percepción de valor y de
- * precisión sin agregar fricción ni una sola pantalla extra.
+ * En momentos estratégicos del recorrido, el sistema "habla": confirma que está
+ * leyendo a la persona y que construye una hipótesis sobre su perfil. Es lo que
+ * separa un formulario de una herramienta que entiende. Tono sobrio y experto
+ * (Stripe/Linear): nunca gamificado, nunca infantil, sin emojis.
  *
- * Cada hito se dispara una sola vez (cuando `answered` cruza su umbral) y el
- * mensaje queda visible hasta el siguiente hito.
+ * Los hooks se anclan al porcentaje de perfil construido (no al número de
+ * pregunta) para reforzar la narrativa "se está midiendo algo", no "faltan X".
  */
-export type InsightTone = 'pattern' | 'precision' | 'social';
+export type InsightTone = 'pattern' | 'precision' | 'hypothesis' | 'adaptive';
 
 export interface Insight {
-  /** Nº de respuestas a partir del cual aparece este mensaje. */
+  /** % de perfil construido a partir del cual aparece. */
   at: number;
   tone: InsightTone;
   text: string;
 }
 
-/** Hitos del núcleo, ordenados por umbral creciente. */
-const INSIGHTS: Insight[] = [
-  { at: 4,  tone: 'pattern',   text: 'Detectamos un patrón claro en cómo pensás.' },
-  { at: 8,  tone: 'precision', text: 'Tu perfil ya tiene 58% de precisión.' },
-  { at: 12, tone: 'social',    text: 'Vas más definido/a que 7 de cada 10 personas a esta altura.' },
-  { at: 16, tone: 'precision', text: 'Precisión del perfil: 74% y subiendo.' },
+/** Hooks del núcleo, anclados a hitos de ~25 / 50 / 75 / pre-final. */
+const HOOKS: Insight[] = [
+  { at: 22, tone: 'pattern',    text: 'Detectamos un patrón interesante en cómo pensás.' },
+  { at: 46, tone: 'precision',  text: 'Ya identificamos algunas áreas donde probablemente destaques.' },
+  { at: 70, tone: 'hypothesis', text: 'Estamos validando una hipótesis sobre tu perfil.' },
+  { at: 88, tone: 'precision',  text: 'Ya tenemos casi todo para generar un resultado confiable.' },
 ];
 
-/** Mensaje extra para la fase adaptativa (desempate fino). */
-const ADAPTIVE_INSIGHT: Insight = {
-  at: 0,
-  tone: 'precision',
-  text: 'Afinando los últimos detalles de tu camino.',
-};
+/**
+ * En la fase adaptativa el recorrido deja de ser igual para todos. Lo decimos
+ * sin lenguaje técnico, rotando entre formas de la misma idea.
+ */
+const ADAPTIVE_HOOKS: Insight[] = [
+  { at: 0, tone: 'adaptive', text: 'Ajustando el recorrido según tus respuestas.' },
+  { at: 0, tone: 'adaptive', text: 'Las próximas preguntas dependen de cómo respondiste hasta acá.' },
+  { at: 0, tone: 'adaptive', text: 'Estas preguntas no las recibe todo el mundo.' },
+];
 
 /**
- * Devuelve el insight vigente según cuántas respuestas lleva el usuario.
- * @param answered  cantidad de preguntas ya respondidas.
- * @param isAdaptive si está en la fase de desempate (fuera del núcleo).
+ * Devuelve el insight vigente.
+ * @param pct        % de perfil construido (0–100).
+ * @param isAdaptive si está en la fase adaptativa (fuera del núcleo).
+ * @param adaptiveStep índice de la pregunta adaptativa actual (para rotar copy).
  */
-export function getCurrentInsight(answered: number, isAdaptive: boolean): Insight | null {
-  if (isAdaptive) return ADAPTIVE_INSIGHT;
+export function getCurrentInsight(pct: number, isAdaptive: boolean, adaptiveStep = 0): Insight | null {
+  if (isAdaptive) {
+    return ADAPTIVE_HOOKS[adaptiveStep % ADAPTIVE_HOOKS.length];
+  }
   let current: Insight | null = null;
-  for (const ins of INSIGHTS) {
-    if (answered >= ins.at) current = ins;
+  for (const h of HOOKS) {
+    if (pct >= h.at) current = h;
   }
   return current;
 }

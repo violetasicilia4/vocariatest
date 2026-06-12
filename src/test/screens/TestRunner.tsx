@@ -4,11 +4,13 @@ import { ChevronLeft } from 'lucide-react';
 import { QUESTIONS, type Question } from '../data/questions';
 import ProgressBar from '../components/ProgressBar';
 import ProgressInsight from '../components/ProgressInsight';
+import ProfilePanel from '../components/ProfilePanel';
 import QuestionCard from '../components/QuestionCard';
 import ChapterTransition from '../components/ChapterTransition';
 import LogoIcon from '../../components/ui/LogoIcon';
 import { getChapterPosition, TOTAL_CHAPTERS, type Chapter } from '../data/chapters';
 import { getCurrentInsight } from '../data/insights';
+import { readProfile } from '../engine/profileSignals';
 import { EASE } from '../ui/theme';
 import type { ScoringResult } from '../engine/scorer';
 import { calcularResultado } from '../engine/scorer';
@@ -38,6 +40,7 @@ export default function TestRunner({ nombre, profile, onComplete }: TestRunnerPr
   const currentQuestion = questions[currentIndex];
   const total = questions.length;
   const position = getChapterPosition(currentIndex, CORE_LENGTH);
+  const isAdaptive = currentIndex >= CORE_LENGTH;
 
   // Avance global (0–100) para el header, alineado con el relleno de la barra.
   const chapterFraction = position.countInChapter > 0
@@ -45,8 +48,11 @@ export default function TestRunner({ nombre, profile, onComplete }: TestRunnerPr
     : 0.5;
   const overallPct = ((position.chapter.numero - 1) + chapterFraction) / TOTAL_CHAPTERS * 100;
 
-  // Mensaje inteligente vigente (se renueva cada 4–5 preguntas).
-  const insight = getCurrentInsight(currentIndex, currentIndex >= CORE_LENGTH);
+  // Mensaje inteligente vigente (hook por % o copy adaptativo rotativo).
+  const insight = getCurrentInsight(overallPct, isAdaptive, currentIndex - CORE_LENGTH);
+
+  // Lectura en vivo del perfil (read-only sobre el vector, sin spoilear).
+  const snapshot = readProfile(answers, overallPct / 100);
 
   // Al entrar a un capítulo nuevo (no el primero), mostrar el respiro de transición.
   useEffect(() => {
@@ -97,62 +103,96 @@ export default function TestRunner({ nombre, profile, onComplete }: TestRunnerPr
     exit: (dir: number) => ({ x: dir > 0 ? -28 : 28, opacity: 0 }),
   };
 
+  const firstName = nombre ? nombre.split(' ')[0] : '';
+
   return (
-    <div className="min-h-screen bg-paper flex flex-col">
-      {/* Header persistente con progreso por capítulos */}
-      <header className="sticky top-0 z-10 bg-paper/85 backdrop-blur-xl border-b border-line/70">
-        <div className="max-w-xl mx-auto w-full px-5 pt-3.5 pb-3">
-          <div className="flex items-center justify-between mb-3">
-            <div className="flex items-center gap-2 text-ink">
-              <LogoIcon size={20} />
-              <span className="font-display font-bold text-[13px] tracking-tight">Vocaria</span>
-            </div>
-            {nombre && (
-              <span className="text-[12px] text-ink/40 font-medium font-display">
-                {nombre.split(' ')[0]}
-              </span>
-            )}
+    <div className="min-h-screen bg-paper lg:flex">
+
+      {/* ── Riel izquierdo (desktop): identidad + progreso + perfil en vivo ── */}
+      <aside className="hidden lg:flex lg:flex-col lg:w-[360px] lg:shrink-0 lg:h-screen lg:sticky lg:top-0 border-r border-line bg-paper-raised/50 px-8 py-9">
+        <div className="flex items-center justify-between mb-10">
+          <div className="flex items-center gap-2 text-ink">
+            <LogoIcon size={22} />
+            <span className="font-display font-bold text-[14px] tracking-tight">Vocaria</span>
           </div>
-          <ProgressBar position={position} overallPct={overallPct} />
-          <ProgressInsight insight={insight} />
+          {firstName && (
+            <span className="text-[12px] text-ink/40 font-medium font-display">{firstName}</span>
+          )}
         </div>
-      </header>
 
-      {/* Pregunta */}
-      <div className="flex-1 flex flex-col justify-center px-5 py-9 max-w-xl mx-auto w-full">
-        <AnimatePresence mode="wait" custom={direction}>
-          <motion.div
-            key={currentQuestion?.id}
-            custom={direction}
-            variants={variants}
-            initial="enter"
-            animate="center"
-            exit="exit"
-            transition={{ duration: 0.32, ease: EASE }}
-          >
-            {currentQuestion && (
-              <QuestionCard
-                question={currentQuestion}
-                onAnswer={handleAnswer}
-                currentAnswer={answers[currentQuestion.id]}
-              />
-            )}
-          </motion.div>
-        </AnimatePresence>
+        <ProgressBar position={position} overallPct={overallPct} />
+        <ProgressInsight insight={insight} />
+
+        <div className="mt-9 pt-8 border-t border-line">
+          <ProfilePanel snapshot={snapshot} />
+        </div>
+
+        <div className="mt-auto pt-8 flex items-center gap-1.5">
+          <span className="w-1.5 h-1.5 rounded-full bg-brand-sky animate-pulse" />
+          <span className="text-[11px] text-ink/35 font-medium">Análisis en curso</span>
+        </div>
+      </aside>
+
+      {/* ── Columna principal ── */}
+      <div className="flex-1 flex flex-col min-h-screen">
+
+        {/* Header persistente (solo mobile/tablet) */}
+        <header className="lg:hidden sticky top-0 z-10 bg-paper/85 backdrop-blur-xl border-b border-line/70">
+          <div className="max-w-xl mx-auto w-full px-5 pt-3.5 pb-3">
+            <div className="flex items-center justify-between mb-3">
+              <div className="flex items-center gap-2 text-ink">
+                <LogoIcon size={20} />
+                <span className="font-display font-bold text-[13px] tracking-tight">Vocaria</span>
+              </div>
+              {firstName && (
+                <span className="text-[12px] text-ink/40 font-medium font-display">{firstName}</span>
+              )}
+            </div>
+            <ProgressBar position={position} overallPct={overallPct} />
+            <ProgressInsight insight={insight} />
+          </div>
+        </header>
+
+        {/* Pregunta */}
+        <div className="flex-1 flex flex-col justify-center px-5 lg:px-14 py-9 lg:py-12 w-full">
+          <div className="max-w-xl mx-auto w-full">
+            <AnimatePresence mode="wait" custom={direction}>
+              <motion.div
+                key={currentQuestion?.id}
+                custom={direction}
+                variants={variants}
+                initial="enter"
+                animate="center"
+                exit="exit"
+                transition={{ duration: 0.32, ease: EASE }}
+              >
+                {currentQuestion && (
+                  <QuestionCard
+                    question={currentQuestion}
+                    onAnswer={handleAnswer}
+                    currentAnswer={answers[currentQuestion.id]}
+                  />
+                )}
+              </motion.div>
+            </AnimatePresence>
+          </div>
+        </div>
+
+        {/* Volver */}
+        {currentIndex > 0 && (
+          <div className="px-5 lg:px-14 pb-7 flex justify-start w-full">
+            <div className="max-w-xl mx-auto w-full">
+              <button
+                onClick={handleBack}
+                className="text-ink/40 hover:text-ink text-[13px] font-medium font-display transition-colors flex items-center gap-1"
+              >
+                <ChevronLeft size={15} strokeWidth={2.4} />
+                Anterior
+              </button>
+            </div>
+          </div>
+        )}
       </div>
-
-      {/* Volver */}
-      {currentIndex > 0 && (
-        <div className="px-5 pb-7 flex justify-start max-w-xl mx-auto w-full">
-          <button
-            onClick={handleBack}
-            className="text-ink/40 hover:text-ink text-[13px] font-medium font-display transition-colors flex items-center gap-1"
-          >
-            <ChevronLeft size={15} strokeWidth={2.4} />
-            Anterior
-          </button>
-        </div>
-      )}
 
       {/* Respiro de transición entre capítulos */}
       <AnimatePresence>

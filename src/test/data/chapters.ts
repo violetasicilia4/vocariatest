@@ -13,6 +13,8 @@ export interface Chapter {
   subtitulo: string;
   /** Índice (0-based) de la primera pregunta del capítulo en el núcleo. */
   start: number;
+  /** Marca el tramo adaptativo: el recorrido deja de ser igual para todos. */
+  adaptive?: boolean;
 }
 
 export const CHAPTERS: Chapter[] = [
@@ -27,8 +29,9 @@ export const ADAPTIVE_CHAPTER: Chapter = {
   id: 'afinar',
   numero: CHAPTERS.length + 1,
   titulo: 'Afinando tu perfil',
-  subtitulo: 'Pocas preguntas que definen tu camino exacto.',
+  subtitulo: 'Elegimos estas preguntas según cómo venís respondiendo. No todos reciben las mismas.',
   start: -1,
+  adaptive: true,
 };
 
 export const TOTAL_CHAPTERS = CHAPTERS.length + 1;

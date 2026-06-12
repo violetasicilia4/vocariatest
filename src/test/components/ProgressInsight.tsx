@@ -1,12 +1,13 @@
 import { AnimatePresence, motion } from 'motion/react';
-import { Sparkles, Target, Users } from 'lucide-react';
+import { Sparkles, Target, FlaskConical, Route } from 'lucide-react';
 import type { Insight } from '../data/insights';
 import { EASE } from '../ui/theme';
 
 const ICON = {
   pattern: Sparkles,
   precision: Target,
-  social: Users,
+  hypothesis: FlaskConical,
+  adaptive: Route,
 } as const;
 
 /**

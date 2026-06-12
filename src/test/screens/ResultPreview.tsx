@@ -150,6 +150,10 @@ export default function ResultPreview({ nombre, result, onGetFullReport }: Resul
         <motion.div initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.5, ease: EASE }}>
           <p className="text-ink/50 text-[13px] font-medium mb-2">Tu perfil vocacional, {firstName}</p>
           <ConfianzaBadge confianza={confianza} />
+          <p className="text-[12px] text-ink/40 font-medium mt-3 leading-relaxed">
+            Construido analizando tus respuestas en <span className="text-ink/60 font-semibold">37 dimensiones de personalidad</span>
+            {result.disputaResuelta ? ', con un recorrido afinado especialmente para vos.' : '.'}
+          </p>
         </motion.div>
 
         {/* Arquetipo principal */}
