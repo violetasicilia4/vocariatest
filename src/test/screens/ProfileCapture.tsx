@@ -66,8 +66,8 @@ export default function ProfileCapture({ onStart }: ProfileCaptureProps) {
 
         {/* Progreso del onboarding */}
         <div className="flex gap-1.5 mb-9">
-          <div className={`h-[5px] rounded-full flex-1 transition-all duration-400 ${step === 'datos' ? 'bg-clay' : 'bg-clay/40'}`} />
-          <div className={`h-[5px] rounded-full flex-1 transition-all duration-400 ${step === 'movilidad' ? 'bg-clay' : 'bg-line'}`} />
+          <div className={`h-[5px] rounded-full flex-1 transition-all duration-400 ${step === 'datos' ? 'bg-brand-sky' : 'bg-brand-sky/40'}`} />
+          <div className={`h-[5px] rounded-full flex-1 transition-all duration-400 ${step === 'movilidad' ? 'bg-brand-sky' : 'bg-line'}`} />
         </div>
 
         <AnimatePresence mode="wait" custom={direction}>
@@ -83,7 +83,7 @@ export default function ProfileCapture({ onStart }: ProfileCaptureProps) {
               exit="exit"
               transition={{ duration: 0.3, ease: EASE }}
             >
-              <h1 className="font-serif font-semibold text-[31px] sm:text-[37px] text-ink leading-[1.1] tracking-[-0.01em] mb-3">
+              <h1 className="font-display font-black text-[31px] sm:text-[37px] text-ink leading-[1.06] tracking-tight mb-3">
                 Antes de empezar,<br />contanos sobre vos
               </h1>
               <p className="text-ink/55 text-[14px] font-medium leading-relaxed mb-8">
@@ -146,7 +146,7 @@ export default function ProfileCapture({ onStart }: ProfileCaptureProps) {
                   </div>
                 </div>
 
-                {error && <p className="text-clay-deep text-[13px] font-semibold">{error}</p>}
+                {error && <p className="text-red-500 text-[13px] font-semibold">{error}</p>}
 
                 <button
                   onClick={handleDatosNext}
@@ -160,7 +160,7 @@ export default function ProfileCapture({ onStart }: ProfileCaptureProps) {
               <div className="flex items-center gap-3 mt-6 flex-wrap">
                 {['~12 min', 'Sin respuestas correctas', 'Resultado gratis'].map(t => (
                   <span key={t} className="text-[11px] text-ink/40 font-medium flex items-center gap-1.5">
-                    <span className="w-1 h-1 rounded-full bg-clay/60" />
+                    <span className="w-1 h-1 rounded-full bg-brand-sky/60" />
                     {t}
                   </span>
                 ))}
@@ -179,7 +179,7 @@ export default function ProfileCapture({ onStart }: ProfileCaptureProps) {
               exit="exit"
               transition={{ duration: 0.3, ease: EASE }}
             >
-              <h1 className="font-serif font-semibold text-[28px] sm:text-[33px] text-ink leading-[1.12] tracking-[-0.01em] mb-3">
+              <h1 className="font-display font-black text-[28px] sm:text-[33px] text-ink leading-[1.1] tracking-tight mb-3">
                 ¿Estarías dispuesto/a a mudarte para estudiar?
               </h1>
               <p className="text-ink/55 text-[14px] font-medium mb-8 leading-relaxed">
@@ -195,7 +195,7 @@ export default function ProfileCapture({ onStart }: ProfileCaptureProps) {
                       onClick={() => handleMovilidadSelect(opt.id)}
                       className={`w-full text-left px-5 py-4 rounded-[20px] border transition-all duration-200 flex items-center gap-4 active:scale-[0.99] ${OPTION_IDLE}`}
                     >
-                      <span className="shrink-0 w-11 h-11 rounded-2xl bg-clay-soft text-clay-deep flex items-center justify-center">
+                      <span className="shrink-0 w-11 h-11 rounded-2xl bg-sky-soft text-sky-deep flex items-center justify-center">
                         <Icon size={20} strokeWidth={1.9} />
                       </span>
                       <div>

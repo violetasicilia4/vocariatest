@@ -39,7 +39,7 @@ export default function CheckoutScreen({ nombre, email, result, plan, onBack }: 
 
         <motion.div initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.5, ease: EASE }}>
           <p className="text-ink/50 text-[13px] font-medium mb-2">Tu informe está listo, {firstName}</p>
-          <h1 className="font-serif font-semibold text-[28px] text-ink leading-tight tracking-[-0.01em]">
+          <h1 className="font-display font-black text-[28px] text-ink leading-tight tracking-tight">
             Plan {planData.nombre}
           </h1>
           <p className="text-ink/55 text-[14px] mt-2 leading-relaxed">
@@ -51,11 +51,11 @@ export default function CheckoutScreen({ nombre, email, result, plan, onBack }: 
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.1, ease: EASE }}
-          className="rounded-[22px] border border-clay bg-clay-soft/50 p-6"
+          className="rounded-[22px] border border-sky bg-sky-soft/50 p-6"
           style={{ boxShadow: CARD_SHADOW }}
         >
           <div className="flex items-end gap-2 mb-1">
-            <span className="font-serif font-semibold text-[42px] text-ink leading-none">${planData.precio}</span>
+            <span className="font-display font-extrabold tracking-tight text-[42px] text-ink leading-none">${planData.precio}</span>
             <span className="text-ink/50 text-[14px] font-medium mb-2">ARS · pago único</span>
           </div>
           <p className="text-ink/55 text-[12px]">{planData.tagline}</p>
@@ -72,7 +72,7 @@ export default function CheckoutScreen({ nombre, email, result, plan, onBack }: 
           <div className="space-y-3">
             {planData.incluye.map(item => (
               <div key={item} className="flex items-start gap-3">
-                <Check size={14} strokeWidth={2.5} className="text-clay-deep shrink-0 mt-0.5" />
+                <Check size={14} strokeWidth={2.5} className="text-sky-deep shrink-0 mt-0.5" />
                 <span className="text-[13px] text-ink/65 font-medium leading-snug">{item}</span>
               </div>
             ))}

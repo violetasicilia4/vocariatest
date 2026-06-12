@@ -3,10 +3,12 @@ import { motion, AnimatePresence } from 'motion/react';
 import { ChevronLeft } from 'lucide-react';
 import { QUESTIONS, type Question } from '../data/questions';
 import ProgressBar from '../components/ProgressBar';
+import ProgressInsight from '../components/ProgressInsight';
 import QuestionCard from '../components/QuestionCard';
 import ChapterTransition from '../components/ChapterTransition';
 import LogoIcon from '../../components/ui/LogoIcon';
-import { getChapterPosition, type Chapter } from '../data/chapters';
+import { getChapterPosition, TOTAL_CHAPTERS, type Chapter } from '../data/chapters';
+import { getCurrentInsight } from '../data/insights';
 import { EASE } from '../ui/theme';
 import type { ScoringResult } from '../engine/scorer';
 import { calcularResultado } from '../engine/scorer';
@@ -36,6 +38,15 @@ export default function TestRunner({ nombre, profile, onComplete }: TestRunnerPr
   const currentQuestion = questions[currentIndex];
   const total = questions.length;
   const position = getChapterPosition(currentIndex, CORE_LENGTH);
+
+  // Avance global (0–100) para el header, alineado con el relleno de la barra.
+  const chapterFraction = position.countInChapter > 0
+    ? Math.min(1, (position.indexInChapter - 1) / position.countInChapter + 1 / position.countInChapter)
+    : 0.5;
+  const overallPct = ((position.chapter.numero - 1) + chapterFraction) / TOTAL_CHAPTERS * 100;
+
+  // Mensaje inteligente vigente (se renueva cada 4–5 preguntas).
+  const insight = getCurrentInsight(currentIndex, currentIndex >= CORE_LENGTH);
 
   // Al entrar a un capítulo nuevo (no el primero), mostrar el respiro de transición.
   useEffect(() => {
@@ -102,7 +113,8 @@ export default function TestRunner({ nombre, profile, onComplete }: TestRunnerPr
               </span>
             )}
           </div>
-          <ProgressBar position={position} />
+          <ProgressBar position={position} overallPct={overallPct} />
+          <ProgressInsight insight={insight} />
         </div>
       </header>
 

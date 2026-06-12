@@ -35,7 +35,7 @@ export default function EmailCapture({ onStart }: EmailCaptureProps) {
         </div>
 
         {/* Headline */}
-        <h1 className="font-serif font-semibold text-[30px] sm:text-[36px] text-ink leading-[1.1] tracking-[-0.01em] mb-3">
+        <h1 className="font-display font-black text-[30px] sm:text-[36px] text-ink leading-[1.06] tracking-tight mb-3">
           Antes de empezar, ¿cómo te llamás?
         </h1>
         <p className="text-ink/55 text-[14px] font-medium leading-relaxed mb-8">
@@ -67,7 +67,7 @@ export default function EmailCapture({ onStart }: EmailCaptureProps) {
           </div>
 
           {error && (
-            <p className="text-clay-deep text-[13px] font-semibold">{error}</p>
+            <p className="text-red-500 text-[13px] font-semibold">{error}</p>
           )}
 
           <button
@@ -82,7 +82,7 @@ export default function EmailCapture({ onStart }: EmailCaptureProps) {
         <div className="flex items-center gap-3 mt-6 flex-wrap">
           {['~12 min', 'Sin respuestas correctas', 'Resultado gratis'].map(t => (
             <span key={t} className="text-[11px] text-ink/40 font-medium flex items-center gap-1.5">
-              <span className="w-1 h-1 rounded-full bg-clay/60" />
+              <span className="w-1 h-1 rounded-full bg-brand-sky/60" />
               {t}
             </span>
           ))}

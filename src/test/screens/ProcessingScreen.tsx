@@ -33,18 +33,18 @@ export default function ProcessingScreen({ nombre, onDone }: ProcessingScreenPro
       <div className="relative mb-12 flex items-center justify-center w-28 h-28">
         <motion.div
           className="absolute w-20 h-20 rounded-full"
-          style={{ background: 'radial-gradient(circle at 38% 34%, #e7c6b3, #c45d3a)' }}
+          style={{ background: 'radial-gradient(circle at 38% 34%, #9fd2f1, #258ef9)' }}
           animate={{ scale: [1, 1.06, 1] }}
           transition={{ duration: 2.4, repeat: Infinity, ease: 'easeInOut' }}
         />
         <motion.div
-          className="absolute w-20 h-20 rounded-full border border-clay/30"
+          className="absolute w-20 h-20 rounded-full border border-sky/30"
           animate={{ scale: [1, 1.7, 1], opacity: [0.6, 0, 0.6] }}
           transition={{ duration: 2.4, repeat: Infinity, ease: 'easeInOut' }}
         />
       </div>
 
-      <h2 className="font-serif font-semibold text-[25px] text-ink text-center mb-5 tracking-[-0.01em] leading-tight">
+      <h2 className="font-display font-extrabold text-[25px] text-ink text-center mb-5 tracking-tight leading-tight">
         {nombre ? `Calculando tu perfil, ${nombre.split(' ')[0]}` : 'Calculando tu perfil'}
       </h2>
 
@@ -68,7 +68,7 @@ export default function ProcessingScreen({ nombre, onDone }: ProcessingScreenPro
           <motion.div
             key={i}
             className="h-1.5 rounded-full"
-            animate={{ width: i <= stepIndex ? 26 : 8, backgroundColor: i <= stepIndex ? '#c45d3a' : '#e8e1d4' }}
+            animate={{ width: i <= stepIndex ? 26 : 8, backgroundColor: i <= stepIndex ? '#258ef9' : '#e8eef5' }}
             transition={{ duration: 0.4 }}
           />
         ))}

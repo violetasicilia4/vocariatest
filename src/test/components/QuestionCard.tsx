@@ -52,7 +52,7 @@ export default function QuestionCard({ question, onAnswer, currentAnswer }: Ques
   return (
     <div className="w-full">
       <div className="mb-7 sm:mb-9">
-        <h2 className="font-serif font-semibold text-[23px] sm:text-[27px] text-ink leading-[1.22] tracking-[-0.01em]">
+        <h2 className="font-display font-extrabold text-[23px] sm:text-[28px] text-ink leading-[1.18] tracking-tight">
           {question.enunciado}
         </h2>
         {question.subtext && (
@@ -156,8 +156,8 @@ function ScaleOptions({
               aria-label={op.texto}
               className={`flex-1 min-h-[60px] aspect-square rounded-2xl font-display font-bold text-[17px] transition-all duration-200 flex items-center justify-center border
                 ${active
-                  ? 'bg-ink text-paper border-ink scale-[1.04] shadow-[0_8px_22px_rgba(28,26,22,0.18)]'
-                  : 'bg-paper-raised text-ink/45 border-line hover:border-line-strong hover:text-ink/70'
+                  ? 'bg-ink text-white border-ink scale-[1.04] shadow-[0_10px_26px_rgba(7,17,31,0.22)]'
+                  : 'bg-paper-raised text-ink/45 border-line hover:border-sky/45 hover:text-ink/70'
                 }`}
             >
               {op.id}
@@ -205,33 +205,34 @@ function VisualOptions({
         const active = selected === op.id;
         const Icon = iconForEmoji(op.emoji);
         return (
-          <button
+          <motion.button
             key={op.id}
             onClick={() => onSelect(op.id)}
             aria-pressed={active}
-            className={`relative flex flex-col items-start gap-3 p-4 min-h-[124px] rounded-[20px] border transition-all duration-200 text-left active:scale-[0.985]
+            whileTap={{ scale: 0.97 }}
+            className={`relative flex flex-col items-start gap-3 p-4 min-h-[124px] rounded-[20px] border transition-[border-color,background-color,box-shadow] duration-200 text-left
               ${active ? OPTION_ACTIVE : OPTION_IDLE}`}
           >
             <span
               className={`w-10 h-10 rounded-full flex items-center justify-center transition-colors
-                ${active ? 'bg-white/12 text-paper' : 'bg-clay-soft text-clay-deep'}`}
+                ${active ? 'bg-white/15 text-white' : 'bg-sky-soft text-sky-deep'}`}
             >
               <Icon size={19} strokeWidth={1.9} />
             </span>
-            <span className={`font-display text-[12.5px] font-semibold leading-snug ${active ? 'text-paper' : 'text-ink/75'}`}>
+            <span className={`font-display text-[12.5px] font-semibold leading-snug ${active ? 'text-white' : 'text-ink/75'}`}>
               {op.texto}
             </span>
             {active && (
               <motion.span
-                className="absolute top-3 right-3 w-5 h-5 rounded-full bg-clay flex items-center justify-center"
+                className="absolute top-3 right-3 w-5 h-5 rounded-full bg-brand-lime flex items-center justify-center"
                 initial={{ scale: 0 }}
                 animate={{ scale: 1 }}
                 transition={{ type: 'spring', stiffness: 500, damping: 22 }}
               >
-                <Check size={11} strokeWidth={3} className="text-white" />
+                <Check size={11} strokeWidth={3} className="text-slate-950" />
               </motion.span>
             )}
-          </button>
+          </motion.button>
         );
       })}
     </div>
@@ -253,23 +254,24 @@ function PairsOptions({
         const active = selected === op.id;
         const Icon = iconForEmoji(op.emoji);
         return (
-          <button
+          <motion.button
             key={op.id}
             onClick={() => onSelect(op.id)}
             aria-pressed={active}
-            className={`w-full flex items-center gap-4 px-5 py-5 rounded-[20px] border transition-all duration-200 text-left active:scale-[0.99]
+            whileTap={{ scale: 0.99 }}
+            className={`w-full flex items-center gap-4 px-5 py-5 rounded-[20px] border transition-[border-color,background-color,box-shadow] duration-200 text-left
               ${active ? OPTION_ACTIVE : OPTION_IDLE}`}
           >
             <span
               className={`shrink-0 w-12 h-12 rounded-2xl flex items-center justify-center transition-colors
-                ${active ? 'bg-white/12 text-paper' : 'bg-clay-soft text-clay-deep'}`}
+                ${active ? 'bg-white/15 text-white' : 'bg-sky-soft text-sky-deep'}`}
             >
               <Icon size={22} strokeWidth={1.9} />
             </span>
-            <span className={`font-display font-semibold text-[15px] leading-snug ${active ? 'text-paper' : 'text-ink/90'}`}>
+            <span className={`font-display font-semibold text-[15px] leading-snug ${active ? 'text-white' : 'text-ink/90'}`}>
               {op.texto}
             </span>
-          </button>
+          </motion.button>
         );
       })}
     </div>
@@ -308,9 +310,9 @@ function MultiSelectOptions({
             >
               <span
                 className={`shrink-0 w-5 h-5 rounded-md border flex items-center justify-center transition-colors
-                  ${active ? 'bg-clay border-clay' : disabled ? 'border-ink/15' : 'border-line-strong'}`}
+                  ${active ? 'bg-brand-lime border-brand-lime' : disabled ? 'border-ink/15' : 'border-line-strong'}`}
               >
-                {active && <Check size={12} strokeWidth={3} className="text-white" />}
+                {active && <Check size={12} strokeWidth={3} className="text-slate-950" />}
               </span>
               <span className="leading-snug">{op.texto}</span>
             </button>
@@ -344,21 +346,22 @@ function ChoiceOptions({
       {opciones.map(op => {
         const active = selected === op.id;
         return (
-          <button
+          <motion.button
             key={op.id}
             onClick={() => onSelect(op.id)}
             aria-pressed={active}
-            className={`w-full text-left px-4 py-4 rounded-[18px] border font-display text-[14.5px] font-medium transition-all duration-200 flex items-start gap-3.5 active:scale-[0.99]
+            whileTap={{ scale: 0.99 }}
+            className={`w-full text-left px-4 py-4 rounded-[18px] border font-display text-[14.5px] font-medium transition-[border-color,background-color,box-shadow] duration-200 flex items-start gap-3.5
               ${active ? OPTION_ACTIVE : OPTION_IDLE}`}
           >
             <span
               className={`shrink-0 w-7 h-7 rounded-full flex items-center justify-center font-display text-[12px] font-bold mt-px transition-colors
-                ${active ? 'bg-clay text-white' : 'bg-clay-soft text-clay-deep'}`}
+                ${active ? 'bg-brand-lime text-slate-950' : 'bg-sky-soft text-sky-deep'}`}
             >
               {op.id.toUpperCase()}
             </span>
             <span className="leading-snug pt-0.5">{op.texto}</span>
-          </button>
+          </motion.button>
         );
       })}
     </div>

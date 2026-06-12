@@ -16,9 +16,9 @@ interface ResultPreviewProps {
 
 function ConfianzaBadge({ confianza }: { confianza: number }) {
   const label = confianza >= 85 ? 'Alta precisión' : confianza >= 70 ? 'Buena precisión' : 'Precisión moderada';
+  // Píldora lima con texto navy — el mismo gesto de "alta afinidad" del hero.
   return (
-    <span className="inline-flex items-center gap-1.5 text-[11.5px] font-bold text-clay-deep">
-      <span className="w-1.5 h-1.5 rounded-full inline-block bg-clay" />
+    <span className="inline-flex items-center gap-1.5 bg-brand-lime text-slate-950 text-[11px] font-black px-2.5 py-1 rounded-md tracking-wide">
       {label} · {confianza}%
     </span>
   );
@@ -46,8 +46,8 @@ function DisputaCard({ result }: { result: ScoringResult }) {
       className={`${CARD} p-5 flex items-start gap-3.5`}
       style={{ boxShadow: CARD_SHADOW }}
     >
-      <span className="shrink-0 mt-0.5 w-9 h-9 rounded-full bg-clay-soft flex items-center justify-center">
-        <Scale size={16} strokeWidth={1.9} className="text-clay-deep" />
+      <span className="shrink-0 mt-0.5 w-9 h-9 rounded-full bg-sky-soft flex items-center justify-center">
+        <Scale size={16} strokeWidth={1.9} className="text-sky-deep" />
       </span>
       <div>
         <p className="text-[11px] font-bold text-ink/40 tracking-[0.12em] uppercase mb-1.5">
@@ -89,13 +89,13 @@ function PlanCard({ planId, onSelect }: { planId: PlanId; onSelect: () => void }
   return (
     <div
       className={`relative rounded-[22px] border p-5 transition-all ${
-        isPopular ? 'border-clay bg-clay-soft/50' : 'border-line bg-paper-raised'
+        isPopular ? 'border-sky bg-sky-soft/50' : 'border-line bg-paper-raised'
       }`}
       style={{ boxShadow: CARD_SHADOW }}
     >
       {isPopular && (
         <div className="absolute -top-3 left-5">
-          <span className="flex items-center gap-1 bg-ink text-paper text-[10px] font-bold px-2.5 py-1 rounded-full tracking-wide uppercase">
+          <span className="flex items-center gap-1 bg-ink text-white text-[10px] font-bold px-2.5 py-1 rounded-full tracking-wide uppercase">
             <Star size={9} fill="currentColor" /> Más elegido
           </span>
         </div>
@@ -107,7 +107,7 @@ function PlanCard({ planId, onSelect }: { planId: PlanId; onSelect: () => void }
           <p className="text-[12px] text-ink/50 font-medium mt-0.5">{plan.tagline}</p>
         </div>
         <div className="text-right shrink-0">
-          <p className="font-serif font-semibold text-[23px] leading-none text-ink">${plan.precio}</p>
+          <p className="font-display font-extrabold text-[23px] leading-none text-ink tracking-tight">${plan.precio}</p>
           <p className="text-[10px] text-ink/40 font-medium mt-1">ARS · único</p>
         </div>
       </div>
@@ -115,7 +115,7 @@ function PlanCard({ planId, onSelect }: { planId: PlanId; onSelect: () => void }
       <div className="space-y-2 mb-5">
         {plan.incluye.map(item => (
           <div key={item} className="flex items-start gap-2.5">
-            <Check size={13} strokeWidth={2.5} className="shrink-0 mt-0.5 text-clay-deep" />
+            <Check size={13} strokeWidth={2.5} className="shrink-0 mt-0.5 text-sky-deep" />
             <span className="text-[12.5px] text-ink/65 font-medium leading-snug">{item}</span>
           </div>
         ))}
@@ -148,7 +148,7 @@ export default function ResultPreview({ nombre, result, onGetFullReport }: Resul
 
         {/* Saludo */}
         <motion.div initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.5, ease: EASE }}>
-          <p className="text-ink/50 text-[13px] font-medium mb-1.5">Tu perfil vocacional, {firstName}</p>
+          <p className="text-ink/50 text-[13px] font-medium mb-2">Tu perfil vocacional, {firstName}</p>
           <ConfianzaBadge confianza={confianza} />
         </motion.div>
 
@@ -166,7 +166,7 @@ export default function ResultPreview({ nombre, result, onGetFullReport }: Resul
           <div className="flex items-start justify-between gap-4 mb-5">
             <div className="min-w-0">
               <p className="text-[11px] text-ink/45 font-bold tracking-[0.12em] uppercase mb-2">Tu arquetipo</p>
-              <h1 className="font-serif font-semibold text-[30px] sm:text-[35px] text-ink leading-[1.08] tracking-[-0.01em]">
+              <h1 className="font-display font-black text-[30px] sm:text-[35px] text-ink leading-[1.06] tracking-tight">
                 {combinacion ? combinacion.nombre : primario.nombre}
               </h1>
               {!combinacion && secundario && (
@@ -211,7 +211,7 @@ export default function ResultPreview({ nombre, result, onGetFullReport }: Resul
           <p className="text-[11px] font-bold text-ink/40 tracking-[0.12em] uppercase mb-3.5">Tus fortalezas</p>
           <div className="flex flex-wrap gap-2">
             {primario.fortalezas.slice(0, 2).map(f => (
-              <span key={f} className="px-3.5 py-2 rounded-full bg-clay-soft/60 border border-line text-[12.5px] text-ink/80 font-semibold">
+              <span key={f} className="px-3.5 py-2 rounded-full bg-sky-soft/60 border border-line text-[12.5px] text-ink/80 font-semibold">
                 {f}
               </span>
             ))}
@@ -243,9 +243,9 @@ export default function ResultPreview({ nombre, result, onGetFullReport }: Resul
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             transition={{ delay: 0.25 }}
-            className="rounded-[18px] border border-line bg-clay-soft/40 p-4"
+            className="rounded-[18px] border border-line bg-sky-soft/40 p-4"
           >
-            <p className="text-[11px] font-bold text-clay-deep mb-1.5 tracking-[0.12em] uppercase">Nota</p>
+            <p className="text-[11px] font-bold text-sky-deep mb-1.5 tracking-[0.12em] uppercase">Nota</p>
             {advertencias.map((a, i) => (
               <p key={i} className="text-[12.5px] text-ink/70 leading-relaxed">{a}</p>
             ))}
@@ -259,7 +259,7 @@ export default function ResultPreview({ nombre, result, onGetFullReport }: Resul
           transition={{ duration: 0.5, delay: 0.25, ease: EASE }}
         >
           <div className="mb-5">
-            <h2 className="font-serif font-semibold text-[22px] text-ink mb-1.5 tracking-[-0.01em]">
+            <h2 className="font-display font-black text-[22px] text-ink mb-1.5 tracking-tight">
               Desbloqueá tu informe completo
             </h2>
             <p className="text-[13px] text-ink/55 font-medium">

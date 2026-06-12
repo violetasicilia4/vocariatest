@@ -10,17 +10,19 @@
   --color-brand-sky: #258ef9; /* Precise bright sky blue from the screenshots */
   --color-brand-dark: #0e1118; /* Dark charcoal/navy color used in screenshots */
 
-  /* ── Test flow · "Editorial Calm" palette ──────────────────────────────
-     Warm, human, premium — deliberately not startup/fintech. Warm paper +
-     warm ink, with a single restrained clay accent for progress/selection. */
-  --color-paper: #f6f3ec;       /* warm bone — screen background */
-  --color-paper-raised: #fffdf9; /* card surface (warm white) */
-  --color-ink: #1c1a16;         /* warm near-black — text & selection fills */
-  --color-clay: #c45d3a;        /* restrained warm accent — progress, highlights */
-  --color-clay-deep: #a84d2e;   /* clay pressed/hover */
-  --color-clay-soft: #f1e3d9;   /* clay wash */
-  --color-line: #e8e1d4;        /* warm hairline border */
-  --color-line-strong: #d8cfbd; /* warm border, emphasized */
+  /* ── Test flow · aligned with the landing (sky blue + lime) ─────────────
+     The test must feel like the same product as the home: cool white surfaces,
+     landing navy ink, sky blue as the live/progress accent, and lime reserved
+     for high-affinity highlights — exactly the home's signature pairing. */
+  --color-paper: #f6f9fd;        /* near-white, faint sky tint — screen background */
+  --color-paper-raised: #ffffff; /* card surface (pure white) */
+  --color-ink: #07111f;          /* landing navy — text & selection fills */
+  --color-sky: #258ef9;          /* landing sky blue — progress, live accents */
+  --color-sky-deep: #1a6fd4;     /* sky pressed/hover */
+  --color-sky-soft: #e7f1fe;     /* sky wash — icon chips, soft highlights */
+  --color-lime: #d5ff3f;         /* landing lime — high-affinity highlights */
+  --color-line: #e8eef5;         /* cool hairline border */
+  --color-line-strong: #d4deea;  /* cool border, emphasized */
 }
 
 /* Custom easing curves */

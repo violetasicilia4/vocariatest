@@ -40,7 +40,7 @@ export default function ChapterTransition({ chapter, onContinue }: ChapterTransi
           <div
             key={i}
             className={`h-[5px] rounded-full transition-all duration-500 ${
-              i < chapter.numero - 1 ? 'bg-clay w-5' : i === chapter.numero - 1 ? 'bg-ink w-8' : 'bg-line w-5'
+              i < chapter.numero - 1 ? 'bg-brand-sky w-5' : i === chapter.numero - 1 ? 'bg-ink w-8' : 'bg-line w-5'
             }`}
           />
         ))}
@@ -50,16 +50,16 @@ export default function ChapterTransition({ chapter, onContinue }: ChapterTransi
         initial={{ opacity: 0, y: 10 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ delay: 0.16, duration: 0.45, ease: EASE }}
-        className="text-[11px] font-bold tracking-[0.2em] uppercase text-clay-deep mb-3"
+        className="text-[11px] font-bold tracking-[0.2em] uppercase text-brand-sky mb-3"
       >
-        Capítulo {chapter.numero}
+        Módulo {chapter.numero}
       </motion.p>
 
       <motion.h2
         initial={{ opacity: 0, y: 12 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ delay: 0.22, duration: 0.5, ease: EASE }}
-        className="font-serif font-semibold text-[32px] sm:text-[38px] text-ink leading-[1.1] tracking-[-0.01em] mb-3 max-w-sm"
+        className="font-display font-black text-[32px] sm:text-[38px] text-ink leading-[1.08] tracking-tight mb-3 max-w-sm"
       >
         {chapter.titulo}
       </motion.h2>
