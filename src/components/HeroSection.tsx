@@ -23,7 +23,7 @@ export default function HeroSection({ onGetStartedClick }: HeroSectionProps) {
       opacity: 1,
       transition: { type: 'spring', stiffness: 100, damping: 15 },
     },
-  };
+  } as const;
 
   const mobileVariants = {
     hidden: { opacity: 0 },
@@ -33,7 +33,7 @@ export default function HeroSection({ onGetStartedClick }: HeroSectionProps) {
   const mobileItemVariants = {
     hidden: { opacity: 0 },
     visible: { opacity: 1, transition: { duration: 0.6, ease: 'easeOut' } },
-  };
+  } as const;
 
   return (
     <section
