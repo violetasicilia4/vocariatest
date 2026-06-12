@@ -51,18 +51,18 @@ export const QUESTIONS: Question[] = [
     ],
   },
 
-  // Q3 — Necesidad de estructura (midpoints escritos)
+  // Q3 — Necesidad de estructura (situación concreta, no escala de "importancia")
   {
     id: 'sca_1',
     tipo: 'scale',
-    enunciado: '¿Qué tan importante es para vos tener claridad sobre qué se espera de vos en el trabajo?',
-    subtext: 'No hay respuesta correcta: ambos extremos son igualmente válidos.',
+    enunciado: 'Arrancás en un lugar nuevo. ¿Cómo te gustaría que fuera tu primer día?',
+    subtext: 'No hay respuesta correcta: los dos extremos son igualmente válidos.',
     opciones: [
-      { id: '1', texto: 'Prefiero definirme mis propios objetivos con total libertad', scores: { descubridor: 3, artifice: 2 } },
-      { id: '2', texto: 'Me gusta tener dirección general, pero con espacio para decidir', scores: { arquitecto: 2 } },
-      { id: '3', texto: 'Necesito cierta claridad, pero me adapto cuando el contexto cambia', scores: { orquestador: 1 } },
-      { id: '4', texto: 'Prefiero objetivos claros, aunque con algo de margen propio', scores: { arbitro: 2 } },
-      { id: '5', texto: 'Necesito saber exactamente qué se espera para rendir bien', scores: { custodio: 3, arbitro: 2 } },
+      { id: '1', texto: 'Que me tiren al agua: "arreglate y mostranos qué sabés hacer"', scores: { descubridor: 3, artifice: 2 } },
+      { id: '2', texto: 'Una dirección general y libertad para encararlo a mi modo', scores: { arquitecto: 2 } },
+      { id: '3', texto: 'Algo de guía, pero con margen para adaptarme sobre la marcha', scores: { orquestador: 1 } },
+      { id: '4', texto: 'Objetivos claros desde el primer día, con algo de margen propio', scores: { arbitro: 2 } },
+      { id: '5', texto: 'Que me expliquen con precisión qué se espera de mí', scores: { custodio: 3, arbitro: 2 } },
     ],
   },
 
@@ -145,7 +145,21 @@ export const QUESTIONS: Question[] = [
     ],
   },
 
-  // Q9 — Respuesta a la injusticia
+  // Q9 — Validación cruzada de impacto/empatía (disfrazada: "qué mirás al final")
+  {
+    id: 'xv_impacto',
+    tipo: 'situacional',
+    enunciado: 'Un proyecto en el que pusiste mucho finalmente sale. ¿Qué es lo primero que mirás para saber si valió la pena?',
+    subtext: 'Elegí lo que de verdad te haría sentir que el esfuerzo tuvo sentido.',
+    opciones: [
+      { id: 'a', texto: 'Si mejoró concretamente la vida de las personas que lo iban a usar.', scores: { sanador: 10, catalizador: 5 } },
+      { id: 'b', texto: 'Si los números y la calidad técnica dieron lo que esperaba.', scores: { interprete: 10, arquitecto: 5 } },
+      { id: 'c', texto: 'Si el equipo terminó orgulloso y más unido por lo que logró.', scores: { anfitrion: 8, orquestador: 5 } },
+      { id: 'd', texto: 'Si abrió la puerta a algo más grande o a una idea nueva.', scores: { narrador: 8, descubridor: 5 } },
+    ],
+  },
+
+  // Q10 — Respuesta a la injusticia
   {
     id: 'sit_4',
     tipo: 'situacional',
@@ -196,7 +210,20 @@ export const QUESTIONS: Question[] = [
     ],
   },
 
-  // Q13 — Actividades que generan flow
+  // Q14 — Validación cruzada de liderazgo/iniciativa (disfrazada: grupo estancado)
+  {
+    id: 'xv_liderazgo',
+    tipo: 'situacional',
+    enunciado: 'Tu grupo está estancado y nadie se decide. Sin que nadie te lo pida, lo más probable es que vos…',
+    opciones: [
+      { id: 'a', texto: 'Tome la iniciativa y proponga un plan para que arranquemos ya.', scores: { orquestador: 10, catalizador: 5 } },
+      { id: 'b', texto: 'Ayude a que cada uno diga lo que piensa para destrabarlo juntos.', scores: { sanador: 8, anfitrion: 5 } },
+      { id: 'c', texto: 'Me ponga a resolver mi parte para no frenar al resto.', scores: { arquitecto: 8, constructor: 5 } },
+      { id: 'd', texto: 'Analice por qué estamos trabados antes de empujar a nadie.', scores: { arbitro: 8, interprete: 5 } },
+    ],
+  },
+
+  // Q15 — Actividades que generan flow
   {
     id: 'mul_2',
     tipo: 'multiselect',
@@ -265,16 +292,16 @@ export const QUESTIONS: Question[] = [
     ],
   },
 
-  // Q18 — Autopercepción de fortaleza central
+  // Q18 — Fortaleza central, vía recuerdo conductual (no auto-rótulo directo)
   {
     id: 'sit_9',
     tipo: 'situacional',
-    enunciado: 'Las personas que mejor te conocen dirían que tu mayor fortaleza en el trabajo es:',
+    enunciado: 'Pensá en la última vez que un grupo del que formabas parte logró algo difícil. ¿Qué parte de eso no habría pasado sin vos?',
     opciones: [
-      { id: 'a', texto: 'Tu capacidad para encontrar soluciones donde otros ven solo problemas.', scores: { arquitecto: 10, descubridor: 5 } },
-      { id: 'b', texto: 'Tu habilidad para que la gente se sienta escuchada y acompañada.', scores: { sanador: 10, catalizador: 5 } },
-      { id: 'c', texto: 'Tu energía para llevar proyectos adelante y hacer que las cosas pasen.', scores: { orquestador: 10, constructor: 5 } },
-      { id: 'd', texto: 'Tu manera de conectar ideas y mundos que parecen no tener relación.', scores: { narrador: 10, arbitro: 5 } },
+      { id: 'a', texto: 'Encontrar una salida cuando parecía que no había forma de avanzar.', scores: { arquitecto: 10, descubridor: 5 } },
+      { id: 'b', texto: 'Sostener al grupo: que nadie se sintiera perdido ni de más.', scores: { sanador: 10, catalizador: 5 } },
+      { id: 'c', texto: 'Empujar para que dejáramos de hablar y las cosas pasaran de verdad.', scores: { orquestador: 10, constructor: 5 } },
+      { id: 'd', texto: 'Conectar ideas sueltas y darle un sentido al conjunto.', scores: { narrador: 10, arbitro: 5 } },
     ],
   },
 

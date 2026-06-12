@@ -281,6 +281,28 @@ const SIGNAL_MAPPING: Record<string, QuestionSignalMap> = {
       d: { interes_ideas: 22, pensamiento_sistemico: 15, creatividad_generativa: 12, persuasion_influencia: 10 },
     },
   },
+
+  // Validación cruzada — re-miden impacto/empatía y liderazgo en situaciones
+  // distintas, para confirmar (o corregir) lo captado por sit_6/vis_sat/sit_9.
+  xv_impacto: {
+    type: 'single',
+    options: {
+      a: { empatia_funcional: 20, impacto_social: 18, vocacion_servicio: 18, interes_personas: 15, busqueda_impacto: 10 },
+      b: { orientacion_analitica: 20, interes_datos: 15, orientacion_logro: 12, reflexion_profunda: 8 },
+      c: { orientacion_social: 18, colaboracion_cercana: 18, energia_interpersonal: 12 },
+      d: { interes_ideas: 18, busqueda_impacto: 12, orientacion_largo_plazo: 12, creatividad_generativa: 10 },
+    },
+  },
+
+  xv_liderazgo: {
+    type: 'single',
+    options: {
+      a: { liderazgo: 22, orientacion_logro: 18, persuasion_influencia: 15, energia_interpersonal: 10, reflexion_vs_accion: -15 },
+      b: { empatia_funcional: 18, colaboracion_cercana: 18, orientacion_social: 15 },
+      c: { autonomia: 20, orientacion_practica: 15, profundidad_vs_amplitud: 12 },
+      d: { pensamiento_critico: 20, orientacion_analitica: 18, reflexion_profunda: 15 },
+    },
+  },
 };
 
 // ---------------------------------------------------------------------------

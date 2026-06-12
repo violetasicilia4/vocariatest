@@ -20,8 +20,8 @@ export interface Chapter {
 export const CHAPTERS: Chapter[] = [
   { id: 'pensar', numero: 1, titulo: 'Cómo pensás',      subtitulo: 'La forma en que abordás lo nuevo y lo incierto.', start: 0 },
   { id: 'mueve',  numero: 2, titulo: 'Qué te mueve',     subtitulo: 'Lo que te da energía y lo que te importa de verdad.', start: 4 },
-  { id: 'trabajo',numero: 3, titulo: 'Cómo trabajás',    subtitulo: 'Tu relación con las personas, el ritmo y el entorno.', start: 9 },
-  { id: 'rumbo',  numero: 4, titulo: 'Hacia dónde vas',  subtitulo: 'La vida profesional que te resuena de verdad.', start: 14 },
+  { id: 'trabajo',numero: 3, titulo: 'Cómo trabajás',    subtitulo: 'Tu relación con las personas, el ritmo y el entorno.', start: 10 },
+  { id: 'rumbo',  numero: 4, titulo: 'Hacia dónde vas',  subtitulo: 'La vida profesional que te resuena de verdad.', start: 16 },
 ];
 
 /** Capítulo "extra" para la fase adaptativa (índices fuera del núcleo). */

@@ -70,10 +70,12 @@ type ProfileDef = {
   anti_1: number[];
   vis_2: number[];
   vis_sat: number[];
+  xv_impacto: number[];
   sit_4: number[];
   par_2: number[];
   sca_3: number[];
   sit_6: number[];
+  xv_liderazgo: number[];
   mul_2: number[];
   sca_4: number[];
   par_3: number[];
@@ -93,10 +95,12 @@ const PROFILES: Record<number, ProfileDef> = {
     anti_1:  [30, 3, 35, 25, 30, 5, 10],
     vis_2:   [35, 15, 5, 30, 10, 5],
     vis_sat: [5, 40, 20, 25, 5, 5],
+    xv_impacto: [10, 60, 15, 15],
     sit_4:   [20, 5, 50, 25],
     par_2:   [70, 30],
     sca_3:   [25, 20, 15, 20, 20],
     sit_6:   [50, 25, 10, 15],
+    xv_liderazgo: [15, 5, 30, 50],
     mul_2:   [45, 5, 20, 45, 15, 10, 15, 20],
     sca_4:   [5, 10, 20, 25, 40],
     par_3:   [30, 70],
@@ -114,10 +118,12 @@ const PROFILES: Record<number, ProfileDef> = {
     anti_1:  [15, 40, 10, 35, 30, 40, 20],
     vis_2:   [5, 15, 55, 5, 10, 10],
     vis_sat: [55, 5, 5, 10, 20, 5],
+    xv_impacto: [65, 5, 20, 10],
     sit_4:   [15, 35, 10, 40],
     par_2:   [30, 70],
     sca_3:   [5, 15, 20, 35, 25],
     sit_6:   [5, 20, 55, 20],
+    xv_liderazgo: [10, 60, 10, 20],
     mul_2:   [10, 55, 15, 10, 20, 15, 20, 10],
     sca_4:   [20, 25, 25, 20, 10],
     par_3:   [40, 60],
@@ -135,10 +141,12 @@ const PROFILES: Record<number, ProfileDef> = {
     anti_1:  [20, 35, 5, 40, 25, 10, 20],
     vis_2:   [10, 5, 10, 5, 60, 10],
     vis_sat: [10, 5, 5, 55, 15, 10],
+    xv_impacto: [15, 10, 15, 60],
     sit_4:   [20, 10, 25, 45],
     par_2:   [55, 45],
     sca_3:   [5, 5, 10, 35, 45],
     sit_6:   [25, 30, 15, 30],
+    xv_liderazgo: [20, 15, 40, 25],
     mul_2:   [15, 10, 50, 15, 15, 10, 55, 15],
     sca_4:   [5, 10, 15, 25, 45],
     par_3:   [70, 30],
@@ -156,10 +164,12 @@ const PROFILES: Record<number, ProfileDef> = {
     anti_1:  [15, 20, 30, 10, 30, 10, 25],
     vis_2:   [10, 50, 10, 10, 10, 10],
     vis_sat: [10, 5, 55, 10, 15, 5],
+    xv_impacto: [15, 45, 25, 15],
     sit_4:   [15, 15, 45, 25],
     par_2:   [40, 60],
     sca_3:   [35, 25, 20, 15, 5],
     sit_6:   [20, 30, 25, 25],
+    xv_liderazgo: [15, 10, 60, 15],
     mul_2:   [15, 10, 50, 10, 20, 50, 10, 15],
     sca_4:   [15, 20, 25, 20, 20],
     par_3:   [20, 80],
@@ -177,10 +187,12 @@ const PROFILES: Record<number, ProfileDef> = {
     anti_1:  [25, 20, 5, 35, 10, 30, 5],
     vis_2:   [25, 40, 10, 10, 5, 10],
     vis_sat: [10, 15, 10, 20, 25, 20],
+    xv_impacto: [20, 15, 40, 25],
     sit_4:   [30, 10, 20, 40],
     par_2:   [35, 65],
     sca_3:   [15, 20, 25, 25, 15],
     sit_6:   [10, 20, 20, 50],
+    xv_liderazgo: [65, 15, 10, 10],
     mul_2:   [15, 20, 15, 20, 55, 10, 20, 40],
     sca_4:   [10, 15, 30, 25, 20],
     par_3:   [25, 75],
@@ -198,10 +210,12 @@ const PROFILES: Record<number, ProfileDef> = {
     anti_1:  [10, 25, 30, 5, 30, 5, 30],
     vis_2:   [10, 20, 25, 10, 5, 30],
     vis_sat: [20, 5, 35, 10, 15, 15],
+    xv_impacto: [35, 20, 30, 15],
     sit_4:   [15, 30, 30, 25],
     par_2:   [50, 50],
     sca_3:   [10, 20, 30, 25, 15],
     sit_6:   [15, 30, 35, 20],
+    xv_liderazgo: [15, 20, 50, 15],
     mul_2:   [10, 25, 20, 10, 10, 55, 15, 10],
     sca_4:   [30, 30, 20, 10, 10],
     par_3:   [25, 75],
@@ -219,10 +233,12 @@ const PROFILES: Record<number, ProfileDef> = {
     anti_1:  [25, 45, 5, 35, 20, 25, 15],
     vis_2:   [10, 5, 20, 10, 40, 15],
     vis_sat: [15, 5, 5, 35, 20, 20],
+    xv_impacto: [25, 10, 20, 45],
     sit_4:   [30, 15, 15, 40],
     par_2:   [45, 55],
     sca_3:   [5, 5, 15, 35, 40],
     sit_6:   [20, 25, 25, 30],
+    xv_liderazgo: [35, 30, 10, 25],
     mul_2:   [20, 25, 15, 10, 20, 5, 55, 20],
     sca_4:   [5, 10, 20, 30, 35],
     par_3:   [60, 40],
@@ -240,10 +256,12 @@ const PROFILES: Record<number, ProfileDef> = {
     anti_1:  [30, 10, 20, 20, 25, 20, 5],
     vis_2:   [15, 10, 15, 50, 5, 5],
     vis_sat: [15, 10, 10, 10, 10, 45],
+    xv_impacto: [20, 40, 10, 30],
     sit_4:   [55, 15, 15, 15],
     par_2:   [55, 45],
     sca_3:   [20, 25, 25, 20, 10],
     sit_6:   [15, 20, 20, 45],
+    xv_liderazgo: [20, 15, 15, 50],
     mul_2:   [25, 20, 10, 25, 20, 10, 20, 55],
     sca_4:   [25, 30, 25, 15, 5],
     par_3:   [20, 80],
@@ -263,10 +281,12 @@ const MUL_1_OPTS   = ['a', 'b', 'c', 'd', 'e', 'f', 'g', 'h'];
 const ANTI_1_OPTS  = ['sangre', 'matematica', 'exposicion', 'rutina', 'ventas', 'soledad', 'competencia'];
 const VIS_2_OPTS   = ['a', 'b', 'c', 'd', 'e', 'f'];
 const VIS_SAT_OPTS = ['a', 'b', 'c', 'd', 'e', 'f'];
+const XV_IMP_OPTS  = ['a', 'b', 'c', 'd'];
 const SIT_4_OPTS   = ['a', 'b', 'c', 'd'];
 const PAR_2_OPTS   = ['a', 'b'];
 const SCA_3_OPTS   = ['1', '2', '3', '4', '5'];
 const SIT_6_OPTS   = ['a', 'b', 'c', 'd'];
+const XV_LID_OPTS  = ['a', 'b', 'c', 'd'];
 const MUL_2_OPTS   = ['a', 'b', 'c', 'd', 'e', 'f', 'g', 'h'];
 const SCA_4_OPTS   = ['1', '2', '3', '4', '5'];
 const PAR_3_OPTS   = ['a', 'b'];
@@ -294,10 +314,12 @@ function generateAnswers(
     anti_1:  pickN(ANTI_1_OPTS, p.anti_1, 2),
     vis_2:   pick(VIS_2_OPTS,   p.vis_2),
     vis_sat: pick(VIS_SAT_OPTS, p.vis_sat),
+    xv_impacto: pick(XV_IMP_OPTS, p.xv_impacto),
     sit_4:   pick(SIT_4_OPTS,   p.sit_4),
     par_2:   pick(PAR_2_OPTS,   p.par_2),
     sca_3:   pick(SCA_3_OPTS,   p.sca_3),
     sit_6:   pick(SIT_6_OPTS,   p.sit_6),
+    xv_liderazgo: pick(XV_LID_OPTS, p.xv_liderazgo),
     mul_2:   pickN(MUL_2_OPTS,  p.mul_2, 3),
     sca_4:   pick(SCA_4_OPTS,   p.sca_4),
     par_3:   pick(PAR_3_OPTS,   p.par_3),
