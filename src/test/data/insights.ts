@@ -32,17 +32,32 @@ const HOOKS: Insight[] = [
  */
 const ADAPTIVE_HOOKS: Insight[] = [
   { at: 0, tone: 'adaptive', text: 'Ajustando el recorrido según tus respuestas.' },
-  { at: 0, tone: 'adaptive', text: 'Las próximas preguntas dependen de cómo respondiste hasta acá.' },
+  { at: 0, tone: 'adaptive', text: 'Esta pregunta depende de cómo respondiste hasta acá.' },
   { at: 0, tone: 'adaptive', text: 'Estas preguntas no las recibe todo el mundo.' },
 ];
+
+/** Cierre para la última pregunta: no puede prometer preguntas que no existen. */
+const CLOSING_HOOK: Insight = {
+  at: 0,
+  tone: 'precision',
+  text: 'Última pregunta: estamos afinando el detalle final de tu resultado.',
+};
 
 /**
  * Devuelve el insight vigente.
  * @param pct        % de perfil construido (0–100).
  * @param isAdaptive si está en la fase adaptativa (fuera del núcleo).
  * @param adaptiveStep índice de la pregunta adaptativa actual (para rotar copy).
+ * @param isLast      si es la última pregunta del test (no hay "próximas").
  */
-export function getCurrentInsight(pct: number, isAdaptive: boolean, adaptiveStep = 0): Insight | null {
+export function getCurrentInsight(
+  pct: number,
+  isAdaptive: boolean,
+  adaptiveStep = 0,
+  isLast = false,
+): Insight | null {
+  // En la última pregunta nunca prometemos preguntas siguientes.
+  if (isLast) return CLOSING_HOOK;
   if (isAdaptive) {
     return ADAPTIVE_HOOKS[adaptiveStep % ADAPTIVE_HOOKS.length];
   }

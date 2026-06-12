@@ -65,10 +65,13 @@ export const OPTION_ACTIVE =
 export const OPTION_DISABLED =
   'bg-[#eef2f7] border-[#eef2f7] text-ink/25 cursor-not-allowed';
 
-/** Input de formulario. */
+/** Input de formulario.
+ *  El font-size es 16px a propósito: por debajo de eso, iOS Safari hace
+ *  auto-zoom al enfocar el campo y deja la pantalla "pegada" en zoom, lo que
+ *  permitía desplazarse en horizontal. Con 16px el zoom no se dispara. */
 export const INPUT =
   'w-full px-4 py-3.5 rounded-2xl bg-paper-raised border border-line text-ink ' +
-  'placeholder:text-ink/35 font-display font-medium text-[15px] transition-all ' +
+  'placeholder:text-ink/35 font-display font-medium text-[16px] transition-all ' +
   'focus:outline-none focus:border-sky focus:ring-2 focus:ring-sky/20';
 
 /** Label de formulario (eyebrow uppercase). */

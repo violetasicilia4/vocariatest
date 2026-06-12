@@ -7,7 +7,7 @@ import ProgressInsight from '../components/ProgressInsight';
 import QuestionCard from '../components/QuestionCard';
 import CheckpointModal from '../components/Checkpoint';
 import LogoIcon from '../../components/ui/LogoIcon';
-import { CHECKPOINTS, confidenceForPct, stageForPct, type Checkpoint } from '../data/stages';
+import { CHECKPOINTS, confidenceForPct, type Checkpoint } from '../data/stages';
 import { getCurrentInsight } from '../data/insights';
 import { EASE } from '../ui/theme';
 import type { ScoringResult } from '../engine/scorer';
@@ -50,9 +50,11 @@ export default function TestRunner({ nombre, profile, onComplete }: TestRunnerPr
   }
   pct = Math.min(100, Math.round(pct));
   const confidence = confidenceForPct(pct);
+  const isLastQuestion = currentIndex === total - 1;
 
-  // Microcopy de inteligencia: solo en la fase adaptativa (recorrido único).
-  const insight = getCurrentInsight(pct, isAdaptive, currentIndex - CORE_LENGTH);
+  // Microcopy de inteligencia: aparece a lo largo del test (no solo en la fase
+  // adaptativa) como "cartel" de avance. En la última pregunta usa el cierre.
+  const insight = getCurrentInsight(pct, isAdaptive, currentIndex - CORE_LENGTH, isLastQuestion);
 
   // Checkpoints: al cruzar un umbral nuevo, interrumpir con el modal premium.
   useEffect(() => {
@@ -109,126 +111,73 @@ export default function TestRunner({ nombre, profile, onComplete }: TestRunnerPr
   };
 
   const firstName = nombre ? nombre.split(' ')[0] : '';
-  const { label: stageLabel } = stageForPct(pct);
 
   return (
-    // Viewport fijo de alto completo. En desktop se parte en dos: un rail de
-    // contexto a la izquierda (progreso como protagonista) y la zona de decisión
-    // a la derecha. En mobile colapsa a una sola columna con el progreso arriba.
-    // overflow-hidden + overflow-x-hidden en el cuerpo evitan el scroll lateral
-    // que generaban las transiciones horizontales de las preguntas.
-    <div className="h-[100dvh] flex flex-col lg:flex-row bg-paper overflow-hidden">
+    // Viewport fijo de alto completo, una sola columna centrada en todos los
+    // tamaños: el progreso vive arriba (full-width, contenido centrado) y la
+    // pregunta queda centrada en el medio — nunca desplazada hacia un lado.
+    // overflow-x-hidden en el cuerpo evita el scroll lateral que generaban las
+    // transiciones horizontales de las preguntas.
+    <div className="h-[100dvh] flex flex-col bg-paper overflow-hidden">
 
-      {/* ───────── Rail de contexto (solo desktop) ─────────
-          El progreso deja de ser una barrita: acá es el héroe de la columna. */}
-      <aside className="hidden lg:flex lg:flex-col lg:w-[380px] xl:w-[420px] shrink-0 border-r border-line/70 bg-gradient-to-b from-sky-soft/40 via-paper to-paper px-12 py-10">
-        <div className="flex items-center gap-2 text-ink">
-          <LogoIcon size={22} />
-          <span className="font-display font-bold text-[15px] tracking-tight">Vocaria</span>
-        </div>
-
-        <div className="flex-1 flex flex-col justify-center max-w-[290px]">
-          <AnimatePresence mode="wait">
-            <motion.p
-              key={stageLabel}
-              initial={{ opacity: 0, y: 8 }}
-              animate={{ opacity: 1, y: 0 }}
-              exit={{ opacity: 0, y: -8 }}
-              transition={{ duration: 0.35, ease: EASE }}
-              className="text-[12px] font-bold uppercase tracking-[0.14em] text-sky-deep mb-4"
-            >
-              {stageLabel}
-            </motion.p>
-          </AnimatePresence>
-
-          <div className="flex items-baseline gap-1 mb-1">
-            <span className="font-display font-black text-[68px] leading-[0.9] text-ink tabular-nums tracking-[-0.03em]">
-              {confidence}
-            </span>
-            <span className="font-display font-black text-[30px] text-ink/35">%</span>
-          </div>
-          <p className="text-[11px] font-bold uppercase tracking-[0.14em] text-ink/40 mb-7">
-            Confianza del perfil
-          </p>
-
-          <div className="h-[7px] rounded-full bg-line overflow-hidden mb-1">
-            <motion.div
-              className="h-full rounded-full bg-brand-sky"
-              style={{ boxShadow: '0 0 12px rgba(37,142,249,0.5)' }}
-              initial={false}
-              animate={{ width: `${pct}%` }}
-              transition={{ duration: 0.6, ease: EASE }}
-            />
-          </div>
-
-          {isAdaptive && <ProgressInsight insight={insight} />}
-        </div>
-
-        <p className="text-[12px] text-ink/35 font-medium">
-          {firstName ? `Test de ${firstName}` : 'Test vocacional'} · sin respuestas correctas
-        </p>
-      </aside>
-
-      {/* ───────── Columna principal (mobile completa / desktop derecha) ───────── */}
-      <div className="flex-1 min-h-0 flex flex-col">
-
-        {/* Header compacto — solo mobile/tablet. En desktop el progreso vive en el rail. */}
-        <header className="lg:hidden shrink-0 sticky top-0 z-10 bg-paper/90 backdrop-blur-xl border-b border-line/70">
-          <div className="max-w-xl mx-auto w-full px-5 pt-2.5 pb-2.5">
-            <div className="flex items-center justify-between mb-2">
-              <div className="flex items-center gap-1.5 text-ink">
-                <LogoIcon size={16} />
-                <span className="font-display font-bold text-[11.5px] tracking-tight">Vocaria</span>
-              </div>
-              {firstName && (
-                <span className="text-[10.5px] text-ink/35 font-medium font-display">{firstName}</span>
-              )}
+      {/* Progreso arriba: identidad + barra narrativa + confianza + carteles de
+          avance. Mismo bloque en mobile y desktop, solo escala el tamaño. */}
+      <header className="shrink-0 sticky top-0 z-10 bg-paper/90 backdrop-blur-xl border-b border-line/70">
+        <div className="max-w-xl lg:max-w-2xl mx-auto w-full px-5 lg:px-8 pt-2.5 lg:pt-4 pb-2.5 lg:pb-3.5">
+          <div className="flex items-center justify-between mb-2 lg:mb-2.5">
+            <div className="flex items-center gap-1.5 text-ink">
+              <LogoIcon size={16} />
+              <span className="font-display font-bold text-[11.5px] lg:text-[13px] tracking-tight">Vocaria</span>
             </div>
-            <ProgressBar pct={pct} confidence={confidence} />
-            {isAdaptive && <ProgressInsight insight={insight} />}
+            {firstName && (
+              <span className="text-[10.5px] lg:text-[12px] text-ink/35 font-medium font-display">{firstName}</span>
+            )}
           </div>
-        </header>
-
-        {/* Cuerpo de la pregunta — centrado vertical; clipea el eje X para que las
-            transiciones no produzcan scroll lateral. */}
-        <main className="flex-1 min-h-0 overflow-y-auto overflow-x-hidden flex flex-col">
-          <div className="m-auto w-full max-w-xl lg:max-w-2xl px-5 lg:px-14 py-4 sm:py-5 lg:py-10">
-            <AnimatePresence mode="wait" custom={direction}>
-              <motion.div
-                key={currentQuestion?.id}
-                custom={direction}
-                variants={variants}
-                initial="enter"
-                animate="center"
-                exit="exit"
-                transition={{ duration: 0.3, ease: EASE }}
-              >
-                {currentQuestion && (
-                  <QuestionCard
-                    question={currentQuestion}
-                    onAnswer={handleAnswer}
-                    currentAnswer={answers[currentQuestion.id]}
-                  />
-                )}
-              </motion.div>
-            </AnimatePresence>
-          </div>
-        </main>
-
-        {/* Volver — pinneado abajo de la columna, no compite con las opciones */}
-        <div className="shrink-0 max-w-xl lg:max-w-2xl mx-auto w-full px-5 lg:px-14 pb-3 lg:pb-6 pt-0.5">
-          {currentIndex > 0 ? (
-            <button
-              onClick={handleBack}
-              className="-ml-1.5 px-1.5 py-1 rounded-lg text-ink/40 hover:text-ink text-[12.5px] font-medium font-display transition-colors flex items-center gap-1"
-            >
-              <ChevronLeft size={14} strokeWidth={2.4} />
-              Anterior
-            </button>
-          ) : (
-            <div className="h-[16px]" />
-          )}
+          <ProgressBar pct={pct} confidence={confidence} />
+          {/* Carteles de avance — aparecen a lo largo del test, no solo al final. */}
+          <ProgressInsight insight={insight} />
         </div>
+      </header>
+
+      {/* Cuerpo de la pregunta — centrado vertical y horizontalmente; clipea el
+          eje X para que las transiciones no produzcan scroll lateral. */}
+      <main className="flex-1 min-h-0 overflow-y-auto overflow-x-hidden flex flex-col">
+        <div className="m-auto w-full max-w-xl lg:max-w-2xl px-5 lg:px-8 py-4 sm:py-6 lg:py-10">
+          <AnimatePresence mode="wait" custom={direction}>
+            <motion.div
+              key={currentQuestion?.id}
+              custom={direction}
+              variants={variants}
+              initial="enter"
+              animate="center"
+              exit="exit"
+              transition={{ duration: 0.3, ease: EASE }}
+            >
+              {currentQuestion && (
+                <QuestionCard
+                  question={currentQuestion}
+                  onAnswer={handleAnswer}
+                  currentAnswer={answers[currentQuestion.id]}
+                />
+              )}
+            </motion.div>
+          </AnimatePresence>
+        </div>
+      </main>
+
+      {/* Volver — pinneado abajo, centrado, no compite con las opciones */}
+      <div className="shrink-0 max-w-xl lg:max-w-2xl mx-auto w-full px-5 lg:px-8 pb-3 lg:pb-5 pt-0.5">
+        {currentIndex > 0 ? (
+          <button
+            onClick={handleBack}
+            className="-ml-1.5 px-1.5 py-1 rounded-lg text-ink/40 hover:text-ink text-[12.5px] font-medium font-display transition-colors flex items-center gap-1"
+          >
+            <ChevronLeft size={14} strokeWidth={2.4} />
+            Anterior
+          </button>
+        ) : (
+          <div className="h-[16px]" />
+        )}
       </div>
 
       {/* Checkpoint premium — interrumpe el flujo en los hitos clave */}

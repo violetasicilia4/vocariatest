@@ -7,7 +7,7 @@ import { getArquetipo, type Arquetipo } from '../data/arquetipos';
 import { iconForEmoji } from '../ui/icons';
 import { PLANES, type PlanId } from '../data/profile';
 import { CARD, CARD_SHADOW, CTA_PRIMARY, CTA_DARK, EASE } from '../ui/theme';
-import { openPrintableReport } from '../report/printableReport';
+import { openPrintableReport, openPlanReport } from '../report/printableReport';
 import { Download } from 'lucide-react';
 
 // Etiquetas legibles para las dimensiones de preferencia (preferences.ts).
@@ -234,7 +234,7 @@ function PlanCard({ planId, onSelect }: { planId: PlanId; onSelect: () => void }
   );
 }
 
-export default function ResultPreview({ nombre, result, onGetFullReport }: ResultPreviewProps) {
+export default function ResultPreview({ nombre, result }: ResultPreviewProps) {
   const { primario, secundario, tercero, combinacion, confianza, advertencias } = result;
   const firstName = nombre.split(' ')[0];
   const PrimarioIcon = iconForEmoji(primario.emoji);
@@ -399,7 +399,7 @@ export default function ResultPreview({ nombre, result, onGetFullReport }: Resul
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ delay: 0.3 + i * 0.07, ease: EASE }}
               >
-                <PlanCard planId={planId} onSelect={() => onGetFullReport(planId)} />
+                <PlanCard planId={planId} onSelect={() => openPlanReport(nombre, result, planId)} />
               </motion.div>
             ))}
           </div>

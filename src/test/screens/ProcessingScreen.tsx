@@ -27,51 +27,48 @@ export default function ProcessingScreen({ nombre, onDone }: ProcessingScreenPro
     };
   }, [onDone]);
 
+  const progress = ((stepIndex + 1) / STEPS.length) * 100;
+
   return (
-    <div className="min-h-[100dvh] bg-paper flex flex-col items-center justify-center px-5">
-      {/* Pulso calmo */}
-      <div className="relative mb-12 flex items-center justify-center w-28 h-28">
-        <motion.div
-          className="absolute w-20 h-20 rounded-full"
-          style={{ background: 'radial-gradient(circle at 38% 34%, #9fd2f1, #258ef9)' }}
-          animate={{ scale: [1, 1.06, 1] }}
-          transition={{ duration: 2.4, repeat: Infinity, ease: 'easeInOut' }}
-        />
-        <motion.div
-          className="absolute w-20 h-20 rounded-full border border-sky/30"
-          animate={{ scale: [1, 1.7, 1], opacity: [0.6, 0, 0.6] }}
-          transition={{ duration: 2.4, repeat: Infinity, ease: 'easeInOut' }}
-        />
-      </div>
+    <div className="min-h-[100dvh] bg-paper flex flex-col items-center justify-center px-6">
+      <div className="w-full max-w-[300px] flex flex-col items-center">
 
-      <h2 className="font-display font-extrabold text-[25px] lg:text-[30px] text-ink text-center mb-5 tracking-tight leading-tight">
-        {nombre ? `Calculando tu perfil, ${nombre.split(' ')[0]}` : 'Calculando tu perfil'}
-      </h2>
+        <h2 className="font-display font-extrabold text-[22px] lg:text-[26px] text-ink text-center mb-8 tracking-tight leading-tight">
+          {nombre ? `Calculando tu perfil, ${nombre.split(' ')[0]}` : 'Calculando tu perfil'}
+        </h2>
 
-      <div className="h-6 overflow-hidden">
-        <AnimatePresence mode="wait">
-          <motion.p
-            key={stepIndex}
-            initial={{ opacity: 0, y: 8 }}
-            animate={{ opacity: 1, y: 0 }}
-            exit={{ opacity: 0, y: -8 }}
-            transition={{ duration: 0.35 }}
-            className="text-ink/55 text-[14px] font-medium text-center"
-          >
-            {STEPS[stepIndex]}
-          </motion.p>
-        </AnimatePresence>
-      </div>
-
-      <div className="flex gap-2 mt-9">
-        {STEPS.map((_, i) => (
+        {/* Barra de procesamiento minimalista: avance determinado + un destello
+            que recorre la barra para dar la sensación de "datos en proceso". */}
+        <div className="relative w-full h-[3px] rounded-full bg-line overflow-hidden">
           <motion.div
-            key={i}
-            className="h-1.5 rounded-full"
-            animate={{ width: i <= stepIndex ? 26 : 8, backgroundColor: i <= stepIndex ? '#258ef9' : '#e8eef5' }}
-            transition={{ duration: 0.4 }}
+            className="h-full rounded-full bg-ink"
+            initial={{ width: '0%' }}
+            animate={{ width: `${progress}%` }}
+            transition={{ duration: 0.6, ease: [0.16, 1, 0.3, 1] }}
           />
-        ))}
+          <motion.div
+            className="absolute top-0 h-full w-1/3 bg-gradient-to-r from-transparent via-brand-sky/70 to-transparent"
+            animate={{ x: ['-100%', '400%'] }}
+            transition={{ duration: 1.3, repeat: Infinity, ease: 'easeInOut' }}
+          />
+        </div>
+
+        {/* Estado actual — alineado a la barra, monoespaciado sutil de "sistema". */}
+        <div className="h-5 overflow-hidden mt-5 w-full">
+          <AnimatePresence mode="wait">
+            <motion.p
+              key={stepIndex}
+              initial={{ opacity: 0, y: 6 }}
+              animate={{ opacity: 1, y: 0 }}
+              exit={{ opacity: 0, y: -6 }}
+              transition={{ duration: 0.3 }}
+              className="text-ink/50 text-[12.5px] font-medium text-center tracking-wide tabular-nums"
+            >
+              {STEPS[stepIndex]}
+            </motion.p>
+          </AnimatePresence>
+        </div>
+
       </div>
     </div>
   );
