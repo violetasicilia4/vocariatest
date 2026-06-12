@@ -31,10 +31,14 @@ function useCountUp(target: number, duration: number, start: number): number {
 }
 
 /**
- * Checkpoint premium con suspenso. Primero "analiza" —el anillo y el número
- * suben lento, generando expectativa— y recién cuando completa revela el
- * hallazgo. Inspirado en los anillos de Apple Fitness y el "analyzing" de
- * Stripe Radar. Sin confeti, sin puntos, sin emojis.
+ * Hito de confianza, premium con suspenso. Primero "analiza" —el anillo y el
+ * número suben lento, generando expectativa— y al completar revela el hallazgo.
+ *
+ * Jerarquía: el número manda. Es lo más grande de la escena, dentro de un
+ * anillo que se lee como "nivel de confianza alcanzado" (no como progreso): un
+ * trazo grueso con degradé sky→lima y un halo que respira al revelarse. Debajo,
+ * la etiqueta que nombra esa cifra, el título del hito y una sola línea de copy
+ * que respira. Sin confeti, sin puntos, sin emojis.
  */
 export default function CheckpointModal({ checkpoint, confidence, onContinue }: CheckpointModalProps) {
   const startVal = Math.max(8, Math.round(confidence * 0.5));
@@ -56,7 +60,7 @@ export default function CheckpointModal({ checkpoint, confidence, onContinue }: 
     return () => window.removeEventListener('keydown', onKey);
   }, [revealed, onContinue]);
 
-  const R = 32;
+  const R = 50;
   const C = 2 * Math.PI * R;
   const offset = C * (1 - value / 100);
 
@@ -78,59 +82,69 @@ export default function CheckpointModal({ checkpoint, confidence, onContinue }: 
         role="dialog"
         aria-modal="true"
         aria-label={checkpoint.title}
-        className="w-full max-w-[332px] bg-paper-raised rounded-[30px] p-8 text-center overflow-hidden"
+        className="w-full max-w-[360px] bg-paper-raised rounded-[30px] px-9 pt-9 pb-7 text-center overflow-hidden"
         style={{ boxShadow: CARD_SHADOW_LG }}
       >
-        {/* Anillo de confianza + número, centro de la escena */}
-        <div className="relative w-[88px] h-[88px] mx-auto mb-6">
-          {/* Pulso ambiental mientras analiza */}
+        {/* Anillo de confianza con el número como protagonista absoluto */}
+        <div className="relative w-[128px] h-[128px] mx-auto mb-5">
+          {/* Halo que respira: tenue mientras analiza, un pulso firme al revelar */}
           <AnimatePresence>
             {!revealed && (
               <motion.span
-                className="absolute inset-0 rounded-full bg-brand-sky/15"
+                className="absolute inset-1 rounded-full bg-brand-sky/12"
                 initial={{ scale: 0.8, opacity: 0 }}
-                animate={{ scale: [0.85, 1.15, 0.85], opacity: [0.5, 0, 0.5] }}
+                animate={{ scale: [0.85, 1.12, 0.85], opacity: [0.45, 0, 0.45] }}
                 exit={{ opacity: 0 }}
                 transition={{ duration: 1.8, repeat: Infinity, ease: 'easeInOut' }}
               />
             )}
           </AnimatePresence>
+          {revealed && (
+            <motion.span
+              className="absolute inset-1 rounded-full bg-brand-sky/15"
+              initial={{ scale: 0.9, opacity: 0.7 }}
+              animate={{ scale: 1.25, opacity: 0 }}
+              transition={{ duration: 0.9, ease: EASE }}
+            />
+          )}
 
-          <svg width="88" height="88" viewBox="0 0 88 88" className="-rotate-90 relative">
-            <circle cx="44" cy="44" r={R} fill="none" stroke="var(--color-line)" strokeWidth="6" />
+          <svg width="128" height="128" viewBox="0 0 128 128" className="-rotate-90 relative">
+            <defs>
+              <linearGradient id="confGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+                <stop offset="0%" stopColor="var(--color-brand-sky)" />
+                <stop offset="100%" stopColor="var(--color-brand-lime)" />
+              </linearGradient>
+            </defs>
+            <circle cx="64" cy="64" r={R} fill="none" stroke="var(--color-line)" strokeWidth="8" />
             <circle
-              cx="44" cy="44" r={R} fill="none" stroke="var(--color-brand-sky)" strokeWidth="6"
+              cx="64" cy="64" r={R} fill="none" stroke="url(#confGrad)" strokeWidth="8"
               strokeLinecap="round" strokeDasharray={C} strokeDashoffset={offset}
             />
           </svg>
 
           <motion.div
             className="absolute inset-0 flex items-center justify-center"
-            animate={revealed ? { scale: [1, 1.12, 1] } : {}}
+            animate={revealed ? { scale: [1, 1.08, 1] } : {}}
             transition={{ duration: 0.5, ease: EASE }}
           >
-            <span className="font-display font-black text-[22px] text-ink tabular-nums">{value}%</span>
+            <span className="font-display font-black text-[40px] text-ink tabular-nums tracking-[-0.03em] leading-none">
+              {value}<span className="text-[22px] align-top text-ink/40 ml-0.5">%</span>
+            </span>
           </motion.div>
         </div>
 
         <AnimatePresence mode="wait">
           {!revealed ? (
-            <motion.div
+            <motion.p
               key="analyzing"
               initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
+              animate={{ opacity: [0.45, 1, 0.45] }}
               exit={{ opacity: 0 }}
-              transition={{ duration: 0.3 }}
-              className="pb-1"
+              transition={{ opacity: { duration: 1.6, repeat: Infinity, ease: 'easeInOut' } }}
+              className="text-[12px] font-bold text-ink/45 tracking-[0.16em] uppercase pb-1"
             >
-              <motion.p
-                animate={{ opacity: [0.45, 1, 0.45] }}
-                transition={{ duration: 1.6, repeat: Infinity, ease: 'easeInOut' }}
-                className="text-[12px] font-bold text-ink/50 tracking-[0.14em] uppercase"
-              >
-                Analizando tus respuestas
-              </motion.p>
-            </motion.div>
+              Analizando tus respuestas
+            </motion.p>
           ) : (
             <motion.div
               key="revealed"
@@ -138,13 +152,13 @@ export default function CheckpointModal({ checkpoint, confidence, onContinue }: 
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.45, ease: EASE }}
             >
-              <p className="text-[10.5px] font-bold text-brand-sky tracking-[0.16em] uppercase mb-2">
-                Checkpoint
+              <p className="text-[11px] font-bold text-ink/40 tracking-[0.16em] uppercase mb-3">
+                Confianza del perfil
               </p>
-              <h3 className="font-display font-black text-[22px] text-ink tracking-tight mb-2 leading-tight">
+              <h3 className="font-display font-black text-[21px] text-ink tracking-tight leading-[1.15] mb-2">
                 {checkpoint.title}
               </h3>
-              <p className="text-[13.5px] text-ink/55 font-medium leading-relaxed mb-6">
+              <p className="text-[14px] text-ink/55 font-medium leading-[1.5] mb-7 mx-auto max-w-[270px]">
                 {checkpoint.text}
               </p>
               <button

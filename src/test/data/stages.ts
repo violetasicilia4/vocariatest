@@ -48,10 +48,12 @@ export interface Checkpoint {
   text: string;
 }
 
-/** Los 4 momentos que interrumpen el flujo. Copy corto, sofisticado. */
+/** Los 4 momentos que interrumpen el flujo. Copy corto, sofisticado.
+ *  Cada texto está pensado para asentar en líneas parejas —sin huérfanas—
+ *  dentro del ancho del modal. */
 export const CHECKPOINTS: Checkpoint[] = [
-  { at: 25, title: 'Patrón detectado',     text: 'Identificamos una de tus fortalezas principales.' },
-  { at: 50, title: 'Perfil en construcción', text: 'Tu perfil ya alcanzó alta precisión.' },
-  { at: 75, title: 'Hipótesis validada',   text: 'Tus últimas respuestas reforzaron un patrón.' },
-  { at: 90, title: 'Resultado casi listo', text: 'Ya hay información suficiente para una recomendación confiable.' },
+  { at: 25, title: 'Patrón detectado',       text: 'Tus primeras respuestas ya marcan una dirección clara en tu perfil.' },
+  { at: 50, title: 'Perfil en construcción', text: 'Tu perfil está mostrando señales cada vez más consistentes.' },
+  { at: 75, title: 'Hipótesis validada',     text: 'Las últimas respuestas fortalecieron una tendencia que veníamos detectando.' },
+  { at: 90, title: 'Resultado casi listo',   text: 'Ya tenemos información suficiente para una recomendación precisa.' },
 ];

@@ -115,16 +115,17 @@ export default function TestRunner({ nombre, profile, onComplete }: TestRunnerPr
     // de la pregunta puede desplazarse — el avance nunca se pierde de vista.
     <div className="h-[100dvh] flex flex-col bg-paper">
 
-      {/* Header pinneado: identidad + progreso narrativo + confianza */}
+      {/* Header pinneado: identidad + progreso narrativo + confianza.
+          Compacto a propósito — cede el viewport a la zona de decisión. */}
       <header className="shrink-0 sticky top-0 z-10 bg-paper/90 backdrop-blur-xl border-b border-line/70">
-        <div className="max-w-xl mx-auto w-full px-5 lg:px-6 pt-3 lg:pt-4 pb-3 lg:pb-3.5">
-          <div className="flex items-center justify-between mb-2.5">
+        <div className="max-w-xl mx-auto w-full px-5 lg:px-6 pt-2.5 lg:pt-3.5 pb-2.5 lg:pb-3">
+          <div className="flex items-center justify-between mb-2">
             <div className="flex items-center gap-1.5 text-ink">
-              <LogoIcon size={18} />
-              <span className="font-display font-bold text-[12px] tracking-tight">Vocaria</span>
+              <LogoIcon size={16} />
+              <span className="font-display font-bold text-[11.5px] tracking-tight">Vocaria</span>
             </div>
             {firstName && (
-              <span className="text-[11px] text-ink/35 font-medium font-display">{firstName}</span>
+              <span className="text-[10.5px] text-ink/35 font-medium font-display">{firstName}</span>
             )}
           </div>
           <ProgressBar pct={pct} confidence={confidence} />
@@ -135,7 +136,7 @@ export default function TestRunner({ nombre, profile, onComplete }: TestRunnerPr
       {/* Cuerpo de la pregunta — centrado si entra; alineado arriba (sin recorte)
           y con scroll interno solo si una pregunta larga no entrara. */}
       <main className="flex-1 min-h-0 overflow-y-auto flex flex-col">
-        <div className="m-auto w-full max-w-xl px-5 lg:px-6 py-6">
+        <div className="m-auto w-full max-w-xl px-5 lg:px-6 py-4 sm:py-5">
           <AnimatePresence mode="wait" custom={direction}>
             <motion.div
               key={currentQuestion?.id}
@@ -159,17 +160,17 @@ export default function TestRunner({ nombre, profile, onComplete }: TestRunnerPr
       </main>
 
       {/* Volver — pinneado abajo, no compite con las opciones */}
-      <div className="shrink-0 max-w-xl mx-auto w-full px-5 lg:px-6 pb-4 pt-1">
+      <div className="shrink-0 max-w-xl mx-auto w-full px-5 lg:px-6 pb-3 pt-0.5">
         {currentIndex > 0 ? (
           <button
             onClick={handleBack}
-            className="-ml-1.5 px-1.5 py-1.5 rounded-lg text-ink/40 hover:text-ink text-[13px] font-medium font-display transition-colors flex items-center gap-1"
+            className="-ml-1.5 px-1.5 py-1 rounded-lg text-ink/40 hover:text-ink text-[12.5px] font-medium font-display transition-colors flex items-center gap-1"
           >
-            <ChevronLeft size={15} strokeWidth={2.4} />
+            <ChevronLeft size={14} strokeWidth={2.4} />
             Anterior
           </button>
         ) : (
-          <div className="h-[20px]" />
+          <div className="h-[16px]" />
         )}
       </div>
 

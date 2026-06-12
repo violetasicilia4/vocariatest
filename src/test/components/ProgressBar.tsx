@@ -20,7 +20,7 @@ export default function ProgressBar({ pct, confidence }: ProgressBarProps) {
 
   return (
     <div className="w-full">
-      <div className="flex items-end justify-between mb-2 gap-3">
+      <div className="flex items-end justify-between mb-1.5 gap-3">
         <div className="overflow-hidden">
           <AnimatePresence mode="wait">
             <motion.span
