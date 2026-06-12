@@ -7,7 +7,7 @@ import ProgressInsight from '../components/ProgressInsight';
 import QuestionCard from '../components/QuestionCard';
 import CheckpointModal from '../components/Checkpoint';
 import LogoIcon from '../../components/ui/LogoIcon';
-import { CHECKPOINTS, confidenceForPct, type Checkpoint } from '../data/stages';
+import { CHECKPOINTS, confidenceForPct, stageForPct, type Checkpoint } from '../data/stages';
 import { getCurrentInsight } from '../data/insights';
 import { EASE } from '../ui/theme';
 import type { ScoringResult } from '../engine/scorer';
@@ -109,69 +109,126 @@ export default function TestRunner({ nombre, profile, onComplete }: TestRunnerPr
   };
 
   const firstName = nombre ? nombre.split(' ')[0] : '';
+  const { label: stageLabel } = stageForPct(pct);
 
   return (
-    // Viewport fijo: el progreso queda siempre pinneado arriba y solo el cuerpo
-    // de la pregunta puede desplazarse — el avance nunca se pierde de vista.
-    <div className="h-[100dvh] flex flex-col bg-paper">
+    // Viewport fijo de alto completo. En desktop se parte en dos: un rail de
+    // contexto a la izquierda (progreso como protagonista) y la zona de decisión
+    // a la derecha. En mobile colapsa a una sola columna con el progreso arriba.
+    // overflow-hidden + overflow-x-hidden en el cuerpo evitan el scroll lateral
+    // que generaban las transiciones horizontales de las preguntas.
+    <div className="h-[100dvh] flex flex-col lg:flex-row bg-paper overflow-hidden">
 
-      {/* Header pinneado: identidad + progreso narrativo + confianza.
-          Compacto a propósito — cede el viewport a la zona de decisión. */}
-      <header className="shrink-0 sticky top-0 z-10 bg-paper/90 backdrop-blur-xl border-b border-line/70">
-        <div className="max-w-xl mx-auto w-full px-5 lg:px-6 pt-2.5 lg:pt-3.5 pb-2.5 lg:pb-3">
-          <div className="flex items-center justify-between mb-2">
-            <div className="flex items-center gap-1.5 text-ink">
-              <LogoIcon size={16} />
-              <span className="font-display font-bold text-[11.5px] tracking-tight">Vocaria</span>
-            </div>
-            {firstName && (
-              <span className="text-[10.5px] text-ink/35 font-medium font-display">{firstName}</span>
-            )}
+      {/* ───────── Rail de contexto (solo desktop) ─────────
+          El progreso deja de ser una barrita: acá es el héroe de la columna. */}
+      <aside className="hidden lg:flex lg:flex-col lg:w-[380px] xl:w-[420px] shrink-0 border-r border-line/70 bg-gradient-to-b from-sky-soft/40 via-paper to-paper px-12 py-10">
+        <div className="flex items-center gap-2 text-ink">
+          <LogoIcon size={22} />
+          <span className="font-display font-bold text-[15px] tracking-tight">Vocaria</span>
+        </div>
+
+        <div className="flex-1 flex flex-col justify-center max-w-[290px]">
+          <AnimatePresence mode="wait">
+            <motion.p
+              key={stageLabel}
+              initial={{ opacity: 0, y: 8 }}
+              animate={{ opacity: 1, y: 0 }}
+              exit={{ opacity: 0, y: -8 }}
+              transition={{ duration: 0.35, ease: EASE }}
+              className="text-[12px] font-bold uppercase tracking-[0.14em] text-sky-deep mb-4"
+            >
+              {stageLabel}
+            </motion.p>
+          </AnimatePresence>
+
+          <div className="flex items-baseline gap-1 mb-1">
+            <span className="font-display font-black text-[68px] leading-[0.9] text-ink tabular-nums tracking-[-0.03em]">
+              {confidence}
+            </span>
+            <span className="font-display font-black text-[30px] text-ink/35">%</span>
           </div>
-          <ProgressBar pct={pct} confidence={confidence} />
+          <p className="text-[11px] font-bold uppercase tracking-[0.14em] text-ink/40 mb-7">
+            Confianza del perfil
+          </p>
+
+          <div className="h-[7px] rounded-full bg-line overflow-hidden mb-1">
+            <motion.div
+              className="h-full rounded-full bg-brand-sky"
+              style={{ boxShadow: '0 0 12px rgba(37,142,249,0.5)' }}
+              initial={false}
+              animate={{ width: `${pct}%` }}
+              transition={{ duration: 0.6, ease: EASE }}
+            />
+          </div>
+
           {isAdaptive && <ProgressInsight insight={insight} />}
         </div>
-      </header>
 
-      {/* Cuerpo de la pregunta — centrado si entra; alineado arriba (sin recorte)
-          y con scroll interno solo si una pregunta larga no entrara. */}
-      <main className="flex-1 min-h-0 overflow-y-auto flex flex-col">
-        <div className="m-auto w-full max-w-xl px-5 lg:px-6 py-4 sm:py-5">
-          <AnimatePresence mode="wait" custom={direction}>
-            <motion.div
-              key={currentQuestion?.id}
-              custom={direction}
-              variants={variants}
-              initial="enter"
-              animate="center"
-              exit="exit"
-              transition={{ duration: 0.3, ease: EASE }}
-            >
-              {currentQuestion && (
-                <QuestionCard
-                  question={currentQuestion}
-                  onAnswer={handleAnswer}
-                  currentAnswer={answers[currentQuestion.id]}
-                />
+        <p className="text-[12px] text-ink/35 font-medium">
+          {firstName ? `Test de ${firstName}` : 'Test vocacional'} · sin respuestas correctas
+        </p>
+      </aside>
+
+      {/* ───────── Columna principal (mobile completa / desktop derecha) ───────── */}
+      <div className="flex-1 min-h-0 flex flex-col">
+
+        {/* Header compacto — solo mobile/tablet. En desktop el progreso vive en el rail. */}
+        <header className="lg:hidden shrink-0 sticky top-0 z-10 bg-paper/90 backdrop-blur-xl border-b border-line/70">
+          <div className="max-w-xl mx-auto w-full px-5 pt-2.5 pb-2.5">
+            <div className="flex items-center justify-between mb-2">
+              <div className="flex items-center gap-1.5 text-ink">
+                <LogoIcon size={16} />
+                <span className="font-display font-bold text-[11.5px] tracking-tight">Vocaria</span>
+              </div>
+              {firstName && (
+                <span className="text-[10.5px] text-ink/35 font-medium font-display">{firstName}</span>
               )}
-            </motion.div>
-          </AnimatePresence>
-        </div>
-      </main>
+            </div>
+            <ProgressBar pct={pct} confidence={confidence} />
+            {isAdaptive && <ProgressInsight insight={insight} />}
+          </div>
+        </header>
 
-      {/* Volver — pinneado abajo, no compite con las opciones */}
-      <div className="shrink-0 max-w-xl mx-auto w-full px-5 lg:px-6 pb-3 pt-0.5">
-        {currentIndex > 0 ? (
-          <button
-            onClick={handleBack}
-            className="-ml-1.5 px-1.5 py-1 rounded-lg text-ink/40 hover:text-ink text-[12.5px] font-medium font-display transition-colors flex items-center gap-1"
-          >
-            <ChevronLeft size={14} strokeWidth={2.4} />
-            Anterior
-          </button>
-        ) : (
-          <div className="h-[16px]" />
-        )}
+        {/* Cuerpo de la pregunta — centrado vertical; clipea el eje X para que las
+            transiciones no produzcan scroll lateral. */}
+        <main className="flex-1 min-h-0 overflow-y-auto overflow-x-hidden flex flex-col">
+          <div className="m-auto w-full max-w-xl lg:max-w-2xl px-5 lg:px-14 py-4 sm:py-5 lg:py-10">
+            <AnimatePresence mode="wait" custom={direction}>
+              <motion.div
+                key={currentQuestion?.id}
+                custom={direction}
+                variants={variants}
+                initial="enter"
+                animate="center"
+                exit="exit"
+                transition={{ duration: 0.3, ease: EASE }}
+              >
+                {currentQuestion && (
+                  <QuestionCard
+                    question={currentQuestion}
+                    onAnswer={handleAnswer}
+                    currentAnswer={answers[currentQuestion.id]}
+                  />
+                )}
+              </motion.div>
+            </AnimatePresence>
+          </div>
+        </main>
+
+        {/* Volver — pinneado abajo de la columna, no compite con las opciones */}
+        <div className="shrink-0 max-w-xl lg:max-w-2xl mx-auto w-full px-5 lg:px-14 pb-3 lg:pb-6 pt-0.5">
+          {currentIndex > 0 ? (
+            <button
+              onClick={handleBack}
+              className="-ml-1.5 px-1.5 py-1 rounded-lg text-ink/40 hover:text-ink text-[12.5px] font-medium font-display transition-colors flex items-center gap-1"
+            >
+              <ChevronLeft size={14} strokeWidth={2.4} />
+              Anterior
+            </button>
+          ) : (
+            <div className="h-[16px]" />
+          )}
+        </div>
       </div>
 
       {/* Checkpoint premium — interrumpe el flujo en los hitos clave */}

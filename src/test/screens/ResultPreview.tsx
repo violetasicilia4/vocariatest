@@ -246,7 +246,7 @@ export default function ResultPreview({ nombre, result, onGetFullReport }: Resul
         <span className="font-display font-bold text-[13px] tracking-tight">Vocaria</span>
       </div>
 
-      <div className="max-w-xl mx-auto px-5 py-8 space-y-6 pb-12">
+      <div className="max-w-xl lg:max-w-2xl mx-auto px-5 lg:px-8 py-8 lg:py-12 space-y-6 pb-12">
 
         {/* Saludo */}
         <motion.div initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.5, ease: EASE }}>
@@ -391,7 +391,7 @@ export default function ResultPreview({ nombre, result, onGetFullReport }: Resul
             </p>
           </div>
 
-          <div className="space-y-5">
+          <div className="space-y-5 lg:space-y-0 lg:grid lg:grid-cols-3 lg:gap-4 lg:items-start">
             {(['esencial', 'universitario', 'profesional'] as PlanId[]).map((planId, i) => (
               <motion.div
                 key={planId}

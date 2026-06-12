@@ -44,16 +44,32 @@ export function confidenceForPct(pct: number): number {
 export interface Checkpoint {
   /** % a partir del cual se dispara (una sola vez). */
   at: number;
+  /** Microcopy de la fase "analizando" — distinto en cada hito para no repetir. */
+  analyzing: string;
   title: string;
   text: string;
 }
 
-/** Los 4 momentos que interrumpen el flujo. Copy corto, sofisticado.
- *  Cada texto está pensado para asentar en líneas parejas —sin huérfanas—
- *  dentro del ancho del modal. */
+/** Tres momentos que interrumpen brevemente el flujo. Copy corto, sofisticado.
+ *  Cada uno tiene su propia frase de análisis para que no se sienta idéntico al
+ *  anterior. Son pocos a propósito: cada interrupción tiene que pesar. */
 export const CHECKPOINTS: Checkpoint[] = [
-  { at: 25, title: 'Patrón detectado',       text: 'Tus primeras respuestas ya marcan una dirección clara en tu perfil.' },
-  { at: 50, title: 'Perfil en construcción', text: 'Tu perfil está mostrando señales cada vez más consistentes.' },
-  { at: 75, title: 'Hipótesis validada',     text: 'Las últimas respuestas fortalecieron una tendencia que veníamos detectando.' },
-  { at: 90, title: 'Resultado casi listo',   text: 'Ya tenemos información suficiente para una recomendación precisa.' },
+  {
+    at: 30,
+    analyzing: 'Leyendo tus primeras respuestas',
+    title: 'Patrón detectado',
+    text: 'Tus primeras respuestas ya marcan una dirección clara en tu perfil.',
+  },
+  {
+    at: 58,
+    analyzing: 'Cruzando señales de tu perfil',
+    title: 'Perfil en construcción',
+    text: 'Empiezan a aparecer señales cada vez más consistentes sobre cómo pensás.',
+  },
+  {
+    at: 82,
+    analyzing: 'Contrastando con tus respuestas',
+    title: 'Hipótesis validada',
+    text: 'Las últimas respuestas fortalecieron la tendencia que veníamos detectando.',
+  },
 ];

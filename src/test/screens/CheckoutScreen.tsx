@@ -52,7 +52,7 @@ export default function CheckoutScreen({ nombre, email, result, plan, onBack }: 
         </button>
       </div>
 
-      <div className="max-w-xl mx-auto px-5 py-8 pb-32 space-y-6">
+      <div className="max-w-xl lg:max-w-2xl mx-auto px-5 lg:px-8 py-8 lg:py-12 pb-32 space-y-6">
 
         <motion.div initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.5, ease: EASE }}>
           <p className="text-ink/50 text-[13px] font-medium mb-2">Tu informe está listo, {firstName}</p>
@@ -133,7 +133,7 @@ export default function CheckoutScreen({ nombre, email, result, plan, onBack }: 
 
       <div className="fixed bottom-0 left-0 right-0 px-5 pb-6 pt-6 bg-gradient-to-t from-paper via-paper to-transparent">
         {intentSent ? (
-          <div className="w-full max-w-xl mx-auto rounded-[20px] border border-sky bg-sky-soft/60 px-5 py-4 flex items-start gap-3">
+          <div className="w-full max-w-xl lg:max-w-2xl mx-auto rounded-[20px] border border-sky bg-sky-soft/60 px-5 py-4 flex items-start gap-3">
             <CheckCircle2 size={20} className="text-sky-deep shrink-0 mt-0.5" />
             <div>
               <p className="text-[14px] font-bold text-ink">Te reservamos el lugar, {firstName}.</p>
@@ -149,7 +149,7 @@ export default function CheckoutScreen({ nombre, email, result, plan, onBack }: 
             <button
               onClick={handlePago}
               disabled={sending}
-              className={`w-full max-w-xl mx-auto flex items-center justify-center gap-2 py-4 text-[16px] disabled:opacity-60 ${CTA_PRIMARY}`}
+              className={`w-full max-w-xl lg:max-w-2xl mx-auto flex items-center justify-center gap-2 py-4 text-[16px] disabled:opacity-60 ${CTA_PRIMARY}`}
             >
               {sending ? 'Reservando...' : 'Reservar mi informe completo'}
               {!sending && <ArrowRight size={18} strokeWidth={2.5} />}

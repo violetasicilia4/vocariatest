@@ -18,9 +18,9 @@ export default function ProcessingScreen({ nombre, onDone }: ProcessingScreenPro
 
   useEffect(() => {
     const intervals = STEPS.map((_, i) =>
-      setTimeout(() => setStepIndex(i), i * 900)
+      setTimeout(() => setStepIndex(i), i * 620)
     );
-    const done = setTimeout(onDone, STEPS.length * 900 + 600);
+    const done = setTimeout(onDone, STEPS.length * 620 + 400);
     return () => {
       intervals.forEach(clearTimeout);
       clearTimeout(done);
@@ -28,7 +28,7 @@ export default function ProcessingScreen({ nombre, onDone }: ProcessingScreenPro
   }, [onDone]);
 
   return (
-    <div className="min-h-screen bg-paper flex flex-col items-center justify-center px-5">
+    <div className="min-h-[100dvh] bg-paper flex flex-col items-center justify-center px-5">
       {/* Pulso calmo */}
       <div className="relative mb-12 flex items-center justify-center w-28 h-28">
         <motion.div
@@ -44,7 +44,7 @@ export default function ProcessingScreen({ nombre, onDone }: ProcessingScreenPro
         />
       </div>
 
-      <h2 className="font-display font-extrabold text-[25px] text-ink text-center mb-5 tracking-tight leading-tight">
+      <h2 className="font-display font-extrabold text-[25px] lg:text-[30px] text-ink text-center mb-5 tracking-tight leading-tight">
         {nombre ? `Calculando tu perfil, ${nombre.split(' ')[0]}` : 'Calculando tu perfil'}
       </h2>
 

@@ -9,10 +9,10 @@ interface CheckpointModalProps {
   onContinue: () => void;
 }
 
-/** Duración del "build" antes del reveal — el suspenso que hace que el hito pese. */
-const ANALYZE_MS = 1900;
+/** Duración del "build" antes del reveal — suspenso breve, sin demorar el flujo. */
+const ANALYZE_MS = 1000;
 /** Tiempo que el hallazgo queda en pantalla antes de cerrarse solo. */
-const HOLD_MS = 3200;
+const HOLD_MS = 2000;
 
 /** Cuenta ascendente con easing, en sync con el anillo. */
 function useCountUp(target: number, duration: number, start: number): number {
@@ -152,10 +152,10 @@ export default function CheckpointModal({ checkpoint, confidence, onContinue }: 
               initial={{ opacity: 0 }}
               animate={{ opacity: [0.45, 1, 0.45] }}
               exit={{ opacity: 0 }}
-              transition={{ opacity: { duration: 1.6, repeat: Infinity, ease: 'easeInOut' } }}
+              transition={{ opacity: { duration: 1.2, repeat: Infinity, ease: 'easeInOut' } }}
               className="text-[12px] font-bold text-ink/45 tracking-[0.16em] uppercase pb-1"
             >
-              Analizando tus respuestas
+              {checkpoint.analyzing}
             </motion.p>
           ) : (
             <motion.div
