@@ -70,14 +70,27 @@ export default function Header({ onContactClick }: HeaderProps) {
           </button>
         </div>
 
-        {/* Hamburguesa mobile */}
-        <button
-          onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
-          className={`md:hidden p-1 rounded-lg focus:outline-none ${scrolled ? 'text-slate-900' : 'text-white'}`}
-          aria-label={mobileMenuOpen ? 'Cerrar menú' : 'Abrir menú'}
-        >
-          {mobileMenuOpen ? <X className="w-6 h-6" /> : <Menu className="w-6 h-6" />}
-        </button>
+        {/* Acciones mobile: CTA primario + hamburguesa */}
+        <div className="flex items-center gap-2.5 md:hidden">
+          {/* CTA mobile — aparece al scrollear, cuando el CTA del hero ya no
+              está a la vista. Mantiene el "Empezar" siempre alcanzable sin
+              sumar ruido above-the-fold. */}
+          {scrolled && !mobileMenuOpen && (
+            <button
+              onClick={onContactClick}
+              className="px-4 py-2 bg-brand-lime text-slate-950 rounded-full text-[12px] font-bold tracking-wide hover:bg-[#07111F] hover:text-white active:scale-[0.97] transition-[background-color,color,transform] duration-200 shadow-[0_6px_18px_rgba(213,255,63,0.30)]"
+            >
+              Empezar
+            </button>
+          )}
+          <button
+            onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
+            className={`p-1 rounded-lg focus:outline-none ${scrolled ? 'text-slate-900' : 'text-white'}`}
+            aria-label={mobileMenuOpen ? 'Cerrar menú' : 'Abrir menú'}
+          >
+            {mobileMenuOpen ? <X className="w-6 h-6" /> : <Menu className="w-6 h-6" />}
+          </button>
+        </div>
       </div>
 
       {/* Menú mobile */}
