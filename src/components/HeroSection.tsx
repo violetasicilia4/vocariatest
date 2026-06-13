@@ -74,8 +74,8 @@ export default function HeroSection({ onGetStartedClick }: HeroSectionProps) {
 
           {/* Subtítulo */}
           <motion.p variants={mobileItemVariants}
-            className="text-[11.5px] w-full mb-3 leading-snug font-medium"
-            style={{ color: 'rgba(255,255,255,0.75)', textShadow: '0 1px 12px rgba(10,30,60,0.30)' }}
+            className="text-[13px] w-full mb-3 leading-relaxed font-medium"
+            style={{ color: 'rgba(255,255,255,0.9)', textShadow: '0 1px 12px rgba(10,30,60,0.32)' }}
           >
             Respondé un test basado en situaciones reales y recibí carreras, universidades y próximos pasos.
           </motion.p>
@@ -83,7 +83,7 @@ export default function HeroSection({ onGetStartedClick }: HeroSectionProps) {
           {/* Preview de resultado — prueba social de apoyo, escala reducida */}
           <motion.div variants={mobileItemVariants} className="w-[95%] mx-auto mb-10 opacity-90">
             <div className="flex justify-center mb-2">
-              <span className="text-[9.5px] font-medium tracking-widest uppercase" style={{ color: 'rgba(255,255,255,0.45)' }}>
+              <span className="text-[10.5px] font-semibold tracking-widest uppercase" style={{ color: 'rgba(255,255,255,0.62)' }}>
                 Así se ve tu resultado
               </span>
             </div>
