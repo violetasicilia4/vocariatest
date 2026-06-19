@@ -253,7 +253,22 @@ export function recomendar(result: ScoringResult): CarreraRecomendada[] {
 
       return { entry, careerScore, univsEnProv, disponibleEnProv };
     })
-    .sort((a, b) => b.careerScore - a.careerScore);
+    // Orden estable: el fit se calcula a nivel FAMILIA, así que muchas carreras
+    // quedan empatadas. Si ordenáramos solo por el float crudo, un cambio mínimo
+    // de una respuesta reordena el empate y el "#1" salta (fragilidad: la #1
+    // cambiaba ~37% al variar una sola respuesta). Ordenamos por fit REDONDEADO
+    // y desempatamos con criterios estables y con sentido (accesibilidad), no por
+    // el ruido del decimal ni por la posición en la DB.
+    .sort((a, b) => {
+      const fa = Math.round(a.careerScore);
+      const fb = Math.round(b.careerScore);
+      if (fb !== fa) return fb - fa;
+      if (b.univsEnProv.length !== a.univsEnProv.length) return b.univsEnProv.length - a.univsEnProv.length;
+      if (b.entry.universidades.length !== a.entry.universidades.length) {
+        return b.entry.universidades.length - a.entry.universidades.length;
+      }
+      return a.entry.id < b.entry.id ? -1 : a.entry.id > b.entry.id ? 1 : 0;
+    });
 
   // ── Diversity: max 3 per macroArea, max 2 per familia ─────────────────────
   const resultado: CarreraRecomendada[] = [];
@@ -358,8 +373,24 @@ export function recomendar(result: ScoringResult): CarreraRecomendada[] {
     });
   }
 
-  // Tag the first as 'top'
-  if (resultado.length > 0) resultado[0].tag = 'top';
+  // Cluster de cabeza en vez de un único #1. Cuando varias carreras quedan casi
+  // empatadas (lo habitual, porque el fit es por familia), coronar UNA sola hace
+  // el resultado frágil: cambiar una respuesta reordena el empate y el "ganador"
+  // salta. Marcamos como co-líderes ("top") a las que caen dentro de un margen
+  // del mejor fit (hasta 3). El CONJUNTO de cabeza es estable aunque el orden
+  // interno no lo sea — eso es lo que el usuario percibe como "mi resultado".
+  const TOP_MARGIN = 4;
+  if (resultado.length > 0) {
+    const mejorFit = resultado[0].fitScore;
+    let marcados = 0;
+    for (const r of resultado) {
+      if (r.tag === 'sorpresa') continue;
+      if (marcados < 3 && r.fitScore >= mejorFit - TOP_MARGIN) {
+        r.tag = 'top';
+        marcados++;
+      }
+    }
+  }
 
   return resultado;
 }

@@ -12,8 +12,8 @@ CASOS DE PRUEBA — FLUJO COMPLETO — 2026-06-19
   Confianza: 83%  ⚠ 1 advertencia(s)
   Carreras (top 5 de 9):
     ★ Licenciado en Obstetricia  [fit 87, 5 univ. en su provincia]
-    · Licenciado en Enfermería  [fit 83, 1 univ. en su provincia]
-    · Licenciado en Terapia Ocupacional  [fit 83, 1 univ. en su provincia]
+    ★ Licenciado en Fonoaudiología  [fit 83, 3 univ. en su provincia]
+    ★ Licenciado/a en Enfermería  [fit 83, 2 univ. en su provincia]
     · Licenciado en Educación Física  [fit 81, 3 univ. en su provincia]
     · Profesor de Educación Física  [fit 81, 1 univ. en su provincia]
 
@@ -24,9 +24,9 @@ CASOS DE PRUEBA — FLUJO COMPLETO — 2026-06-19
   Resultado: constructor (92)  ·  custodio (48)  ·  arquitecto (41)
   Confianza: 91%  
   Carreras (top 5 de 9):
+    ★ Ingeniero Mecánico  [fit 96, 2 univ. en su provincia]
     ★ Ingeniero Civil  [fit 96, 1 univ. en su provincia]
-    · Ingeniero Mecánico  [fit 96, 2 univ. en su provincia]
-    · Ingeniero Electromecánico  [fit 96, 1 univ. en su provincia]
+    ★ Ingeniero Electromecánico  [fit 96, 1 univ. en su provincia]
     · Ingeniero Agrónomo  [fit 87, 1 univ. en su provincia]
     · Técnico/a Universitario/a en Jardinería y Floricultura  [fit 87, 1 univ. en su provincia]
 
@@ -40,8 +40,8 @@ CASOS DE PRUEBA — FLUJO COMPLETO — 2026-06-19
   Confianza: 83%  
   Carreras (top 5 de 9):
     ★ Licenciado en Artes Visuales  [fit 99, 6 univ. en su provincia]
-    · Profesor de Teatro  [fit 99, 3 univ. en su provincia]
-    · Diseñador Gráfico  [fit 97, 6 univ. en su provincia]
+    ★ Licenciado en Filosofía  [fit 99, 3 univ. en su provincia]
+    ★ Diseñador Gráfico  [fit 97, 6 univ. en su provincia]
     · Licenciado en Diseño Gráfico  [fit 97, 6 univ. en su provincia]
     · Licenciado en Inglés  [fit 87, 4 univ. en su provincia]
 
@@ -55,7 +55,7 @@ CASOS DE PRUEBA — FLUJO COMPLETO — 2026-06-19
   Confianza: 82%  ⚠ 1 advertencia(s)
   Carreras (top 5 de 9):
     ★ Licenciado/a en Ciencias de Datos  [fit 96, 1 univ. en su provincia]
-    · Ingeniero/a en Inteligencia Artificial  [fit 96, 1 univ. en su provincia]
+    ★ Ingeniero/a en Inteligencia Artificial  [fit 96, 1 univ. en su provincia]
     · Ingeniero en Sistemas de Información  [fit 89, 1 univ. en su provincia]
     · Ingeniero/a en Informática  [fit 89, 1 univ. en su provincia]
     · Licenciado/a en Actividad Física y Deportes  [fit 85, 1 univ. en su provincia]
@@ -70,10 +70,10 @@ CASOS DE PRUEBA — FLUJO COMPLETO — 2026-06-19
   Confianza: 78%  ⚠ 1 advertencia(s)
   Carreras (top 5 de 9):
     ★ Licenciado en Recursos Humanos  [fit 90, 6 univ. en su provincia]
-    · Licenciado en Administración de Recursos Humanos  [fit 90, 4 univ. en su provincia]
-    · Licenciado en Marketing  [fit 82, 6 univ. en su provincia]
+    ★ Licenciado en Administración de Recursos Humanos  [fit 90, 4 univ. en su provincia]
     · Licenciado en Comercialización  [fit 82, 6 univ. en su provincia]
-    · Licenciado en Educación Física  [fit 81, 6 univ. en su provincia]
+    · Licenciado en Marketing  [fit 82, 6 univ. en su provincia]
+    · Licenciado en Relaciones Internacionales  [fit 81, 6 univ. en su provincia]
 
 ■ Nico (18, Misiones)
   Ama el monte, los animales, estar afuera. Tranquilo, constante, piensa a largo plazo.
@@ -98,8 +98,8 @@ CASOS DE PRUEBA — FLUJO COMPLETO — 2026-06-19
   Confianza: 88%  
   Carreras (top 5 de 9):
     ★ Bioquímico/a  [fit 85, 1 univ. en su provincia]
-    · Farmacéutico/a  [fit 85, 1 univ. en su provincia]
-    · Licenciado/a en Física  [fit 83, 1 univ. en su provincia]
+    ★ Farmacéutico/a  [fit 85, 1 univ. en su provincia]
+    ★ Licenciado/a en Física  [fit 83, 1 univ. en su provincia]
     · Licenciado en Psicología  [fit 81, 1 univ. en su provincia]
     · Psicólogo  [fit 81, 1 univ. en su provincia]
 
@@ -109,14 +109,14 @@ CASOS DE PRUEBA — FLUJO COMPLETO — 2026-06-19
   Preguntas: 20 núcleo + 5 duelos = 25
   Duelos elegidos: equipo, decision, lectura, legado, orgullo
   Disputa al entrar: custodio 36 vs constructor 23
-  Resultado: custodio (36)  ·  arquitecto (33)  ·  constructor (31)
+  Resultado: custodio (36)  ·  orquestador (28)  ·  arquitecto (25)
   Confianza: 45%  ⚠ 1 advertencia(s)
   Carreras (top 5 de 9):
-    ★ Ingeniero Electromecánico  [fit 51, 1 univ. en su provincia]
-    · Ingeniero/a Mecánico/a  [fit 51, 1 univ. en su provincia]
+    ★ Licenciado en Administración - MD  [fit 57, 1 univ. en su provincia]
+    ★ Licenciado/a en Administración  [fit 57, 1 univ. en su provincia]
+    ★ Licenciado en Relaciones Públicas e Institucionales  [fit 57, 1 univ. en su provincia]
     · Médico Veterinario  [fit 50, 1 univ. en su provincia]
-    · Técnico en Turismo Rural  [fit 45, sin univ. en su provincia]
-    · Ingeniero en Sistemas de Información  [fit 42, 1 univ. en su provincia]
+    · Licenciado en Ciencia Política y de Gobierno  [fit 50, 1 univ. en su provincia]
 
 ═══════════════════════════════════════════════════════════
 CRUCE ENTRE CASOS
@@ -126,7 +126,6 @@ CRUCE ENTRE CASOS
   Rango de confianza: 45%–91%
 
   Solapamiento de carreras entre pares de casos (de 8-9 recomendadas):
-    ⚠ Nico y Lautaro: 5 carreras en común
-    Promedio general: 0.4 carreras en común por par de casos
+    Promedio general: 0.2 carreras en común por par de casos
 
 ═══════════════════════════════════════════════════════════
