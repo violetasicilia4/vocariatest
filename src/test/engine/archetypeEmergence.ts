@@ -46,9 +46,9 @@ const ARCHETYPE_RULES: ArchetypeRule[] = [
   {
     id: 'arquitecto',
     primary: [
-      { signal: 'pensamiento_sistemico',   threshold: 52, weight: 1.2 },
-      { signal: 'orientacion_logro',        threshold: 45, weight: 0.8 },
-      { signal: 'pensamiento_abstracto',    threshold: 48, weight: 1.0 },
+      { signal: 'pensamiento_sistemico',   threshold: 48, weight: 1.3 },
+      { signal: 'orientacion_logro',        threshold: 42, weight: 0.8 },
+      { signal: 'pensamiento_abstracto',    threshold: 44, weight: 1.0 },
     ],
     secondary: [
       { signal: 'interes_datos',            threshold: 50, weight: 0.5 },
@@ -95,9 +95,9 @@ const ARCHETYPE_RULES: ArchetypeRule[] = [
   {
     id: 'catalizador',
     primary: [
-      { signal: 'impacto_social',           threshold: 55, weight: 1.2 },
-      { signal: 'orientacion_social',       threshold: 52, weight: 1.0 },
-      { signal: 'busqueda_impacto',         threshold: 52, weight: 1.0 },
+      { signal: 'impacto_social',           threshold: 50, weight: 1.2 },
+      { signal: 'orientacion_social',       threshold: 48, weight: 1.0 },
+      { signal: 'busqueda_impacto',         threshold: 48, weight: 1.0 },
     ],
     secondary: [
       { signal: 'liderazgo',                threshold: 50, weight: 0.5 },
@@ -174,26 +174,26 @@ const ARCHETYPE_RULES: ArchetypeRule[] = [
   {
     id: 'arbitro',
     primary: [
-      { signal: 'pensamiento_critico',      threshold: 60, weight: 1.3 },
-      { signal: 'impacto_social',           threshold: 50, weight: 0.9 },
-      { signal: 'necesidad_estructura',     threshold: 45, weight: 0.8 },
+      { signal: 'pensamiento_critico',      threshold: 50, weight: 1.5 },
+      { signal: 'impacto_social',           threshold: 44, weight: 1.0 },
+      { signal: 'necesidad_estructura',     threshold: 42, weight: 0.8 },
     ],
     secondary: [
-      { signal: 'orientacion_largo_plazo',  threshold: 55, weight: 0.5 },
-      { signal: 'persuasion_influencia',    threshold: 50, weight: 0.4 },
-      { signal: 'reflexion_profunda',       threshold: 55, weight: 0.4 },
+      { signal: 'orientacion_largo_plazo',  threshold: 52, weight: 0.5 },
+      { signal: 'persuasion_influencia',    threshold: 48, weight: 0.5 },
+      { signal: 'reflexion_profunda',       threshold: 52, weight: 0.4 },
     ],
   },
 
   {
     id: 'custodio',
     primary: [
-      { signal: 'interes_naturaleza',       threshold: 55, weight: 1.4 },
-      { signal: 'orientacion_largo_plazo',  threshold: 55, weight: 1.2 },
+      { signal: 'interes_naturaleza',       threshold: 48, weight: 1.4 },
+      { signal: 'orientacion_largo_plazo',  threshold: 50, weight: 1.2 },
     ],
     secondary: [
-      { signal: 'necesidad_estabilidad',    threshold: 50, weight: 0.5 },
-      { signal: 'vocacion_servicio',        threshold: 50, weight: 0.5 },
+      { signal: 'necesidad_estabilidad',    threshold: 48, weight: 0.5 },
+      { signal: 'vocacion_servicio',        threshold: 48, weight: 0.5 },
       { signal: 'orientacion_practica',     threshold: 40, weight: 0.4 },
     ],
     notIf: [
@@ -204,12 +204,12 @@ const ARCHETYPE_RULES: ArchetypeRule[] = [
   {
     id: 'narrador',
     primary: [
-      { signal: 'interes_ideas',            threshold: 70, weight: 1.2 },
-      { signal: 'expresion_personal',       threshold: 60, weight: 1.0 },
-      { signal: 'persuasion_influencia',    threshold: 55, weight: 1.0 },
+      { signal: 'interes_ideas',            threshold: 63, weight: 1.3 },
+      { signal: 'expresion_personal',       threshold: 55, weight: 1.0 },
+      { signal: 'persuasion_influencia',    threshold: 50, weight: 1.0 },
     ],
     secondary: [
-      { signal: 'creatividad_generativa',   threshold: 50, weight: 0.5 },
+      { signal: 'creatividad_generativa',   threshold: 48, weight: 0.5 },
       { signal: 'orientacion_social',       threshold: 45, weight: 0.3 },
       { signal: 'reflexion_profunda',       threshold: 50, weight: 0.4 },
     ],

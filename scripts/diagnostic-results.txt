@@ -6,34 +6,34 @@ DIAGNÓSTICO DEL MOTOR VOCACIONAL — 2026-06-19
    Si el motor fuera neutral, cada arquetipo ganaría ~8,3%.
    Desvíos grandes = el motor favorece/castiga por construcción.
 ───────────────────────────────────────────────────────────
-  descubridor    ███·····················   1081  (10.8%)
-  sanador        ███·····················   1076  (10.8%)
-  artifice       ███·····················   1058  (10.6%)
-  constructor    ██······················   1028  (10.3%)
-  interprete     ██······················    984  (9.8%)
-  orquestador    ██······················    974  (9.7%)
-  anfitrion      ██······················    672  (6.7%)
-  catalizador    ██······················    662  (6.6%)
-  arbitro        ██······················    655  (6.6%)
-  custodio       ██······················    645  (6.5%)
-  narrador       █·······················    609  (6.1%)
-  arquitecto     █·······················    556  (5.6%)
+  descubridor    ███·····················   1045  (10.4%)
+  sanador        ██······················   1022  (10.2%)
+  artifice       ██······················   1009  (10.1%)
+  interprete     ██······················    952  (9.5%)
+  constructor    ██······················    942  (9.4%)
+  orquestador    ██······················    927  (9.3%)
+  custodio       ██······················    776  (7.8%)
+  arbitro        ██······················    763  (7.6%)
+  narrador       ██······················    723  (7.2%)
+  catalizador    ██······················    679  (6.8%)
+  anfitrion      ██······················    635  (6.3%)
+  arquitecto     █·······················    527  (5.3%)
 
 2) IDENTIFICABILIDAD (patrón óptimo por arquetipo, búsqueda greedy)
    Para cada arquetipo: el mejor patrón de respuestas posible.
    "rank" = posición que alcanza en su propio patrón ideal (1 = gana).
 ───────────────────────────────────────────────────────────
-  arquitecto     emergencia= 88  rank=1  confianza=85%  OK
-  constructor    emergencia= 86  rank=1  confianza=91%  OK
-  sanador        emergencia= 82  rank=1  confianza=88%  OK
-  catalizador    emergencia= 79  rank=1  confianza=77%  OK
-  artifice       emergencia= 97  rank=1  confianza=97%  OK
+  arquitecto     emergencia= 84  rank=1  confianza=82%  OK
+  constructor    emergencia= 81  rank=1  confianza=88%  OK
+  sanador        emergencia= 97  rank=1  confianza=95%  OK
+  catalizador    emergencia= 78  rank=1  confianza=76%  OK
+  artifice       emergencia= 96  rank=1  confianza=90%  OK
   interprete     emergencia= 96  rank=1  confianza=97%  OK
-  orquestador    emergencia= 88  rank=1  confianza=85%  OK
+  orquestador    emergencia= 87  rank=1  confianza=84%  OK
   descubridor    emergencia= 88  rank=1  confianza=92%  OK
   arbitro        emergencia= 92  rank=1  confianza=94%  OK
   custodio       emergencia= 93  rank=1  confianza=88%  OK
-  narrador       emergencia= 76  rank=1  confianza=85%  OK
+  narrador       emergencia= 89  rank=1  confianza=92%  OK
   anfitrion      emergencia= 90  rank=1  confianza=93%  OK
 
 3) REPETICIÓN DE RESULTADOS (población mixta de 10.000)
@@ -41,62 +41,62 @@ DIAGNÓSTICO DEL MOTOR VOCACIONAL — 2026-06-19
    Mide si el test le repite las mismas carreras a todo el mundo.
 ───────────────────────────────────────────────────────────
   Arquetipo primario en población mixta:
-  descubridor    ███·····················   1176  (11.8%)
-  interprete     ██······················   1033  (10.3%)
-  constructor    ██······················    988  (9.9%)
-  artifice       ██······················    975  (9.8%)
-  orquestador    ██······················    966  (9.7%)
-  sanador        ██······················    929  (9.3%)
-  arbitro        ██······················    726  (7.3%)
-  custodio       ██······················    719  (7.2%)
-  arquitecto     ██······················    671  (6.7%)
-  anfitrion      ██······················    648  (6.5%)
-  narrador       ██······················    640  (6.4%)
-  catalizador    █·······················    529  (5.3%)
+  descubridor    ███·····················   1069  (10.7%)
+  interprete     ██······················   1008  (10.1%)
+  artifice       ██······················   1002  (10.0%)
+  orquestador    ██······················    956  (9.6%)
+  sanador        ██······················    917  (9.2%)
+  constructor    ██······················    886  (8.9%)
+  custodio       ██······················    805  (8.1%)
+  narrador       ██······················    763  (7.6%)
+  arbitro        ██······················    737  (7.4%)
+  anfitrion      ██······················    681  (6.8%)
+  arquitecto     ██······················    633  (6.3%)
+  catalizador    █·······················    543  (5.4%)
 
   Carreras distintas como recomendación #1 (top): 56
   Top 10 carreras más repetidas como #1:
-    Licenciado en Artes Visuales                    1038  (10.4%)
-    Contador Público                                 852  (8.5%)
-    Licenciado en Administración                     591  (5.9%)
-    Ingeniero Civil                                  578  (5.8%)
-    Licenciado en Comunicación Social                506  (5.1%)
-    Licenciado en Relaciones Internacionales         475  (4.8%)
-    Licenciado en Obstetricia                        465  (4.7%)
-    Licenciado en Bromatología                       460  (4.6%)
-    Licenciado en Recursos Humanos                   377  (3.8%)
-    Técnico Universitario en Acompañamiento Tera     366  (3.7%)
+    Licenciado en Artes Visuales                    1115  (11.2%)
+    Contador Público                                 750  (7.5%)
+    Ingeniero Civil                                  595  (5.9%)
+    Licenciado en Relaciones Internacionales         543  (5.4%)
+    Licenciado en Bromatología                       515  (5.1%)
+    Licenciado en Comunicación Social                472  (4.7%)
+    Licenciado en Administración                     440  (4.4%)
+    Licenciado en Recursos Humanos                   438  (4.4%)
+    Técnico Universitario en Acompañamiento Tera     424  (4.2%)
+    Licenciado en Obstetricia                        408  (4.1%)
 
-  Sets de 8-9 carreras DISTINTOS entre 10.000 usuarios: 5868
-  El set más común se repite: 126 veces (1.3%)
-  Los 5 sets más comunes cubren: 3.6% de los usuarios
+  Sets de 8-9 carreras DISTINTOS entre 10.000 usuarios: 5897
+  El set más común se repite: 151 veces (1.5%)
+  Los 5 sets más comunes cubren: 3.7% de los usuarios
   Carreras del catálogo que aparecen al menos una vez: 104
 
 4) DISTRIBUCIÓN DE CONFIANZA (población mixta)
    El rango teórico es 45–97%. Si todo cae arriba de 85%, el número
    no informa nada (siempre "muy seguro").
 ───────────────────────────────────────────────────────────
-  45-54   █████████···············   3671  (36.7%)
-  55-64   █████···················   1921  (19.2%)
-  65-74   ████····················   1593  (15.9%)
-  75-84   ███·····················   1370  (13.7%)
-  85-94   ███·····················   1226  (12.3%)
-  95-97   █·······················    219  (2.2%)
-  Promedio: 63.9%  |  Mín: 45%  |  Máx: 97%
+  45-54   █████████···············   3726  (37.3%)
+  55-64   █████···················   2017  (20.2%)
+  65-74   ████····················   1597  (16.0%)
+  75-84   ███·····················   1368  (13.7%)
+  85-94   ███·····················   1149  (11.5%)
+  95-97   ························    143  (1.4%)
+  Promedio: 63.2%  |  Mín: 45%  |  Máx: 97%
 
 5) SENSIBILIDAD (2.000 usuarios de la población mixta)
    Se cambia UNA respuesta al azar por otra opción de esa pregunta.
    % alto = resultado frágil; depende demasiado de respuestas sueltas.
 ───────────────────────────────────────────────────────────
-  Cambia el ARQUETIPO PRIMARIO: 20.5% de las veces
-  Cambia la CARRERA #1:        34.4% de las veces
+  Cambia el ARQUETIPO PRIMARIO: 20.8% de las veces
+  Cambia la CARRERA #1:        34.3% de las veces
 
   Preguntas más decisivas (% de flips de arquetipo al cambiarlas):
-    vis_sat    44%  (n=99)
-    vis_1      44%  (n=93)
-    mul_2      34%  (n=102)
-    xv_impacto 24%  (n=99)
-    sit_6      23%  (n=83)
-    sit_1      22%  (n=106)
+    vis_1      39%  (n=93)
+    vis_sat    38%  (n=99)
+    mul_2      38%  (n=102)
+    par_3      31%  (n=90)
+    sit_8      29%  (n=91)
+    sit_6      27%  (n=83)
 
 ═══════════════════════════════════════════════════════════

@@ -230,10 +230,13 @@ export const COMBINACIONES: Combinacion[] = [
   { ids: ['orquestador', 'arbitro'], nombre: 'El Gestor de Instituciones', descripcion: 'Construye y lidera organizaciones con un fuerte sentido de norma y bien común.' },
   { ids: ['descubridor', 'custodio'], nombre: 'El Guardián Científico', descripcion: 'Investiga ecosistemas, biodiversidad y sistemas naturales para protegerlos.' },
   { ids: ['custodio', 'narrador'], nombre: 'El Comunicador de Territorio', descripcion: 'Documenta, cuenta y defiende el valor de lo natural y lo cultural.' },
-  { ids: ['narrador', 'catalizador'], nombre: 'El Periodista Social', descripcion: 'Usa la comunicación como herramienta de transformación comunitaria.' },
-  { ids: ['arbitro', 'orquestador'], nombre: 'El Gestor de Poder', descripcion: 'Combina la comprensión del sistema jurídico con la capacidad de liderar en él.' },
   { ids: ['anfitrion', 'catalizador'], nombre: 'El Animador de Comunidades', descripcion: 'Crea experiencias que construyen comunidad y transforman la vida cotidiana.' },
   { ids: ['constructor', 'custodio'], nombre: 'El Ingeniero Ambiental', descripcion: 'Construye infraestructura que respeta y convive con los sistemas naturales.' },
+  // Combinaciones frecuentes agregadas para cubrir el top-10 de la simulación
+  // (antes caían al nombre genérico del arquetipo).
+  { ids: ['constructor', 'orquestador'], nombre: 'El Director de Proyectos', descripcion: 'Lleva proyectos físicos del plano a la realidad, coordinando equipos, recursos y plazos.' },
+  { ids: ['anfitrion', 'sanador'], nombre: 'El Creador de Bienestar', descripcion: 'Une la energía para generar experiencias con la vocación de cuidar: que el otro la pase bien y esté bien.' },
+  { ids: ['anfitrion', 'orquestador'], nombre: 'El Director de Experiencias', descripcion: 'Diseña y dirige experiencias y eventos a escala, coordinando equipos, logística y personas.' },
 ];
 
 export function getArquetipo(id: string): Arquetipo | undefined {
