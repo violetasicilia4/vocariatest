@@ -81,7 +81,7 @@ export default function ContactModal({ isOpen, onClose }: ContactModalProps) {
                     <p className="text-[10px] font-bold tracking-widest uppercase text-slate-400 mb-1">
                       Pronto disponible
                     </p>
-                    <h3 className="text-xl font-display font-extrabold text-[#0e1118] leading-snug">
+                    <h3 className="text-xl font-display font-extrabold text-[#07111F] leading-snug">
                       Estamos terminando el test.
                     </h3>
                     <p className="text-sm text-slate-500 mt-2 leading-relaxed">

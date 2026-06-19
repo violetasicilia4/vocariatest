@@ -18,7 +18,7 @@ const __dirname = dirname(fileURLToPath(import.meta.url));
 // Paleta de marca (coherente con theme.ts / index.css)
 const NAVY = '#07111F';
 const NAVY_2 = '#0d1b2e';
-const LIME = '#d8f95c';
+const LIME = '#d5ff3f';
 const SKY = '#9FD2F1';
 const WHITE = '#ffffff';
 
@@ -55,7 +55,7 @@ const svg = `
   <!-- Pill -->
   <g transform="translate(80, 478)">
     <rect width="540" height="62" rx="31" fill="${LIME}"/>
-    <text x="270" y="40" font-family="DejaVu Sans" font-weight="bold" font-size="25" fill="${NAVY}" text-anchor="middle">Resultado en 7 minutos · gratis</text>
+    <text x="270" y="40" font-family="DejaVu Sans" font-weight="bold" font-size="25" fill="${NAVY}" text-anchor="middle">Resultado personalizado · gratis</text>
   </g>
 
   <!-- Mockup de resultado (mostrá, no prometas) -->

@@ -8,7 +8,7 @@ const faqs = [
   },
   {
     pregunta: '¿Cuánto tiempo lleva?',
-    respuesta: 'Unos 7 minutos. Las preguntas son situacionales y no tienen respuestas correctas.',
+    respuesta: 'El que necesites. Son preguntas situacionales, sin respuestas correctas, y la mayoría lo completa de una sentada, sin apuro.',
   },
   {
     pregunta: '¿El resultado me dice exactamente qué estudiar?',
@@ -46,7 +46,7 @@ export default function FAQSection() {
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
           transition={{ duration: 0.4 }}
-          className="font-display font-black text-2xl sm:text-3xl text-[#0e1118] tracking-tight leading-tight mb-8"
+          className="font-display font-black text-2xl sm:text-3xl text-[#07111F] tracking-tight leading-tight mb-8"
         >
           Preguntas frecuentes.
         </motion.h2>

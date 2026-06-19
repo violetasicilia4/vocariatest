@@ -51,7 +51,7 @@ export default function App() {
         {/* Demo interactiva — la sección más poderosa */}
         <MuestraTest onGetStartedClick={openTest} />
 
-        {/* Prueba social — casos reales de otros usuarios */}
+        {/* Valor concreto — qué entrega el test (sin prueba social falsa pre-lanzamiento) */}
         <TestimonialsSection />
 
         {/* Metodología — contexto para quien necesita entender el "cómo" */}

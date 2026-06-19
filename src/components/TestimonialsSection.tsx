@@ -1,63 +1,63 @@
 import { useRef, useState, useCallback } from 'react';
-import { ChevronLeft, ChevronRight } from 'lucide-react';
+import { Fingerprint, Compass, MapPin, Footprints } from 'lucide-react';
+import type { LucideIcon } from 'lucide-react';
 import { motion } from 'motion/react';
 
-const testimonios = [
+// Sección honesta de valor: en lugar de testimonios (el producto es pre-lanzamiento
+// y no puede tener usuarios reales todavía), mostramos qué entrega el test. Cumple
+// la misma función de "convencer antes del CTA" sin caer en prueba social falsa.
+const entregables: { icon: LucideIcon; titulo: string; texto: string; etiqueta?: string }[] = [
   {
-    texto: 'Venía cambiando de idea todo el tiempo. Me ayudó a poner un poco de orden entre tantas opciones.',
-    nombre: 'Martina S.',
-    edad: '18',
+    icon: Fingerprint,
+    titulo: 'Tu arquetipo vocacional',
+    texto: 'Cómo pensás, decidís y resolvés, descrito en un perfil claro. No una etiqueta: tu forma de razonar.',
+    etiqueta: 'Gratis',
   },
   {
-    texto: 'Sentía que tenía demasiada información y cada vez estaba más confundido. El informe me ayudó a bajar todo a tierra.',
-    nombre: 'Tomás R.',
-    edad: '17',
+    icon: Compass,
+    titulo: 'Carreras que encajan',
+    texto: 'Cruzamos tu forma de pensar con +130 carreras reales y te mostramos las de mayor afinidad, con el porqué.',
+    etiqueta: 'Gratis',
   },
   {
-    texto: 'Ya había arrancado una carrera y venía con dudas hace meses. Me sirvió para entender que no estaba dudando porque sí.',
-    nombre: 'Nicolás M.',
-    edad: '20',
+    icon: MapPin,
+    titulo: 'Universidades y salida laboral',
+    texto: 'Dónde se estudia cada carrera en Argentina, su duración real y qué panorama laboral y salarial tiene.',
+    etiqueta: 'Informe completo',
   },
   {
-    texto: 'Lo hice pensando que me iba a decir qué estudiar. Al final me ayudó más a entenderme a mí que a elegir una carrera puntual.',
-    nombre: 'Sofía L.',
-    edad: '19',
+    icon: Footprints,
+    titulo: 'Un punto de partida',
+    texto: 'Salís con algo concreto para investigar y decidir, no con más preguntas de las que entraste.',
   },
 ];
 
-function getInitials(nombre: string): string {
-  return nombre.split(' ').map((w) => w[0]).join('').slice(0, 2).toUpperCase();
-}
-
-function TestimonioCard({ t }: { t: typeof testimonios[0] }) {
+function EntregableCard({ e }: { e: typeof entregables[0] }) {
+  const Icon = e.icon;
   return (
     <div
       className="bg-white rounded-2xl p-5 flex flex-col h-full"
       style={{ boxShadow: '0 4px 24px rgba(0,0,0,0.20)' }}
     >
-      <div
-        className="font-display font-black text-[#0e1118] select-none mb-3 leading-none"
-        style={{ fontSize: '48px', lineHeight: '0.75' }}
-        aria-hidden="true"
-      >
-        &ldquo;
-      </div>
-      <p className="font-display text-[14px] font-medium text-slate-800 leading-relaxed flex-1 mb-5">
-        {t.texto}
-      </p>
-      <div className="flex items-center gap-3 pt-4 border-t border-slate-100">
-        <div
-          className="w-8 h-8 rounded-full bg-[#0e1118] flex items-center justify-center shrink-0"
-          style={{ boxShadow: '0 0 0 2px rgba(213,255,63,0.18)' }}
+      <div className="flex items-center justify-between mb-4">
+        <span
+          className="w-10 h-10 rounded-xl flex items-center justify-center shrink-0"
+          style={{ background: '#07111F' }}
         >
-          <span className="font-display font-black text-[10px] text-white tracking-wide">
-            {getInitials(t.nombre)}
+          <Icon size={18} strokeWidth={2} style={{ color: '#d5ff3f' }} />
+        </span>
+        {e.etiqueta && (
+          <span className="text-[10px] font-bold uppercase tracking-wide text-slate-400 bg-slate-100 border border-slate-200 px-2 py-0.5 rounded-full">
+            {e.etiqueta}
           </span>
-        </div>
-        <p className="font-display font-bold text-[13px] text-slate-900 leading-tight">
-          {t.nombre}, {t.edad} años
-        </p>
+        )}
       </div>
+      <h3 className="font-display font-extrabold text-[15px] text-slate-900 leading-tight mb-1.5">
+        {e.titulo}
+      </h3>
+      <p className="font-display text-[13px] font-medium text-slate-500 leading-relaxed flex-1">
+        {e.texto}
+      </p>
     </div>
   );
 }
@@ -66,7 +66,6 @@ export default function TestimonialsSection() {
   const scrollRef = useRef<HTMLDivElement>(null);
   const [activeIndex, setActiveIndex] = useState(0);
 
-  /* Paso exacto por card usando el DOM para evitar cálculos aproximados */
   const getStep = () => {
     const card = scrollRef.current?.querySelector('[data-card]') as HTMLElement | null;
     return card ? card.offsetWidth + 20 : 0; // ancho + gap-5 (20px)
@@ -78,14 +77,8 @@ export default function TestimonialsSection() {
     if (!card) return;
     const step = card.offsetWidth + 20;
     const idx = Math.round(scrollRef.current.scrollLeft / step);
-    setActiveIndex(Math.max(0, Math.min(idx, testimonios.length - 1)));
+    setActiveIndex(Math.max(0, Math.min(idx, entregables.length - 1)));
   }, []);
-
-  const scrollByCard = (dir: 1 | -1) => {
-    const step = getStep();
-    if (!scrollRef.current || !step) return;
-    scrollRef.current.scrollBy({ left: dir * step, behavior: 'smooth' });
-  };
 
   const goTo = (i: number) => {
     const step = getStep();
@@ -98,21 +91,19 @@ export default function TestimonialsSection() {
     <section className="py-10 sm:py-14" style={{ background: '#07111F' }}>
       <div className="max-w-5xl mx-auto px-6">
 
-        {/* Encabezado + flechas desktop */}
         <motion.div
           initial={{ opacity: 0, y: 12 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
           transition={{ duration: 0.4 }}
-          className="flex items-center justify-between mb-6 sm:mb-8"
+          className="mb-6 sm:mb-8"
         >
           <h2 className="font-display font-black text-xl sm:text-2xl text-white tracking-tight">
-            Lo que encontraron otros.
+            Lo que vas a obtener.
           </h2>
-
         </motion.div>
 
-        {/* Desktop: grilla 4 columnas sin scroll */}
+        {/* Desktop: grilla 4 columnas */}
         <motion.div
           initial={{ opacity: 0 }}
           whileInView={{ opacity: 1 }}
@@ -120,7 +111,7 @@ export default function TestimonialsSection() {
           transition={{ duration: 0.5, delay: 0.1 }}
           className="hidden sm:grid sm:grid-cols-2 lg:grid-cols-4 gap-5"
         >
-          {testimonios.map((t, i) => <TestimonioCard key={i} t={t} />)}
+          {entregables.map((e, i) => <EntregableCard key={i} e={e} />)}
         </motion.div>
 
         {/* Mobile: carrusel con scroll */}
@@ -137,9 +128,9 @@ export default function TestimonialsSection() {
             className="flex overflow-x-auto snap-x snap-mandatory gap-5"
             style={{ scrollbarWidth: 'none', WebkitOverflowScrolling: 'touch' }}
           >
-            {testimonios.map((t, i) => (
+            {entregables.map((e, i) => (
               <div key={i} data-card className="snap-start shrink-0 w-[calc(100%-56px)]">
-                <TestimonioCard t={t} />
+                <EntregableCard e={e} />
               </div>
             ))}
             <div className="shrink-0 w-14" aria-hidden="true" />
@@ -148,11 +139,11 @@ export default function TestimonialsSection() {
 
         {/* Dots mobile */}
         <div className="flex items-center justify-center gap-2 mt-5 sm:hidden">
-          {testimonios.map((_, i) => (
+          {entregables.map((_, i) => (
             <button
               key={i}
               onClick={() => goTo(i)}
-              aria-label={`Testimonio ${i + 1}`}
+              aria-label={`Ver ${entregables[i].titulo}`}
               className={`rounded-full transition-[width,background-color] duration-200 ${
                 activeIndex === i
                   ? 'w-5 h-2 bg-brand-lime'

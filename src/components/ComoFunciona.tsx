@@ -35,7 +35,7 @@ export default function ComoFunciona() {
           <span className="font-normal block text-slate-400 mb-0.5">
             No te preguntamos qué te gusta.
           </span>
-          <span className="font-black block text-[#0e1118]">
+          <span className="font-black block text-[#07111F]">
             Te ponemos en situaciones.
           </span>
         </motion.h2>

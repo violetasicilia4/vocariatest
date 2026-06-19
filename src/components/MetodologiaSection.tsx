@@ -33,7 +33,7 @@ export default function MetodologiaSection() {
           <div className="sm:max-w-xs">
             <h2
               id="metodologia-heading"
-              className="font-display font-semibold text-[18px] sm:text-xl text-[#0e1118] leading-snug"
+              className="font-display font-semibold text-[18px] sm:text-xl text-[#07111F] leading-snug"
             >
               Vocaria no decide por vos. Organiza señales para ayudarte a comparar caminos posibles.
             </h2>

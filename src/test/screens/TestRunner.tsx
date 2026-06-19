@@ -129,9 +129,14 @@ export default function TestRunner({ nombre, profile, onComplete }: TestRunnerPr
               <LogoIcon size={16} />
               <span className="font-display font-bold text-[11.5px] lg:text-[13px] tracking-tight">Vocaria</span>
             </div>
-            {firstName && (
-              <span className="text-[10.5px] lg:text-[12px] text-ink/35 font-medium font-display">{firstName}</span>
-            )}
+            <div className="flex items-center gap-1.5 font-display text-[10.5px] lg:text-[12px]">
+              <span className="text-ink/55 font-semibold tabular-nums">
+                Pregunta {currentIndex + 1} de {total}
+              </span>
+              {firstName && (
+                <span className="text-ink/30 font-medium hidden sm:inline">· {firstName}</span>
+              )}
+            </div>
           </div>
           <ProgressBar pct={pct} confidence={confidence} />
           {/* Carteles de avance — aparecen a lo largo del test, no solo al final. */}

@@ -55,7 +55,7 @@ export default function CheckoutScreen({ nombre, email, result, plan, onBack }: 
       <div className="max-w-xl lg:max-w-2xl mx-auto px-5 lg:px-8 py-8 lg:py-12 pb-32 space-y-6">
 
         <motion.div initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.5, ease: EASE }}>
-          <p className="text-ink/50 text-[13px] font-medium mb-2">Tu informe está listo, {firstName}</p>
+          <p className="text-ink/50 text-[13px] font-medium mb-2">Reservá tu informe completo, {firstName}</p>
           <h1 className="font-display font-black text-[28px] text-ink leading-tight tracking-tight">
             Plan {planData.nombre}
           </h1>
@@ -73,9 +73,12 @@ export default function CheckoutScreen({ nombre, email, result, plan, onBack }: 
         >
           <div className="flex items-end gap-2 mb-1">
             <span className="font-display font-extrabold tracking-tight text-[42px] text-ink leading-none">${planData.precio}</span>
-            <span className="text-ink/50 text-[14px] font-medium mb-2">ARS · pago único</span>
+            <span className="text-ink/50 text-[14px] font-medium mb-2">ARS · precio de lanzamiento</span>
           </div>
           <p className="text-ink/55 text-[12px]">{planData.tagline}</p>
+          <p className="text-ink/70 text-[12.5px] font-medium mt-3 pt-3 border-t border-sky/30 leading-relaxed">
+            Reservás sin pagar ahora. Te avisamos primero cuando esté listo y mantenés este precio de lanzamiento.
+          </p>
         </motion.div>
 
         <motion.div
@@ -117,7 +120,7 @@ export default function CheckoutScreen({ nombre, email, result, plan, onBack }: 
           className="flex gap-4 flex-wrap"
         >
           {[
-            { icon: Shield, text: 'Pago seguro' },
+            { icon: Shield, text: 'Sin pago ahora' },
             { icon: Lock, text: 'Datos protegidos' },
             { icon: MapPin, text: 'Universidades de Argentina' },
             { icon: TrendingUp, text: 'Salarios actualizados' },

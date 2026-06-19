@@ -2,7 +2,6 @@ import { useState } from 'react';
 import { motion } from 'motion/react';
 import LogoIcon from '../../components/ui/LogoIcon';
 import { INPUT, LABEL, CTA_PRIMARY } from '../ui/theme';
-import { TEST_DURATION } from '../../config/copy';
 
 interface EmailCaptureProps {
   onStart: (nombre: string, email: string) => void;
@@ -81,7 +80,7 @@ export default function EmailCapture({ onStart }: EmailCaptureProps) {
 
         {/* Trust */}
         <div className="flex items-center gap-3 mt-6 flex-wrap">
-          {[TEST_DURATION, 'Sin respuestas correctas', 'Resultado gratis'].map(t => (
+          {['Situaciones reales', 'Sin respuestas correctas', 'Resultado gratis'].map(t => (
             <span key={t} className="text-[11px] text-ink/40 font-medium flex items-center gap-1.5">
               <span className="w-1 h-1 rounded-full bg-brand-sky/60" />
               {t}

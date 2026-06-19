@@ -8,7 +8,7 @@
   --font-mono: "JetBrains Mono", ui-monospace, monospace;
   --color-brand-lime: #d5ff3f; /* Precise high-fidelity lime yellow from the screenshots */
   --color-brand-sky: #258ef9; /* Precise bright sky blue from the screenshots */
-  --color-brand-dark: #0e1118; /* Dark charcoal/navy color used in screenshots */
+  --color-brand-dark: #07111F; /* Dark charcoal/navy color used in screenshots */
 
   /* ── Test flow · aligned with the landing (sky blue + lime) ─────────────
      The test must feel like the same product as the home: cool white surfaces,

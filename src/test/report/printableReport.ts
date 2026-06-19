@@ -34,9 +34,26 @@ function esc(s: string): string {
   return s.replace(/[&<>"]/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c] as string));
 }
 
-function buildHtml(nombre: string, result: ScoringResult): string {
+function buildHtml(nombre: string, result: ScoringResult, recomendaciones: CarreraRecomendada[] = []): string {
   const firstName = esc(nombre.split(' ')[0] || nombre);
   const { primario, secundario, tercero, combinacion, confianza, tensiones, preferences } = result;
+
+  // Carreras: el corazón del entregable. Mostramos las 3 con mayor afinidad con
+  // su justificación (sin universidades ni salarios — eso es el informe completo).
+  const carreras = recomendaciones.slice(0, 3);
+  const carrerasHtml = carreras
+    .map(c => {
+      const tagLabel = c.tag === 'top' ? 'Alta afinidad' : c.tag === 'sorpresa' ? 'Para explorar' : 'Alternativa';
+      return `<div class="career">
+        <div class="career-head">
+          <span class="career-title">${esc(c.titulo)}</span>
+          <span class="career-tag">${tagLabel}</span>
+        </div>
+        <p class="career-why">${esc(c.razon)}</p>
+        ${c.alerta ? `<p class="career-alert">${esc(c.alerta)}</p>` : ''}
+      </div>`;
+    })
+    .join('');
 
   const prefRows = (Object.entries(preferences) as [keyof CareerPreferences, number][])
     .sort((a, b) => b[1] - a[1])
@@ -78,11 +95,11 @@ function buildHtml(nombre: string, result: ScoringResult): string {
   body { font-family: system-ui, -apple-system, sans-serif; color: #0d1b2e; line-height: 1.6; margin: 0; }
   .wrap { max-width: 720px; margin: 0 auto; padding: 24px; }
   .brand { display: flex; align-items: center; gap: 8px; font-weight: 800; font-size: 15px; color: #07111F; }
-  .brand .dot { width: 22px; height: 22px; border-radius: 7px; background: #d8f95c; display: inline-block; }
+  .brand .dot { width: 22px; height: 22px; border-radius: 7px; background: #d5ff3f; display: inline-block; }
   .meta { color: #94a3b8; font-size: 12px; margin-top: 4px; }
   h1 { font-size: 30px; font-weight: 900; margin: 22px 0 6px; color: #07111F; line-height: 1.1; }
   .tag { color: #1a3a5c; font-weight: 600; font-size: 16px; margin-bottom: 16px; }
-  .badge { display: inline-block; background: #d8f95c; color: #07111F; font-weight: 800; font-size: 12px; padding: 4px 10px; border-radius: 6px; }
+  .badge { display: inline-block; background: #d5ff3f; color: #07111F; font-weight: 800; font-size: 12px; padding: 4px 10px; border-radius: 6px; }
   h2 { font-size: 16px; font-weight: 800; margin: 28px 0 10px; color: #0d1b2e; text-transform: uppercase; letter-spacing: .04em; }
   p { font-size: 14px; color: #334155; }
   ul { margin: 8px 0 0 18px; font-size: 14px; color: #334155; }
@@ -96,6 +113,12 @@ function buildHtml(nombre: string, result: ScoringResult): string {
   .tension { background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 10px; padding: 14px 16px; margin-bottom: 10px; }
   .t-msg { font-weight: 600; color: #0d1b2e; margin: 0; }
   .t-tip { color: #64748b; font-size: 13px; margin: 8px 0 0; }
+  .career { border: 1px solid #e2e8f0; border-radius: 12px; padding: 14px 16px; margin-bottom: 12px; page-break-inside: avoid; }
+  .career-head { display: flex; align-items: center; justify-content: space-between; gap: 10px; }
+  .career-title { font-weight: 800; font-size: 16px; color: #07111F; }
+  .career-tag { font-size: 10.5px; font-weight: 700; text-transform: uppercase; letter-spacing: .04em; color: #1a3a5c; background: #eef5fb; border-radius: 999px; padding: 3px 9px; white-space: nowrap; }
+  .career-why { margin: 8px 0 0; font-size: 13.5px; }
+  .career-alert { margin: 6px 0 0; font-size: 12.5px; color: #b45309; }
   .foot { margin-top: 36px; border-top: 1px solid #e2e8f0; padding-top: 14px; color: #94a3b8; font-size: 11.5px; }
   @media print { .noprint { display: none; } body { -webkit-print-color-adjust: exact; print-color-adjust: exact; } }
   .printbtn { background: #07111F; color: #fff; border: 0; border-radius: 999px; padding: 12px 26px; font-weight: 700; font-size: 14px; cursor: pointer; margin-top: 8px; }
@@ -117,15 +140,18 @@ function buildHtml(nombre: string, result: ScoringResult): string {
   <h2>Tus fortalezas</h2>
   <ul>${fortalezas}</ul>
 
+  ${carrerasHtml ? `<h2>Carreras que encajan con tu perfil</h2>${carrerasHtml}` : ''}
+
   ${tensionesHtml ? `<h2>Lo que te hace distinto</h2>${tensionesHtml}` : ''}
 
   <h2>Tu perfil en detalle</h2>
   ${prefRows}
 
   <div class="foot">
-    Este es tu resultado gratuito de Vocaria. El informe completo —carreras afines con justificación,
-    universidades argentinas donde se dictan y salidas laborales con rangos salariales— estará disponible próximamente.
-    Vocaria es una herramienta de exploración vocacional y no reemplaza un proceso de orientación profesional.
+    Este es tu resultado gratuito de Vocaria. El informe completo agrega, para cada carrera,
+    las universidades argentinas donde se dicta, las modalidades y duración real, y las salidas
+    laborales con rangos salariales. Vocaria es una herramienta de exploración vocacional y no
+    reemplaza un proceso de orientación profesional.
   </div>
 
   <div class="noprint" style="text-align:center;margin-top:24px">
@@ -226,12 +252,12 @@ function buildPlanHtml(
   body { font-family: system-ui, -apple-system, sans-serif; color: #0d1b2e; line-height: 1.6; margin: 0; }
   .wrap { max-width: 740px; margin: 0 auto; padding: 24px; }
   .brand { display: flex; align-items: center; gap: 8px; font-weight: 800; font-size: 15px; color: #07111F; }
-  .brand .dot { width: 22px; height: 22px; border-radius: 7px; background: #d8f95c; display: inline-block; }
-  .preview { margin-top: 14px; background: #07111F; color: #d8f95c; font-size: 11.5px; font-weight: 700; letter-spacing: .04em; text-transform: uppercase; padding: 8px 14px; border-radius: 8px; display: inline-block; }
+  .brand .dot { width: 22px; height: 22px; border-radius: 7px; background: #d5ff3f; display: inline-block; }
+  .preview { margin-top: 14px; background: #07111F; color: #d5ff3f; font-size: 11.5px; font-weight: 700; letter-spacing: .04em; text-transform: uppercase; padding: 8px 14px; border-radius: 8px; display: inline-block; }
   .meta { color: #94a3b8; font-size: 12px; margin-top: 10px; }
   h1 { font-size: 30px; font-weight: 900; margin: 18px 0 4px; color: #07111F; line-height: 1.1; }
   .tag { color: #1a3a5c; font-weight: 600; font-size: 16px; margin-bottom: 14px; }
-  .badge { display: inline-block; background: #d8f95c; color: #07111F; font-weight: 800; font-size: 12px; padding: 4px 10px; border-radius: 6px; }
+  .badge { display: inline-block; background: #d5ff3f; color: #07111F; font-weight: 800; font-size: 12px; padding: 4px 10px; border-radius: 6px; }
   h2 { font-size: 15px; font-weight: 800; margin: 30px 0 10px; color: #0d1b2e; text-transform: uppercase; letter-spacing: .05em; border-bottom: 1px solid #e2e8f0; padding-bottom: 6px; }
   p { font-size: 14px; color: #334155; }
   ul { margin: 6px 0 0 18px; font-size: 14px; color: #334155; }
@@ -346,22 +372,23 @@ export function openPlanReport(nombre: string, result: ScoringResult, planId: Pl
 /**
  * Abre el informe imprimible en una pestaña nueva y dispara el diálogo de impresión.
  * Debe llamarse desde un handler de click (gesto del usuario) para evitar bloqueo de popups.
+ *
+ * El recomendador (que carga la DB de carreras) se importa on-demand: así el informe
+ * gratuito ya incluye las 3 carreras con mayor afinidad, sin inflar el chunk inicial
+ * del test. La ventana se abre de forma sincrónica dentro del click para no gatillar
+ * el bloqueo de popups; el contenido se completa al resolver el import.
  */
 export function openPrintableReport(nombre: string, result: ScoringResult): void {
-  const html = buildHtml(nombre, result);
   const win = window.open('', '_blank');
-  if (!win) {
-    // Popup bloqueado: fallback a descarga de un .html con el mismo contenido.
-    const blob = new Blob([html], { type: 'text/html' });
-    const url = URL.createObjectURL(blob);
-    const a = document.createElement('a');
-    a.href = url;
-    a.download = 'mi-resultado-vocaria.html';
-    a.click();
-    URL.revokeObjectURL(url);
-    return;
+  if (win) {
+    win.document.write('<p style="font-family:system-ui;color:#64748b;padding:40px;text-align:center">Generando tu informe…</p>');
   }
-  win.document.open();
-  win.document.write(html);
-  win.document.close();
+  import('../engine/recommender')
+    .then(({ recomendar }) => {
+      writeToWindow(win, buildHtml(nombre, result, recomendar(result)), 'mi-resultado-vocaria.html');
+    })
+    .catch(() => {
+      // Si el chunk del recomendador no carga (red), entregamos igual el informe de perfil.
+      writeToWindow(win, buildHtml(nombre, result), 'mi-resultado-vocaria.html');
+    });
 }

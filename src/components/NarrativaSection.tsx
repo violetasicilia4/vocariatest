@@ -36,7 +36,7 @@ export default function NarrativaSection({ onGetStartedClick }: NarrativaSection
             </p>
             <h2
               id="narrativa-heading"
-              className="font-display font-black text-[36px] text-[#0e1118] tracking-tight leading-[1.05]"
+              className="font-display font-black text-[36px] text-[#07111F] tracking-tight leading-[1.05]"
             >
               Es que todavía no tenés un mapa.
             </h2>
@@ -94,7 +94,7 @@ export default function NarrativaSection({ onGetStartedClick }: NarrativaSection
             </p>
             <h2
               id="narrativa-heading"
-              className="font-display font-black text-[46px] text-[#0e1118] tracking-tight leading-[1.05] mb-10"
+              className="font-display font-black text-[46px] text-[#07111F] tracking-tight leading-[1.05] mb-10"
             >
               Es que todavía no tenés un mapa.
             </h2>

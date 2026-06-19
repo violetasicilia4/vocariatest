@@ -25,7 +25,7 @@ export default function CierreCTA({ onGetStartedClick }: CierreCTAProps) {
           className="mb-8"
         >
           <h2 className="font-display font-black text-4xl sm:text-6xl text-white tracking-tight leading-[1.1] mb-3">
-            7 minutos.
+            Unas preguntas.
           </h2>
 
           <p className="font-display text-xl sm:text-2xl font-normal tracking-tight" style={{ color: 'rgba(255,255,255,0.5)' }}>

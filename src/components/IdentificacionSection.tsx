@@ -12,7 +12,7 @@ const bullets = [
 
 export default function IdentificacionSection({ onGetStartedClick }: IdentificacionSectionProps) {
   return (
-    <section style={{ background: '#0e1118' }}>
+    <section style={{ background: '#07111F' }}>
       <div className="max-w-5xl mx-auto px-6 py-10 sm:py-14">
 
         <motion.div

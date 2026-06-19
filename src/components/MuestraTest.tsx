@@ -120,7 +120,7 @@ export default function MuestraTest({ onGetStartedClick }: MuestraTestProps) {
           >
             <h2
               id="muestra-heading"
-              className="font-display font-black text-2xl text-[#0e1118] tracking-tight leading-tight mb-2"
+              className="font-display font-black text-2xl text-[#07111F] tracking-tight leading-tight mb-2"
             >
               Probá una pregunta real.
             </h2>
@@ -150,7 +150,7 @@ export default function MuestraTest({ onGetStartedClick }: MuestraTestProps) {
           >
             <h2
               id="muestra-heading"
-              className="font-display font-black text-[40px] text-[#0e1118] tracking-tight leading-[1.1] mb-5"
+              className="font-display font-black text-[40px] text-[#07111F] tracking-tight leading-[1.1] mb-5"
             >
               Probá una pregunta real.
             </h2>
