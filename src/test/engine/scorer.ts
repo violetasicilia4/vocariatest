@@ -112,9 +112,15 @@ export function calcularResultado(
   const tensiones = detectarTensiones(ranking, preferences, antipatrones);
 
   const advertencias: string[] = [];
-  if (activos.length >= 3) {
+  // "Perfil amplio" solo cuando DE VERDAD lo es: 3+ arquetipos cerca del top
+  // (>= 60% del puntaje máximo). Antes se disparaba con `activos.length >= 3`,
+  // pero `activos` usa un umbral laxo (40% del top) y el promedio es ~4,6
+  // arquetipos activos — la nota le aparecía a casi todos, y encima empujaba al
+  // pago. Ahora es informativa y se reserva para los perfiles genuinamente anchos.
+  const perfilesCercaDelTop = ranking.filter(a => a.score >= top.score * 0.6 && a.score > 0).length;
+  if (perfilesCercaDelTop >= 3) {
     advertencias.push(
-      'Tu perfil es amplio y multidimensional. Hay varias áreas que te interesan genuinamente — el informe completo te ayuda a priorizar.',
+      'Tu perfil es genuinamente amplio: varias orientaciones te representan con fuerza parecida. No es un problema — es información para elegir con criterio.',
     );
   }
   const respondidas = QUESTIONS.filter(q => answers[q.id]).length;

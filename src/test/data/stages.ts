@@ -33,14 +33,6 @@ export function stageForPct(pct: number): { label: string; index: number } {
   return { label: STAGES[index].label, index };
 }
 
-/**
- * Confianza del perfil (0–100). Arranca alta-media y sube hacia ~97 — se siente
- * como precisión que mejora, nunca como un contador de preguntas.
- */
-export function confidenceForPct(pct: number): number {
-  return Math.max(42, Math.min(97, Math.round(42 + pct * 0.55)));
-}
-
 export interface Checkpoint {
   /** % a partir del cual se dispara (una sola vez). */
   at: number;

@@ -1,4 +1,4 @@
-import { useState, useCallback, useEffect } from 'react';
+import { useState, useCallback, useEffect, useMemo } from 'react';
 import { motion, AnimatePresence } from 'motion/react';
 import { ChevronLeft } from 'lucide-react';
 import { QUESTIONS, type Question } from '../data/questions';
@@ -7,7 +7,7 @@ import ProgressInsight from '../components/ProgressInsight';
 import QuestionCard from '../components/QuestionCard';
 import CheckpointModal from '../components/Checkpoint';
 import LogoIcon from '../../components/ui/LogoIcon';
-import { CHECKPOINTS, confidenceForPct, type Checkpoint } from '../data/stages';
+import { CHECKPOINTS, type Checkpoint } from '../data/stages';
 import { getCurrentInsight } from '../data/insights';
 import { EASE } from '../ui/theme';
 import type { ScoringResult } from '../engine/scorer';
@@ -49,7 +49,14 @@ export default function TestRunner({ nombre, profile, onComplete }: TestRunnerPr
     pct = 92 + ((aStep + 1) / (aTotal + 1)) * 8;
   }
   pct = Math.min(100, Math.round(pct));
-  const confidence = confidenceForPct(pct);
+  // Confianza REAL parcial: la misma métrica que ve el usuario en el resultado.
+  // Arranca en ~45 (piso de calcularConfianza) y sube a medida que el perfil se
+  // define. Antes acá se mostraba un número cosmético (42→97 según el avance) que
+  // contradecía la confianza real del resultado; esto los unifica.
+  const confidence = useMemo(
+    () => calcularResultado(answers, profile).confianza,
+    [answers, profile],
+  );
   const isLastQuestion = currentIndex === total - 1;
 
   // Microcopy de inteligencia: aparece a lo largo del test (no solo en la fase

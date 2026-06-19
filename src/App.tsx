@@ -3,7 +3,6 @@ import Header from './components/Header';
 import HeroSection from './components/HeroSection';
 import LogoBanner from './components/LogoBanner';
 import Footer from './components/Footer';
-import ContactModal from './components/ContactModal';
 import NarrativaSection from './components/NarrativaSection';
 import MuestraTest from './components/MuestraTest';
 import ComoFunciona from './components/ComoFunciona';
@@ -18,7 +17,6 @@ import { flushQueue } from './services/leads';
 const TestFlow = lazy(() => import('./test/TestFlow'));
 
 export default function App() {
-  const [contactOpen, setContactOpen] = useState(false);
   const [testOpen, setTestOpen] = useState(false);
 
   useEffect(() => {
@@ -27,10 +25,7 @@ export default function App() {
     void flushQueue();
   }, []);
 
-  const openTest = () => {
-    setContactOpen(false);
-    setTestOpen(true);
-  };
+  const openTest = () => setTestOpen(true);
 
   return (
     <div className="relative min-h-screen bg-white overflow-hidden selection:bg-brand-lime selection:text-slate-950 font-sans antialiased text-[#0f172a]">
@@ -65,12 +60,7 @@ export default function App() {
 
       </main>
 
-      <Footer onContactClick={openTest} />
-
-      <ContactModal
-        isOpen={contactOpen}
-        onClose={() => setContactOpen(false)}
-      />
+      <Footer />
 
       {testOpen && (
         <Suspense

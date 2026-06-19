@@ -45,7 +45,7 @@ export const PLANES: Record<PlanId, {
     incluye: [
       'Todo lo del plan Universitario',
       'Salidas laborales concretas por carrera',
-      'Rangos salariales en Argentina 2025',
+      'Rangos salariales orientativos en Argentina (ARS)',
       'Empresas argentinas que contratan estos perfiles',
     ],
   },

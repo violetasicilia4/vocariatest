@@ -11,7 +11,11 @@ export interface SalarioFamilia {
   roles: RolSalarial[];
 }
 
-// Salarios en ARS miles/mes — estimaciones mercado 2025
+// Salarios en ARS miles/mes — estimaciones orientativas de mercado.
+// IMPORTANTE: en una economía con inflación alta, estos valores envejecen rápido.
+// No se exponen al usuario con un año fijo (se muestran como "orientativos") para
+// no prometer un dato desactualizado. Revisar/recalibrar periódicamente contra
+// fuentes de mercado actuales antes de habilitar el plan Profesional de pago.
 export const SALARIOS: SalarioFamilia[] = [
   {
     macroArea: 'Ingeniería Informática y Sistemas',

@@ -224,7 +224,7 @@ function buildPlanHtml(
         : '';
       const salBlock = showSalarios && c.salario && c.salario.roles.length
         ? `<div class="sub">
-             <span class="sub-h">Salida laboral y salarios (ARS/mes · 2025)</span>
+             <span class="sub-h">Salida laboral y salarios (ARS/mes · orientativo)</span>
              ${c.salario.roles.slice(0, 3).map(r =>
                `<div class="sal"><span class="sal-rol">${esc(r.rol)}</span><span class="sal-rng">${fmtSalary(r.juniorMin, r.seniorMax)}</span></div>`,
              ).join('')}

@@ -88,12 +88,25 @@ function normTitulo(titulo: string): string {
     .replace(/\/a\b/g, '')           // "licenciado/a" → "licenciado"
     .replace(/\s+/g, ' ')
     .trim();
-  for (const prefijo of ['licenciado en ', 'licenciada en ', 'licenciatura en ', 'medico ', 'medica ']) {
+  const prefijos = [
+    'licenciado en ', 'licenciada en ', 'licenciatura en ',
+    'ingeniero en ', 'ingeniera en ', 'ingenieria en ',
+    'profesor universitario en ', 'profesora universitaria en ',
+    'profesor en ', 'profesora en ', 'profesorado en ', 'profesorado de ',
+    'tecnico universitario en ', 'tecnica universitaria en ',
+    'tecnicatura universitaria en ', 'tecnicatura en ',
+    'tecnico en ', 'tecnica en ',
+    'medico ', 'medica ',
+  ];
+  for (const prefijo of prefijos) {
     if (t.startsWith(prefijo) && t.length > prefijo.length) {
       t = t.slice(prefijo.length);
       break;
     }
   }
+  // "gestión de X" colapsa a "X": evita que "Recursos Humanos" y "Gestión de
+  // Recursos Humanos" (misma carrera, distinto título) ocupen dos lugares del top.
+  if (t.startsWith('gestion de ')) t = t.slice('gestion de '.length);
   return t;
 }
 

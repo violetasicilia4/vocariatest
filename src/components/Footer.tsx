@@ -1,10 +1,6 @@
 import LogoIcon from './ui/LogoIcon';
 
-interface FooterProps {
-  onContactClick: () => void;
-}
-
-export default function Footer({ onContactClick }: FooterProps) {
+export default function Footer() {
   return (
     <footer className="bg-[#07111F] text-white py-10 rounded-t-[28px] mt-0">
       <div className="max-w-5xl mx-auto px-6 flex flex-col sm:flex-row items-center justify-between gap-4">
@@ -41,12 +37,6 @@ export default function Footer({ onContactClick }: FooterProps) {
           >
             Privacidad
           </a>
-          <button
-            onClick={onContactClick}
-            className="text-[11px] font-semibold text-white/40 hover:text-white transition-colors"
-          >
-            Contacto
-          </button>
         </div>
 
       </div>
