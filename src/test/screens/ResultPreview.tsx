@@ -7,8 +7,7 @@ import { getArquetipo, type Arquetipo } from '../data/arquetipos';
 import { iconForEmoji } from '../ui/icons';
 import { PLANES, type PlanId } from '../data/profile';
 import { CARD, CARD_SHADOW, CTA_PRIMARY, CTA_DARK, EASE } from '../ui/theme';
-import { openPrintableReport, openPlanReport } from '../report/printableReport';
-import { Download } from 'lucide-react';
+import { openPlanReport } from '../report/printableReport';
 
 // Etiquetas legibles para las dimensiones de preferencia (preferences.ts).
 const PREF_LABELS: Record<keyof CareerPreferences, string> = {
@@ -363,18 +362,6 @@ export default function ResultPreview({ nombre, result }: ResultPreviewProps) {
             ))}
           </motion.div>
         )}
-
-        {/* Entregable gratuito: descargar el resultado en PDF */}
-        <motion.button
-          initial={{ opacity: 0, y: 16 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.5, delay: 0.22, ease: EASE }}
-          onClick={() => openPrintableReport(nombre, result)}
-          className={`w-full flex items-center justify-center gap-2 py-3.5 text-[14px] ${CTA_DARK}`}
-        >
-          <Download size={16} strokeWidth={2.3} />
-          Descargar mi resultado (PDF)
-        </motion.button>
 
         {/* Planes */}
         <motion.div
