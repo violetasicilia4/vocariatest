@@ -38,9 +38,26 @@ create table if not exists public.test_results (
 
 create index if not exists test_results_email_idx on public.test_results (email);
 
+-- ── Compras (registradas por el webhook de Mercado Pago, server-side) ─────────
+-- La escribe la función /api/mp-webhook tras verificar el pago contra la API de
+-- Mercado Pago. No se escribe nunca desde el cliente.
+create table if not exists public.purchases (
+  id                  uuid primary key default gen_random_uuid(),
+  created_at          timestamptz not null default now(),
+  payment_id          text not null unique,
+  plan_id             text,
+  email               text,
+  amount              numeric,
+  status              text,
+  external_reference  text
+);
+
+create index if not exists purchases_email_idx on public.purchases (email);
+
 -- ── Row Level Security ───────────────────────────────────────────────────────
 alter table public.leads        enable row level security;
 alter table public.test_results enable row level security;
+alter table public.purchases    enable row level security;
 
 -- Sólo INSERT para el rol anónimo. Sin SELECT/UPDATE/DELETE.
 drop policy if exists "anon insert leads" on public.leads;

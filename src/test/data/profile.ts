@@ -20,10 +20,9 @@ export const PLANES: Record<PlanId, {
     precio: '2.990',
     tagline: 'Tu perfil + carreras',
     incluye: [
-      'Descripción completa de tu arquetipo',
+      'Descripción completa de tu arquetipo vocacional',
       'Fortalezas, motivaciones y áreas de desarrollo',
-      '5–8 carreras afines con justificación',
-      'PDF descargable',
+      'Tus carreras más afines, con la razón de cada una',
     ],
   },
   universitario: {
@@ -33,9 +32,8 @@ export const PLANES: Record<PlanId, {
     popular: true,
     incluye: [
       'Todo lo del plan Esencial',
-      'Universidades donde se dicta cada carrera',
-      'Planes de estudio y modalidades',
-      'Duración real (no solo la oficial)',
+      'Universidades de Argentina donde se estudia cada carrera',
+      'Modalidad y duración real de cada una',
     ],
   },
   profesional: {
@@ -46,7 +44,6 @@ export const PLANES: Record<PlanId, {
       'Todo lo del plan Universitario',
       'Salidas laborales concretas por carrera',
       'Rangos salariales orientativos en Argentina (ARS)',
-      'Empresas argentinas que contratan estos perfiles',
     ],
   },
 };

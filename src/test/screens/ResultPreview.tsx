@@ -7,7 +7,6 @@ import { getArquetipo, type Arquetipo } from '../data/arquetipos';
 import { iconForEmoji } from '../ui/icons';
 import { PLANES, type PlanId } from '../data/profile';
 import { CARD, CARD_SHADOW, CTA_PRIMARY, CTA_DARK, EASE } from '../ui/theme';
-import { openPlanReport } from '../report/printableReport';
 
 // Etiquetas legibles para las dimensiones de preferencia (preferences.ts).
 const PREF_LABELS: Record<keyof CareerPreferences, string> = {
@@ -233,7 +232,7 @@ function PlanCard({ planId, onSelect }: { planId: PlanId; onSelect: () => void }
   );
 }
 
-export default function ResultPreview({ nombre, result }: ResultPreviewProps) {
+export default function ResultPreview({ nombre, result, onGetFullReport }: ResultPreviewProps) {
   const { primario, secundario, tercero, combinacion, confianza, advertencias } = result;
   const firstName = nombre.split(' ')[0];
   const PrimarioIcon = iconForEmoji(primario.emoji);
@@ -386,7 +385,7 @@ export default function ResultPreview({ nombre, result }: ResultPreviewProps) {
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ delay: 0.3 + i * 0.07, ease: EASE }}
               >
-                <PlanCard planId={planId} onSelect={() => openPlanReport(nombre, result, planId)} />
+                <PlanCard planId={planId} onSelect={() => onGetFullReport(planId)} />
               </motion.div>
             ))}
           </div>

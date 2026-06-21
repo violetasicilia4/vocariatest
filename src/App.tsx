@@ -15,9 +15,14 @@ import { flushQueue } from './services/leads';
 // (~varios cientos de KB). Se carga sólo cuando el usuario abre el test,
 // no en el critical path de la landing.
 const TestFlow = lazy(() => import('./test/TestFlow'));
+const PaymentReturn = lazy(() => import('./test/screens/PaymentReturn'));
 
 export default function App() {
   const [testOpen, setTestOpen] = useState(false);
+  // Retorno de Mercado Pago: la URL trae ?mp=return tras el checkout.
+  const [paymentReturn, setPaymentReturn] = useState(
+    () => new URLSearchParams(window.location.search).get('mp') === 'return',
+  );
 
   useEffect(() => {
     window.scrollTo({ top: 0, left: 0, behavior: 'instant' as ScrollBehavior });
@@ -71,6 +76,18 @@ export default function App() {
           }
         >
           <TestFlow onExit={() => setTestOpen(false)} />
+        </Suspense>
+      )}
+
+      {paymentReturn && (
+        <Suspense
+          fallback={
+            <div className="fixed inset-0 z-[120] bg-paper flex items-center justify-center">
+              <div className="w-7 h-7 border-2 border-brand-sky/30 border-t-brand-sky rounded-full animate-spin" />
+            </div>
+          }
+        >
+          <PaymentReturn onClose={() => setPaymentReturn(false)} />
         </Suspense>
       )}
     </div>
