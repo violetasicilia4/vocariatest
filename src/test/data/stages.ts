@@ -16,13 +16,16 @@ export interface Stage {
   label: string;
 }
 
-/** Etapas de la barra (la barra "cuenta una historia"). */
+/** Etapas de la barra (la barra "cuenta una historia").
+ *  Nota: "Generando resultado" NO va acá — la generación ocurre en la pantalla
+ *  de procesamiento, después del test. Mientras todavía se responde, la última
+ *  etapa es de afinado, para no decir "generando" con preguntas pendientes. */
 export const STAGES: Stage[] = [
   { at: 0,  label: 'Explorando patrones' },
   { at: 20, label: 'Detectando afinidades' },
   { at: 45, label: 'Construyendo perfil' },
-  { at: 70, label: 'Validando hipótesis' },
-  { at: 90, label: 'Generando resultado' },
+  { at: 72, label: 'Validando hipótesis' },
+  { at: 92, label: 'Afinando los detalles' },
 ];
 
 export function stageForPct(pct: number): { label: string; index: number } {

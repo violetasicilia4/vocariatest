@@ -40,6 +40,9 @@ export default function TestRunner({ nombre, profile, onComplete }: TestRunnerPr
   const total = questions.length;
   const isAdaptive = currentIndex >= CORE_LENGTH;
   const answeredCount = Object.keys(answers).length;
+  // Posición dentro de la fase adaptativa (desempate), si estamos en ella.
+  const adaptiveStep = currentIndex - CORE_LENGTH;          // 0-based
+  const adaptiveTotal = adaptiveQuestions?.length ?? 0;
 
   // Avance global (0–100), coherente con preguntas respondidas/restantes.
   //
@@ -48,20 +51,28 @@ export default function TestRunner({ nombre, profile, onComplete }: TestRunnerPr
   // primera ya muestra avance y la última llega a 100. Sin saltos ni 0% inicial.
   //
   // La fase adaptativa (desempate, sólo para perfiles peleados, 1–5 preguntas)
-  // ocurre cuando el núcleo YA está completo: la barra se mantiene llena (100%) y
-  // el encabezado pasa a "Afinando tu resultado". Así nunca retrocede al aparecer
+  // ocurre cuando el núcleo YA está completo: la barra se mantiene llena y el
+  // encabezado pasa a "Afinando · X de N". Así nunca retrocede al aparecer
   // preguntas extra que no se conocían de antemano.
   const pct = isAdaptive
     ? 100
     : Math.min(100, Math.round(((currentIndex + 1) / CORE_LENGTH) * 100));
 
-  // Confianza "en vivo": misma señal real que la confianza final, pero sin la
-  // penalización por completitud que la dejaba clavada en 45 durante el test.
-  // Sube a medida que el perfil se define y termina en el valor real del
-  // resultado. Es lo que ven el medidor y los checkpoints.
+  // Medidor de confianza/precisión que se ve durante el test.
+  //
+  // No se muestra la señal real "cruda" porque es volátil: a cada respuesta
+  // cambia qué arquetipo lidera, así que el número saltaba (54→46→sube→baja) y
+  // podía arrancar alto en la 2da pregunta o terminar en 40. En su lugar lo
+  // anclamos al AVANCE (rampa monótona, suave) y dejamos que la señal real pese
+  // cada vez más a medida que el perfil se estabiliza, hasta converger al valor
+  // real del resultado al final. Sube parejo y nunca contradice el resultado.
   const confidence = useMemo(() => {
     const { ranking } = calcularResultado(answers, profile);
-    return calcularConfianzaEnVivo(ranking, answers, answeredCount, CORE_LENGTH);
+    const real = calcularConfianzaEnVivo(ranking, answers, answeredCount, CORE_LENGTH);
+    const p = Math.min(1, answeredCount / CORE_LENGTH);     // 0→1 según avance
+    const w = p * p;                                        // peso de la señal real (0→1)
+    const ramp = 46 + p * 46;                               // backbone monótona 46→92
+    return Math.max(40, Math.min(97, Math.round(real * w + ramp * (1 - w))));
   }, [answers, profile, answeredCount]);
   const isLastQuestion = currentIndex === total - 1;
 
@@ -144,7 +155,9 @@ export default function TestRunner({ nombre, profile, onComplete }: TestRunnerPr
             </div>
             <div className="flex items-center gap-1.5 font-display text-[10.5px] lg:text-[12px]">
               <span className="text-ink/55 font-semibold tabular-nums">
-                {isAdaptive ? 'Afinando tu resultado' : `Pregunta ${currentIndex + 1} de ${CORE_LENGTH}`}
+                {isAdaptive
+                  ? `Afinando · ${adaptiveStep + 1} de ${adaptiveTotal}`
+                  : `Pregunta ${currentIndex + 1} de ${CORE_LENGTH}`}
               </span>
               {firstName && (
                 <span className="text-ink/30 font-medium hidden sm:inline">· {firstName}</span>
