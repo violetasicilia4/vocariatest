@@ -156,7 +156,7 @@ export default function ResultPreview({ nombre, result, onGetFullReport }: Resul
       <div className="max-w-xl lg:max-w-5xl mx-auto px-5 lg:px-8 py-8 lg:py-12 pb-16">
 
         {/* ───────────────────────── HOOK: la revelación ─────────────────────────
-            Lo único gratis: el nombre del arquetipo, la frase catchy (la muestra),
+            Lo único del preview: el nombre del arquetipo, la frase catchy (la muestra),
             la precisión y un gancho. Nada del informe en sí. */}
         <motion.div
           initial={{ opacity: 0, y: 18 }}

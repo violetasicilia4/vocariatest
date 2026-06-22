@@ -3,7 +3,7 @@
  * (vía "Guardar como PDF" del diálogo de impresión del navegador), sin depender
  * de un backend de PDF.
  *
- * El PDF es un entregable de los PLANES PAGOS. El tier gratuito NO descarga PDF:
+ * El PDF es un entregable de los PLANES PAGOS. El tier de preview NO descarga PDF:
  * su resultado vive en pantalla (ResultPreview). Mientras Mercado Pago no esté
  * habilitado, este documento se muestra como "vista previa" del entregable de pago.
  *

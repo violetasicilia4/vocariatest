@@ -55,7 +55,7 @@ const svg = `
   <!-- Pill -->
   <g transform="translate(80, 478)">
     <rect width="540" height="62" rx="31" fill="${LIME}"/>
-    <text x="270" y="40" font-family="DejaVu Sans" font-weight="bold" font-size="25" fill="${NAVY}" text-anchor="middle">Resultado personalizado · gratis</text>
+    <text x="270" y="40" font-family="DejaVu Sans" font-weight="bold" font-size="25" fill="${NAVY}" text-anchor="middle">Resultado personalizado al instante</text>
   </g>
 
   <!-- Mockup de resultado (mostrá, no prometas) -->
