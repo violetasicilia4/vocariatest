@@ -278,7 +278,7 @@ function buildPlanHtml(
       <p class="cover-eyebrow">Informe vocacional · ${esc(firstName)}</p>
       <h1 class="cover-title">${esc(tituloPrincipal)}</h1>
       <p class="cover-tag">${esc(taglinePrincipal)}</p>
-      <span class="cover-badge">Precisión ${confianza}% · 37 dimensiones analizadas</span>
+      <span class="cover-badge">Perfil definido al ${confianza}% · según tus respuestas</span>
     </div>
     <div class="cover-foot">
       <span>Plan <strong>${esc(plan.nombre)}</strong> · ${esc(plan.tagline)}</span>
@@ -343,9 +343,8 @@ function buildPlanHtml(
   </div>
 
   <div class="printbar noprint">
-    <button class="printbtn" onclick="window.print()">Guardar como PDF / Imprimir</button>
+    <button class="printbtn" id="vocaria-print" type="button">Guardar como PDF / Imprimir</button>
   </div>
-<script>window.addEventListener('load', function(){ setTimeout(function(){ window.print(); }, 450); });</script>
 </body></html>`;
 }
 
@@ -363,6 +362,19 @@ function writeToWindow(win: Window | null, html: string, fallbackName: string): 
   win.document.open();
   win.document.write(html);
   win.document.close();
+  // El documento del informe es same-origin (about:blank) y hereda la CSP del
+  // sitio (script-src 'self'), por eso NO usamos JS inline: el botón de imprimir
+  // y la impresión automática se cablean desde acá, en la ventana padre.
+  const triggerPrint = () => {
+    try {
+      win.print();
+    } catch {
+      /* el usuario puede imprimir manualmente desde el botón */
+    }
+  };
+  const btn = win.document.getElementById('vocaria-print');
+  if (btn) btn.addEventListener('click', triggerPrint);
+  win.setTimeout(triggerPrint, 500);
 }
 
 /**
