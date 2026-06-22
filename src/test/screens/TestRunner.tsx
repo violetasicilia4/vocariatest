@@ -140,16 +140,16 @@ export default function TestRunner({ nombre, profile, onComplete }: TestRunnerPr
 
   return (
     // Viewport fijo de alto completo. El progreso vive arriba (barra ancha,
-    // ocupa la pantalla en desktop) y la pregunta queda centrada en el medio.
-    // En mobile es una columna; en desktop el cuerpo se reparte en dos columnas
-    // (enunciado | opciones, dentro de QuestionCard) para ocupar el ancho.
+    // ocupa la pantalla en desktop) y la pregunta queda centrada en el medio,
+    // en flujo vertical: enunciado arriba y respuestas debajo (en grilla en
+    // desktop), para que la lectura sea continua de arriba hacia abajo.
     // overflow-x-hidden evita el scroll lateral de las transiciones horizontales.
     <div className="h-[100dvh] flex flex-col bg-paper overflow-hidden">
 
       {/* Progreso arriba: identidad + barra narrativa + confianza + carteles de
           avance. Mismo bloque en mobile y desktop, solo escala el tamaño. */}
       <header className="shrink-0 sticky top-0 z-10 bg-paper/90 backdrop-blur-xl border-b border-line/70">
-        <div className="max-w-xl lg:max-w-6xl mx-auto w-full px-5 lg:px-12 pt-2.5 lg:pt-4 pb-2.5 lg:pb-3.5">
+        <div className="max-w-xl lg:max-w-5xl mx-auto w-full px-5 lg:px-12 pt-2.5 lg:pt-4 pb-2.5 lg:pb-3.5">
           <div className="flex items-center justify-between mb-2 lg:mb-2.5">
             <div className="flex items-center gap-1.5 text-ink">
               <LogoIcon size={16} />
@@ -175,7 +175,7 @@ export default function TestRunner({ nombre, profile, onComplete }: TestRunnerPr
       {/* Cuerpo de la pregunta — centrado vertical y horizontalmente; clipea el
           eje X para que las transiciones no produzcan scroll lateral. */}
       <main className="flex-1 min-h-0 overflow-y-auto overflow-x-hidden flex flex-col">
-        <div className="m-auto w-full max-w-xl lg:max-w-6xl px-5 lg:px-12 py-4 sm:py-6 lg:py-10">
+        <div className="m-auto w-full max-w-xl lg:max-w-5xl px-5 lg:px-12 py-4 sm:py-6 lg:py-10">
           <AnimatePresence mode="wait" custom={direction}>
             <motion.div
               key={currentQuestion?.id}
@@ -199,7 +199,7 @@ export default function TestRunner({ nombre, profile, onComplete }: TestRunnerPr
       </main>
 
       {/* Volver — pinneado abajo, centrado, no compite con las opciones */}
-      <div className="shrink-0 max-w-xl lg:max-w-6xl mx-auto w-full px-5 lg:px-12 pb-3 lg:pb-5 pt-0.5">
+      <div className="shrink-0 max-w-xl lg:max-w-5xl mx-auto w-full px-5 lg:px-12 pb-3 lg:pb-5 pt-0.5">
         {currentIndex > 0 ? (
           <button
             onClick={handleBack}

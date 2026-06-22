@@ -73,9 +73,50 @@ export default function ProfileCapture({ onStart }: ProfileCaptureProps) {
   };
 
   return (
-    <div className="min-h-screen bg-paper flex flex-col items-center justify-center px-5 py-12">
+    // Mobile: una sola columna. Desktop: split-screen — panel de marca a la
+    // izquierda + formulario a la derecha (patrón de onboarding premium), para
+    // que ocupe la pantalla en vez de quedar como un celular centrado.
+    <div className="min-h-screen bg-paper lg:grid lg:grid-cols-2">
+
+      {/* Panel de marca — solo desktop */}
+      <aside className="hidden lg:flex flex-col justify-between bg-ink text-white p-12 xl:p-16 relative overflow-hidden">
+        {/* Acentos sutiles de marca */}
+        <div className="absolute -top-24 -right-24 w-80 h-80 rounded-full bg-brand-sky/20 blur-3xl" />
+        <div className="absolute -bottom-32 -left-16 w-80 h-80 rounded-full bg-brand-lime/10 blur-3xl" />
+
+        <div className="relative flex items-center gap-2.5">
+          <LogoIcon size={26} />
+          <span className="font-display font-bold text-[16px] tracking-tight">Vocaria</span>
+        </div>
+
+        <div className="relative max-w-md">
+          <h2 className="font-display font-black text-[34px] xl:text-[40px] leading-[1.08] tracking-tight mb-5">
+            La carrera correcta no se adivina. Se descubre.
+          </h2>
+          <p className="text-white/65 text-[15px] leading-relaxed font-medium">
+            Un test basado en situaciones reales que detecta tu patrón de pensamiento
+            y lo cruza con carreras universitarias argentinas.
+          </p>
+        </div>
+
+        <div className="relative space-y-3">
+          {[
+            'Situaciones reales, no preguntas abstractas',
+            'Sin respuestas correctas ni incorrectas',
+            'Tu resultado, gratis y al instante',
+          ].map(t => (
+            <div key={t} className="flex items-center gap-3 text-white/75 text-[13.5px] font-medium">
+              <span className="w-1.5 h-1.5 rounded-full bg-brand-lime shrink-0" />
+              {t}
+            </div>
+          ))}
+        </div>
+      </aside>
+
+      {/* Formulario */}
+      <div className="flex flex-col items-center justify-center px-5 py-12 lg:px-12 xl:px-20">
       <div className="w-full max-w-md">
-        <div className="flex items-center gap-2.5 mb-9 text-ink">
+        <div className="flex items-center gap-2.5 mb-9 text-ink lg:hidden">
           <LogoIcon size={24} />
           <span className="font-display font-bold text-[15px] tracking-tight">Vocaria</span>
         </div>
@@ -252,6 +293,7 @@ export default function ProfileCapture({ onStart }: ProfileCaptureProps) {
           )}
 
         </AnimatePresence>
+      </div>
       </div>
     </div>
   );

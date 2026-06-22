@@ -50,17 +50,17 @@ export default function QuestionCard({ question, onAnswer, currentAnswer }: Ques
   };
 
   return (
-    // Mobile: enunciado arriba, opciones abajo (apilado).
-    // Desktop: dos columnas — enunciado a la izquierda, opciones a la derecha —
-    // para ocupar el ancho de la pantalla en vez de quedar como una columna
-    // angosta. Mismo contenido, solo cambia la disposición.
-    <div className="w-full lg:grid lg:grid-cols-2 lg:gap-12 xl:gap-16 lg:items-center">
-      <div className="mb-4 sm:mb-5 lg:mb-0">
-        <h2 className="font-display font-extrabold text-[20px] sm:text-[26px] lg:text-[36px] xl:text-[40px] text-ink leading-[1.14] tracking-tight">
+    // Flujo vertical (la lectura va de arriba hacia abajo): el enunciado arriba,
+    // centrado y de tamaño contenido, y las respuestas justo debajo en grilla
+    // para ocupar el ancho en desktop sin romper la continuidad de lectura.
+    // Es el patrón que mejor lee en quizzes de escritorio (Typeform / 16personalities).
+    <div className="w-full">
+      <div className="mb-6 sm:mb-8 lg:mb-10 text-center max-w-3xl mx-auto">
+        <h2 className="font-display font-extrabold text-[21px] sm:text-[26px] lg:text-[31px] text-ink leading-[1.18] tracking-tight text-balance">
           {question.enunciado}
         </h2>
         {question.subtext && (
-          <p className="mt-2 lg:mt-3.5 text-[12.5px] lg:text-[15px] text-ink/55 font-medium leading-relaxed lg:max-w-[42ch]">
+          <p className="mt-2.5 lg:mt-3 text-[12.5px] lg:text-[14.5px] text-ink/55 font-medium leading-relaxed">
             {question.subtext}
           </p>
         )}
@@ -146,7 +146,7 @@ function ScaleOptions({
   const activeOpt = opciones.find(o => o.id === selected);
 
   return (
-    <div>
+    <div className="max-w-xl mx-auto">
       <div className="flex justify-between mb-2.5 px-0.5 gap-4">
         <span className="text-[11.5px] text-ink/45 font-medium max-w-[44%] leading-snug">{anchors[0]}</span>
         <span className="text-[11.5px] text-ink/45 font-medium max-w-[44%] text-right leading-snug">{anchors[1]}</span>
@@ -206,7 +206,7 @@ function VisualOptions({
   onSelect: (id: string) => void;
 }) {
   return (
-    <div className="grid grid-cols-2 gap-2 lg:gap-3">
+    <div className="grid grid-cols-2 lg:grid-cols-3 gap-2.5 lg:gap-4 max-w-4xl mx-auto">
       {opciones.map(op => {
         const active = selected === op.id;
         const Icon = iconForEmoji(op.emoji);
@@ -256,7 +256,7 @@ function PairsOptions({
   onSelect: (id: string) => void;
 }) {
   return (
-    <div className="space-y-2.5 lg:space-y-3">
+    <div className="grid grid-cols-1 sm:grid-cols-2 gap-2.5 lg:gap-3.5 max-w-3xl mx-auto">
       {opciones.map(op => {
         const active = selected === op.id;
         const Icon = iconForEmoji(op.emoji);
@@ -266,7 +266,7 @@ function PairsOptions({
             onClick={() => onSelect(op.id)}
             aria-pressed={active}
             whileTap={{ scale: 0.99 }}
-            className={`w-full flex items-center gap-3.5 lg:gap-4 px-4 lg:px-5 py-3.5 lg:py-4 rounded-[16px] lg:rounded-[18px] border transition-[border-color,background-color,box-shadow] duration-200 text-left
+            className={`w-full flex items-center gap-3.5 lg:gap-4 px-4 lg:px-5 py-3.5 lg:py-5 rounded-[16px] lg:rounded-[18px] border transition-[border-color,background-color,box-shadow] duration-200 text-left
               ${active ? OPTION_ACTIVE : OPTION_IDLE}`}
           >
             <span
@@ -301,8 +301,8 @@ function MultiSelectOptions({
   const ready = count === maxSelect;
 
   return (
-    <div>
-      <div className="flex flex-col gap-1.5 lg:gap-2 mb-3">
+    <div className="max-w-3xl mx-auto">
+      <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 lg:gap-2.5 mb-4">
         {opciones.map(op => {
           const active = selected.includes(op.id);
           const disabled = !active && count >= maxSelect;
@@ -352,7 +352,7 @@ function ChoiceOptions({
   onSelect: (id: string) => void;
 }) {
   return (
-    <div className="flex flex-col gap-2 lg:gap-2.5">
+    <div className="grid grid-cols-1 lg:grid-cols-2 gap-2.5 lg:gap-3.5 max-w-4xl mx-auto">
       {opciones.map(op => {
         const active = selected === op.id;
         return (
@@ -361,7 +361,7 @@ function ChoiceOptions({
             onClick={() => onSelect(op.id)}
             aria-pressed={active}
             whileTap={{ scale: 0.99 }}
-            className={`w-full text-left px-3.5 lg:px-5 py-3 lg:py-4 rounded-[14px] lg:rounded-[16px] border font-display text-[14px] lg:text-[15.5px] font-medium transition-[border-color,background-color,box-shadow] duration-200 flex items-start gap-2.5 lg:gap-3.5
+            className={`w-full h-full text-left px-3.5 lg:px-5 py-3 lg:py-4 rounded-[14px] lg:rounded-[16px] border font-display text-[14px] lg:text-[15.5px] font-medium transition-[border-color,background-color,box-shadow] duration-200 flex items-start gap-2.5 lg:gap-3.5
               ${active ? OPTION_ACTIVE : OPTION_IDLE}`}
           >
             <span
