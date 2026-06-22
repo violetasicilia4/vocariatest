@@ -50,60 +50,66 @@ export default function QuestionCard({ question, onAnswer, currentAnswer }: Ques
   };
 
   return (
-    <div className="w-full">
-      <div className="mb-4 sm:mb-5 lg:mb-7">
-        <h2 className="font-display font-extrabold text-[20px] sm:text-[26px] lg:text-[32px] text-ink leading-[1.16] tracking-tight">
+    // Mobile: enunciado arriba, opciones abajo (apilado).
+    // Desktop: dos columnas — enunciado a la izquierda, opciones a la derecha —
+    // para ocupar el ancho de la pantalla en vez de quedar como una columna
+    // angosta. Mismo contenido, solo cambia la disposición.
+    <div className="w-full lg:grid lg:grid-cols-2 lg:gap-12 xl:gap-16 lg:items-center">
+      <div className="mb-4 sm:mb-5 lg:mb-0">
+        <h2 className="font-display font-extrabold text-[20px] sm:text-[26px] lg:text-[36px] xl:text-[40px] text-ink leading-[1.14] tracking-tight">
           {question.enunciado}
         </h2>
         {question.subtext && (
-          <p className="mt-2 lg:mt-2.5 text-[12.5px] lg:text-[14.5px] text-ink/55 font-medium leading-relaxed">
+          <p className="mt-2 lg:mt-3.5 text-[12.5px] lg:text-[15px] text-ink/55 font-medium leading-relaxed lg:max-w-[42ch]">
             {question.subtext}
           </p>
         )}
       </div>
 
-      {question.tipo === 'scale' && (
-        <ScaleOptions
-          opciones={question.opciones}
-          selected={selected}
-          onSelect={setSelected}
-          onConfirm={handleScaleConfirm}
-        />
-      )}
+      <div className="w-full">
+        {question.tipo === 'scale' && (
+          <ScaleOptions
+            opciones={question.opciones}
+            selected={selected}
+            onSelect={setSelected}
+            onConfirm={handleScaleConfirm}
+          />
+        )}
 
-      {question.tipo === 'visual' && (
-        <VisualOptions
-          opciones={question.opciones}
-          selected={selected}
-          onSelect={handleAutoSelect}
-        />
-      )}
+        {question.tipo === 'visual' && (
+          <VisualOptions
+            opciones={question.opciones}
+            selected={selected}
+            onSelect={handleAutoSelect}
+          />
+        )}
 
-      {question.tipo === 'pairs' && (
-        <PairsOptions
-          opciones={question.opciones}
-          selected={selected}
-          onSelect={handleAutoSelect}
-        />
-      )}
+        {question.tipo === 'pairs' && (
+          <PairsOptions
+            opciones={question.opciones}
+            selected={selected}
+            onSelect={handleAutoSelect}
+          />
+        )}
 
-      {question.tipo === 'multiselect' && (
-        <MultiSelectOptions
-          opciones={question.opciones}
-          selected={multiSelected}
-          maxSelect={question.maxSelect ?? 3}
-          onToggle={handleMultiToggle}
-          onConfirm={handleMultiConfirm}
-        />
-      )}
+        {question.tipo === 'multiselect' && (
+          <MultiSelectOptions
+            opciones={question.opciones}
+            selected={multiSelected}
+            maxSelect={question.maxSelect ?? 3}
+            onToggle={handleMultiToggle}
+            onConfirm={handleMultiConfirm}
+          />
+        )}
 
-      {question.tipo === 'situacional' && (
-        <ChoiceOptions
-          opciones={question.opciones}
-          selected={selected}
-          onSelect={handleAutoSelect}
-        />
-      )}
+        {question.tipo === 'situacional' && (
+          <ChoiceOptions
+            opciones={question.opciones}
+            selected={selected}
+            onSelect={handleAutoSelect}
+          />
+        )}
+      </div>
     </div>
   );
 }
