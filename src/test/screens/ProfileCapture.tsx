@@ -103,7 +103,7 @@ export default function ProfileCapture({ onStart }: ProfileCaptureProps) {
           {[
             'Situaciones reales, no preguntas abstractas',
             'Sin respuestas correctas ni incorrectas',
-            'Tu resultado, gratis y al instante',
+            'Un resultado claro y personalizado',
           ].map(t => (
             <div key={t} className="flex items-center gap-3 text-white/75 text-[13.5px] font-medium">
               <span className="w-1.5 h-1.5 rounded-full bg-brand-lime shrink-0" />
@@ -233,7 +233,7 @@ export default function ProfileCapture({ onStart }: ProfileCaptureProps) {
               </div>
 
               <div className="flex items-center gap-3 mt-6 flex-wrap">
-                {['Situaciones reales', 'Sin respuestas correctas', 'Resultado gratis'].map(t => (
+                {['Situaciones reales', 'Sin respuestas correctas', 'Resultado personalizado'].map(t => (
                   <span key={t} className="text-[11px] text-ink/40 font-medium flex items-center gap-1.5">
                     <span className="w-1 h-1 rounded-full bg-brand-sky/60" />
                     {t}

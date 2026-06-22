@@ -7,10 +7,6 @@ const faqs = [
     respuesta: 'Para cualquier persona que esté eligiendo carrera, dudando entre opciones, o evaluando un cambio. Funciona para quienes terminan el secundario, para quienes ya empezaron una carrera y no están seguros, y para quienes quieren validar una decisión.',
   },
   {
-    pregunta: '¿Cuánto tiempo lleva?',
-    respuesta: 'El que necesites. Son preguntas situacionales, sin respuestas correctas, y la mayoría lo completa de una sentada, sin apuro.',
-  },
-  {
     pregunta: '¿El resultado me dice exactamente qué estudiar?',
     respuesta: 'No. Te muestra tu patrón y las carreras que más encajan con cómo pensás. La decisión sigue siendo tuya.',
   },

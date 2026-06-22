@@ -11,19 +11,16 @@ const entregables: { icon: LucideIcon; titulo: string; texto: string; etiqueta?:
     icon: Fingerprint,
     titulo: 'Tu arquetipo vocacional',
     texto: 'Cómo pensás, decidís y resolvés, descrito en un perfil claro. No una etiqueta: tu forma de razonar.',
-    etiqueta: 'Gratis',
   },
   {
     icon: Compass,
     titulo: 'Carreras que encajan',
     texto: 'Cruzamos tu forma de pensar con +130 carreras reales y te mostramos las de mayor afinidad, con el porqué.',
-    etiqueta: 'Gratis',
   },
   {
     icon: MapPin,
     titulo: 'Universidades y salida laboral',
     texto: 'Dónde se estudia cada carrera en Argentina, su duración real y qué panorama laboral y salarial tiene.',
-    etiqueta: 'Informe completo',
   },
   {
     icon: Footprints,

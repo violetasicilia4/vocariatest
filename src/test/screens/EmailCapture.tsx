@@ -80,7 +80,7 @@ export default function EmailCapture({ onStart }: EmailCaptureProps) {
 
         {/* Trust */}
         <div className="flex items-center gap-3 mt-6 flex-wrap">
-          {['Situaciones reales', 'Sin respuestas correctas', 'Resultado gratis'].map(t => (
+          {['Situaciones reales', 'Sin respuestas correctas', 'Resultado personalizado'].map(t => (
             <span key={t} className="text-[11px] text-ink/40 font-medium flex items-center gap-1.5">
               <span className="w-1 h-1 rounded-full bg-brand-sky/60" />
               {t}

@@ -160,7 +160,7 @@ export default function CheckoutScreen({ nombre, email, result, plan, onBack }: 
               <p className="text-[12.5px] text-ink/60 leading-snug mt-0.5">
                 Estamos habilitando el pago con Mercado Pago. Te escribimos a{' '}
                 <span className="text-ink font-semibold">{email}</span> apenas esté listo
-                tu informe completo, sin costo de reserva.
+                tu informe completo, sin compromiso.
               </p>
             </div>
           </div>
