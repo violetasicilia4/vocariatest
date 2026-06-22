@@ -16,6 +16,11 @@ import type { PlanId } from '../test/data/profile';
 
 const PENDING_KEY = 'vocaria_pending_order';
 
+// El pedido pendiente guarda PII (email + resultado) en el dispositivo mientras
+// la persona está en el checkout de Mercado Pago. Si abandona y no vuelve, lo
+// purgamos a las 24 h para no retener datos de más.
+const PENDING_MAX_AGE_MS = 24 * 60 * 60 * 1000;
+
 /** ¿Está habilitado el cobro real? (build-time, lo setea quien despliega). */
 export function paymentsEnabled(): boolean {
   return import.meta.env.VITE_PAYMENTS_ENABLED === 'true';
@@ -31,7 +36,7 @@ export interface PendingOrder {
 
 export function savePendingOrder(order: PendingOrder): void {
   try {
-    localStorage.setItem(PENDING_KEY, JSON.stringify(order));
+    localStorage.setItem(PENDING_KEY, JSON.stringify({ ts: Date.now(), order }));
   } catch {
     /* localStorage no disponible */
   }
@@ -40,7 +45,18 @@ export function savePendingOrder(order: PendingOrder): void {
 export function loadPendingOrder(): PendingOrder | null {
   try {
     const raw = localStorage.getItem(PENDING_KEY);
-    return raw ? (JSON.parse(raw) as PendingOrder) : null;
+    if (!raw) return null;
+    const parsed = JSON.parse(raw) as { ts?: number; order?: PendingOrder };
+    // Compat: si no tiene envoltura con ts, lo tratamos como vencido y lo limpiamos.
+    if (!parsed || typeof parsed.ts !== 'number' || !parsed.order) {
+      clearPendingOrder();
+      return null;
+    }
+    if (Date.now() - parsed.ts > PENDING_MAX_AGE_MS) {
+      clearPendingOrder();
+      return null;
+    }
+    return parsed.order;
   } catch {
     return null;
   }

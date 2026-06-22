@@ -19,7 +19,7 @@ interface ResultPreviewProps {
 }
 
 function ConfianzaBadge({ confianza }: { confianza: number }) {
-  const label = confianza >= 85 ? 'Alta precisión' : confianza >= 70 ? 'Buena precisión' : 'Precisión moderada';
+  const label = confianza >= 85 ? 'Perfil muy definido' : confianza >= 70 ? 'Perfil definido' : 'Perfil en formación';
   return (
     <span className="inline-flex items-center gap-1.5 bg-brand-lime text-slate-950 text-[11px] font-black px-2.5 py-1 rounded-md tracking-wide">
       {label} · {confianza}%
@@ -187,7 +187,7 @@ export default function ResultPreview({ nombre, result, onGetFullReport }: Resul
           <div className="flex items-center justify-center gap-2.5 flex-wrap">
             <ConfianzaBadge confianza={confianza} />
             <span className="text-[12px] text-ink/40 font-medium">
-              Analizado en <span className="text-ink/60 font-semibold">37 dimensiones</span>
+              Construido con <span className="text-ink/60 font-semibold">tus respuestas reales</span>
             </span>
           </div>
 

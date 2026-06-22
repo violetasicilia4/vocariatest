@@ -18,6 +18,11 @@ const SUPABASE_ANON_KEY = import.meta.env.VITE_SUPABASE_ANON_KEY as string | und
 
 const QUEUE_KEY = 'vocaria_pending_inserts';
 
+// Minimización de datos: la cola guarda PII (email + respuestas) en el dispositivo.
+// La purgamos a los 7 días para no retener datos indefinidamente en equipos
+// (especialmente compartidos) si nunca se logró sincronizar con Supabase.
+const QUEUE_MAX_AGE_MS = 7 * 24 * 60 * 60 * 1000;
+
 export type LeadSource = 'waitlist' | 'test_start' | 'purchase_intent';
 
 interface PendingInsert {
@@ -32,7 +37,11 @@ export function isConfigured(): boolean {
 
 function readQueue(): PendingInsert[] {
   try {
-    return JSON.parse(localStorage.getItem(QUEUE_KEY) || '[]');
+    const items: PendingInsert[] = JSON.parse(localStorage.getItem(QUEUE_KEY) || '[]');
+    const cutoff = Date.now() - QUEUE_MAX_AGE_MS;
+    // Descarta entradas vencidas. Los callers reescriben la cola, así que la
+    // purga queda persistida (flushQueue corre en cada carga de la app).
+    return items.filter(it => typeof it?.ts === 'number' && it.ts >= cutoff);
   } catch {
     return [];
   }
@@ -89,9 +98,11 @@ async function insert(
 
 /** Reintenta los inserts encolados. Llamar al inicio de la app (best-effort). */
 export async function flushQueue(): Promise<void> {
-  if (!isConfigured()) return;
+  // Persiste la purga por TTL aunque no haya red/Supabase: readQueue() ya filtró
+  // las entradas vencidas, así no quedan datos viejos en el dispositivo.
   const q = readQueue();
-  if (q.length === 0) return;
+  writeQueue(q);
+  if (!isConfigured() || q.length === 0) return;
 
   const remaining: PendingInsert[] = [];
   for (const item of q) {

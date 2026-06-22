@@ -1,20 +1,37 @@
-<div align="center">
-<img width="1200" height="475" alt="GHBanner" src="https://ai.google.dev/static/site-assets/images/share-ais-513315318.png" />
-</div>
+# Vocaria — Test vocacional para Argentina
 
-# Run and deploy your AI Studio app
+Landing + test vocacional que cruza el patrón de pensamiento del usuario con
+carreras universitarias argentinas reales. El motor de scoring es determinístico
+(no usa IA en esta versión). Captura de leads/resultados con Supabase y cobro de
+informes con Mercado Pago.
 
-This contains everything you need to run your app locally.
+## Stack
 
-View your app in AI Studio: https://ai.studio/apps/277c8c8d-08ad-4a3e-b9e0-5aade8c061eb
+- **Frontend:** Vite + React 19 + TypeScript + Tailwind CSS v4
+- **Datos:** Supabase (REST, sólo INSERT anónimo — ver `supabase/schema.sql`)
+- **Pagos:** Mercado Pago (Checkout Pro) vía funciones serverless en `api/`
+- **Deploy:** Vercel o Netlify (config en `vercel.json` / `netlify.toml`)
 
-## Run Locally
+## Correr localmente
 
-**Prerequisites:**  Node.js
+**Requisitos:** Node.js 18+
 
-
-1. Install dependencies:
+1. Instalá dependencias:
    `npm install`
-2. Set the `GEMINI_API_KEY` in [.env.local](.env.local) to your Gemini API key
-3. Run the app:
+2. Copiá `.env.example` a `.env.local` y completá las variables que necesites
+   (Supabase y/o Mercado Pago). La app funciona sin ellas: si Supabase no está
+   configurado, los leads se encolan en `localStorage` y se reintentan.
+3. Levantá el server de desarrollo:
    `npm run dev`
+
+## Scripts
+
+- `npm run dev` — server de desarrollo (puerto 3000)
+- `npm run build` — build de producción a `dist/`
+- `npm run preview` — previsualiza el build
+- `npm run lint` — chequeo de tipos (`tsc --noEmit`)
+
+## Variables de entorno
+
+Ver `.env.example`. Las `VITE_*` se exponen al cliente; el `MP_ACCESS_TOKEN` y la
+`SUPABASE_SERVICE_KEY` son secretos y van sólo server-side.

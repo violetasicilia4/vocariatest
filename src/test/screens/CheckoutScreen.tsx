@@ -76,7 +76,7 @@ export default function CheckoutScreen({ nombre, email, result, plan, onBack }: 
             Plan {planData.nombre}
           </h1>
           <p className="text-ink/55 text-[14px] mt-2 leading-relaxed">
-            Basado en tu arquetipo <span className="text-ink font-semibold">{primario.nombre}</span> con {confianza}% de precisión.
+            Basado en tu arquetipo <span className="text-ink font-semibold">{primario.nombre}</span>, con un perfil definido al {confianza}%.
           </p>
         </motion.div>
 

@@ -22,6 +22,10 @@ const MOVILIDAD_OPTS: { id: UserProfile['movilidad']; icon: LucideIcon; titulo: 
   { id: 'nose', icon: HelpCircle, titulo: 'Todavía no lo sé',    sub: 'No quiero comprometerme con eso ahora.' },
 ];
 
+// Validación de email razonable (no acepta "a@.b" ni dobles puntos), suficiente
+// para frenar tipeos y basura sin pretender validar la existencia del buzón.
+const EMAIL_RE = /^[^\s@]+@[^\s@.]+(\.[^\s@.]+)+$/;
+
 type Step = 'datos' | 'movilidad';
 
 export default function ProfileCapture({ onStart }: ProfileCaptureProps) {
@@ -37,7 +41,7 @@ export default function ProfileCapture({ onStart }: ProfileCaptureProps) {
 
   const handleDatosNext = () => {
     if (!nombre.trim()) { setError('Escribí tu nombre para continuar.'); return; }
-    if (!email.includes('@') || !email.includes('.')) { setError('Ingresá un email válido.'); return; }
+    if (!EMAIL_RE.test(email.trim())) { setError('Ingresá un email válido.'); return; }
     if (!edad) { setError('Seleccioná tu edad.'); return; }
     if (Number(edad) < MIN_AGE) { setError(`Vocaria está disponible para personas de ${MIN_AGE} años o más.`); return; }
     if (!provinciaId) { setError('Seleccioná la provincia donde vivís.'); return; }
