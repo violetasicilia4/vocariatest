@@ -188,7 +188,7 @@ function PlanCard({ planId, onSelect }: { planId: PlanId; onSelect: () => void }
 
   return (
     <div
-      className={`relative rounded-[22px] border p-5 transition-all ${
+      className={`relative flex flex-col h-full rounded-[22px] border p-5 lg:p-6 transition-all ${
         isPopular ? 'border-sky bg-sky-soft/50' : 'border-line bg-paper-raised'
       }`}
       style={{ boxShadow: CARD_SHADOW }}
@@ -201,18 +201,21 @@ function PlanCard({ planId, onSelect }: { planId: PlanId; onSelect: () => void }
         </div>
       )}
 
-      <div className="flex items-start justify-between gap-3 mb-4">
-        <div>
-          <p className="font-display font-bold text-[18px] leading-tight text-ink">{plan.nombre}</p>
-          <p className="text-[12px] text-ink/50 font-medium mt-0.5">{plan.tagline}</p>
-        </div>
-        <div className="text-right shrink-0">
-          <p className="font-display font-extrabold text-[23px] leading-none text-ink tracking-tight">${plan.precio}</p>
-          <p className="text-[10px] text-ink/40 font-medium mt-1">ARS · único</p>
-        </div>
+      {/* Nombre + tagline */}
+      <div className="mb-3">
+        <p className="font-display font-bold text-[18px] leading-tight text-ink">{plan.nombre}</p>
+        <p className="text-[12px] text-ink/50 font-medium mt-0.5">{plan.tagline}</p>
       </div>
 
-      <div className="space-y-2 mb-5">
+      {/* Precio en su propia línea: nunca se corta, sin importar el ancho */}
+      <div className="flex items-baseline gap-1.5 mb-5 pb-5 border-b border-line">
+        <span className="font-display font-extrabold text-[28px] leading-none text-ink tracking-tight whitespace-nowrap">
+          ${plan.precio}
+        </span>
+        <span className="text-[10.5px] text-ink/40 font-medium whitespace-nowrap">ARS · único</span>
+      </div>
+
+      <div className="space-y-2.5 mb-6 flex-1">
         {plan.incluye.map(item => (
           <div key={item} className="flex items-start gap-2.5">
             <Check size={13} strokeWidth={2.5} className="shrink-0 mt-0.5 text-sky-deep" />
@@ -244,7 +247,7 @@ export default function ResultPreview({ nombre, result, onGetFullReport }: Resul
         <span className="font-display font-bold text-[13px] tracking-tight">Vocaria</span>
       </div>
 
-      <div className="max-w-xl lg:max-w-2xl mx-auto px-5 lg:px-8 py-8 lg:py-12 space-y-6 pb-12">
+      <div className="max-w-xl lg:max-w-5xl mx-auto px-5 lg:px-8 py-8 lg:py-12 pb-12">
 
         {/* Saludo */}
         <motion.div initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.5, ease: EASE }}>
@@ -255,6 +258,15 @@ export default function ResultPreview({ nombre, result, onGetFullReport }: Resul
             {result.disputaResuelta ? ', con un recorrido afinado para vos.' : '.'}
           </p>
         </motion.div>
+
+        {/* Cuerpo del resultado.
+            Mobile: una sola columna (orden natural). Desktop: dos columnas para
+            aprovechar el ancho — el arquetipo y su contexto a la izquierda, el
+            detalle del perfil a la derecha. Así deja de verse "mobile estirado". */}
+        <div className="mt-6 space-y-6 lg:space-y-0 lg:grid lg:grid-cols-2 lg:gap-6 lg:items-start">
+
+        {/* Columna izquierda: arquetipo + contexto del resultado */}
+        <div className="space-y-6">
 
         {/* Arquetipo principal */}
         <motion.div
@@ -306,6 +318,11 @@ export default function ResultPreview({ nombre, result, onGetFullReport }: Resul
 
         {/* Insight personalizado — la tensión/huella propia del usuario */}
         <HuellaCard result={result} />
+
+        </div>{/* /columna izquierda */}
+
+        {/* Columna derecha: detalle del perfil */}
+        <div className="space-y-6">
 
         {/* Perfil en dimensiones — concreta el "37 dimensiones" */}
         <PreferencesCard prefs={result.preferences} />
@@ -362,28 +379,33 @@ export default function ResultPreview({ nombre, result, onGetFullReport }: Resul
           </motion.div>
         )}
 
-        {/* Planes */}
+        </div>{/* /columna derecha */}
+        </div>{/* /cuerpo dos columnas */}
+
+        {/* Planes — ancho completo, 3 cards a lo ancho en desktop */}
         <motion.div
           initial={{ opacity: 0, y: 16 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.5, delay: 0.25, ease: EASE }}
+          className="mt-10 lg:mt-14"
         >
-          <div className="mb-5">
-            <h2 className="font-display font-black text-[22px] text-ink mb-1.5 tracking-tight">
+          <div className="mb-5 lg:text-center">
+            <h2 className="font-display font-black text-[22px] lg:text-[28px] text-ink mb-1.5 tracking-tight">
               Desbloqueá tu informe completo
             </h2>
-            <p className="text-[13px] text-ink/55 font-medium">
+            <p className="text-[13px] lg:text-[14px] text-ink/55 font-medium">
               Elegí el plan que más se adapta a lo que necesitás.
             </p>
           </div>
 
-          <div className="space-y-5 lg:space-y-0 lg:grid lg:grid-cols-3 lg:gap-4 lg:items-start">
+          <div className="space-y-5 lg:space-y-0 lg:grid lg:grid-cols-3 lg:gap-5 lg:items-stretch">
             {(['esencial', 'universitario', 'profesional'] as PlanId[]).map((planId, i) => (
               <motion.div
                 key={planId}
                 initial={{ opacity: 0, y: 12 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ delay: 0.3 + i * 0.07, ease: EASE }}
+                className="h-full"
               >
                 <PlanCard planId={planId} onSelect={() => onGetFullReport(planId)} />
               </motion.div>
