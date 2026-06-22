@@ -165,7 +165,7 @@ export default function CheckpointModal({ checkpoint, confidence, onContinue }: 
               transition={{ duration: 0.45, ease: EASE }}
             >
               <p className="text-[11px] font-bold text-ink/40 tracking-[0.16em] uppercase mb-3">
-                Confianza del perfil
+                Avance del análisis
               </p>
               <h3 className="font-display font-black text-[21px] text-ink tracking-tight leading-[1.15] mb-2.5">
                 {checkpoint.title}

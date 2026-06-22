@@ -1,4 +1,4 @@
-import { useState, useCallback, useEffect, useMemo } from 'react';
+import { useState, useCallback, useEffect } from 'react';
 import { motion, AnimatePresence } from 'motion/react';
 import { ChevronLeft } from 'lucide-react';
 import { QUESTIONS, type Question } from '../data/questions';
@@ -38,7 +38,6 @@ export default function TestRunner({ nombre, profile, onComplete }: TestRunnerPr
   const currentQuestion = questions[currentIndex];
   const total = questions.length;
   const isAdaptive = currentIndex >= CORE_LENGTH;
-  const answeredCount = Object.keys(answers).length;
   // Posición dentro de la fase adaptativa (desempate), si estamos en ella.
   const adaptiveStep = currentIndex - CORE_LENGTH;          // 0-based
   const adaptiveTotal = adaptiveQuestions?.length ?? 0;
@@ -64,18 +63,13 @@ export default function TestRunner({ nombre, profile, onComplete }: TestRunnerPr
       )
     : Math.min(100, Math.round(((currentIndex + 1) / CORE_LENGTH) * CORE_CEILING));
 
-  // Medidor de precisión que se ve durante el test.
-  //
-  // Es PURAMENTE función del avance: sube suave y de forma estrictamente
-  // monótona, nunca baja ni oscila. Antes mezclaba la señal real en vivo, que es
-  // volátil (a cada respuesta cambia qué arquetipo lidera) y hacía que el número
-  // subiera y bajara en el medio del test. El valor real y exacto de confianza
-  // se calcula y se muestra en el resultado final.
-  const confidence = useMemo(() => {
-    const p = Math.min(1, answeredCount / CORE_LENGTH);     // 0→1 según avance
-    const eased = 1 - Math.pow(1 - p, 1.5);                 // ease-out suave
-    return Math.round(33 + eased * 60);                     // 33 → 93, monótona
-  }, [answeredCount]);
+  // Medidor que se ve durante el test: es CONGRUENTE con el avance real. Arranca
+  // bajo (≈5% en la primera pregunta) y sube de forma proporcional a las
+  // preguntas respondidas, sin saltos ni retrocesos. Antes partía de un piso del
+  // 33% y crecía con ease-out (rápido al inicio, lento después), lo que se sentía
+  // "ya arriba" desde la primera pregunta. El valor real y exacto de confianza
+  // del perfil se calcula y se muestra recién en el resultado final.
+  const confidence = pct;
   const isLastQuestion = currentIndex === total - 1;
 
   // Microcopy de inteligencia: aparece a lo largo del test (no solo en la fase
@@ -130,10 +124,13 @@ export default function TestRunner({ nombre, profile, onComplete }: TestRunnerPr
     }
   };
 
+  // Continuidad espacial: la pregunta entrante llega desde el lado del avance y
+  // la saliente se va hacia el opuesto, con un leve desplazamiento + fundido.
+  // La dirección refuerza "voy hacia adelante" (o "volví"), no un corte seco.
   const variants = {
-    enter: (dir: number) => ({ x: dir > 0 ? 26 : -26, opacity: 0 }),
+    enter: (dir: number) => ({ x: dir > 0 ? 44 : -44, opacity: 0 }),
     center: { x: 0, opacity: 1 },
-    exit: (dir: number) => ({ x: dir > 0 ? -26 : 26, opacity: 0 }),
+    exit: (dir: number) => ({ x: dir > 0 ? -44 : 44, opacity: 0 }),
   };
 
   const firstName = nombre ? nombre.split(' ')[0] : '';
@@ -166,7 +163,7 @@ export default function TestRunner({ nombre, profile, onComplete }: TestRunnerPr
               )}
             </div>
           </div>
-          <ProgressBar pct={pct} confidence={confidence} />
+          <ProgressBar pct={pct} />
           {/* Carteles de avance — aparecen a lo largo del test, no solo al final. */}
           <ProgressInsight insight={insight} />
         </div>
@@ -184,7 +181,7 @@ export default function TestRunner({ nombre, profile, onComplete }: TestRunnerPr
               initial="enter"
               animate="center"
               exit="exit"
-              transition={{ duration: 0.3, ease: EASE }}
+              transition={{ duration: 0.42, ease: EASE }}
             >
               {currentQuestion && (
                 <QuestionCard

@@ -11,9 +11,25 @@ interface QuestionCardProps {
   currentAnswer?: string;
 }
 
+// ── Motion: "offset & delay" (UX in Motion) ───────────────────────────────────
+// Las opciones entran en cascada en lugar de aparecer todas de golpe. El leve
+// retraso entre una y otra crea continuidad y sensación de avance — la mirada
+// sigue el movimiento hacia abajo y el flujo se siente vivo, no estático.
+const LIST_VARIANTS = {
+  hidden: {},
+  visible: { transition: { staggerChildren: 0.05, delayChildren: 0.06 } },
+};
+const ITEM_VARIANTS = {
+  hidden: { opacity: 0, y: 14 },
+  visible: { opacity: 1, y: 0, transition: { duration: 0.34, ease: EASE } },
+};
+
 export default function QuestionCard({ question, onAnswer, currentAnswer }: QuestionCardProps) {
   const [selected, setSelected] = useState<string | null>(currentAnswer ?? null);
   const [multiSelected, setMultiSelected] = useState<string[]>([]);
+
+  const isMulti = question.tipo === 'multiselect';
+  const max = question.maxSelect ?? 3;
 
   useEffect(() => {
     setSelected(currentAnswer ?? null);
@@ -24,17 +40,7 @@ export default function QuestionCard({ question, onAnswer, currentAnswer }: Ques
     }
   }, [question.id, currentAnswer]);
 
-  const handleAutoSelect = (id: string) => {
-    setSelected(id);
-    setTimeout(() => onAnswer(id), 240);
-  };
-
-  const handleScaleConfirm = () => {
-    if (selected) onAnswer(selected);
-  };
-
   const handleMultiToggle = (id: string) => {
-    const max = question.maxSelect ?? 3;
     setMultiSelected(prev => {
       if (prev.includes(id)) return prev.filter(x => x !== id);
       if (prev.length < max) return [...prev, id];
@@ -42,11 +48,12 @@ export default function QuestionCard({ question, onAnswer, currentAnswer }: Ques
     });
   };
 
-  const handleMultiConfirm = () => {
-    const max = question.maxSelect ?? 3;
-    if (multiSelected.length === max) {
-      onAnswer(multiSelected.join(','));
-    }
+  // Mismo gesto para TODAS las preguntas: elegís y confirmás con "Siguiente".
+  // Ningún tipo avanza solo, así el ritmo es consistente y predecible.
+  const canAdvance = isMulti ? multiSelected.length === max : selected != null;
+  const handleConfirm = () => {
+    if (!canAdvance) return;
+    onAnswer(isMulti ? multiSelected.join(',') : (selected as string));
   };
 
   return (
@@ -68,47 +75,40 @@ export default function QuestionCard({ question, onAnswer, currentAnswer }: Ques
 
       <div className="w-full">
         {question.tipo === 'scale' && (
-          <ScaleOptions
-            opciones={question.opciones}
-            selected={selected}
-            onSelect={setSelected}
-            onConfirm={handleScaleConfirm}
-          />
+          <ScaleOptions opciones={question.opciones} selected={selected} onSelect={setSelected} />
         )}
 
         {question.tipo === 'visual' && (
-          <VisualOptions
-            opciones={question.opciones}
-            selected={selected}
-            onSelect={handleAutoSelect}
-          />
+          <VisualOptions opciones={question.opciones} selected={selected} onSelect={setSelected} />
         )}
 
         {question.tipo === 'pairs' && (
-          <PairsOptions
-            opciones={question.opciones}
-            selected={selected}
-            onSelect={handleAutoSelect}
-          />
+          <PairsOptions opciones={question.opciones} selected={selected} onSelect={setSelected} />
         )}
 
         {question.tipo === 'multiselect' && (
           <MultiSelectOptions
             opciones={question.opciones}
             selected={multiSelected}
-            maxSelect={question.maxSelect ?? 3}
+            maxSelect={max}
             onToggle={handleMultiToggle}
-            onConfirm={handleMultiConfirm}
           />
         )}
 
         {question.tipo === 'situacional' && (
-          <ChoiceOptions
-            opciones={question.opciones}
-            selected={selected}
-            onSelect={handleAutoSelect}
-          />
+          <ChoiceOptions opciones={question.opciones} selected={selected} onSelect={setSelected} />
         )}
+      </div>
+
+      {/* Footer unificado: "Siguiente" para TODAS las preguntas. Disponible
+          (activo) recién cuando hay una elección válida. */}
+      <div className="mt-6 sm:mt-7 lg:mt-9 max-w-xl mx-auto flex items-center gap-3">
+        {isMulti && (
+          <span className="text-[12px] text-ink/45 font-semibold font-display whitespace-nowrap tabular-nums shrink-0">
+            {multiSelected.length} / {max}
+          </span>
+        )}
+        <NextButton onClick={handleConfirm} disabled={!canAdvance} className="flex-1" />
       </div>
     </div>
   );
@@ -116,15 +116,22 @@ export default function QuestionCard({ question, onAnswer, currentAnswer }: Ques
 
 // ── CTA "Siguiente" reutilizable ──────────────────────────────────────────────
 
-function NextButton({ onClick, className = '' }: { onClick: () => void; className?: string }) {
+function NextButton({
+  onClick, disabled = false, className = '',
+}: { onClick: () => void; disabled?: boolean; className?: string }) {
   return (
     <motion.button
-      initial={{ opacity: 0, y: 8 }}
+      type="button"
+      initial={{ opacity: 0, y: 10 }}
       animate={{ opacity: 1, y: 0 }}
-      exit={{ opacity: 0 }}
-      transition={{ duration: 0.2, ease: EASE }}
+      transition={{ duration: 0.3, ease: EASE, delay: 0.04 }}
       onClick={onClick}
-      className={`flex items-center justify-center gap-2 py-3.5 lg:py-4 text-[15px] lg:text-[16px] ${CTA_PRIMARY} ${className}`}
+      disabled={disabled}
+      aria-disabled={disabled}
+      whileTap={disabled ? undefined : { scale: 0.98 }}
+      className={`flex items-center justify-center gap-2 py-3.5 lg:py-4 text-[15px] lg:text-[16px] ${CTA_PRIMARY} ${
+        disabled ? 'opacity-40 pointer-events-none' : ''
+      } ${className}`}
     >
       Siguiente
       <ArrowRight size={17} strokeWidth={2.5} />
@@ -135,12 +142,11 @@ function NextButton({ onClick, className = '' }: { onClick: () => void; classNam
 // ── Scale (1-5) ───────────────────────────────────────────────────────────────
 
 function ScaleOptions({
-  opciones, selected, onSelect, onConfirm,
+  opciones, selected, onSelect,
 }: {
   opciones: Question['opciones'];
   selected: string | null;
   onSelect: (id: string) => void;
-  onConfirm: () => void;
 }) {
   const anchors = [opciones[0]?.texto, opciones[opciones.length - 1]?.texto];
   const activeOpt = opciones.find(o => o.id === selected);
@@ -151,13 +157,21 @@ function ScaleOptions({
         <span className="text-[11.5px] text-ink/45 font-medium max-w-[44%] leading-snug">{anchors[0]}</span>
         <span className="text-[11.5px] text-ink/45 font-medium max-w-[44%] text-right leading-snug">{anchors[1]}</span>
       </div>
-      <div className="flex gap-2 sm:gap-2.5 lg:gap-3 justify-between mb-3">
+      <motion.div
+        variants={LIST_VARIANTS}
+        initial="hidden"
+        animate="visible"
+        className="flex gap-2 sm:gap-2.5 lg:gap-3 justify-between mb-3"
+      >
         {opciones.map(op => {
           const active = selected === op.id;
           return (
-            <button
+            <motion.button
               key={op.id}
+              type="button"
+              variants={ITEM_VARIANTS}
               onClick={() => onSelect(op.id)}
+              whileTap={{ scale: 0.95 }}
               aria-pressed={active}
               aria-label={op.texto}
               className={`flex-1 max-w-[72px] lg:max-w-[88px] min-h-[52px] aspect-square rounded-2xl font-display font-bold text-[17px] lg:text-[19px] transition-all duration-200 flex items-center justify-center border
@@ -167,12 +181,12 @@ function ScaleOptions({
                 }`}
             >
               {op.id}
-            </button>
+            </motion.button>
           );
         })}
-      </div>
+      </motion.div>
 
-      <div className="min-h-[18px] mb-3">
+      <div className="min-h-[18px]">
         <AnimatePresence mode="wait">
           {activeOpt && (
             <motion.p
@@ -188,10 +202,6 @@ function ScaleOptions({
           )}
         </AnimatePresence>
       </div>
-
-      <AnimatePresence>
-        {selected && <NextButton onClick={onConfirm} className="w-full" />}
-      </AnimatePresence>
     </div>
   );
 }
@@ -206,18 +216,25 @@ function VisualOptions({
   onSelect: (id: string) => void;
 }) {
   return (
-    <div className="grid grid-cols-2 lg:grid-cols-3 gap-2.5 lg:gap-4 max-w-4xl mx-auto">
+    <motion.div
+      variants={LIST_VARIANTS}
+      initial="hidden"
+      animate="visible"
+      className="grid grid-cols-2 lg:grid-cols-3 gap-2.5 lg:gap-4 max-w-4xl mx-auto"
+    >
       {opciones.map(op => {
         const active = selected === op.id;
         const Icon = iconForEmoji(op.emoji);
         return (
           <motion.button
             key={op.id}
+            type="button"
+            variants={ITEM_VARIANTS}
             onClick={() => onSelect(op.id)}
             aria-pressed={active}
             whileTap={{ scale: 0.97 }}
-            className={`relative flex flex-col items-start gap-2 lg:gap-3 p-3 lg:p-4 min-h-[88px] lg:min-h-[112px] rounded-[16px] lg:rounded-[20px] border transition-[border-color,background-color,box-shadow] duration-200 text-left
-              ${active ? OPTION_ACTIVE : OPTION_IDLE}`}
+            className={`relative flex flex-col items-start gap-2 lg:gap-3 p-3 lg:p-4 min-h-[88px] lg:min-h-[112px] rounded-[16px] lg:rounded-[20px] border transition-[border-color,background-color,box-shadow,transform] duration-200 text-left
+              ${active ? OPTION_ACTIVE + ' scale-[1.02]' : OPTION_IDLE}`}
           >
             <span
               className={`w-8 h-8 lg:w-10 lg:h-10 rounded-full flex items-center justify-center transition-colors
@@ -242,7 +259,7 @@ function VisualOptions({
           </motion.button>
         );
       })}
-    </div>
+    </motion.div>
   );
 }
 
@@ -256,18 +273,25 @@ function PairsOptions({
   onSelect: (id: string) => void;
 }) {
   return (
-    <div className="grid grid-cols-1 sm:grid-cols-2 gap-2.5 lg:gap-3.5 max-w-3xl mx-auto">
+    <motion.div
+      variants={LIST_VARIANTS}
+      initial="hidden"
+      animate="visible"
+      className="grid grid-cols-1 sm:grid-cols-2 gap-2.5 lg:gap-3.5 max-w-3xl mx-auto"
+    >
       {opciones.map(op => {
         const active = selected === op.id;
         const Icon = iconForEmoji(op.emoji);
         return (
           <motion.button
             key={op.id}
+            type="button"
+            variants={ITEM_VARIANTS}
             onClick={() => onSelect(op.id)}
             aria-pressed={active}
             whileTap={{ scale: 0.99 }}
-            className={`w-full flex items-center gap-3.5 lg:gap-4 px-4 lg:px-5 py-3.5 lg:py-5 rounded-[16px] lg:rounded-[18px] border transition-[border-color,background-color,box-shadow] duration-200 text-left
-              ${active ? OPTION_ACTIVE : OPTION_IDLE}`}
+            className={`w-full flex items-center gap-3.5 lg:gap-4 px-4 lg:px-5 py-3.5 lg:py-5 rounded-[16px] lg:rounded-[18px] border transition-[border-color,background-color,box-shadow,transform] duration-200 text-left
+              ${active ? OPTION_ACTIVE + ' scale-[1.01]' : OPTION_IDLE}`}
           >
             <span
               className={`shrink-0 w-10 h-10 lg:w-12 lg:h-12 rounded-2xl flex items-center justify-center transition-colors
@@ -282,63 +306,56 @@ function PairsOptions({
           </motion.button>
         );
       })}
-    </div>
+    </motion.div>
   );
 }
 
 // ── Multi-select (pick N) ─────────────────────────────────────────────────────
 
 function MultiSelectOptions({
-  opciones, selected, maxSelect, onToggle, onConfirm,
+  opciones, selected, maxSelect, onToggle,
 }: {
   opciones: Question['opciones'];
   selected: string[];
   maxSelect: number;
   onToggle: (id: string) => void;
-  onConfirm: () => void;
 }) {
   const count = selected.length;
-  const ready = count === maxSelect;
 
   return (
-    <div className="max-w-3xl mx-auto">
-      <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 lg:gap-2.5 mb-4">
-        {opciones.map(op => {
-          const active = selected.includes(op.id);
-          const disabled = !active && count >= maxSelect;
-          return (
-            <button
-              key={op.id}
-              onClick={() => onToggle(op.id)}
-              disabled={disabled}
-              aria-pressed={active}
-              className={`w-full flex items-center gap-2.5 px-3.5 lg:px-4 py-2 lg:py-3 rounded-[13px] lg:rounded-[15px] font-display text-[13.5px] lg:text-[15px] font-semibold transition-all duration-200 text-left border ${
-                active ? OPTION_ACTIVE : disabled ? OPTION_DISABLED : OPTION_IDLE
-              }`}
+    <motion.div
+      variants={LIST_VARIANTS}
+      initial="hidden"
+      animate="visible"
+      className="grid grid-cols-1 sm:grid-cols-2 gap-2 lg:gap-2.5 max-w-3xl mx-auto"
+    >
+      {opciones.map(op => {
+        const active = selected.includes(op.id);
+        const disabled = !active && count >= maxSelect;
+        return (
+          <motion.button
+            key={op.id}
+            type="button"
+            variants={ITEM_VARIANTS}
+            onClick={() => onToggle(op.id)}
+            disabled={disabled}
+            whileTap={disabled ? undefined : { scale: 0.99 }}
+            aria-pressed={active}
+            className={`w-full flex items-center gap-2.5 px-3.5 lg:px-4 py-2 lg:py-3 rounded-[13px] lg:rounded-[15px] font-display text-[13.5px] lg:text-[15px] font-semibold transition-all duration-200 text-left border ${
+              active ? OPTION_ACTIVE : disabled ? OPTION_DISABLED : OPTION_IDLE
+            }`}
+          >
+            <span
+              className={`shrink-0 w-[18px] h-[18px] rounded-md border flex items-center justify-center transition-colors
+                ${active ? 'bg-brand-lime border-brand-lime' : disabled ? 'border-ink/15' : 'border-line-strong'}`}
             >
-              <span
-                className={`shrink-0 w-[18px] h-[18px] rounded-md border flex items-center justify-center transition-colors
-                  ${active ? 'bg-brand-lime border-brand-lime' : disabled ? 'border-ink/15' : 'border-line-strong'}`}
-              >
-                {active && <Check size={11} strokeWidth={3} className="text-slate-950" />}
-              </span>
-              <span className="leading-[1.3]">{op.texto}</span>
-            </button>
-          );
-        })}
-      </div>
-
-      <div className="flex items-center gap-3 min-h-[44px]">
-        <span className="text-[12px] text-ink/45 font-semibold font-display whitespace-nowrap tabular-nums shrink-0">
-          {count} / {maxSelect}
-        </span>
-        <AnimatePresence>
-          {ready
-            ? <NextButton onClick={onConfirm} className="flex-1" />
-            : <span className="text-[12px] text-ink/35 font-medium font-display">Elegí {maxSelect - count} más</span>}
-        </AnimatePresence>
-      </div>
-    </div>
+              {active && <Check size={11} strokeWidth={3} className="text-slate-950" />}
+            </span>
+            <span className="leading-[1.3]">{op.texto}</span>
+          </motion.button>
+        );
+      })}
+    </motion.div>
   );
 }
 
@@ -352,16 +369,23 @@ function ChoiceOptions({
   onSelect: (id: string) => void;
 }) {
   return (
-    <div className="grid grid-cols-1 lg:grid-cols-2 gap-2.5 lg:gap-3.5 max-w-4xl mx-auto">
+    <motion.div
+      variants={LIST_VARIANTS}
+      initial="hidden"
+      animate="visible"
+      className="grid grid-cols-1 lg:grid-cols-2 gap-2.5 lg:gap-3.5 max-w-4xl mx-auto"
+    >
       {opciones.map(op => {
         const active = selected === op.id;
         return (
           <motion.button
             key={op.id}
+            type="button"
+            variants={ITEM_VARIANTS}
             onClick={() => onSelect(op.id)}
             aria-pressed={active}
             whileTap={{ scale: 0.99 }}
-            className={`w-full h-full text-left px-3.5 lg:px-5 py-3 lg:py-4 rounded-[14px] lg:rounded-[16px] border font-display text-[14px] lg:text-[15.5px] font-medium transition-[border-color,background-color,box-shadow] duration-200 flex items-start gap-2.5 lg:gap-3.5
+            className={`w-full h-full text-left px-3.5 lg:px-5 py-3 lg:py-4 rounded-[14px] lg:rounded-[16px] border font-display text-[14px] lg:text-[15.5px] font-medium transition-[border-color,background-color,box-shadow,transform] duration-200 flex items-start gap-2.5 lg:gap-3.5
               ${active ? OPTION_ACTIVE : OPTION_IDLE}`}
           >
             <span
@@ -374,6 +398,6 @@ function ChoiceOptions({
           </motion.button>
         );
       })}
-    </div>
+    </motion.div>
   );
 }

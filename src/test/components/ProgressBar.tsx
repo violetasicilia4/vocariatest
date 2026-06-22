@@ -3,10 +3,8 @@ import { stageForPct } from '../data/stages';
 import { EASE } from '../ui/theme';
 
 interface ProgressBarProps {
-  /** Avance global 0–100. */
+  /** Avance global 0–100 (congruente con las preguntas respondidas). */
   pct: number;
-  /** Confianza del perfil 0–100 (medidor de precisión percibida). */
-  confidence: number;
 }
 
 /**
@@ -15,7 +13,7 @@ interface ProgressBarProps {
  * contador de preguntas — es la sensación de un sistema que entiende mejor a
  * cada paso.
  */
-export default function ProgressBar({ pct, confidence }: ProgressBarProps) {
+export default function ProgressBar({ pct }: ProgressBarProps) {
   const { label } = stageForPct(pct);
 
   return (
@@ -36,8 +34,16 @@ export default function ProgressBar({ pct, confidence }: ProgressBarProps) {
           </AnimatePresence>
         </div>
         <div className="flex items-baseline gap-1 shrink-0">
-          <span className="text-[14px] font-black text-brand-sky tabular-nums leading-none">{confidence}%</span>
-          <span className="text-[9.5px] font-bold text-ink/35 uppercase tracking-[0.1em]">conf.</span>
+          <motion.span
+            key={pct}
+            initial={{ opacity: 0.5, y: -2 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.3, ease: EASE }}
+            className="text-[14px] font-black text-brand-sky tabular-nums leading-none"
+          >
+            {pct}%
+          </motion.span>
+          <span className="text-[9.5px] font-bold text-ink/35 uppercase tracking-[0.1em]">avance</span>
         </div>
       </div>
 
