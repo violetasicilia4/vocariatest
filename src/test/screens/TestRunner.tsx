@@ -46,17 +46,24 @@ export default function TestRunner({ nombre, profile, onComplete }: TestRunnerPr
 
   // Avance global (0–100), coherente con preguntas respondidas/restantes.
   //
-  // El núcleo (CORE_LENGTH, que responde todo el mundo) llena la barra 0→100 de
+  // El núcleo (CORE_LENGTH, que responde todo el mundo) llena la barra 0→92 de
   // forma proporcional: la pregunta en curso cuenta como "en curso", así la
-  // primera ya muestra avance y la última llega a 100. Sin saltos ni 0% inicial.
+  // primera ya muestra avance. Se reserva el tramo 92→100 para la fase
+  // adaptativa, de modo que la barra NUNCA llega al 100 mientras todavía pueden
+  // aparecer preguntas de desempate.
   //
   // La fase adaptativa (desempate, sólo para perfiles peleados, 1–5 preguntas)
-  // ocurre cuando el núcleo YA está completo: la barra se mantiene llena y el
-  // encabezado pasa a "Afinando · X de N". Así nunca retrocede al aparecer
-  // preguntas extra que no se conocían de antemano.
+  // llena ese último tramo 92→100 y llega al 100 en la última. Como ese tramo
+  // estaba reservado, la barra avanza sin saltos ni retrocesos al aparecer las
+  // preguntas extra. Si no hay fase adaptativa, el núcleo cierra en 92 y la
+  // pantalla de procesamiento completa el 100.
+  const CORE_CEILING = 92;
   const pct = isAdaptive
-    ? 100
-    : Math.min(100, Math.round(((currentIndex + 1) / CORE_LENGTH) * 100));
+    ? Math.min(
+        100,
+        Math.round(CORE_CEILING + ((adaptiveStep + 1) / Math.max(1, adaptiveTotal)) * (100 - CORE_CEILING)),
+      )
+    : Math.min(100, Math.round(((currentIndex + 1) / CORE_LENGTH) * CORE_CEILING));
 
   // Medidor de confianza/precisión que se ve durante el test.
   //
