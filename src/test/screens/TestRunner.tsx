@@ -12,7 +12,6 @@ import { getCurrentInsight } from '../data/insights';
 import { EASE } from '../ui/theme';
 import type { ScoringResult } from '../engine/scorer';
 import { calcularResultado } from '../engine/scorer';
-import { calcularConfianzaEnVivo } from '../engine/confidence';
 import { selectAdaptiveQuestions } from '../engine/adaptive';
 import type { UserProfile } from '../data/profile';
 
@@ -65,22 +64,18 @@ export default function TestRunner({ nombre, profile, onComplete }: TestRunnerPr
       )
     : Math.min(100, Math.round(((currentIndex + 1) / CORE_LENGTH) * CORE_CEILING));
 
-  // Medidor de confianza/precisión que se ve durante el test.
+  // Medidor de precisión que se ve durante el test.
   //
-  // No se muestra la señal real "cruda" porque es volátil: a cada respuesta
-  // cambia qué arquetipo lidera, así que el número saltaba (54→46→sube→baja) y
-  // podía arrancar alto en la 2da pregunta o terminar en 40. En su lugar lo
-  // anclamos al AVANCE (rampa monótona, suave) y dejamos que la señal real pese
-  // cada vez más a medida que el perfil se estabiliza, hasta converger al valor
-  // real del resultado al final. Sube parejo y nunca contradice el resultado.
+  // Es PURAMENTE función del avance: sube suave y de forma estrictamente
+  // monótona, nunca baja ni oscila. Antes mezclaba la señal real en vivo, que es
+  // volátil (a cada respuesta cambia qué arquetipo lidera) y hacía que el número
+  // subiera y bajara en el medio del test. El valor real y exacto de confianza
+  // se calcula y se muestra en el resultado final.
   const confidence = useMemo(() => {
-    const { ranking } = calcularResultado(answers, profile);
-    const real = calcularConfianzaEnVivo(ranking, answers, answeredCount, CORE_LENGTH);
     const p = Math.min(1, answeredCount / CORE_LENGTH);     // 0→1 según avance
-    const w = p * p;                                        // peso de la señal real (0→1)
-    const ramp = 46 + p * 46;                               // backbone monótona 46→92
-    return Math.max(40, Math.min(97, Math.round(real * w + ramp * (1 - w))));
-  }, [answers, profile, answeredCount]);
+    const eased = 1 - Math.pow(1 - p, 1.5);                 // ease-out suave
+    return Math.round(33 + eased * 60);                     // 33 → 93, monótona
+  }, [answeredCount]);
   const isLastQuestion = currentIndex === total - 1;
 
   // Microcopy de inteligencia: aparece a lo largo del test (no solo en la fase
