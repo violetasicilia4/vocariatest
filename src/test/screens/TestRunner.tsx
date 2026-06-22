@@ -12,6 +12,7 @@ import { getCurrentInsight } from '../data/insights';
 import { EASE } from '../ui/theme';
 import type { ScoringResult } from '../engine/scorer';
 import { calcularResultado } from '../engine/scorer';
+import { calcularConfianzaEnVivo } from '../engine/confidence';
 import { selectAdaptiveQuestions } from '../engine/adaptive';
 import type { UserProfile } from '../data/profile';
 
@@ -38,25 +39,30 @@ export default function TestRunner({ nombre, profile, onComplete }: TestRunnerPr
   const currentQuestion = questions[currentIndex];
   const total = questions.length;
   const isAdaptive = currentIndex >= CORE_LENGTH;
+  const answeredCount = Object.keys(answers).length;
 
-  // Avance global (0–100): el núcleo cubre 0→92, la fase adaptativa 92→100.
-  let pct: number;
-  if (!isAdaptive) {
-    pct = CORE_LENGTH > 1 ? (currentIndex / (CORE_LENGTH - 1)) * 92 : 0;
-  } else {
-    const aStep = currentIndex - CORE_LENGTH;
-    const aTotal = adaptiveQuestions?.length ?? 1;
-    pct = 92 + ((aStep + 1) / (aTotal + 1)) * 8;
-  }
-  pct = Math.min(100, Math.round(pct));
-  // Confianza REAL parcial: la misma métrica que ve el usuario en el resultado.
-  // Arranca en ~45 (piso de calcularConfianza) y sube a medida que el perfil se
-  // define. Antes acá se mostraba un número cosmético (42→97 según el avance) que
-  // contradecía la confianza real del resultado; esto los unifica.
-  const confidence = useMemo(
-    () => calcularResultado(answers, profile).confianza,
-    [answers, profile],
-  );
+  // Avance global (0–100), coherente con preguntas respondidas/restantes.
+  //
+  // El núcleo (CORE_LENGTH, que responde todo el mundo) llena la barra 0→100 de
+  // forma proporcional: la pregunta en curso cuenta como "en curso", así la
+  // primera ya muestra avance y la última llega a 100. Sin saltos ni 0% inicial.
+  //
+  // La fase adaptativa (desempate, sólo para perfiles peleados, 1–5 preguntas)
+  // ocurre cuando el núcleo YA está completo: la barra se mantiene llena (100%) y
+  // el encabezado pasa a "Afinando tu resultado". Así nunca retrocede al aparecer
+  // preguntas extra que no se conocían de antemano.
+  const pct = isAdaptive
+    ? 100
+    : Math.min(100, Math.round(((currentIndex + 1) / CORE_LENGTH) * 100));
+
+  // Confianza "en vivo": misma señal real que la confianza final, pero sin la
+  // penalización por completitud que la dejaba clavada en 45 durante el test.
+  // Sube a medida que el perfil se define y termina en el valor real del
+  // resultado. Es lo que ven el medidor y los checkpoints.
+  const confidence = useMemo(() => {
+    const { ranking } = calcularResultado(answers, profile);
+    return calcularConfianzaEnVivo(ranking, answers, answeredCount, CORE_LENGTH);
+  }, [answers, profile, answeredCount]);
   const isLastQuestion = currentIndex === total - 1;
 
   // Microcopy de inteligencia: aparece a lo largo del test (no solo en la fase
@@ -138,7 +144,7 @@ export default function TestRunner({ nombre, profile, onComplete }: TestRunnerPr
             </div>
             <div className="flex items-center gap-1.5 font-display text-[10.5px] lg:text-[12px]">
               <span className="text-ink/55 font-semibold tabular-nums">
-                Pregunta {currentIndex + 1} de {total}
+                {isAdaptive ? 'Afinando tu resultado' : `Pregunta ${currentIndex + 1} de ${CORE_LENGTH}`}
               </span>
               {firstName && (
                 <span className="text-ink/30 font-medium hidden sm:inline">· {firstName}</span>

@@ -95,3 +95,51 @@ export function calcularConfianza(
     contradictions,
   };
 }
+
+/**
+ * Confianza "en vivo" para el medidor que se ve DURANTE el test.
+ *
+ * La confianza final (`calcularConfianza`) penaliza fuerte la falta de
+ * respuestas (hasta 35 puntos), lo que la deja clavada en el piso (45) durante
+ * casi todo el recorrido: inútil como medidor que "sube" y motivo de que los
+ * checkpoints mostraran 45% siempre.
+ *
+ * Acá usamos las MISMAS señales reales (brecha, concentración, emergencia del
+ * top, contradicciones) SIN la penalización plana, pero topeadas por un techo
+ * que crece con el avance: no se puede estar muy seguro con pocas respuestas,
+ * pero el número sube de forma coherente y, al completar el test, coincide con
+ * la confianza real del resultado (donde la penalización por completitud ya es 0).
+ *
+ * @param answeredCount preguntas respondidas hasta ahora.
+ * @param coreTotal     tamaño del núcleo (denominador del avance del techo).
+ */
+export function calcularConfianzaEnVivo(
+  ranking: Array<{ id: string; pct: number }>,
+  answers: Record<string, string>,
+  answeredCount: number,
+  coreTotal: number,
+): number {
+  const pctTop = ranking[0]?.pct ?? 0;
+  const pctSecond = ranking[1]?.pct ?? 0;
+
+  const gap = pctTop - pctSecond;
+  const gapContrib = clamp(gap * 0.7, 0, 25);
+
+  const sumAll = ranking.reduce((acc, r) => acc + r.pct, 0);
+  const concentration = sumAll > 0 ? pctTop / sumAll : 0;
+  const concContrib = clamp((concentration - 0.16) * 90, 0, 12);
+
+  const strengthContrib = clamp((pctTop - 60) * 0.6, 0, 22);
+
+  const contradictionPenalty = detectContradictions(answers) * 7;
+
+  const base = 38;
+  const signal = base + gapContrib + concContrib + strengthContrib - contradictionPenalty;
+
+  // Techo que crece con el avance: ~50 al empezar → 97 al completar el núcleo.
+  // Evita confianzas altas espurias con pocas respuestas sin clavar el número.
+  const progress = coreTotal > 0 ? clamp(answeredCount / coreTotal, 0, 1) : 1;
+  const ceiling = 50 + progress * 47;
+
+  return clamp(Math.round(Math.min(signal, ceiling)), 40, 97);
+}
