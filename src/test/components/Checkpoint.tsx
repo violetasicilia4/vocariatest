@@ -15,7 +15,7 @@ interface CheckpointCardProps {
 }
 
 /** Tiempo total en pantalla — suficiente para leer el hito sin demorar el flujo. */
-const HOLD_MS = 3600;
+const HOLD_MS = 3100;
 
 // Geometría del anillo — protagonista de la escena.
 const SIZE = 116;
@@ -142,19 +142,20 @@ export default function CheckpointCard({ checkpoint, onContinue }: CheckpointCar
               strokeWidth={STROKE}
             />
 
-            {/* Arco de progreso — lima de marca (verde Vocaria) + luz propia. */}
+            {/* Arco de progreso — verde Vocaria, un punto más profundo para que
+                resalte sobre el blanco, con luz propia. */}
             <motion.circle
               cx={SIZE / 2}
               cy={SIZE / 2}
               r={R}
               fill="none"
-              stroke="var(--color-lime)"
+              stroke="#8fc40f"
               strokeWidth={STROKE}
               strokeLinecap="round"
               strokeDasharray={CIRC}
               style={{
                 strokeDashoffset: dashOffset,
-                filter: 'drop-shadow(0 1px 6px rgba(163,200,40,0.55))',
+                filter: 'drop-shadow(0 1px 6px rgba(120,170,15,0.55))',
               }}
             />
           </svg>
