@@ -145,7 +145,7 @@ export default function TestRunner({ nombre, profile, onComplete }: TestRunnerPr
       {/* Progreso arriba: identidad + barra narrativa + confianza + carteles de
           avance. Mismo bloque en mobile y desktop, solo escala el tamaño. */}
       <header className="shrink-0 sticky top-0 z-10 bg-paper/90 backdrop-blur-xl border-b border-line/70">
-        <div className="max-w-xl lg:max-w-[760px] mx-auto w-full px-5 lg:px-12 pt-2.5 lg:pt-4 pb-2.5 lg:pb-3.5">
+        <div className="max-w-xl lg:max-w-[860px] xl:max-w-[980px] mx-auto w-full px-5 lg:px-12 pt-2.5 lg:pt-4 pb-2.5 lg:pb-3.5">
           <div className="flex items-center justify-between mb-2 lg:mb-2.5">
             <div className="flex items-center gap-1.5 text-ink">
               <LogoIcon size={16} />
@@ -171,7 +171,7 @@ export default function TestRunner({ nombre, profile, onComplete }: TestRunnerPr
       {/* Cuerpo de la pregunta — centrado vertical y horizontalmente; clipea el
           eje X para que las transiciones no produzcan scroll lateral. */}
       <main className="flex-1 min-h-0 overflow-y-auto overflow-x-hidden flex flex-col">
-        <div className="mx-auto w-full max-w-[760px] px-5 lg:px-12 pt-[clamp(2rem,7vh,5rem)] pb-8">
+        <div className="mx-auto w-full max-w-[860px] xl:max-w-[980px] px-5 lg:px-12 pt-[clamp(2rem,6vh,4.5rem)] pb-8">
           <AnimatePresence mode="wait" custom={direction}>
             <motion.div
               key={currentQuestion?.id}

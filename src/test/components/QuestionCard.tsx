@@ -64,8 +64,8 @@ export default function QuestionCard({ question, onAnswer, currentAnswer, onBack
     // para ocupar el ancho en desktop sin romper la continuidad de lectura.
     // Es el patrón que mejor lee en quizzes de escritorio (Typeform / 16personalities).
     <div className="w-full">
-      <div className="mb-6 sm:mb-7 lg:mb-8 text-center max-w-[640px] mx-auto">
-        <h2 className="font-display font-bold text-[22px] sm:text-[26px] lg:text-[34px] text-ink leading-[1.14] tracking-tight text-balance">
+      <div className="mb-6 sm:mb-7 lg:mb-9 text-center max-w-[720px] mx-auto">
+        <h2 className="font-display font-bold text-[22px] sm:text-[26px] lg:text-[34px] xl:text-[38px] text-ink leading-[1.14] tracking-tight text-balance">
           {question.enunciado}
         </h2>
         {question.subtext && (
@@ -105,7 +105,7 @@ export default function QuestionCard({ question, onAnswer, currentAnswer, onBack
       {/* Navegación unificada en una fila: "Anterior" a la izquierda, "Siguiente"
           siempre a la derecha (posición estable). "Siguiente" se activa recién
           cuando hay una elección válida. */}
-      <div className="mt-7 lg:mt-8 max-w-[760px] mx-auto flex items-center justify-between gap-3">
+      <div className="mt-7 lg:mt-9 w-full flex items-center justify-between gap-3">
         <div className="shrink-0">
           {canGoBack && (
             <button
@@ -237,7 +237,7 @@ function VisualOptions({
       variants={LIST_VARIANTS}
       initial="hidden"
       animate="visible"
-      className="grid grid-cols-2 lg:grid-cols-3 gap-2.5 lg:gap-4 max-w-[760px] mx-auto"
+      className="grid grid-cols-2 lg:grid-cols-3 gap-2.5 lg:gap-4 xl:gap-5 w-full"
     >
       {opciones.map(op => {
         const active = selected === op.id;
@@ -250,17 +250,17 @@ function VisualOptions({
             onClick={() => onSelect(op.id)}
             aria-pressed={active}
             whileTap={{ scale: 0.97 }}
-            className={`relative flex flex-col items-start gap-2 lg:gap-3 p-3 lg:p-4 min-h-[88px] lg:min-h-[112px] rounded-2xl border transition-[border-color,background-color,box-shadow,transform] duration-200 text-left
+            className={`relative flex flex-col items-start gap-2 lg:gap-3 p-3 lg:p-4 xl:p-5 min-h-[88px] lg:min-h-[112px] xl:min-h-[132px] rounded-2xl border transition-[border-color,background-color,box-shadow,transform] duration-200 text-left
               ${active ? OPTION_ACTIVE + ' scale-[1.02]' : OPTION_IDLE}`}
           >
             <span
-              className={`w-8 h-8 lg:w-10 lg:h-10 rounded-xl flex items-center justify-center transition-colors
+              className={`w-8 h-8 lg:w-10 lg:h-10 xl:w-11 xl:h-11 rounded-xl flex items-center justify-center transition-colors
                 ${active ? 'bg-white/15 text-white' : 'bg-sky-soft text-sky-deep'}`}
             >
               <Icon size={16} strokeWidth={1.9} className="lg:hidden" />
               <Icon size={20} strokeWidth={1.9} className="hidden lg:block" />
             </span>
-            <span className={`font-display text-[12.5px] lg:text-[14.5px] font-semibold leading-[1.25] ${active ? 'text-white' : ''}`}>
+            <span className={`font-display text-[12.5px] lg:text-[14.5px] xl:text-[15px] font-semibold leading-[1.25] ${active ? 'text-white' : ''}`}>
               {op.texto}
             </span>
             {active && (
@@ -294,7 +294,7 @@ function PairsOptions({
       variants={LIST_VARIANTS}
       initial="hidden"
       animate="visible"
-      className="grid grid-cols-1 sm:grid-cols-2 gap-2.5 lg:gap-3.5 max-w-[760px] mx-auto"
+      className="grid grid-cols-1 sm:grid-cols-2 gap-2.5 lg:gap-3.5 xl:gap-4 w-full"
     >
       {opciones.map(op => {
         const active = selected === op.id;
@@ -344,7 +344,7 @@ function MultiSelectOptions({
       variants={LIST_VARIANTS}
       initial="hidden"
       animate="visible"
-      className="grid grid-cols-1 sm:grid-cols-2 gap-2 lg:gap-2.5 max-w-[760px] mx-auto"
+      className="grid grid-cols-1 sm:grid-cols-2 gap-2 lg:gap-2.5 xl:gap-3 w-full"
     >
       {opciones.map(op => {
         const active = selected.includes(op.id);
@@ -390,7 +390,7 @@ function ChoiceOptions({
       variants={LIST_VARIANTS}
       initial="hidden"
       animate="visible"
-      className="grid grid-cols-1 lg:grid-cols-2 gap-2.5 lg:gap-3.5 max-w-[760px] mx-auto"
+      className="grid grid-cols-1 lg:grid-cols-2 gap-2.5 lg:gap-3.5 xl:gap-4 w-full"
     >
       {opciones.map(op => {
         const active = selected === op.id;
@@ -402,7 +402,7 @@ function ChoiceOptions({
             onClick={() => onSelect(op.id)}
             aria-pressed={active}
             whileTap={{ scale: 0.99 }}
-            className={`w-full h-full text-left px-3.5 lg:px-5 py-3 lg:py-4 rounded-2xl border font-display text-[14px] lg:text-[15.5px] font-medium transition-[border-color,background-color,box-shadow,transform] duration-200 flex items-start gap-2.5 lg:gap-3.5
+            className={`w-full h-full text-left px-3.5 lg:px-5 xl:px-6 py-3 lg:py-4 xl:py-[18px] rounded-2xl border font-display text-[14px] lg:text-[15.5px] xl:text-[16px] font-medium transition-[border-color,background-color,box-shadow,transform] duration-200 flex items-start gap-2.5 lg:gap-3.5
               ${active ? OPTION_ACTIVE : OPTION_IDLE}`}
           >
             <span
