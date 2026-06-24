@@ -1,6 +1,5 @@
 import { useState, useCallback, useEffect } from 'react';
 import { motion, AnimatePresence } from 'motion/react';
-import { ChevronLeft } from 'lucide-react';
 import { QUESTIONS, type Question } from '../data/questions';
 import ProgressBar from '../components/ProgressBar';
 import ProgressInsight from '../components/ProgressInsight';
@@ -188,27 +187,14 @@ export default function TestRunner({ nombre, profile, onComplete }: TestRunnerPr
                   question={currentQuestion}
                   onAnswer={handleAnswer}
                   currentAnswer={answers[currentQuestion.id]}
+                  onBack={handleBack}
+                  canGoBack={currentIndex > 0}
                 />
               )}
             </motion.div>
           </AnimatePresence>
         </div>
       </main>
-
-      {/* Volver — pinneado abajo, centrado, no compite con las opciones */}
-      <div className="shrink-0 max-w-xl lg:max-w-[760px] mx-auto w-full px-5 lg:px-12 pb-3 lg:pb-5 pt-0.5">
-        {currentIndex > 0 ? (
-          <button
-            onClick={handleBack}
-            className="-ml-1.5 px-1.5 py-1 rounded-lg text-ink/40 hover:text-ink text-[12.5px] font-medium font-display transition-colors flex items-center gap-1"
-          >
-            <ChevronLeft size={14} strokeWidth={2.4} />
-            Anterior
-          </button>
-        ) : (
-          <div className="h-[16px]" />
-        )}
-      </div>
 
       {/* Checkpoint premium — interrumpe el flujo en los hitos clave */}
       <AnimatePresence>

@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'motion/react';
-import { Check, ArrowRight } from 'lucide-react';
+import { Check, ArrowRight, ChevronLeft } from 'lucide-react';
 import type { Question } from '../data/questions';
 import { iconForEmoji } from '../ui/icons';
 import { CTA_PRIMARY, OPTION_IDLE, OPTION_ACTIVE, OPTION_DISABLED, EASE } from '../ui/theme';
@@ -9,6 +9,8 @@ interface QuestionCardProps {
   question: Question;
   onAnswer: (value: string) => void;
   currentAnswer?: string;
+  onBack?: () => void;
+  canGoBack?: boolean;
 }
 
 // ── Motion: "offset & delay" (UX in Motion) ───────────────────────────────────
@@ -24,7 +26,7 @@ const ITEM_VARIANTS = {
   visible: { opacity: 1, y: 0, transition: { duration: 0.34, ease: EASE } },
 };
 
-export default function QuestionCard({ question, onAnswer, currentAnswer }: QuestionCardProps) {
+export default function QuestionCard({ question, onAnswer, currentAnswer, onBack, canGoBack }: QuestionCardProps) {
   const [selected, setSelected] = useState<string | null>(currentAnswer ?? null);
   const [multiSelected, setMultiSelected] = useState<string[]>([]);
 
@@ -100,15 +102,30 @@ export default function QuestionCard({ question, onAnswer, currentAnswer }: Ques
         )}
       </div>
 
-      {/* Footer unificado: "Siguiente" para TODAS las preguntas. Disponible
-          (activo) recién cuando hay una elección válida. */}
-      <div className="mt-7 lg:mt-8 max-w-[760px] mx-auto flex items-center justify-center gap-3">
-        {isMulti && (
-          <span className="text-[12px] text-ink/45 font-semibold font-display whitespace-nowrap tabular-nums shrink-0">
-            {multiSelected.length} / {max}
-          </span>
-        )}
-        <NextButton onClick={handleConfirm} disabled={!canAdvance} className="flex-1 sm:flex-none sm:min-w-[240px] sm:px-10" />
+      {/* Navegación unificada en una fila: "Anterior" a la izquierda, "Siguiente"
+          siempre a la derecha (posición estable). "Siguiente" se activa recién
+          cuando hay una elección válida. */}
+      <div className="mt-7 lg:mt-8 max-w-[760px] mx-auto flex items-center justify-between gap-3">
+        <div className="shrink-0">
+          {canGoBack && (
+            <button
+              type="button"
+              onClick={onBack}
+              className="-ml-1.5 px-1.5 py-1 rounded-lg text-ink/40 hover:text-ink text-[13px] font-medium font-display transition-colors flex items-center gap-1"
+            >
+              <ChevronLeft size={15} strokeWidth={2.4} />
+              Anterior
+            </button>
+          )}
+        </div>
+        <div className="flex items-center gap-3 flex-1 sm:flex-none justify-end">
+          {isMulti && (
+            <span className="text-[12px] text-ink/45 font-semibold font-display whitespace-nowrap tabular-nums shrink-0">
+              {multiSelected.length} / {max}
+            </span>
+          )}
+          <NextButton onClick={handleConfirm} disabled={!canAdvance} className="flex-1 sm:flex-none sm:min-w-[240px] sm:px-10" />
+        </div>
       </div>
     </div>
   );
