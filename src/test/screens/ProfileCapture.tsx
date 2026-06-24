@@ -79,27 +79,25 @@ export default function ProfileCapture({ onStart }: ProfileCaptureProps) {
   const activeStepIndex = step === 'datos' ? 0 : 1;
 
   return (
-    // Una sola columna, centrada. Sin panel lateral: la pregunta/formulario es lo
-    // único en pantalla, con un ancho útil cómodo en desktop.
-    <div className="min-h-[100dvh] bg-paper flex flex-col items-center justify-center px-5 py-10 sm:px-6 lg:py-14">
-      <div className="w-full max-w-[600px]">
+    // Una sola columna, centrada. Sin panel lateral: el formulario es lo único en
+    // pantalla. El ancho del contenido se mantiene acotado (~640px) a propósito:
+    // ensanchar inputs los vuelve incómodos. La presencia en desktop viene de la
+    // escala tipográfica y del ritmo vertical, no de estirar el bloque.
+    <div className="min-h-[100dvh] bg-paper flex flex-col items-center justify-center px-6 py-12 sm:px-8 lg:py-16">
+      <div className="w-full max-w-[640px]">
 
         {/* Logo */}
-        <div className="flex items-center gap-2.5 mb-8 text-ink">
+        <div className="flex items-center gap-2.5 mb-9 text-ink">
           <LogoIcon size={24} />
           <span className="font-display font-bold text-[15px] tracking-tight">Vocaria</span>
         </div>
 
-        {/* Cabecera de progreso compacta: contador + barra segmentada */}
-        <div className="mb-7">
-          <div className="flex items-center justify-between mb-2">
-            <span className="text-[11px] font-bold uppercase tracking-[0.12em] text-ink/45">
-              Paso {activeStepIndex + 1} de 2
-            </span>
-            <span className="text-[11px] font-semibold text-ink/35 font-display">
-              Antes de empezar
-            </span>
-          </div>
+        {/* Cabecera de progreso: eyebrow + barra segmentada a todo el ancho.
+            La barra ancla horizontalmente el bloque y le da estructura en desktop. */}
+        <div className="mb-9">
+          <span className="block text-[11px] font-bold uppercase tracking-[0.14em] text-ink/45 mb-2.5">
+            Paso {activeStepIndex + 1} de 2
+          </span>
           <div className="flex gap-1.5">
             <div className={`h-[5px] rounded-full flex-1 transition-all duration-500 ${step === 'datos' ? 'bg-brand-sky' : 'bg-brand-sky/40'}`} />
             <div className={`h-[5px] rounded-full flex-1 transition-all duration-500 ${step === 'movilidad' ? 'bg-brand-sky' : 'bg-line'}`} />
@@ -119,16 +117,16 @@ export default function ProfileCapture({ onStart }: ProfileCaptureProps) {
               exit="exit"
               transition={{ duration: 0.3, ease: EASE }}
             >
-              <h1 className="font-display font-black text-[30px] sm:text-[36px] text-ink leading-[1.05] tracking-tight mb-2.5">
+              <h1 className="font-display font-black text-[31px] sm:text-[38px] lg:text-[42px] text-ink leading-[1.04] tracking-tight mb-3">
                 Antes de empezar,<br />contanos sobre vos
               </h1>
-              <p className="text-ink/55 text-[14.5px] font-medium leading-relaxed mb-7">
+              <p className="text-ink/55 text-[15px] lg:text-[16px] font-medium leading-relaxed mb-9">
                 Sin spam. Tu resultado va a llegar a tu mail.
               </p>
 
-              <div className="space-y-4">
+              <div className="space-y-5">
                 {/* Nombre y email comparten fila en pantallas medianas+ para acortar el recorrido vertical */}
-                <div className="grid sm:grid-cols-2 gap-3.5">
+                <div className="grid sm:grid-cols-2 gap-4">
                   <div>
                     <label className={LABEL}>Nombre</label>
                     <input
@@ -152,7 +150,7 @@ export default function ProfileCapture({ onStart }: ProfileCaptureProps) {
                   </div>
                 </div>
 
-                <div className="grid grid-cols-2 gap-3.5">
+                <div className="grid grid-cols-2 gap-4">
                   <div>
                     <label className={LABEL}>Edad</label>
                     <div className="relative">
@@ -226,28 +224,28 @@ export default function ProfileCapture({ onStart }: ProfileCaptureProps) {
               exit="exit"
               transition={{ duration: 0.3, ease: EASE }}
             >
-              <h1 className="font-display font-black text-[28px] sm:text-[34px] text-ink leading-[1.08] tracking-tight mb-2.5">
+              <h1 className="font-display font-black text-[29px] sm:text-[36px] lg:text-[40px] text-ink leading-[1.06] tracking-tight mb-3">
                 ¿Estarías dispuesto/a a mudarte para estudiar?
               </h1>
-              <p className="text-ink/55 text-[14.5px] font-medium mb-7 leading-relaxed">
+              <p className="text-ink/55 text-[15px] lg:text-[16px] font-medium mb-9 leading-relaxed">
                 Lo usamos para recomendarte universidades accesibles para vos.
               </p>
 
-              <div className="space-y-2.5 mb-6">
+              <div className="space-y-3 mb-7">
                 {MOVILIDAD_OPTS.map(opt => {
                   const Icon = opt.icon;
                   return (
                     <button
                       key={opt.id}
                       onClick={() => handleMovilidadSelect(opt.id)}
-                      className={`group w-full text-left px-4 py-3.5 rounded-2xl border transition-all duration-200 flex items-center gap-3.5 active:scale-[0.99] ${OPTION_IDLE}`}
+                      className={`group w-full text-left px-5 py-4 rounded-2xl border transition-all duration-200 flex items-center gap-4 active:scale-[0.99] ${OPTION_IDLE}`}
                     >
-                      <span className="shrink-0 w-10 h-10 rounded-xl bg-sky-soft text-sky-deep flex items-center justify-center">
-                        <Icon size={19} strokeWidth={1.9} />
+                      <span className="shrink-0 w-11 h-11 rounded-2xl bg-sky-soft text-sky-deep flex items-center justify-center">
+                        <Icon size={20} strokeWidth={1.9} />
                       </span>
                       <div className="min-w-0 flex-1">
-                        <p className="font-display font-bold text-[14.5px] text-ink leading-tight">{opt.titulo}</p>
-                        <p className="text-[12.5px] text-ink/55 font-medium mt-0.5 leading-tight">{opt.sub}</p>
+                        <p className="font-display font-bold text-[15px] text-ink leading-tight">{opt.titulo}</p>
+                        <p className="text-[13px] text-ink/55 font-medium mt-0.5 leading-tight">{opt.sub}</p>
                       </div>
                       <ChevronRight size={18} strokeWidth={2.2} className="shrink-0 text-ink/20 group-hover:text-sky transition-colors" />
                     </button>
