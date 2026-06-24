@@ -69,7 +69,11 @@ export default function TestRunner({ nombre, profile, onComplete }: TestRunnerPr
   // "ya arriba" desde la primera pregunta. El valor real y exacto de confianza
   // del perfil se calcula y se muestra recién en el resultado final.
   const confidence = pct;
-  const isLastQuestion = currentIndex === total - 1;
+  // "Última pregunta" solo es cierto en la fase adaptativa cuando es su última
+  // pregunta. Durante el núcleo NO lo sabemos: todavía pueden aparecer hasta 5
+  // preguntas de validación, así que no prometemos que sea la última (evita el
+  // cartel "última pregunta" cuando en realidad faltan las de desempate).
+  const isLastQuestion = isAdaptive && currentIndex === total - 1;
 
   // Microcopy de inteligencia: aparece a lo largo del test (no solo en la fase
   // adaptativa) como "cartel" de avance. En la última pregunta usa el cierre.

@@ -183,9 +183,9 @@ function ScaleOptions({
   // más aire y dejan de comprimirse. En mobile mantiene el tamaño compacto.
   return (
     <div className="max-w-[440px] sm:max-w-[520px] lg:max-w-[680px] mx-auto">
-      <div className="flex justify-between mb-2.5 lg:mb-4 px-0.5 gap-6 lg:gap-10">
-        <span className="text-[11.5px] lg:text-[14px] text-ink/50 font-medium max-w-[46%] leading-snug">{anchors[0]}</span>
-        <span className="text-[11.5px] lg:text-[14px] text-ink/50 font-medium max-w-[46%] text-right leading-snug">{anchors[1]}</span>
+      <div className="flex justify-between items-end mb-2.5 lg:mb-3.5 px-0.5 gap-5 lg:gap-8">
+        <span className="text-[11.5px] lg:text-[12.5px] text-ink/45 font-medium max-w-[48%] leading-snug">{anchors[0]}</span>
+        <span className="text-[11.5px] lg:text-[12.5px] text-ink/45 font-medium max-w-[48%] text-right leading-snug">{anchors[1]}</span>
       </div>
       <motion.div
         variants={LIST_VARIANTS}

@@ -64,8 +64,14 @@ export default function TestFlow({ onExit }: TestFlowProps) {
     setStep('result');
   }, []);
 
+  // Las pantallas profile/test/processing manejan su propio alto (h-[100dvh]
+  // con scroll interno propio), así que el contenedor NO debe scrollear: si lo
+  // hace, aparece una barra fantasma que no mueve nada. Solo result y checkout
+  // son páginas largas que sí necesitan scroll de página.
+  const scrolls = step === 'result' || step === 'checkout';
+
   return (
-    <div className="fixed inset-0 z-[100] bg-paper overflow-y-auto">
+    <div className={`fixed inset-0 z-[100] bg-paper ${scrolls ? 'overflow-y-auto' : 'overflow-hidden'}`}>
       {step === 'profile' && (
         <button
           onClick={onExit}
