@@ -68,7 +68,7 @@ export default function QuestionCard({ question, onAnswer, currentAnswer, onBack
           así preguntas de 2 o 3 líneas terminan a la MISMA altura y las opciones
           siempre arrancan en el mismo Y. Es lo que evita que "cambien las
           dimensiones" al pasar de pregunta. */}
-      <div className="shrink-0 min-h-[96px] sm:min-h-[120px] lg:min-h-[148px] xl:min-h-[168px] flex flex-col justify-end mb-6 sm:mb-7 lg:mb-9 text-center max-w-[800px] mx-auto">
+      <div className="shrink-0 min-h-[68px] sm:min-h-[80px] lg:min-h-[92px] xl:min-h-[104px] flex flex-col justify-end mb-5 sm:mb-6 lg:mb-7 text-center max-w-[800px] mx-auto">
         <h2 className="font-display font-bold text-[22px] sm:text-[26px] lg:text-[34px] xl:text-[38px] text-ink leading-[1.14] tracking-tight text-balance">
           {question.enunciado}
         </h2>
@@ -109,7 +109,7 @@ export default function QuestionCard({ question, onAnswer, currentAnswer, onBack
       {/* Navegación unificada en una fila: "Anterior" a la izquierda, "Siguiente"
           siempre a la derecha (posición estable). "Siguiente" se activa recién
           cuando hay una elección válida. */}
-      <div className="mt-auto pt-7 lg:pt-9 w-full flex items-center justify-between gap-3 shrink-0">
+      <div className="mt-auto pt-5 lg:pt-6 w-full flex items-center justify-between gap-3 shrink-0">
         <div className="shrink-0">
           {canGoBack && (
             <button
@@ -241,7 +241,7 @@ function VisualOptions({
       variants={LIST_VARIANTS}
       initial="hidden"
       animate="visible"
-      className="grid grid-cols-2 lg:grid-cols-3 gap-2.5 lg:gap-4 xl:gap-5 w-full"
+      className="grid grid-cols-2 lg:grid-cols-3 gap-2.5 lg:gap-3.5 w-full"
     >
       {opciones.map(op => {
         const active = selected === op.id;
@@ -254,11 +254,11 @@ function VisualOptions({
             onClick={() => onSelect(op.id)}
             aria-pressed={active}
             whileTap={{ scale: 0.97 }}
-            className={`relative flex flex-col items-start gap-2 lg:gap-3 p-3 lg:p-4 xl:p-5 min-h-[88px] lg:min-h-[112px] xl:min-h-[132px] rounded-2xl border transition-[border-color,background-color,box-shadow,transform] duration-200 text-left
+            className={`relative flex flex-col items-start gap-2 lg:gap-2.5 p-3 lg:p-4 min-h-[84px] lg:min-h-[100px] xl:min-h-[108px] rounded-2xl border transition-[border-color,background-color,box-shadow,transform] duration-200 text-left
               ${active ? OPTION_ACTIVE + ' scale-[1.02]' : OPTION_IDLE}`}
           >
             <span
-              className={`w-8 h-8 lg:w-10 lg:h-10 xl:w-11 xl:h-11 rounded-xl flex items-center justify-center transition-colors
+              className={`w-8 h-8 lg:w-10 lg:h-10 rounded-xl flex items-center justify-center transition-colors
                 ${active ? 'bg-white/15 text-white' : 'bg-sky-soft text-sky-deep'}`}
             >
               <Icon size={16} strokeWidth={1.9} className="lg:hidden" />
