@@ -55,18 +55,18 @@ export const CHECKPOINTS: Checkpoint[] = [
     at: 30,
     value: 30,
     title: 'Perfil tomando forma',
-    text: 'Tus primeras respuestas ya marcan una dirección.',
+    text: 'Ya se marca una dirección',
   },
   {
     at: 58,
     value: 60,
     title: 'Progreso sólido',
-    text: 'Las señales de tu perfil son cada vez más consistentes.',
+    text: 'Señales cada vez más claras',
   },
   {
     at: 82,
     value: 80,
     title: 'Casi completo',
-    text: 'Las últimas respuestas afinan la tendencia detectada.',
+    text: 'La tendencia se afianza',
   },
 ];

@@ -14,8 +14,8 @@ interface CheckpointCardProps {
   onContinue: () => void;
 }
 
-/** Tiempo total en pantalla antes de que la pieza se retire sola (rápido). */
-const HOLD_MS = 1700;
+/** Tiempo total en pantalla — suficiente para leer el hito sin demorar el flujo. */
+const HOLD_MS = 2800;
 
 // Geometría del anillo — protagonista de la escena.
 const SIZE = 116;
@@ -63,10 +63,10 @@ export default function CheckpointCard({ checkpoint, onContinue }: CheckpointCar
     }
     const controls = animate(mv, to, {
       type: 'spring',
-      stiffness: 140,
+      stiffness: 95,
       damping: 20,
-      mass: 0.8,
-      delay: 0.08,
+      mass: 0.9,
+      delay: 0.12,
     });
     return () => {
       controls.stop();
@@ -115,85 +115,69 @@ export default function CheckpointCard({ checkpoint, onContinue }: CheckpointCar
         transition={enter}
         className="relative w-[300px] max-w-[calc(100vw-3rem)] transform-gpu will-change-transform"
       >
-      {/* Resplandor difuso detrás del cristal — da aire y temperatura de marca. */}
+      {/* Halo sutil de marca (azul cielo) — da aire sin romper la paleta. */}
       <div
         aria-hidden
-        className="pointer-events-none absolute -inset-5 -z-10 rounded-[44px] opacity-80 blur-2xl
-                   bg-[radial-gradient(120%_120%_at_50%_0%,rgba(37,142,249,0.30),transparent_60%)]"
+        className="pointer-events-none absolute -inset-4 -z-10 rounded-[40px] opacity-70 blur-2xl
+                   bg-[radial-gradient(120%_120%_at_50%_0%,rgba(37,142,249,0.22),transparent_62%)]"
       />
 
-      {/* Tarjeta de cristal: borde lumínico, blur, sombras en capas y reflejo superior. */}
+      {/* Tarjeta — misma identidad que las cards del test: blanco, borde frío,
+          radio y sombra azulada de marca. */}
       <div
-        className="relative overflow-hidden rounded-[28px] border border-white/60
-                   bg-white/65 backdrop-blur-2xl backdrop-saturate-150
-                   px-6 pt-7 pb-6 flex flex-col items-center text-center
-                   shadow-[inset_0_1px_1px_rgba(255,255,255,0.9),inset_0_0_0_1px_rgba(255,255,255,0.25),0_24px_60px_-18px_rgba(11,22,40,0.32),0_10px_24px_-12px_rgba(11,22,40,0.20)]"
+        className="relative rounded-[24px] border border-line bg-paper-raised
+                   px-7 pt-7 pb-6 flex flex-col items-center text-center"
+        style={{ boxShadow: '0 16px 48px rgba(11,22,40,0.14)' }}
       >
-        {/* Sheen superior — la "luz" que entra desde arriba sobre el cristal. */}
-        <div
-          aria-hidden
-          className="pointer-events-none absolute inset-x-0 top-0 h-1/2 rounded-t-[28px] opacity-70
-                     bg-gradient-to-b from-white/80 via-white/20 to-transparent"
-        />
-
         {/* ── Anillo (héroe) ─────────────────────────────────────────── */}
         <div className="relative" style={{ width: SIZE, height: SIZE }}>
-          {/* Disco de cristal interior: profundidad + reflejo especular. */}
-          <div
-            aria-hidden
-            className="absolute rounded-full bg-gradient-to-b from-white/85 to-white/35
-                       shadow-[inset_0_1px_2px_rgba(255,255,255,0.95),inset_0_-10px_18px_rgba(11,22,40,0.06)]"
-            style={{ inset: STROKE + 3 }}
-          />
-
           <svg width={SIZE} height={SIZE} viewBox={`0 0 ${SIZE} ${SIZE}`} className="relative -rotate-90">
-            {/* Track grabado en el cristal. */}
+            {/* Track — mismo gris frío que las barras del test. */}
             <circle
               cx={SIZE / 2}
               cy={SIZE / 2}
               r={R}
               fill="none"
-              stroke="rgba(11,22,40,0.07)"
+              stroke="var(--color-line)"
               strokeWidth={STROKE}
             />
 
-            {/* Arco de progreso — color estático de marca + luz propia. */}
+            {/* Arco de progreso — azul cielo estático de marca + luz propia. */}
             <motion.circle
               cx={SIZE / 2}
               cy={SIZE / 2}
               r={R}
               fill="none"
-              stroke="#258ef9"
+              stroke="var(--color-brand-sky)"
               strokeWidth={STROKE}
               strokeLinecap="round"
               strokeDasharray={CIRC}
               style={{
                 strokeDashoffset: dashOffset,
-                filter: 'drop-shadow(0 2px 8px rgba(37,142,249,0.40))',
+                filter: 'drop-shadow(0 2px 7px rgba(37,142,249,0.35))',
               }}
             />
           </svg>
 
-          {/* Número — cuenta en sync con el anillo. */}
+          {/* Número — cuenta en sync con el anillo (tipografía del test). */}
           <div className="absolute inset-0 flex items-center justify-center">
-            <span className="font-display font-semibold text-ink text-[30px] leading-none tracking-tight tabular-nums">
-              {display}
-              <span className="text-[17px] font-medium text-ink/45 ml-[1px]">%</span>
+            <span className="font-display font-bold text-ink text-[30px] leading-none tracking-tight tabular-nums">
+              {display}%
             </span>
           </div>
         </div>
 
-        {/* ── Mensaje — aparece después del anillo ───────────────────── */}
+        {/* ── Mensaje — aparece después del anillo, en un solo renglón ── */}
         <motion.div
           initial={{ opacity: 0, y: reduceMotion ? 0 : 8 }}
           animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: reduceMotion ? 0 : 0.32, duration: 0.4, ease: EASE }}
+          transition={{ delay: reduceMotion ? 0 : 0.4, duration: 0.45, ease: EASE }}
           className="mt-5"
         >
-          <h3 className="font-display font-semibold text-[16px] text-ink tracking-tight leading-tight">
+          <h3 className="font-display font-bold text-[16px] text-ink tracking-tight leading-tight whitespace-nowrap">
             {checkpoint.title}
           </h3>
-          <p className="mt-1.5 text-[12.5px] text-ink/55 font-medium leading-snug max-w-[220px] mx-auto">
+          <p className="mt-1.5 text-[12.5px] text-ink/55 font-medium leading-snug whitespace-nowrap">
             {checkpoint.text}
           </p>
         </motion.div>
