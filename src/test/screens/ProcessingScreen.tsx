@@ -60,8 +60,8 @@ export default function ProcessingScreen({ nombre, onDone }: ProcessingScreenPro
           {nombre ? `Calculando tu perfil, ${nombre.split(' ')[0]}` : 'Calculando tu perfil'}
         </h2>
 
-        {/* Anillo de progreso: track frío + arco azul cielo de marca con remates
-            redondeados. El porcentaje cuenta en el centro. */}
+        {/* Anillo de progreso: track frío + arco azul cielo de marca, un solo
+            color sólido y remates redondeados. El porcentaje cuenta centrado. */}
         <div className="relative" style={{ width: SIZE, height: SIZE }}>
           <svg
             width={SIZE}
@@ -70,13 +70,6 @@ export default function ProcessingScreen({ nombre, onDone }: ProcessingScreenPro
             className="-rotate-90"
             aria-hidden="true"
           >
-            <defs>
-              <linearGradient id="vocaria-ring" x1="0%" y1="0%" x2="100%" y2="100%">
-                <stop offset="0%" stopColor="#258ef9" />
-                <stop offset="100%" stopColor="#5fb0ff" />
-              </linearGradient>
-            </defs>
-
             {/* Track */}
             <circle
               cx={SIZE / 2}
@@ -94,23 +87,19 @@ export default function ProcessingScreen({ nombre, onDone }: ProcessingScreenPro
               cy={SIZE / 2}
               r={R}
               fill="none"
-              stroke="url(#vocaria-ring)"
+              stroke="#258ef9"
               strokeWidth={STROKE}
               strokeLinecap="round"
               strokeDasharray={CIRC}
               animate={{ strokeDashoffset: offset }}
               transition={{ duration: 0.2, ease: 'linear' }}
-              style={{
-                strokeDashoffset: offset,
-                filter: 'drop-shadow(0 0 8px rgba(37,142,249,0.35))',
-              }}
+              style={{ strokeDashoffset: offset }}
             />
           </svg>
 
           <div className="absolute inset-0 flex items-center justify-center">
-            <span className="font-display font-extrabold text-ink text-[38px] tracking-tight tabular-nums">
-              {rounded}
-              <span className="text-ink/40 text-[24px] font-bold ml-0.5">%</span>
+            <span className="font-display font-bold text-ink text-[26px] tracking-tight tabular-nums leading-none">
+              {rounded}%
             </span>
           </div>
         </div>
