@@ -63,8 +63,12 @@ export default function QuestionCard({ question, onAnswer, currentAnswer, onBack
     // centrado y de tamaño contenido, y las respuestas justo debajo en grilla
     // para ocupar el ancho en desktop sin romper la continuidad de lectura.
     // Es el patrón que mejor lee en quizzes de escritorio (Typeform / 16personalities).
-    <div className="w-full">
-      <div className="mb-6 sm:mb-7 lg:mb-9 text-center max-w-[720px] mx-auto">
+    <div className="w-full flex flex-col flex-1 min-h-0">
+      {/* Banda de enunciado de alto fijo: el texto se ancla abajo (justify-end),
+          así preguntas de 2 o 3 líneas terminan a la MISMA altura y las opciones
+          siempre arrancan en el mismo Y. Es lo que evita que "cambien las
+          dimensiones" al pasar de pregunta. */}
+      <div className="shrink-0 min-h-[96px] sm:min-h-[120px] lg:min-h-[148px] xl:min-h-[168px] flex flex-col justify-end mb-6 sm:mb-7 lg:mb-9 text-center max-w-[800px] mx-auto">
         <h2 className="font-display font-bold text-[22px] sm:text-[26px] lg:text-[34px] xl:text-[38px] text-ink leading-[1.14] tracking-tight text-balance">
           {question.enunciado}
         </h2>
@@ -75,7 +79,7 @@ export default function QuestionCard({ question, onAnswer, currentAnswer, onBack
         )}
       </div>
 
-      <div className="w-full">
+      <div className="w-full shrink-0">
         {question.tipo === 'scale' && (
           <ScaleOptions opciones={question.opciones} selected={selected} onSelect={setSelected} />
         )}
@@ -105,7 +109,7 @@ export default function QuestionCard({ question, onAnswer, currentAnswer, onBack
       {/* Navegación unificada en una fila: "Anterior" a la izquierda, "Siguiente"
           siempre a la derecha (posición estable). "Siguiente" se activa recién
           cuando hay una elección válida. */}
-      <div className="mt-7 lg:mt-9 w-full flex items-center justify-between gap-3">
+      <div className="mt-auto pt-7 lg:pt-9 w-full flex items-center justify-between gap-3 shrink-0">
         <div className="shrink-0">
           {canGoBack && (
             <button
@@ -402,7 +406,7 @@ function ChoiceOptions({
             onClick={() => onSelect(op.id)}
             aria-pressed={active}
             whileTap={{ scale: 0.99 }}
-            className={`w-full h-full text-left px-3.5 lg:px-5 xl:px-6 py-3 lg:py-4 xl:py-[18px] rounded-2xl border font-display text-[14px] lg:text-[15.5px] xl:text-[16px] font-medium transition-[border-color,background-color,box-shadow,transform] duration-200 flex items-start gap-2.5 lg:gap-3.5
+            className={`w-full h-full min-h-[60px] lg:min-h-[80px] text-left px-3.5 lg:px-5 xl:px-6 py-3 lg:py-4 xl:py-[18px] rounded-2xl border font-display text-[14px] lg:text-[15.5px] xl:text-[16px] font-medium transition-[border-color,background-color,box-shadow,transform] duration-200 flex items-start gap-2.5 lg:gap-3.5
               ${active ? OPTION_ACTIVE : OPTION_IDLE}`}
           >
             <span
