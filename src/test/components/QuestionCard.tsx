@@ -62,8 +62,8 @@ export default function QuestionCard({ question, onAnswer, currentAnswer }: Ques
     // para ocupar el ancho en desktop sin romper la continuidad de lectura.
     // Es el patrón que mejor lee en quizzes de escritorio (Typeform / 16personalities).
     <div className="w-full">
-      <div className="mb-6 sm:mb-8 lg:mb-10 text-center max-w-3xl mx-auto">
-        <h2 className="font-display font-extrabold text-[21px] sm:text-[26px] lg:text-[31px] text-ink leading-[1.18] tracking-tight text-balance">
+      <div className="mb-6 sm:mb-7 lg:mb-8 text-center max-w-[640px] mx-auto">
+        <h2 className="font-display font-bold text-[22px] sm:text-[26px] lg:text-[34px] text-ink leading-[1.14] tracking-tight text-balance">
           {question.enunciado}
         </h2>
         {question.subtext && (
@@ -102,13 +102,13 @@ export default function QuestionCard({ question, onAnswer, currentAnswer }: Ques
 
       {/* Footer unificado: "Siguiente" para TODAS las preguntas. Disponible
           (activo) recién cuando hay una elección válida. */}
-      <div className="mt-6 sm:mt-7 lg:mt-9 max-w-xl mx-auto flex items-center gap-3">
+      <div className="mt-7 lg:mt-8 max-w-[760px] mx-auto flex items-center justify-center gap-3">
         {isMulti && (
           <span className="text-[12px] text-ink/45 font-semibold font-display whitespace-nowrap tabular-nums shrink-0">
             {multiSelected.length} / {max}
           </span>
         )}
-        <NextButton onClick={handleConfirm} disabled={!canAdvance} className="flex-1" />
+        <NextButton onClick={handleConfirm} disabled={!canAdvance} className="flex-1 sm:flex-none sm:min-w-[240px] sm:px-10" />
       </div>
     </div>
   );
@@ -129,7 +129,7 @@ function NextButton({
       disabled={disabled}
       aria-disabled={disabled}
       whileTap={disabled ? undefined : { scale: 0.98 }}
-      className={`flex items-center justify-center gap-2 py-3.5 lg:py-4 text-[15px] lg:text-[16px] ${CTA_PRIMARY} ${
+      className={`flex items-center justify-center gap-2 py-3.5 text-[15px] lg:text-[16px] ${CTA_PRIMARY} ${
         disabled ? 'opacity-40 pointer-events-none' : ''
       } ${className}`}
     >
@@ -152,7 +152,7 @@ function ScaleOptions({
   const activeOpt = opciones.find(o => o.id === selected);
 
   return (
-    <div className="max-w-xl mx-auto">
+    <div className="max-w-[520px] mx-auto">
       <div className="flex justify-between mb-2.5 px-0.5 gap-4">
         <span className="text-[11.5px] text-ink/45 font-medium max-w-[44%] leading-snug">{anchors[0]}</span>
         <span className="text-[11.5px] text-ink/45 font-medium max-w-[44%] text-right leading-snug">{anchors[1]}</span>
@@ -174,10 +174,10 @@ function ScaleOptions({
               whileTap={{ scale: 0.95 }}
               aria-pressed={active}
               aria-label={op.texto}
-              className={`flex-1 max-w-[72px] lg:max-w-[88px] min-h-[52px] aspect-square rounded-2xl font-display font-bold text-[17px] lg:text-[19px] transition-all duration-200 flex items-center justify-center border
+              className={`flex-1 max-w-[72px] lg:max-w-[88px] min-h-[56px] aspect-square rounded-2xl font-display font-bold text-[17px] lg:text-[19px] transition-all duration-200 flex items-center justify-center border
                 ${active
                   ? 'bg-ink text-white border-ink scale-[1.04] shadow-[0_10px_26px_rgba(7,17,31,0.22)]'
-                  : 'bg-paper-raised text-ink/45 border-line hover:border-sky/45 hover:text-ink/70'
+                  : 'bg-paper-raised text-ink/55 border-line-strong hover:border-sky/45 hover:text-ink/80'
                 }`}
             >
               {op.id}
@@ -220,7 +220,7 @@ function VisualOptions({
       variants={LIST_VARIANTS}
       initial="hidden"
       animate="visible"
-      className="grid grid-cols-2 lg:grid-cols-3 gap-2.5 lg:gap-4 max-w-4xl mx-auto"
+      className="grid grid-cols-2 lg:grid-cols-3 gap-2.5 lg:gap-4 max-w-[760px] mx-auto"
     >
       {opciones.map(op => {
         const active = selected === op.id;
@@ -233,17 +233,17 @@ function VisualOptions({
             onClick={() => onSelect(op.id)}
             aria-pressed={active}
             whileTap={{ scale: 0.97 }}
-            className={`relative flex flex-col items-start gap-2 lg:gap-3 p-3 lg:p-4 min-h-[88px] lg:min-h-[112px] rounded-[16px] lg:rounded-[20px] border transition-[border-color,background-color,box-shadow,transform] duration-200 text-left
+            className={`relative flex flex-col items-start gap-2 lg:gap-3 p-3 lg:p-4 min-h-[88px] lg:min-h-[112px] rounded-2xl border transition-[border-color,background-color,box-shadow,transform] duration-200 text-left
               ${active ? OPTION_ACTIVE + ' scale-[1.02]' : OPTION_IDLE}`}
           >
             <span
-              className={`w-8 h-8 lg:w-10 lg:h-10 rounded-full flex items-center justify-center transition-colors
+              className={`w-8 h-8 lg:w-10 lg:h-10 rounded-xl flex items-center justify-center transition-colors
                 ${active ? 'bg-white/15 text-white' : 'bg-sky-soft text-sky-deep'}`}
             >
               <Icon size={16} strokeWidth={1.9} className="lg:hidden" />
               <Icon size={20} strokeWidth={1.9} className="hidden lg:block" />
             </span>
-            <span className={`font-display text-[12.5px] lg:text-[14.5px] font-semibold leading-[1.25] ${active ? 'text-white' : 'text-ink/75'}`}>
+            <span className={`font-display text-[12.5px] lg:text-[14.5px] font-semibold leading-[1.25] ${active ? 'text-white' : ''}`}>
               {op.texto}
             </span>
             {active && (
@@ -277,7 +277,7 @@ function PairsOptions({
       variants={LIST_VARIANTS}
       initial="hidden"
       animate="visible"
-      className="grid grid-cols-1 sm:grid-cols-2 gap-2.5 lg:gap-3.5 max-w-3xl mx-auto"
+      className="grid grid-cols-1 sm:grid-cols-2 gap-2.5 lg:gap-3.5 max-w-[760px] mx-auto"
     >
       {opciones.map(op => {
         const active = selected === op.id;
@@ -290,7 +290,7 @@ function PairsOptions({
             onClick={() => onSelect(op.id)}
             aria-pressed={active}
             whileTap={{ scale: 0.99 }}
-            className={`w-full flex items-center gap-3.5 lg:gap-4 px-4 lg:px-5 py-3.5 lg:py-5 rounded-[16px] lg:rounded-[18px] border transition-[border-color,background-color,box-shadow,transform] duration-200 text-left
+            className={`w-full flex items-center gap-3.5 lg:gap-4 px-4 lg:px-5 py-3.5 lg:py-5 rounded-2xl border transition-[border-color,background-color,box-shadow,transform] duration-200 text-left
               ${active ? OPTION_ACTIVE + ' scale-[1.01]' : OPTION_IDLE}`}
           >
             <span
@@ -300,7 +300,7 @@ function PairsOptions({
               <Icon size={20} strokeWidth={1.9} className="lg:hidden" />
               <Icon size={23} strokeWidth={1.9} className="hidden lg:block" />
             </span>
-            <span className={`font-display font-semibold text-[14.5px] lg:text-[16px] leading-snug ${active ? 'text-white' : 'text-ink/90'}`}>
+            <span className={`font-display font-semibold text-[14.5px] lg:text-[16px] leading-snug ${active ? 'text-white' : ''}`}>
               {op.texto}
             </span>
           </motion.button>
@@ -327,7 +327,7 @@ function MultiSelectOptions({
       variants={LIST_VARIANTS}
       initial="hidden"
       animate="visible"
-      className="grid grid-cols-1 sm:grid-cols-2 gap-2 lg:gap-2.5 max-w-3xl mx-auto"
+      className="grid grid-cols-1 sm:grid-cols-2 gap-2 lg:gap-2.5 max-w-[760px] mx-auto"
     >
       {opciones.map(op => {
         const active = selected.includes(op.id);
@@ -341,7 +341,7 @@ function MultiSelectOptions({
             disabled={disabled}
             whileTap={disabled ? undefined : { scale: 0.99 }}
             aria-pressed={active}
-            className={`w-full flex items-center gap-2.5 px-3.5 lg:px-4 py-2 lg:py-3 rounded-[13px] lg:rounded-[15px] font-display text-[13.5px] lg:text-[15px] font-semibold transition-all duration-200 text-left border ${
+            className={`w-full flex items-center gap-2.5 px-3.5 lg:px-4 py-2.5 lg:py-3 rounded-2xl font-display text-[13.5px] lg:text-[15px] font-semibold transition-all duration-200 text-left border ${
               active ? OPTION_ACTIVE : disabled ? OPTION_DISABLED : OPTION_IDLE
             }`}
           >
@@ -373,7 +373,7 @@ function ChoiceOptions({
       variants={LIST_VARIANTS}
       initial="hidden"
       animate="visible"
-      className="grid grid-cols-1 lg:grid-cols-2 gap-2.5 lg:gap-3.5 max-w-4xl mx-auto"
+      className="grid grid-cols-1 lg:grid-cols-2 gap-2.5 lg:gap-3.5 max-w-[760px] mx-auto"
     >
       {opciones.map(op => {
         const active = selected === op.id;
@@ -385,7 +385,7 @@ function ChoiceOptions({
             onClick={() => onSelect(op.id)}
             aria-pressed={active}
             whileTap={{ scale: 0.99 }}
-            className={`w-full h-full text-left px-3.5 lg:px-5 py-3 lg:py-4 rounded-[14px] lg:rounded-[16px] border font-display text-[14px] lg:text-[15.5px] font-medium transition-[border-color,background-color,box-shadow,transform] duration-200 flex items-start gap-2.5 lg:gap-3.5
+            className={`w-full h-full text-left px-3.5 lg:px-5 py-3 lg:py-4 rounded-2xl border font-display text-[14px] lg:text-[15.5px] font-medium transition-[border-color,background-color,box-shadow,transform] duration-200 flex items-start gap-2.5 lg:gap-3.5
               ${active ? OPTION_ACTIVE : OPTION_IDLE}`}
           >
             <span

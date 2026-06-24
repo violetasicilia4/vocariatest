@@ -18,7 +18,7 @@ export default function ProgressBar({ pct }: ProgressBarProps) {
 
   return (
     <div className="w-full">
-      <div className="flex items-end justify-between mb-1.5 gap-3">
+      <div className="flex items-end mb-1.5">
         <div className="overflow-hidden">
           <AnimatePresence mode="wait">
             <motion.span
@@ -27,23 +27,11 @@ export default function ProgressBar({ pct }: ProgressBarProps) {
               animate={{ opacity: 1, y: 0 }}
               exit={{ opacity: 0, y: -8 }}
               transition={{ duration: 0.35, ease: EASE }}
-              className="block text-[13px] font-extrabold text-ink tracking-tight font-display"
+              className="block text-[13px] font-bold text-ink/65 tracking-tight font-display"
             >
               {label}
             </motion.span>
           </AnimatePresence>
-        </div>
-        <div className="flex items-baseline gap-1 shrink-0">
-          <motion.span
-            key={pct}
-            initial={{ opacity: 0.5, y: -2 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.3, ease: EASE }}
-            className="text-[14px] font-black text-brand-sky tabular-nums leading-none"
-          >
-            {pct}%
-          </motion.span>
-          <span className="text-[9.5px] font-bold text-ink/35 uppercase tracking-[0.1em]">avance</span>
         </div>
       </div>
 

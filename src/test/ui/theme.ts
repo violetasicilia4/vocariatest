@@ -38,7 +38,7 @@ export const CTA_PRIMARY =
   'hover:bg-brand-lime hover:text-slate-950 active:scale-[0.97] ' +
   'transition-[transform,background-color,color,box-shadow] duration-200 ' +
   '[transition-timing-function:cubic-bezier(0.16,1,0.3,1)] ' +
-  'shadow-[0_10px_28px_rgba(5,8,22,0.22)] ' +
+  'shadow-[0_8px_24px_rgba(5,8,22,0.16)] ' +
   'focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-sky/40 focus-visible:ring-offset-2 focus-visible:ring-offset-paper';
 
 /** CTA secundario (outline frío sobre blanco). */
@@ -54,7 +54,7 @@ export const CARD =
 
 /** Opción NO seleccionada (card interactiva). */
 export const OPTION_IDLE =
-  'bg-paper-raised border border-line text-ink/80 ' +
+  'bg-paper-raised border border-line text-ink/85 ' +
   'hover:border-sky/45 hover:bg-sky-soft/40 hover:shadow-[0_8px_24px_rgba(37,142,249,0.08)]';
 
 /** Opción seleccionada (fill navy, check lima). */
