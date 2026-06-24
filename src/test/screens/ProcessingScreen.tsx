@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { motion, AnimatePresence } from 'motion/react';
+import { motion, AnimatePresence, animate, useReducedMotion } from 'motion/react';
 
 interface ProcessingScreenProps {
   nombre: string;
@@ -13,48 +13,110 @@ const STEPS = [
   'Generando tu resultado',
 ];
 
+const STEP_MS = 620;
+const TOTAL_MS = STEPS.length * STEP_MS;
+
+// Geometría del anillo de progreso.
+const SIZE = 180;
+const STROKE = 12;
+const R = (SIZE - STROKE) / 2;
+const CIRC = 2 * Math.PI * R;
+
 export default function ProcessingScreen({ nombre, onDone }: ProcessingScreenProps) {
   const [stepIndex, setStepIndex] = useState(0);
+  const [pct, setPct] = useState(0);
+  const reduceMotion = useReducedMotion();
 
   useEffect(() => {
-    const intervals = STEPS.map((_, i) =>
-      setTimeout(() => setStepIndex(i), i * 620)
+    const steps = STEPS.map((_, i) =>
+      setTimeout(() => setStepIndex(i), i * STEP_MS)
     );
-    const done = setTimeout(onDone, STEPS.length * 620 + 400);
-    return () => {
-      intervals.forEach(clearTimeout);
-      clearTimeout(done);
-    };
-  }, [onDone]);
+    const done = setTimeout(onDone, TOTAL_MS + 400);
 
-  const progress = ((stepIndex + 1) / STEPS.length) * 100;
+    // El porcentaje sube de forma continua hasta 100 mientras avanzan las etapas.
+    const controls = reduceMotion
+      ? (setPct(100), null)
+      : animate(0, 100, {
+          duration: TOTAL_MS / 1000,
+          ease: [0.4, 0, 0.2, 1],
+          onUpdate: (v: number) => setPct(v),
+        });
+
+    return () => {
+      steps.forEach(clearTimeout);
+      clearTimeout(done);
+      controls?.stop();
+    };
+  }, [onDone, reduceMotion]);
+
+  const rounded = Math.round(pct);
+  const offset = CIRC * (1 - pct / 100);
 
   return (
     <div className="min-h-[100dvh] bg-paper flex flex-col items-center justify-center px-6">
-      <div className="w-full max-w-[300px] flex flex-col items-center">
+      <div className="w-full max-w-[320px] flex flex-col items-center">
 
-        <h2 className="font-display font-extrabold text-[22px] lg:text-[26px] text-ink text-center mb-8 tracking-tight leading-tight">
+        <h2 className="font-display font-extrabold text-[22px] lg:text-[26px] text-ink text-center mb-10 tracking-tight leading-tight">
           {nombre ? `Calculando tu perfil, ${nombre.split(' ')[0]}` : 'Calculando tu perfil'}
         </h2>
 
-        {/* Barra de procesamiento minimalista: avance determinado + un destello
-            que recorre la barra para dar la sensación de "datos en proceso". */}
-        <div className="relative w-full h-[3px] rounded-full bg-line overflow-hidden">
-          <motion.div
-            className="h-full rounded-full bg-ink"
-            initial={{ width: '0%' }}
-            animate={{ width: `${progress}%` }}
-            transition={{ duration: 0.6, ease: [0.16, 1, 0.3, 1] }}
-          />
-          <motion.div
-            className="absolute top-0 h-full w-1/3 bg-gradient-to-r from-transparent via-brand-sky/70 to-transparent"
-            animate={{ x: ['-100%', '400%'] }}
-            transition={{ duration: 1.3, repeat: Infinity, ease: 'easeInOut' }}
-          />
+        {/* Anillo de progreso: track frío + arco azul cielo de marca con remates
+            redondeados. El porcentaje cuenta en el centro. */}
+        <div className="relative" style={{ width: SIZE, height: SIZE }}>
+          <svg
+            width={SIZE}
+            height={SIZE}
+            viewBox={`0 0 ${SIZE} ${SIZE}`}
+            className="-rotate-90"
+            aria-hidden="true"
+          >
+            <defs>
+              <linearGradient id="vocaria-ring" x1="0%" y1="0%" x2="100%" y2="100%">
+                <stop offset="0%" stopColor="#258ef9" />
+                <stop offset="100%" stopColor="#5fb0ff" />
+              </linearGradient>
+            </defs>
+
+            {/* Track */}
+            <circle
+              cx={SIZE / 2}
+              cy={SIZE / 2}
+              r={R}
+              fill="none"
+              stroke="currentColor"
+              className="text-line"
+              strokeWidth={STROKE}
+            />
+
+            {/* Arco de avance */}
+            <motion.circle
+              cx={SIZE / 2}
+              cy={SIZE / 2}
+              r={R}
+              fill="none"
+              stroke="url(#vocaria-ring)"
+              strokeWidth={STROKE}
+              strokeLinecap="round"
+              strokeDasharray={CIRC}
+              animate={{ strokeDashoffset: offset }}
+              transition={{ duration: 0.2, ease: 'linear' }}
+              style={{
+                strokeDashoffset: offset,
+                filter: 'drop-shadow(0 0 8px rgba(37,142,249,0.35))',
+              }}
+            />
+          </svg>
+
+          <div className="absolute inset-0 flex items-center justify-center">
+            <span className="font-display font-extrabold text-ink text-[38px] tracking-tight tabular-nums">
+              {rounded}
+              <span className="text-ink/40 text-[24px] font-bold ml-0.5">%</span>
+            </span>
+          </div>
         </div>
 
-        {/* Estado actual — alineado a la barra, monoespaciado sutil de "sistema". */}
-        <div className="h-5 overflow-hidden mt-5 w-full">
+        {/* Etapa actual — debajo del anillo. */}
+        <div className="h-5 overflow-hidden mt-8 w-full">
           <AnimatePresence mode="wait">
             <motion.p
               key={stepIndex}
