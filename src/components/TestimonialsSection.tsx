@@ -6,24 +6,21 @@ import { motion } from 'motion/react';
 // Sección honesta de valor: en lugar de testimonios (el producto es pre-lanzamiento
 // y no puede tener usuarios reales todavía), mostramos qué entrega el test. Cumple
 // la misma función de "convencer antes del CTA" sin caer en prueba social falsa.
-const entregables: { icon: LucideIcon; titulo: string; texto: string; etiqueta?: string }[] = [
+const entregables: { icon: LucideIcon; titulo: string; texto: string }[] = [
   {
     icon: Fingerprint,
     titulo: 'Tu arquetipo vocacional',
     texto: 'Cómo pensás, decidís y resolvés, descrito en un perfil claro. No una etiqueta: tu forma de razonar.',
-    etiqueta: 'Gratis',
   },
   {
     icon: Compass,
     titulo: 'Carreras que encajan',
     texto: 'Cruzamos tu forma de pensar con +130 carreras reales y te mostramos las de mayor afinidad, con el porqué.',
-    etiqueta: 'Gratis',
   },
   {
     icon: MapPin,
     titulo: 'Universidades y salida laboral',
     texto: 'Dónde se estudia cada carrera en Argentina, su duración real y qué panorama laboral y salarial tiene.',
-    etiqueta: 'Informe completo',
   },
   {
     icon: Footprints,
@@ -39,18 +36,13 @@ function EntregableCard({ e }: { e: typeof entregables[0] }) {
       className="bg-white rounded-2xl p-5 flex flex-col h-full"
       style={{ boxShadow: '0 4px 24px rgba(0,0,0,0.20)' }}
     >
-      <div className="flex items-center justify-between mb-4">
+      <div className="flex items-center mb-4">
         <span
           className="w-10 h-10 rounded-xl flex items-center justify-center shrink-0"
           style={{ background: '#07111F' }}
         >
           <Icon size={18} strokeWidth={2} style={{ color: '#d5ff3f' }} />
         </span>
-        {e.etiqueta && (
-          <span className="text-[10px] font-bold uppercase tracking-wide text-slate-400 bg-slate-100 border border-slate-200 px-2 py-0.5 rounded-full">
-            {e.etiqueta}
-          </span>
-        )}
       </div>
       <h3 className="font-display font-extrabold text-[15px] text-slate-900 leading-tight mb-1.5">
         {e.titulo}
