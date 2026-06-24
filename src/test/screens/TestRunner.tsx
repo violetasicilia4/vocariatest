@@ -202,7 +202,6 @@ export default function TestRunner({ nombre, profile, onComplete }: TestRunnerPr
         {checkpoint && (
           <CheckpointModal
             checkpoint={checkpoint}
-            confidence={confidence}
             onContinue={() => setCheckpoint(null)}
           />
         )}

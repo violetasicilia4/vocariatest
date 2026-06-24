@@ -39,32 +39,34 @@ export function stageForPct(pct: number): { label: string; index: number } {
 export interface Checkpoint {
   /** % a partir del cual se dispara (una sola vez). */
   at: number;
-  /** Microcopy de la fase "analizando" — distinto en cada hito para no repetir. */
-  analyzing: string;
+  /** Valor "redondo" que muestra el anillo del hito (la cifra protagonista). */
+  value: number;
+  /** Título corto y premium del hito. */
   title: string;
+  /** Línea de apoyo, breve. */
   text: string;
 }
 
 /** Tres momentos que interrumpen brevemente el flujo. Copy corto, sofisticado.
- *  Cada uno tiene su propia frase de análisis para que no se sienta idéntico al
- *  anterior. Son pocos a propósito: cada interrupción tiene que pesar. */
+ *  Son pocos a propósito: cada interrupción tiene que pesar. El anillo del hito
+ *  aterriza en una cifra redonda (30 → 60 → 80) para que se lea intencional. */
 export const CHECKPOINTS: Checkpoint[] = [
   {
     at: 30,
-    analyzing: 'Leyendo tus primeras respuestas',
-    title: 'Patrón detectado',
-    text: 'Tus primeras respuestas ya marcan una dirección clara en tu perfil.',
+    value: 30,
+    title: 'Perfil tomando forma',
+    text: 'Tus primeras respuestas ya marcan una dirección.',
   },
   {
     at: 58,
-    analyzing: 'Cruzando señales de tu perfil',
-    title: 'Perfil en construcción',
-    text: 'Empiezan a aparecer señales cada vez más consistentes sobre cómo pensás.',
+    value: 60,
+    title: 'Progreso sólido',
+    text: 'Las señales de tu perfil son cada vez más consistentes.',
   },
   {
     at: 82,
-    analyzing: 'Contrastando con tus respuestas',
-    title: 'Hipótesis validada',
-    text: 'Las últimas respuestas fortalecieron la tendencia que veníamos detectando.',
+    value: 80,
+    title: 'Casi completo',
+    text: 'Las últimas respuestas afinan la tendencia detectada.',
   },
 ];
