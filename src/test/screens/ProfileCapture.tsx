@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { motion, AnimatePresence } from 'motion/react';
-import { ChevronDown, ChevronLeft, ChevronRight, ArrowRight, Plane, House, HelpCircle, Check } from 'lucide-react';
+import { ChevronDown, ChevronLeft, ChevronRight, ArrowRight, Plane, House, HelpCircle } from 'lucide-react';
 import type { LucideIcon } from 'lucide-react';
 import LogoIcon from '../../components/ui/LogoIcon';
 import { type UserProfile, PROVINCIAS } from '../data/profile';
@@ -20,14 +20,6 @@ const MOVILIDAD_OPTS: { id: UserProfile['movilidad']; icon: LucideIcon; titulo: 
   { id: 'si',   icon: Plane,      titulo: 'Sí, me mudaría',      sub: 'Si encuentro la carrera ideal, sin problema.' },
   { id: 'no',   icon: House,      titulo: 'Prefiero quedarme',   sub: 'Necesito estudiar cerca de donde vivo.' },
   { id: 'nose', icon: HelpCircle, titulo: 'Todavía no lo sé',    sub: 'No quiero comprometerme con eso ahora.' },
-];
-
-// Puntos de confianza del panel de marca (solo desktop). Mantienen el lado
-// izquierdo "vivo" y dan presencia de escritorio sin depender del paso actual.
-const TRUST_POINTS = [
-  'Análisis personalizado, no un test genérico.',
-  'Resultados claros, directo a tu correo.',
-  'Sin spam y sin compromisos.',
 ];
 
 // Validación de email razonable (no acepta "a@.b" ni dobles puntos), suficiente
@@ -114,66 +106,28 @@ export default function ProfileCapture({ onStart }: ProfileCaptureProps) {
   };
 
   return (
-    // Layout responsivo de dos columnas. En mobile es una sola columna con el
-    // formulario (como antes). En desktop (lg+) aparece un panel de marca a la
-    // izquierda que llena la pantalla y le da presencia de escritorio, en vez de
-    // dejar un bloque tamaño-mobile comprimido en el centro.
+    // Una sola columna centrada (mobile y desktop). El ancho del contenido se
+    // mantiene acotado a propósito: ensanchar los inputs los vuelve incómodos.
+    // La presencia en desktop viene de centrar bien el bloque y de la escala
+    // tipográfica, no de un panel lateral.
     //
     // La raíz está fijada a la altura del viewport con overflow-hidden: así NUNCA
     // genera el scroll fantasma (el padre es `fixed inset-0 overflow-y-auto`, y un
     // hijo con min-h-[100dvh] lo desbordaba por sub-píxeles). Si el formulario no
-    // entra en pantallas bajas, scrollea solo la columna del formulario.
-    <div className="h-[100dvh] overflow-hidden bg-paper flex flex-col lg:flex-row">
+    // entra en pantallas bajas, scrollea solo esta columna.
+    <div className="h-[100dvh] overflow-hidden bg-paper">
+      <div className="h-full overflow-y-auto">
+        <div className="min-h-full flex flex-col justify-center px-6 sm:px-8 py-10 lg:py-14">
+          <div className="w-full max-w-[560px] mx-auto">
 
-      {/* Panel de marca · solo desktop */}
-      <aside className="hidden lg:flex lg:w-[42%] xl:w-[40%] shrink-0 relative overflow-hidden bg-ink text-white flex-col justify-between p-12 xl:p-16">
-        {/* Brillo cielo sutil, en línea con el hero */}
-        <div
-          aria-hidden
-          className="pointer-events-none absolute -top-24 -left-24 w-[420px] h-[420px] rounded-full opacity-60"
-          style={{ background: 'radial-gradient(circle, rgba(37,142,249,0.35) 0%, transparent 70%)' }}
-        />
-        <div className="relative flex items-center gap-2.5">
-          <LogoIcon size={26} />
-          <span className="font-display font-bold text-[16px] tracking-tight">Vocaria</span>
-        </div>
-
-        <div className="relative">
-          <h2 className="font-display font-black text-[34px] xl:text-[40px] leading-[1.05] tracking-tight mb-5">
-            Elegí tu carrera<br />con datos, no con dudas.
-          </h2>
-          <ul className="space-y-3.5">
-            {TRUST_POINTS.map(point => (
-              <li key={point} className="flex items-start gap-3 text-white/75 text-[15px] font-medium leading-snug">
-                <span className="shrink-0 mt-0.5 w-5 h-5 rounded-full bg-brand-lime/90 text-slate-950 flex items-center justify-center">
-                  <Check size={13} strokeWidth={3} />
-                </span>
-                {point}
-              </li>
-            ))}
-          </ul>
-        </div>
-
-        <div className="relative max-w-[280px]">
-          <Progress step={step} dark />
-        </div>
-      </aside>
-
-      {/* Columna del formulario · la única visible en mobile.
-          overflow-y-auto local: si el contenido no entra (pantallas bajas),
-          scrollea esta columna, no toda la página. */}
-      <div className="flex-1 min-w-0 h-full overflow-y-auto">
-        <div className="min-h-full flex flex-col justify-center px-6 sm:px-10 lg:px-14 xl:px-20 py-10 lg:py-12">
-          <div className="w-full max-w-[540px] mx-auto lg:mx-0">
-
-            {/* Logo · solo mobile (en desktop vive en el panel de marca) */}
-            <div className="lg:hidden flex items-center gap-2.5 mb-8 text-ink">
+            {/* Logo */}
+            <div className="flex items-center gap-2.5 mb-8 text-ink">
               <LogoIcon size={24} />
               <span className="font-display font-bold text-[15px] tracking-tight">Vocaria</span>
             </div>
 
-            {/* Progreso · solo mobile (en desktop vive en el panel de marca) */}
-            <div className="lg:hidden mb-9">
+            {/* Progreso */}
+            <div className="mb-9">
               <Progress step={step} />
             </div>
 
