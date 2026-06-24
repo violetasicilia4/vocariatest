@@ -121,15 +121,9 @@ export default function CheckpointModal({ checkpoint, confidence, onContinue }: 
           )}
 
           <svg width="128" height="128" viewBox="0 0 128 128" className="-rotate-90 relative">
-            <defs>
-              <linearGradient id="confGrad" x1="0%" y1="0%" x2="100%" y2="100%">
-                <stop offset="0%" stopColor="var(--color-brand-sky)" />
-                <stop offset="100%" stopColor="var(--color-brand-lime)" />
-              </linearGradient>
-            </defs>
             <circle cx="64" cy="64" r={R} fill="none" stroke="var(--color-line)" strokeWidth="8" />
             <circle
-              cx="64" cy="64" r={R} fill="none" stroke="url(#confGrad)" strokeWidth="8"
+              cx="64" cy="64" r={R} fill="none" stroke="#258ef9" strokeWidth="8"
               strokeLinecap="round" strokeDasharray={C} strokeDashoffset={offset}
             />
           </svg>
@@ -139,8 +133,8 @@ export default function CheckpointModal({ checkpoint, confidence, onContinue }: 
             animate={revealed ? { scale: [1, 1.08, 1] } : {}}
             transition={{ duration: 0.5, ease: EASE }}
           >
-            <span className="font-display font-black text-[40px] text-ink tabular-nums tracking-[-0.03em] leading-none">
-              {value}<span className="text-[22px] align-top text-ink/40 ml-0.5">%</span>
+            <span className="font-display font-bold text-[30px] text-ink tabular-nums tracking-tight leading-none">
+              {value}%
             </span>
           </motion.div>
         </div>
