@@ -64,52 +64,58 @@ export default function QuestionCard({ question, onAnswer, currentAnswer, onBack
     // para ocupar el ancho en desktop sin romper la continuidad de lectura.
     // Es el patrón que mejor lee en quizzes de escritorio (Typeform / 16personalities).
     <div className="w-full flex flex-col flex-1 min-h-0">
-      {/* Banda de enunciado de alto fijo: el texto se ancla abajo (justify-end),
-          así preguntas de 2 o 3 líneas terminan a la MISMA altura y las opciones
-          siempre arrancan en el mismo Y. Es lo que evita que "cambien las
-          dimensiones" al pasar de pregunta. */}
-      <div className="shrink-0 min-h-[68px] sm:min-h-[80px] lg:min-h-[92px] xl:min-h-[104px] flex flex-col justify-end mb-5 sm:mb-6 lg:mb-7 text-center max-w-[800px] mx-auto">
-        <h2 className="font-display font-bold text-[22px] sm:text-[26px] lg:text-[34px] xl:text-[38px] text-ink leading-[1.14] tracking-tight text-balance">
-          {question.enunciado}
-        </h2>
-        {question.subtext && (
-          <p className="mt-2.5 lg:mt-3 text-[12.5px] lg:text-[14.5px] text-ink/55 font-medium leading-relaxed">
-            {question.subtext}
-          </p>
-        )}
-      </div>
+      {/* Bloque enunciado + opciones, centrado vertical en el espacio libre.
+          Antes el enunciado quedaba arriba y un mt-auto empujaba el botón al
+          fondo, dejando un hueco grande en desktop. Centrarlo reparte el aire
+          arriba y abajo y la pregunta queda equilibrada en cualquier alto de
+          pantalla, sin tocar el comportamiento en mobile. */}
+      <div className="flex-1 min-h-0 flex flex-col justify-center py-4">
+        {/* Banda de enunciado de alto fijo: el texto se ancla abajo (justify-end),
+            así preguntas de 2 o 3 líneas terminan a la MISMA altura y las opciones
+            siempre arrancan en el mismo Y, sin saltos al cambiar de pregunta. */}
+        <div className="shrink-0 min-h-[68px] sm:min-h-[80px] lg:min-h-[92px] xl:min-h-[104px] flex flex-col justify-end mb-5 sm:mb-6 lg:mb-8 text-center max-w-[820px] mx-auto">
+          <h2 className="font-display font-bold text-[22px] sm:text-[26px] lg:text-[34px] xl:text-[38px] text-ink leading-[1.14] tracking-tight text-balance">
+            {question.enunciado}
+          </h2>
+          {question.subtext && (
+            <p className="mt-2.5 lg:mt-3 text-[12.5px] lg:text-[14.5px] text-ink/55 font-medium leading-relaxed">
+              {question.subtext}
+            </p>
+          )}
+        </div>
 
-      <div className="w-full shrink-0">
-        {question.tipo === 'scale' && (
-          <ScaleOptions opciones={question.opciones} selected={selected} onSelect={setSelected} />
-        )}
+        <div className="w-full shrink-0">
+          {question.tipo === 'scale' && (
+            <ScaleOptions opciones={question.opciones} selected={selected} onSelect={setSelected} />
+          )}
 
-        {question.tipo === 'visual' && (
-          <VisualOptions opciones={question.opciones} selected={selected} onSelect={setSelected} />
-        )}
+          {question.tipo === 'visual' && (
+            <VisualOptions opciones={question.opciones} selected={selected} onSelect={setSelected} />
+          )}
 
-        {question.tipo === 'pairs' && (
-          <PairsOptions opciones={question.opciones} selected={selected} onSelect={setSelected} />
-        )}
+          {question.tipo === 'pairs' && (
+            <PairsOptions opciones={question.opciones} selected={selected} onSelect={setSelected} />
+          )}
 
-        {question.tipo === 'multiselect' && (
-          <MultiSelectOptions
-            opciones={question.opciones}
-            selected={multiSelected}
-            maxSelect={max}
-            onToggle={handleMultiToggle}
-          />
-        )}
+          {question.tipo === 'multiselect' && (
+            <MultiSelectOptions
+              opciones={question.opciones}
+              selected={multiSelected}
+              maxSelect={max}
+              onToggle={handleMultiToggle}
+            />
+          )}
 
-        {question.tipo === 'situacional' && (
-          <ChoiceOptions opciones={question.opciones} selected={selected} onSelect={setSelected} />
-        )}
+          {question.tipo === 'situacional' && (
+            <ChoiceOptions opciones={question.opciones} selected={selected} onSelect={setSelected} />
+          )}
+        </div>
       </div>
 
       {/* Navegación unificada en una fila: "Anterior" a la izquierda, "Siguiente"
-          siempre a la derecha (posición estable). "Siguiente" se activa recién
-          cuando hay una elección válida. */}
-      <div className="mt-auto pt-5 lg:pt-6 w-full flex items-center justify-between gap-3 shrink-0">
+          siempre a la derecha (posición estable, anclada abajo). "Siguiente" se
+          activa recién cuando hay una elección válida. */}
+      <div className="pt-5 lg:pt-6 w-full flex items-center justify-between gap-3 shrink-0">
         <div className="shrink-0">
           {canGoBack && (
             <button
@@ -172,17 +178,20 @@ function ScaleOptions({
   const anchors = [opciones[0]?.texto, opciones[opciones.length - 1]?.texto];
   const activeOpt = opciones.find(o => o.id === selected);
 
+  // En desktop la escala se ensancha y los números crecen para no quedar
+  // diminutos en el medio de la pantalla; las leyendas de los extremos tienen
+  // más aire y dejan de comprimirse. En mobile mantiene el tamaño compacto.
   return (
-    <div className="max-w-[520px] mx-auto">
-      <div className="flex justify-between mb-2.5 px-0.5 gap-4">
-        <span className="text-[11.5px] text-ink/45 font-medium max-w-[44%] leading-snug">{anchors[0]}</span>
-        <span className="text-[11.5px] text-ink/45 font-medium max-w-[44%] text-right leading-snug">{anchors[1]}</span>
+    <div className="max-w-[440px] sm:max-w-[520px] lg:max-w-[680px] mx-auto">
+      <div className="flex justify-between mb-2.5 lg:mb-4 px-0.5 gap-6 lg:gap-10">
+        <span className="text-[11.5px] lg:text-[14px] text-ink/50 font-medium max-w-[46%] leading-snug">{anchors[0]}</span>
+        <span className="text-[11.5px] lg:text-[14px] text-ink/50 font-medium max-w-[46%] text-right leading-snug">{anchors[1]}</span>
       </div>
       <motion.div
         variants={LIST_VARIANTS}
         initial="hidden"
         animate="visible"
-        className="flex gap-2 sm:gap-2.5 lg:gap-3 justify-between mb-3"
+        className="flex gap-2.5 sm:gap-3 lg:gap-4 justify-between mb-3 lg:mb-5"
       >
         {opciones.map(op => {
           const active = selected === op.id;
@@ -195,7 +204,7 @@ function ScaleOptions({
               whileTap={{ scale: 0.95 }}
               aria-pressed={active}
               aria-label={op.texto}
-              className={`flex-1 max-w-[72px] lg:max-w-[88px] min-h-[56px] aspect-square rounded-2xl font-display font-bold text-[17px] lg:text-[19px] transition-all duration-200 flex items-center justify-center border
+              className={`flex-1 max-w-[72px] lg:max-w-[112px] min-h-[56px] aspect-square rounded-2xl lg:rounded-[20px] font-display font-bold text-[17px] lg:text-[26px] transition-all duration-200 flex items-center justify-center border
                 ${active
                   ? 'bg-ink text-white border-ink scale-[1.04] shadow-[0_10px_26px_rgba(7,17,31,0.22)]'
                   : 'bg-paper-raised text-ink/55 border-line-strong hover:border-sky/45 hover:text-ink/80'
@@ -207,7 +216,7 @@ function ScaleOptions({
         })}
       </motion.div>
 
-      <div className="min-h-[18px]">
+      <div className="min-h-[18px] lg:min-h-[22px]">
         <AnimatePresence mode="wait">
           {activeOpt && (
             <motion.p
@@ -216,7 +225,7 @@ function ScaleOptions({
               animate={{ opacity: 1, y: 0 }}
               exit={{ opacity: 0 }}
               transition={{ duration: 0.18 }}
-              className="text-[12.5px] text-ink/60 font-medium text-center leading-snug px-2"
+              className="text-[12.5px] lg:text-[15px] text-ink/60 font-medium text-center leading-snug px-2"
             >
               {activeOpt.texto}
             </motion.p>
