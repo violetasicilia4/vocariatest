@@ -64,6 +64,15 @@ export default function TestFlow({ onExit }: TestFlowProps) {
     setStep('result');
   }, []);
 
+  // Mientras el overlay del test está montado, bloqueamos el scroll de la
+  // landing que queda detrás. Así el rubber-band (rebote del overscroll) ya no
+  // la deja asomar por arriba/abajo al scrollear el resultado.
+  useEffect(() => {
+    const prev = document.body.style.overflow;
+    document.body.style.overflow = 'hidden';
+    return () => { document.body.style.overflow = prev; };
+  }, []);
+
   // Las pantallas profile/test/processing manejan su propio alto (h-[100dvh]
   // con scroll interno propio), así que el contenedor NO debe scrollear: si lo
   // hace, aparece una barra fantasma que no mueve nada. Solo result y checkout
@@ -71,7 +80,7 @@ export default function TestFlow({ onExit }: TestFlowProps) {
   const scrolls = step === 'result' || step === 'checkout';
 
   return (
-    <div className={`fixed inset-0 z-[100] bg-paper ${scrolls ? 'overflow-y-auto' : 'overflow-hidden'}`}>
+    <div className={`fixed inset-0 z-[100] bg-paper overscroll-none ${scrolls ? 'overflow-y-auto' : 'overflow-hidden'}`}>
       {step === 'profile' && (
         <button
           onClick={onExit}
