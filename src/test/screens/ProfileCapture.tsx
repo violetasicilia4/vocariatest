@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { motion, AnimatePresence } from 'motion/react';
-import { ChevronDown, ChevronLeft, ChevronRight, ArrowRight, Plane, House, HelpCircle } from 'lucide-react';
+import { ChevronDown, ChevronLeft, ChevronRight, ArrowRight, Plane, House, HelpCircle, Check } from 'lucide-react';
 import type { LucideIcon } from 'lucide-react';
 import LogoIcon from '../../components/ui/LogoIcon';
 import { type UserProfile, PROVINCIAS } from '../data/profile';
@@ -22,11 +22,48 @@ const MOVILIDAD_OPTS: { id: UserProfile['movilidad']; icon: LucideIcon; titulo: 
   { id: 'nose', icon: HelpCircle, titulo: 'Todavía no lo sé',    sub: 'No quiero comprometerme con eso ahora.' },
 ];
 
+// Puntos de confianza del panel de marca (solo desktop). Mantienen el lado
+// izquierdo "vivo" y dan presencia de escritorio sin depender del paso actual.
+const TRUST_POINTS = [
+  'Análisis personalizado, no un test genérico.',
+  'Resultados claros, directo a tu correo.',
+  'Sin spam y sin compromisos.',
+];
+
 // Validación de email razonable (no acepta "a@.b" ni dobles puntos), suficiente
 // para frenar tipeos y basura sin pretender validar la existencia del buzón.
 const EMAIL_RE = /^[^\s@]+@[^\s@.]+(\.[^\s@.]+)+$/;
 
 type Step = 'datos' | 'movilidad';
+
+// Eyebrow + barra segmentada de progreso. Se reutiliza en el panel de marca
+// (desktop) y arriba del formulario (mobile), siempre con el mismo estado.
+function Progress({ step, dark = false }: { step: Step; dark?: boolean }) {
+  const idx = step === 'datos' ? 0 : 1;
+  return (
+    <div>
+      <span
+        className={`block text-[11px] font-bold uppercase tracking-[0.14em] mb-2.5 ${
+          dark ? 'text-white/55' : 'text-ink/45'
+        }`}
+      >
+        Paso {idx + 1} de 2
+      </span>
+      <div className="flex gap-1.5">
+        <div
+          className={`h-[5px] rounded-full flex-1 transition-all duration-500 ${
+            step === 'datos' ? 'bg-brand-sky' : dark ? 'bg-brand-sky/50' : 'bg-brand-sky/40'
+          }`}
+        />
+        <div
+          className={`h-[5px] rounded-full flex-1 transition-all duration-500 ${
+            step === 'movilidad' ? 'bg-brand-sky' : dark ? 'bg-white/15' : 'bg-line'
+          }`}
+        />
+      </div>
+    </div>
+  );
+}
 
 export default function ProfileCapture({ onStart }: ProfileCaptureProps) {
   const [step, setStep] = useState<Step>('datos');
@@ -76,35 +113,71 @@ export default function ProfileCapture({ onStart }: ProfileCaptureProps) {
     exit: (dir: number) => ({ x: dir > 0 ? -28 : 28, opacity: 0 }),
   };
 
-  const activeStepIndex = step === 'datos' ? 0 : 1;
-
   return (
-    // Una sola columna, centrada. Sin panel lateral: el formulario es lo único en
-    // pantalla. El ancho del contenido se mantiene acotado (~640px) a propósito:
-    // ensanchar inputs los vuelve incómodos. La presencia en desktop viene de la
-    // escala tipográfica y del ritmo vertical, no de estirar el bloque.
-    <div className="min-h-[100dvh] bg-paper flex flex-col items-center justify-center px-6 py-12 sm:px-8 lg:py-16">
-      <div className="w-full max-w-[640px]">
+    // Layout responsivo de dos columnas. En mobile es una sola columna con el
+    // formulario (como antes). En desktop (lg+) aparece un panel de marca a la
+    // izquierda que llena la pantalla y le da presencia de escritorio, en vez de
+    // dejar un bloque tamaño-mobile comprimido en el centro.
+    //
+    // La raíz está fijada a la altura del viewport con overflow-hidden: así NUNCA
+    // genera el scroll fantasma (el padre es `fixed inset-0 overflow-y-auto`, y un
+    // hijo con min-h-[100dvh] lo desbordaba por sub-píxeles). Si el formulario no
+    // entra en pantallas bajas, scrollea solo la columna del formulario.
+    <div className="h-[100dvh] overflow-hidden bg-paper flex flex-col lg:flex-row">
 
-        {/* Logo */}
-        <div className="flex items-center gap-2.5 mb-9 text-ink">
-          <LogoIcon size={24} />
-          <span className="font-display font-bold text-[15px] tracking-tight">Vocaria</span>
+      {/* Panel de marca · solo desktop */}
+      <aside className="hidden lg:flex lg:w-[42%] xl:w-[40%] shrink-0 relative overflow-hidden bg-ink text-white flex-col justify-between p-12 xl:p-16">
+        {/* Brillo cielo sutil, en línea con el hero */}
+        <div
+          aria-hidden
+          className="pointer-events-none absolute -top-24 -left-24 w-[420px] h-[420px] rounded-full opacity-60"
+          style={{ background: 'radial-gradient(circle, rgba(37,142,249,0.35) 0%, transparent 70%)' }}
+        />
+        <div className="relative flex items-center gap-2.5">
+          <LogoIcon size={26} />
+          <span className="font-display font-bold text-[16px] tracking-tight">Vocaria</span>
         </div>
 
-        {/* Cabecera de progreso: eyebrow + barra segmentada a todo el ancho.
-            La barra ancla horizontalmente el bloque y le da estructura en desktop. */}
-        <div className="mb-9">
-          <span className="block text-[11px] font-bold uppercase tracking-[0.14em] text-ink/45 mb-2.5">
-            Paso {activeStepIndex + 1} de 2
-          </span>
-          <div className="flex gap-1.5">
-            <div className={`h-[5px] rounded-full flex-1 transition-all duration-500 ${step === 'datos' ? 'bg-brand-sky' : 'bg-brand-sky/40'}`} />
-            <div className={`h-[5px] rounded-full flex-1 transition-all duration-500 ${step === 'movilidad' ? 'bg-brand-sky' : 'bg-line'}`} />
-          </div>
+        <div className="relative">
+          <h2 className="font-display font-black text-[34px] xl:text-[40px] leading-[1.05] tracking-tight mb-5">
+            Elegí tu carrera<br />con datos, no con dudas.
+          </h2>
+          <ul className="space-y-3.5">
+            {TRUST_POINTS.map(point => (
+              <li key={point} className="flex items-start gap-3 text-white/75 text-[15px] font-medium leading-snug">
+                <span className="shrink-0 mt-0.5 w-5 h-5 rounded-full bg-brand-lime/90 text-slate-950 flex items-center justify-center">
+                  <Check size={13} strokeWidth={3} />
+                </span>
+                {point}
+              </li>
+            ))}
+          </ul>
         </div>
 
-        <AnimatePresence mode="wait" custom={direction}>
+        <div className="relative max-w-[280px]">
+          <Progress step={step} dark />
+        </div>
+      </aside>
+
+      {/* Columna del formulario · la única visible en mobile.
+          overflow-y-auto local: si el contenido no entra (pantallas bajas),
+          scrollea esta columna, no toda la página. */}
+      <div className="flex-1 min-w-0 h-full overflow-y-auto">
+        <div className="min-h-full flex flex-col justify-center px-6 sm:px-10 lg:px-14 xl:px-20 py-10 lg:py-12">
+          <div className="w-full max-w-[540px] mx-auto lg:mx-0">
+
+            {/* Logo · solo mobile (en desktop vive en el panel de marca) */}
+            <div className="lg:hidden flex items-center gap-2.5 mb-8 text-ink">
+              <LogoIcon size={24} />
+              <span className="font-display font-bold text-[15px] tracking-tight">Vocaria</span>
+            </div>
+
+            {/* Progreso · solo mobile (en desktop vive en el panel de marca) */}
+            <div className="lg:hidden mb-9">
+              <Progress step={step} />
+            </div>
+
+            <AnimatePresence mode="wait" custom={direction}>
 
           {/* Paso 1: Datos */}
           {step === 'datos' && (
@@ -263,7 +336,9 @@ export default function ProfileCapture({ onStart }: ProfileCaptureProps) {
             </motion.div>
           )}
 
-        </AnimatePresence>
+            </AnimatePresence>
+          </div>
+        </div>
       </div>
     </div>
   );
