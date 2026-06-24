@@ -154,10 +154,10 @@ export default function TestRunner({ nombre, profile, onComplete }: TestRunnerPr
             <div className="flex items-center gap-1.5 font-display text-[10.5px] lg:text-[12px]">
               <span className="text-ink/55 font-semibold tabular-nums">
                 {isAdaptive
-                  ? `Afinando · ${adaptiveStep + 1} de ${adaptiveTotal}`
+                  ? 'Últimas preguntas de refinamiento'
                   : `Pregunta ${currentIndex + 1} de ${CORE_LENGTH}`}
               </span>
-              {firstName && (
+              {firstName && !isAdaptive && (
                 <span className="text-ink/30 font-medium hidden sm:inline">· {firstName}</span>
               )}
             </div>
