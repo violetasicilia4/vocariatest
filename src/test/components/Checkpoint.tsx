@@ -14,8 +14,8 @@ interface CheckpointCardProps {
   onContinue: () => void;
 }
 
-/** Tiempo total en pantalla antes de que la tarjeta se retire sola. */
-const HOLD_MS = 2500;
+/** Tiempo total en pantalla antes de que la pieza se retire sola (rápido). */
+const HOLD_MS = 1700;
 
 // Geometría del anillo — protagonista de la escena.
 const SIZE = 116;
@@ -63,10 +63,10 @@ export default function CheckpointCard({ checkpoint, onContinue }: CheckpointCar
     }
     const controls = animate(mv, to, {
       type: 'spring',
-      stiffness: 70,
-      damping: 18,
-      mass: 1,
-      delay: 0.18,
+      stiffness: 140,
+      damping: 20,
+      mass: 0.8,
+      delay: 0.08,
     });
     return () => {
       controls.stop();
@@ -94,25 +94,32 @@ export default function CheckpointCard({ checkpoint, onContinue }: CheckpointCar
     : { type: 'spring' as const, stiffness: 380, damping: 30, mass: 0.9 };
 
   return (
+    // Overlay que tapa la pantalla y se desvanece — la pieza vuelve al centro.
     <motion.div
-      role="status"
-      aria-live="polite"
-      aria-label={`${checkpoint.title}. ${to}% completado.`}
       onClick={onContinue}
-      initial={{ opacity: 0, y: reduceMotion ? 0 : 28, scale: reduceMotion ? 1 : 0.9 }}
-      animate={{ opacity: 1, y: 0, scale: 1 }}
-      exit={{ opacity: 0, y: reduceMotion ? 0 : 14, scale: reduceMotion ? 1 : 0.94 }}
-      transition={enter}
-      className="fixed z-[80] cursor-default transform-gpu will-change-transform
-                 bottom-[max(1.25rem,env(safe-area-inset-bottom))] left-1/2 -translate-x-1/2
-                 sm:left-auto sm:right-7 sm:bottom-7 sm:translate-x-0
-                 w-[300px] max-w-[calc(100vw-2rem)]"
+      initial={{ opacity: 0 }}
+      animate={{ opacity: 1 }}
+      exit={{ opacity: 0 }}
+      transition={{ duration: reduceMotion ? 0.2 : 0.3, ease: EASE }}
+      className="fixed inset-0 z-[80] flex items-center justify-center px-6
+                 bg-ink/30 backdrop-blur-md"
     >
+      {/* Tarjeta de cristal centrada. */}
+      <motion.div
+        role="status"
+        aria-live="polite"
+        aria-label={`${checkpoint.title}. ${to}% completado.`}
+        initial={{ opacity: 0, y: reduceMotion ? 0 : 18, scale: reduceMotion ? 1 : 0.9 }}
+        animate={{ opacity: 1, y: 0, scale: 1 }}
+        exit={{ opacity: 0, y: reduceMotion ? 0 : 8, scale: reduceMotion ? 1 : 0.96 }}
+        transition={enter}
+        className="relative w-[300px] max-w-[calc(100vw-3rem)] transform-gpu will-change-transform"
+      >
       {/* Resplandor difuso detrás del cristal — da aire y temperatura de marca. */}
       <div
         aria-hidden
         className="pointer-events-none absolute -inset-5 -z-10 rounded-[44px] opacity-80 blur-2xl
-                   bg-[radial-gradient(120%_120%_at_70%_0%,rgba(37,142,249,0.30),transparent_60%),radial-gradient(120%_120%_at_20%_100%,rgba(213,255,63,0.18),transparent_55%)]"
+                   bg-[radial-gradient(120%_120%_at_50%_0%,rgba(37,142,249,0.30),transparent_60%)]"
       />
 
       {/* Tarjeta de cristal: borde lumínico, blur, sombras en capas y reflejo superior. */}
@@ -140,14 +147,6 @@ export default function CheckpointCard({ checkpoint, onContinue }: CheckpointCar
           />
 
           <svg width={SIZE} height={SIZE} viewBox={`0 0 ${SIZE} ${SIZE}`} className="relative -rotate-90">
-            <defs>
-              <linearGradient id="cpRing" x1="0%" y1="0%" x2="100%" y2="100%">
-                <stop offset="0%" stopColor="#258ef9" />
-                <stop offset="55%" stopColor="#38bdf8" />
-                <stop offset="100%" stopColor="#a3e635" />
-              </linearGradient>
-            </defs>
-
             {/* Track grabado en el cristal. */}
             <circle
               cx={SIZE / 2}
@@ -158,13 +157,13 @@ export default function CheckpointCard({ checkpoint, onContinue }: CheckpointCar
               strokeWidth={STROKE}
             />
 
-            {/* Arco de progreso — gradiente sofisticado + luz propia. */}
+            {/* Arco de progreso — color estático de marca + luz propia. */}
             <motion.circle
               cx={SIZE / 2}
               cy={SIZE / 2}
               r={R}
               fill="none"
-              stroke="url(#cpRing)"
+              stroke="#258ef9"
               strokeWidth={STROKE}
               strokeLinecap="round"
               strokeDasharray={CIRC}
@@ -188,7 +187,7 @@ export default function CheckpointCard({ checkpoint, onContinue }: CheckpointCar
         <motion.div
           initial={{ opacity: 0, y: reduceMotion ? 0 : 8 }}
           animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: reduceMotion ? 0 : 0.5, duration: 0.5, ease: EASE }}
+          transition={{ delay: reduceMotion ? 0 : 0.32, duration: 0.4, ease: EASE }}
           className="mt-5"
         >
           <h3 className="font-display font-semibold text-[16px] text-ink tracking-tight leading-tight">
@@ -199,6 +198,7 @@ export default function CheckpointCard({ checkpoint, onContinue }: CheckpointCar
           </p>
         </motion.div>
       </div>
+      </motion.div>
     </motion.div>
   );
 }
