@@ -1,5 +1,6 @@
 import { useEffect, useMemo, useState } from 'react';
 import { motion, AnimatePresence, animate, useReducedMotion } from 'motion/react';
+import { Check } from 'lucide-react';
 import { SKY, EASE } from '../ui/theme';
 
 interface ProcessingScreenProps {
@@ -7,92 +8,86 @@ interface ProcessingScreenProps {
   onDone: () => void;
 }
 
+// Mensajes que transmiten una IA construyendo un perfil único (no "esperando").
 const STEPS = [
-  'Analizando tu forma de decidir',
-  'Cruzando con 130+ carreras',
-  'Identificando tu arquetipo',
-  'Generando tu resultado',
+  'Detectando patrones de personalidad',
+  'Identificando fortalezas dominantes',
+  'Comparando con 130+ carreras',
+  'Construyendo tu mapa profesional',
+  'Preparando resultados',
 ];
 
-// Procesamiento deliberado (~5.5s): largo para leerse como trabajo real y
-// lucir la animación, pero sin aburrir.
-const TOTAL_MS = 5500;
-const STEP_MS = TOTAL_MS / STEPS.length;
-const BLOOM_AT = TOTAL_MS - 700; // el núcleo "florece" justo antes de revelar.
+// Procesamiento deliberado (~6s): tiempo para que el descubrimiento respire.
+const TOTAL_MS = 6000;
+const BLOOM_AT = TOTAL_MS - 700; // el núcleo "florece" antes de revelar.
 
-// ── Geometría del orbe ────────────────────────────────────────────────────────
-// Tendencia "AI orb": una red radial dentro de un orbe de cristal. Anillos de
-// nodos que convergen hacia un núcleo central (la inteligencia resolviendo),
-// con pulsos viajando hacia adentro y partículas orbitando. Inspirado en los
-// loaders de IA actuales (orb glowing + partículas → centro).
-const SIZE = 248;
-const C = SIZE / 2;
-const ORB_R = 112;
-const RING_OUTER = 90;
-const RING_INNER = 50;
+// ── Geometría del orbe (espacio viewBox 0–100, resolución independiente) ──────
+// Red radial que converge a un centro donde vive el porcentaje (protagonista).
+// Inspiración: Apple Intelligence (orbe vivo), Linear/Stripe (sobriedad,
+// checklist), Raycast/Arc (glow sutil, profundidad).
+const C = 50;
+const ARC_R = 46; // anillo de progreso, casi al borde
+const RING_OUTER = 37;
+const RING_INNER = 22;
 const OUTER_N = 9;
 const INNER_N = 5;
+const ARC_CIRC = 2 * Math.PI * ARC_R;
 
 interface Pt { x: number; y: number; }
-interface Edge { a: Pt; b: Pt; ring: 'in' | 'core'; }
+interface NodeT extends Pt { threshold: number; rDot: number; }
+interface Edge { a: Pt; b: Pt; len: number; toCore: boolean; }
 
 function polar(radius: number, angleDeg: number): Pt {
   const a = (angleDeg * Math.PI) / 180;
   return { x: C + radius * Math.cos(a), y: C + radius * Math.sin(a) };
 }
+function dist(a: Pt, b: Pt) {
+  return Math.hypot(a.x - b.x, a.y - b.y);
+}
 
 function buildOrb() {
   const core: Pt = { x: C, y: C };
-  const inner: Pt[] = Array.from({ length: INNER_N }, (_, i) =>
-    polar(RING_INNER, (360 / INNER_N) * i - 90),
-  );
-  const outer: Pt[] = Array.from({ length: OUTER_N }, (_, i) =>
-    polar(RING_OUTER, (360 / OUTER_N) * i - 90 + 20),
-  );
+  const inner = Array.from({ length: INNER_N }, (_, i) => polar(RING_INNER, (360 / INNER_N) * i - 90));
+  const outer = Array.from({ length: OUTER_N }, (_, i) => polar(RING_OUTER, (360 / OUTER_N) * i - 90 + 20));
 
-  // Cada nodo externo se conecta a los 2 internos angularmente más cercanos
-  // (convergencia radial limpia, no una maraña).
+  // Activación progresiva: los externos primero (entra la señal), luego los
+  // internos; el último tramo queda para el "bloom" del centro.
+  const nodes: NodeT[] = [
+    ...outer.map((p, i) => ({ ...p, rDot: 1.7, threshold: 0.06 + (i / OUTER_N) * 0.5 })),
+    ...inner.map((p, i) => ({ ...p, rDot: 1.9, threshold: 0.58 + (i / INNER_N) * 0.32 })),
+  ];
+
+  // Conexiones: cada externo a sus 2 internos más cercanos; cada interno al core.
   const edges: Edge[] = [];
   outer.forEach((o) => {
-    const oa = Math.atan2(o.y - C, o.x - C);
-    const ranked = inner
-      .map((n) => {
-        const na = Math.atan2(n.y - C, n.x - C);
-        let d = Math.abs(na - oa);
-        if (d > Math.PI) d = 2 * Math.PI - d;
-        return { n, d };
-      })
-      .sort((p, q) => p.d - q.d);
-    ranked.slice(0, 2).forEach(({ n }) => edges.push({ a: o, b: n, ring: 'in' }));
+    [...inner]
+      .map((n) => ({ n, d: Math.abs(Math.atan2(n.y - C, n.x - C) - Math.atan2(o.y - C, o.x - C)) }))
+      .sort((p, q) => p.d - q.d)
+      .slice(0, 2)
+      .forEach(({ n }) => edges.push({ a: o, b: n, len: dist(o, n), toCore: false }));
   });
-  inner.forEach((n) => edges.push({ a: n, b: core, ring: 'core' }));
+  inner.forEach((n) => edges.push({ a: n, b: core, len: dist(n, core), toCore: true }));
 
-  return { core, inner, outer, edges };
+  return { core, nodes, edges };
 }
 
 export default function ProcessingScreen({ nombre, onDone }: ProcessingScreenProps) {
-  const [stepIndex, setStepIndex] = useState(0);
   const [pct, setPct] = useState(0);
   const [bloom, setBloom] = useState(false);
   const reduceMotion = useReducedMotion();
-
-  const { core, inner, outer, edges } = useMemo(buildOrb, []);
+  const { core, nodes, edges } = useMemo(buildOrb, []);
 
   useEffect(() => {
-    const steps = STEPS.map((_, i) => setTimeout(() => setStepIndex(i), i * STEP_MS));
     const bloomT = setTimeout(() => setBloom(true), reduceMotion ? 0 : BLOOM_AT);
     const done = setTimeout(onDone, TOTAL_MS + 350);
-
     const controls = reduceMotion
       ? (setPct(100), null)
       : animate(0, 100, {
           duration: TOTAL_MS / 1000,
-          ease: [0.4, 0, 0.2, 1],
+          ease: [0.33, 0, 0.2, 1],
           onUpdate: (v: number) => setPct(v),
         });
-
     return () => {
-      steps.forEach(clearTimeout);
       clearTimeout(bloomT);
       clearTimeout(done);
       controls?.stop();
@@ -100,232 +95,255 @@ export default function ProcessingScreen({ nombre, onDone }: ProcessingScreenPro
   }, [onDone, reduceMotion]);
 
   const rounded = Math.round(pct);
+  const frac = pct / 100;
+  const arcOffset = ARC_CIRC * (1 - frac);
+  const stageIndex = Math.min(STEPS.length - 1, Math.floor(frac * STEPS.length));
+  // Punta del arco de progreso (para el glow que lo persigue).
+  const tip = polar(ARC_R, -90 + frac * 360);
 
   return (
-    <div className="min-h-[100dvh] bg-paper flex flex-col items-center justify-center px-6">
-      <div className="w-full max-w-[340px] flex flex-col items-center">
-        <h2 className="font-display font-extrabold text-[22px] lg:text-[26px] text-ink text-center mb-9 tracking-tight leading-tight">
-          {nombre ? `Calculando tu perfil, ${nombre.split(' ')[0]}` : 'Calculando tu perfil'}
-        </h2>
+    <div className="min-h-[100dvh] bg-paper flex flex-col items-center justify-center px-6 py-10">
+      <div className="w-full max-w-[420px] flex flex-col items-center">
+        <motion.h2
+          initial={{ opacity: 0, y: 8 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.5, ease: EASE }}
+          className="font-display font-extrabold text-[20px] lg:text-[24px] text-ink text-center mb-8 sm:mb-10 tracking-tight leading-tight px-2"
+        >
+          {nombre ? `Construyendo tu perfil, ${nombre.split(' ')[0]}` : 'Construyendo tu perfil'}
+        </motion.h2>
 
-        {/* ── Orbe neuronal ──────────────────────────────────────────────── */}
-        <div className="relative" style={{ width: SIZE, height: SIZE }} aria-hidden="true">
-          {/* Glow externo suave (sky de marca). Respira despacio. */}
+        {/* ── Orbe (héroe) ───────────────────────────────────────────────── */}
+        <div
+          className="relative w-[clamp(260px,78vw,360px)] aspect-square"
+          aria-hidden="true"
+        >
+          {/* Glow externo que respira (Raycast/Arc vibe). */}
           <motion.div
             className="absolute rounded-full"
             style={{
-              inset: -14,
+              inset: '-7%',
               background:
-                'radial-gradient(circle at 50% 50%, rgba(37,142,249,0.20) 0%, rgba(37,142,249,0.07) 50%, transparent 72%)',
-              filter: 'blur(10px)',
+                'radial-gradient(circle at 50% 45%, rgba(37,142,249,0.22) 0%, rgba(37,142,249,0.08) 48%, transparent 72%)',
+              filter: 'blur(14px)',
             }}
-            animate={reduceMotion ? { opacity: 0.6 } : { opacity: [0.5, 0.8, 0.5], scale: [0.98, 1.03, 0.98] }}
-            transition={reduceMotion ? { duration: 0.4 } : { duration: 3, repeat: Infinity, ease: 'easeInOut' }}
+            animate={reduceMotion ? { opacity: 0.6 } : { opacity: [0.5, 0.85, 0.5], scale: [0.97, 1.04, 0.97] }}
+            transition={reduceMotion ? { duration: 0.4 } : { duration: 3.4, repeat: Infinity, ease: 'easeInOut' }}
           />
 
-          {/* Cuerpo del orbe: cristal frío con borde hairline (identidad landing). */}
+          {/* Cuerpo de cristal frío con borde hairline (identidad de la landing). */}
           <div
-            className="absolute rounded-full border border-line"
+            className="absolute inset-0 rounded-full border border-line"
             style={{
-              inset: (SIZE - ORB_R * 2) / 2,
-              background:
-                'radial-gradient(circle at 50% 38%, #ffffff 0%, #f6f9fd 58%, #eef3fa 100%)',
+              background: 'radial-gradient(circle at 50% 36%, #ffffff 0%, #f6f9fd 60%, #eaf1fb 100%)',
               boxShadow:
-                'inset 0 1px 1px rgba(255,255,255,0.9), inset 0 -10px 30px rgba(37,142,249,0.06), 0 16px 48px rgba(11,22,40,0.12)',
+                'inset 0 1px 2px rgba(255,255,255,0.9), inset 0 -14px 36px rgba(37,142,249,0.07), 0 22px 60px rgba(11,22,40,0.13)',
             }}
           />
 
-          {/* Anillo escáner que gira (sweep cónico) — el cliché AI-loader, en sky. */}
-          {!reduceMotion && (
-            <motion.div
-              className="absolute rounded-full"
-              style={{
-                inset: (SIZE - ORB_R * 2) / 2,
-                background:
-                  'conic-gradient(from 0deg, rgba(37,142,249,0) 0deg, rgba(37,142,249,0) 280deg, rgba(37,142,249,0.55) 350deg, rgba(37,142,249,0) 360deg)',
-                WebkitMaskImage:
-                  'radial-gradient(closest-side, transparent calc(100% - 4px), #000 calc(100% - 3px))',
-                maskImage:
-                  'radial-gradient(closest-side, transparent calc(100% - 4px), #000 calc(100% - 3px))',
-              }}
-              animate={{ rotate: 360 }}
-              transition={{ duration: 2.6, repeat: Infinity, ease: 'linear' }}
-            />
-          )}
+          {/* Red + anillo de progreso (viewBox 0–100, escala perfecto). */}
+          <svg viewBox="0 0 100 100" className="absolute inset-0 w-full h-full overflow-visible">
+            {/* Track del progreso */}
+            <circle cx={C} cy={C} r={ARC_R} fill="none" stroke="var(--color-line)" strokeWidth={1.4} />
 
-          {/* La red, recortada al orbe. */}
-          <div
-            className="absolute rounded-full overflow-hidden"
-            style={{ inset: (SIZE - ORB_R * 2) / 2 }}
-          >
-            <svg
-              width={ORB_R * 2}
-              height={ORB_R * 2}
-              viewBox={`${C - ORB_R} ${C - ORB_R} ${ORB_R * 2} ${ORB_R * 2}`}
-              className="overflow-visible"
-            >
-              {/* Conexiones base — hairline frío. */}
-              <g stroke={SKY} strokeWidth={1} strokeOpacity={0.12}>
-                {edges.map((e, i) => (
-                  <line key={`e${i}`} x1={e.a.x} y1={e.a.y} x2={e.b.x} y2={e.b.y} />
-                ))}
-              </g>
+            {/* Conexiones: se DIBUJAN al inicio (pathLength 0→1, escalonadas). */}
+            <g stroke={SKY} strokeWidth={0.6} strokeOpacity={0.16} strokeLinecap="round">
+              {edges.map((e, i) => (
+                <motion.line
+                  key={`e${i}`}
+                  x1={e.a.x} y1={e.a.y} x2={e.b.x} y2={e.b.y}
+                  initial={reduceMotion ? { pathLength: 1 } : { pathLength: 0 }}
+                  animate={{ pathLength: 1 }}
+                  transition={{ duration: 0.7, delay: reduceMotion ? 0 : 0.15 + i * 0.035, ease: EASE }}
+                />
+              ))}
+            </g>
 
-              {/* Pulsos de señal viajando HACIA el centro (convergencia). Los de
-                  los radios externos arrancan primero; los internos, con retraso
-                  → el flujo "entra" al núcleo en oleadas continuas. */}
-              {!reduceMotion &&
-                edges.map((e, i) => {
-                  const mx = (e.a.x + e.b.x) / 2;
-                  const my = (e.a.y + e.b.y) / 2;
-                  const delay = (e.ring === 'in' ? 0 : 0.5) + (i % 6) * 0.13;
-                  return (
-                    <motion.circle
-                      key={`p${i}`}
-                      r={2.4}
-                      fill={SKY}
-                      initial={{ opacity: 0 }}
-                      animate={{
-                        cx: [e.a.x, mx, e.b.x],
-                        cy: [e.a.y, my, e.b.y],
-                        opacity: [0, 0.95, 0],
-                      }}
-                      transition={{
-                        duration: 1.0,
-                        repeat: Infinity,
-                        repeatDelay: 0.5,
-                        ease: 'easeInOut',
-                        delay,
-                      }}
-                    />
-                  );
-                })}
-
-              {/* Partículas orbitando (dos grupos contrarrotantes → profundidad).
-                  Tendencia: partículas en trayectoria circular alrededor del núcleo. */}
-              {!reduceMotion &&
-                [
-                  { r: 70, n: 5, dur: 9, dir: 1, op: 0.5 },
-                  { r: 38, n: 4, dur: 6.5, dir: -1, op: 0.7 },
-                ].map((orbit, oi) => (
-                  <motion.g
-                    key={`orb${oi}`}
-                    style={{ transformOrigin: `${C}px ${C}px` }}
-                    animate={{ rotate: 360 * orbit.dir }}
-                    transition={{ duration: orbit.dur, repeat: Infinity, ease: 'linear' }}
-                  >
-                    {Array.from({ length: orbit.n }).map((_, j) => {
-                      const p = polar(orbit.r, (360 / orbit.n) * j);
-                      return <circle key={j} cx={p.x} cy={p.y} r={1.6} fill={SKY} fillOpacity={orbit.op} />;
-                    })}
-                  </motion.g>
-                ))}
-
-              {/* Nodos externos e internos — pulso suave en oleada radial. */}
-              {[...outer.map((p) => ({ p, r: 4.5, w: 0 }) ), ...inner.map((p) => ({ p, r: 5, w: 1 }))].map(
-                (node, i) => (
+            {/* Pulsos de señal viajando hacia el centro (convergencia continua). */}
+            {!reduceMotion &&
+              edges.map((e, i) => {
+                const mx = (e.a.x + e.b.x) / 2;
+                const my = (e.a.y + e.b.y) / 2;
+                const delay = 1 + (e.toCore ? 0.45 : 0) + (i % 6) * 0.14;
+                return (
                   <motion.circle
-                    key={`n${i}`}
-                    cx={node.p.x}
-                    cy={node.p.y}
-                    r={node.r}
-                    fill="#ffffff"
-                    stroke={SKY}
-                    strokeWidth={2}
-                    style={{ transformBox: 'fill-box', transformOrigin: 'center' }}
-                    animate={reduceMotion ? { scale: 1 } : { scale: [1, 1.3, 1], opacity: [0.8, 1, 0.8] }}
-                    transition={
-                      reduceMotion
-                        ? { duration: 0.3 }
-                        : {
-                            duration: 1.5,
-                            repeat: Infinity,
-                            repeatDelay: 0.3,
-                            ease: 'easeInOut',
-                            delay: (node.w === 1 ? 0.5 : 0) + (i % 4) * 0.12,
-                          }
-                    }
+                    key={`p${i}`}
+                    r={0.95}
+                    fill={SKY}
+                    initial={{ opacity: 0 }}
+                    animate={{ cx: [e.a.x, mx, e.b.x], cy: [e.a.y, my, e.b.y], opacity: [0, 0.95, 0] }}
+                    transition={{ duration: 1.0, repeat: Infinity, repeatDelay: 0.5, ease: 'easeInOut', delay }}
                   />
-                ),
-              )}
+                );
+              })}
 
-              {/* Halo del núcleo — palpita; al final "florece". */}
-              <motion.circle
-                cx={core.x}
-                cy={core.y}
-                fill={SKY}
-                fillOpacity={0.18}
-                style={{ transformBox: 'fill-box', transformOrigin: 'center' }}
-                animate={
-                  reduceMotion
-                    ? { scale: 1 }
-                    : bloom
-                      ? { scale: 3.2, opacity: 0 }
-                      : { scale: [1, 1.5, 1], opacity: [0.5, 0.9, 0.5] }
-                }
-                transition={
-                  reduceMotion
-                    ? { duration: 0.3 }
-                    : bloom
-                      ? { duration: 0.7, ease: EASE }
-                      : { duration: 1.6, repeat: Infinity, ease: 'easeInOut' }
-                }
-                r={14}
-              />
+            {/* Partículas orbitando (dos grupos contrarrotantes → profundidad). */}
+            {!reduceMotion &&
+              [
+                { r: 30, n: 5, dur: 11, dir: 1, op: 0.45 },
+                { r: 15, n: 4, dur: 7.5, dir: -1, op: 0.6 },
+              ].map((o, oi) => (
+                <motion.g
+                  key={`o${oi}`}
+                  style={{ transformOrigin: '50px 50px' }}
+                  animate={{ rotate: 360 * o.dir }}
+                  transition={{ duration: o.dur, repeat: Infinity, ease: 'linear' }}
+                >
+                  {Array.from({ length: o.n }).map((_, j) => {
+                    const p = polar(o.r, (360 / o.n) * j);
+                    return <circle key={j} cx={p.x} cy={p.y} r={0.7} fill={SKY} fillOpacity={o.op} />;
+                  })}
+                </motion.g>
+              ))}
 
-              {/* Núcleo (la "respuesta"): navy sólido que crece al florecer. */}
-              <motion.circle
-                cx={core.x}
-                cy={core.y}
-                r={9}
-                fill={SKY}
-                style={{
-                  transformBox: 'fill-box',
-                  transformOrigin: 'center',
-                  filter: 'drop-shadow(0 2px 10px rgba(37,142,249,0.55))',
-                }}
-                animate={reduceMotion ? { scale: 1 } : bloom ? { scale: 1.6 } : { scale: [1, 1.12, 1] }}
-                transition={
-                  reduceMotion
-                    ? { duration: 0.3 }
-                    : bloom
-                      ? { duration: 0.6, ease: EASE }
-                      : { duration: 1.6, repeat: Infinity, ease: 'easeInOut' }
-                }
-              />
-            </svg>
-          </div>
+            {/* Nodos: entran y se ACTIVAN según el progreso real (color + glow). */}
+            {nodes.map((n, i) => {
+              const active = frac >= n.threshold;
+              return (
+                <motion.circle
+                  key={`n${i}`}
+                  cx={n.x}
+                  cy={n.y}
+                  r={n.rDot}
+                  fill="#ffffff"
+                  stroke={SKY}
+                  strokeWidth={0.9}
+                  style={{
+                    transformBox: 'fill-box',
+                    transformOrigin: 'center',
+                    filter: active ? 'drop-shadow(0 0 2.5px rgba(37,142,249,0.7))' : 'none',
+                  }}
+                  initial={reduceMotion ? { scale: 1, opacity: 1 } : { scale: 0, opacity: 0 }}
+                  animate={{
+                    scale: active ? 1.18 : 1,
+                    opacity: 1,
+                    strokeOpacity: active ? 1 : 0.32,
+                  }}
+                  transition={{
+                    scale: { type: 'spring', stiffness: 320, damping: 18 },
+                    opacity: { duration: 0.5, delay: reduceMotion ? 0 : 0.2 + i * 0.045, ease: EASE },
+                    strokeOpacity: { duration: 0.4, ease: EASE },
+                  }}
+                />
+              );
+            })}
+
+            {/* Arco de progreso (determinado): el "progreso real". */}
+            <circle
+              cx={C}
+              cy={C}
+              r={ARC_R}
+              fill="none"
+              stroke={SKY}
+              strokeWidth={1.8}
+              strokeLinecap="round"
+              strokeDasharray={ARC_CIRC}
+              strokeDashoffset={arcOffset}
+              transform={`rotate(-90 ${C} ${C})`}
+              style={{ filter: 'drop-shadow(0 0 2px rgba(37,142,249,0.45))' }}
+            />
+            {/* Glow en la punta del arco. */}
+            {!reduceMotion && pct > 1 && pct < 99.5 && (
+              <circle cx={tip.x} cy={tip.y} r={1.7} fill="#fff" stroke={SKY} strokeWidth={1} style={{ filter: 'drop-shadow(0 0 3px rgba(37,142,249,0.9))' }} />
+            )}
+          </svg>
+
+          {/* Halo del centro (detrás del número): palpita y al final florece. */}
+          <motion.div
+            className="absolute left-1/2 top-1/2 rounded-full"
+            style={{
+              width: '46%',
+              height: '46%',
+              x: '-50%',
+              y: '-50%',
+              background: 'radial-gradient(circle, rgba(37,142,249,0.30) 0%, rgba(37,142,249,0.10) 50%, transparent 72%)',
+              filter: 'blur(4px)',
+            }}
+            animate={
+              reduceMotion
+                ? { opacity: 0.6 }
+                : bloom
+                  ? { scale: 2.4, opacity: 0 }
+                  : { scale: [1, 1.18, 1], opacity: [0.55, 0.9, 0.55] }
+            }
+            transition={
+              reduceMotion
+                ? { duration: 0.4 }
+                : bloom
+                  ? { duration: 0.7, ease: EASE }
+                  : { duration: 2, repeat: Infinity, ease: 'easeInOut' }
+            }
+          />
+
+          {/* PORCENTAJE — protagonista, dentro del orbe. */}
+          <motion.div
+            className="absolute inset-0 flex flex-col items-center justify-center"
+            animate={reduceMotion ? {} : bloom ? { scale: 1.06 } : { scale: 1 }}
+            transition={{ duration: 0.6, ease: EASE }}
+          >
+            <div className="flex items-start font-display font-black text-ink tracking-tighter tabular-nums leading-none">
+              <span className="text-[clamp(48px,15vw,68px)]">{rounded}</span>
+              <span className="text-[clamp(20px,5vw,26px)] font-extrabold text-ink/55 mt-[0.45em] ml-0.5">%</span>
+            </div>
+            <span className="mt-1 text-[10.5px] sm:text-[11px] font-bold uppercase tracking-[0.18em] text-sky-deep/70">
+              {bloom ? 'Listo' : 'Analizando'}
+            </span>
+          </motion.div>
         </div>
 
-        {/* Barra de progreso fina + etapa + % (sobrio, deja claro que avanza). */}
-        <div className="mt-9 w-full max-w-[260px]">
-          <div className="h-[3px] w-full rounded-full bg-line overflow-hidden">
-            <motion.div
-              className="h-full rounded-full"
-              style={{ background: SKY }}
-              animate={{ width: `${pct}%` }}
-              transition={{ duration: 0.2, ease: 'linear' }}
-            />
-          </div>
-          <div className="mt-3.5 flex items-center justify-between gap-3">
-            <div className="h-5 overflow-hidden flex-1">
-              <AnimatePresence mode="wait">
-                <motion.p
-                  key={stepIndex}
-                  initial={{ opacity: 0, y: 6 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  exit={{ opacity: 0, y: -6 }}
-                  transition={{ duration: 0.3, ease: EASE }}
-                  className="text-ink/55 text-[12.5px] font-medium tracking-wide leading-none"
+        {/* ── Checklist animado (Linear/Stripe) ──────────────────────────── */}
+        <div className="mt-9 sm:mt-10 w-full max-w-[300px] flex flex-col gap-2.5">
+          {STEPS.map((label, i) => {
+            const done = i < stageIndex || (bloom && i === stageIndex);
+            const current = i === stageIndex && !done;
+            const pending = i > stageIndex;
+            return (
+              <motion.div
+                key={label}
+                className="flex items-center gap-3"
+                animate={{ opacity: pending ? 0.4 : 1 }}
+                transition={{ duration: 0.4, ease: EASE }}
+              >
+                <span
+                  className="relative shrink-0 w-[20px] h-[20px] rounded-full flex items-center justify-center transition-colors duration-300"
+                  style={{
+                    background: done ? SKY : 'transparent',
+                    border: done ? `1px solid ${SKY}` : current ? `1px solid ${SKY}` : '1px solid var(--color-line-strong)',
+                  }}
                 >
-                  {STEPS[stepIndex]}
-                </motion.p>
-              </AnimatePresence>
-            </div>
-            <span className="text-ink/40 text-[12.5px] font-semibold tabular-nums leading-none shrink-0">
-              {rounded}%
-            </span>
-          </div>
+                  <AnimatePresence mode="wait">
+                    {done ? (
+                      <motion.span
+                        key="check"
+                        initial={{ scale: 0 }}
+                        animate={{ scale: 1 }}
+                        transition={{ type: 'spring', stiffness: 500, damping: 22 }}
+                      >
+                        <Check size={12} strokeWidth={3} className="text-white" />
+                      </motion.span>
+                    ) : current ? (
+                      <motion.span
+                        key="dot"
+                        className="w-[7px] h-[7px] rounded-full"
+                        style={{ background: SKY }}
+                        animate={{ scale: [1, 1.5, 1], opacity: [1, 0.5, 1] }}
+                        transition={{ duration: 1.2, repeat: Infinity, ease: 'easeInOut' }}
+                      />
+                    ) : (
+                      <span key="empty" className="w-[6px] h-[6px] rounded-full bg-line-strong" />
+                    )}
+                  </AnimatePresence>
+                </span>
+                <span
+                  className={`font-display text-[13px] sm:text-[13.5px] leading-snug transition-colors duration-300 ${
+                    current ? 'text-ink font-semibold' : done ? 'text-ink/70 font-medium' : 'text-ink/45 font-medium'
+                  }`}
+                >
+                  {label}
+                </span>
+              </motion.div>
+            );
+          })}
         </div>
       </div>
     </div>
