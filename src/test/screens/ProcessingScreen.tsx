@@ -212,7 +212,7 @@ export default function ProcessingScreen({ nombre, onDone }: ProcessingScreenPro
 
         {/* ── Mensaje vivo (cambia con calma, sin números) ───────────────── */}
         <div
-          className="relative mt-[clamp(1.5rem,5vh,3rem)] h-6 flex items-center justify-center"
+          className="relative w-full mt-[clamp(1.5rem,5vh,3rem)] h-6 flex items-center justify-center"
           aria-live="polite"
         >
           {/* Sin mode="wait": el saliente y el entrante cruzan en simultáneo
