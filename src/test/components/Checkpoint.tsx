@@ -53,6 +53,11 @@ export default function CheckpointCard({ checkpoint, onContinue }: CheckpointCar
   const dashOffset = useTransform(mv, (v) => CIRC * (1 - v / 100));
   const [display, setDisplay] = useState(from);
 
+  // Punto líder: viaja por la punta del arco para sugerir "lectura en vivo".
+  // Ángulo medido desde arriba (−90°) y avanzando en sentido horario.
+  const dotX = useTransform(mv, (v) => SIZE / 2 + R * Math.cos((v / 100) * Math.PI * 2 - Math.PI / 2));
+  const dotY = useTransform(mv, (v) => SIZE / 2 + R * Math.sin((v / 100) * Math.PI * 2 - Math.PI / 2));
+
   // Mientras el anillo "calcula" titila; cuando el valor aterriza, se aquieta.
   const [settled, setSettled] = useState(reduceMotion);
 
@@ -137,7 +142,38 @@ export default function CheckpointCard({ checkpoint, onContinue }: CheckpointCar
       >
         {/* ── Anillo (héroe) ─────────────────────────────────────────── */}
         <div className="relative" style={{ width: SIZE, height: SIZE }}>
-          <svg width={SIZE} height={SIZE} viewBox={`0 0 ${SIZE} ${SIZE}`} className="relative -rotate-90">
+          {/* Halo circular detrás del anillo — respira mientras "procesa".
+              Es un círculo difuso (no la sombra del SVG), así nunca se recorta
+              en cuadrado. Al aterrizar el valor, se calma. */}
+          <motion.div
+            aria-hidden
+            className="pointer-events-none absolute rounded-full"
+            style={{
+              inset: -10,
+              background:
+                'radial-gradient(circle at 50% 50%, rgba(143,196,15,0.45) 0%, rgba(143,196,15,0.18) 42%, transparent 70%)',
+              filter: 'blur(8px)',
+            }}
+            animate={
+              reduceMotion || settled
+                ? { opacity: 0.45, scale: 1 }
+                : { opacity: [0.35, 0.7, 0.45, 0.62, 0.35], scale: [0.96, 1.04, 0.99, 1.03, 0.96] }
+            }
+            transition={
+              reduceMotion || settled
+                ? { duration: 0.5, ease: EASE }
+                : { duration: 1.9, times: [0, 0.3, 0.55, 0.78, 1], repeat: Infinity, ease: 'easeInOut' }
+            }
+          />
+
+          {/* overflow-visible: el resplandor del arco sigue la forma del trazo
+              en vez de recortarse contra la caja cuadrada del SVG. */}
+          <svg
+            width={SIZE}
+            height={SIZE}
+            viewBox={`0 0 ${SIZE} ${SIZE}`}
+            className="relative -rotate-90 overflow-visible"
+          >
             {/* Track — mismo gris frío que las barras del test. */}
             <circle
               cx={SIZE / 2}
@@ -148,10 +184,8 @@ export default function CheckpointCard({ checkpoint, onContinue }: CheckpointCar
               strokeWidth={STROKE}
             />
 
-            {/* Arco de progreso — verde Vocaria, un punto más profundo para que
-                resalte sobre el blanco, con luz propia. Mientras "piensa", el
-                brillo titila de forma irregular (no rítmica → se lee orgánico);
-                al aterrizar el valor, queda firme. */}
+            {/* Arco de progreso — verde Vocaria. Mientras "piensa", la luz del
+                trazo late de forma irregular; al aterrizar, queda firme. */}
             <motion.circle
               cx={SIZE / 2}
               cy={SIZE / 2}
@@ -164,18 +198,15 @@ export default function CheckpointCard({ checkpoint, onContinue }: CheckpointCar
               style={{ strokeDashoffset: dashOffset }}
               animate={
                 reduceMotion || settled
-                  ? {
-                      opacity: 1,
-                      filter: 'drop-shadow(0 1px 6px rgba(120,170,15,0.55))',
-                    }
+                  ? { opacity: 1, filter: 'drop-shadow(0 0 4px rgba(143,196,15,0.5))' }
                   : {
-                      opacity: [1, 0.78, 0.95, 0.82, 1],
+                      opacity: [1, 0.85, 0.97, 0.88, 1],
                       filter: [
-                        'drop-shadow(0 1px 6px rgba(120,170,15,0.45))',
-                        'drop-shadow(0 1px 11px rgba(120,170,15,0.85))',
-                        'drop-shadow(0 1px 7px rgba(120,170,15,0.55))',
-                        'drop-shadow(0 1px 10px rgba(120,170,15,0.78))',
-                        'drop-shadow(0 1px 6px rgba(120,170,15,0.45))',
+                        'drop-shadow(0 0 3px rgba(143,196,15,0.4))',
+                        'drop-shadow(0 0 8px rgba(143,196,15,0.85))',
+                        'drop-shadow(0 0 5px rgba(143,196,15,0.55))',
+                        'drop-shadow(0 0 7px rgba(143,196,15,0.78))',
+                        'drop-shadow(0 0 3px rgba(143,196,15,0.4))',
                       ],
                     }
               }
@@ -183,6 +214,37 @@ export default function CheckpointCard({ checkpoint, onContinue }: CheckpointCar
                 reduceMotion || settled
                   ? { duration: 0.4, ease: EASE }
                   : { duration: 1.3, times: [0, 0.28, 0.52, 0.76, 1], repeat: Infinity, ease: 'easeInOut' }
+              }
+            />
+          </svg>
+
+          {/* Punto líder en la punta del arco — viaja con el progreso y palpita,
+              como un cabezal de lectura. Se desvanece cuando el valor se fija. */}
+          <svg
+            width={SIZE}
+            height={SIZE}
+            viewBox={`0 0 ${SIZE} ${SIZE}`}
+            className="absolute inset-0 overflow-visible pointer-events-none"
+          >
+            <motion.circle
+              cx={dotX}
+              cy={dotY}
+              r={STROKE / 2 + 1}
+              fill="#ffffff"
+              stroke="#8fc40f"
+              strokeWidth={2}
+              style={{
+                filter: 'drop-shadow(0 0 6px rgba(143,196,15,0.95))',
+                transformBox: 'fill-box',
+                transformOrigin: 'center',
+              }}
+              animate={
+                reduceMotion ? { opacity: 0 } : settled ? { opacity: 0, scale: 0.6 } : { opacity: [0.9, 1, 0.9], scale: [0.85, 1.15, 0.85] }
+              }
+              transition={
+                reduceMotion || settled
+                  ? { duration: 0.4, ease: EASE }
+                  : { duration: 0.7, repeat: Infinity, ease: 'easeInOut' }
               }
             />
           </svg>
