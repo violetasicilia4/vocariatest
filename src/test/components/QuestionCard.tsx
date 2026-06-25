@@ -64,12 +64,11 @@ export default function QuestionCard({ question, onAnswer, currentAnswer, onBack
     // para ocupar el ancho en desktop sin romper la continuidad de lectura.
     // Es el patrón que mejor lee en quizzes de escritorio (Typeform / 16personalities).
     <div className="w-full flex flex-col flex-1 min-h-0">
-      {/* Bloque enunciado + opciones, centrado vertical en el espacio libre.
-          Antes el enunciado quedaba arriba y un mt-auto empujaba el botón al
-          fondo, dejando un hueco grande en desktop. Centrarlo reparte el aire
-          arriba y abajo y la pregunta queda equilibrada en cualquier alto de
-          pantalla, sin tocar el comportamiento en mobile. */}
-      <div className="flex-1 min-h-0 flex flex-col justify-center py-4">
+      {/* Bloque enunciado + opciones, anclado hacia arriba con un margen
+          superior proporcional al alto (no centrado): así la pregunta arranca
+          cerca de la barra de avance y no queda flotando en el medio con mucho
+          aire arriba. El botón sigue anclado abajo en posición estable. */}
+      <div className="flex-1 min-h-0 flex flex-col justify-start pt-[clamp(0.5rem,6vh,4rem)] pb-4">
         {/* Banda de enunciado de alto fijo: el texto se ancla abajo (justify-end),
             así preguntas de 2 o 3 líneas terminan a la MISMA altura y las opciones
             siempre arrancan en el mismo Y, sin saltos al cambiar de pregunta. */}
