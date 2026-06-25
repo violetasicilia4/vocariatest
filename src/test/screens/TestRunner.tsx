@@ -175,7 +175,7 @@ export default function TestRunner({ nombre, profile, onComplete }: TestRunnerPr
       {/* Cuerpo de la pregunta — centrado vertical y horizontalmente; clipea el
           eje X para que las transiciones no produzcan scroll lateral. */}
       <main className="flex-1 min-h-0 overflow-y-auto overflow-x-hidden flex flex-col">
-        <div className="mx-auto w-full max-w-[860px] xl:max-w-[980px] px-5 lg:px-12 pt-[clamp(0.5rem,2vh,2rem)] pb-3 lg:pb-6 flex-1 flex flex-col min-h-0">
+        <div className="mx-auto w-full max-w-[860px] xl:max-w-[980px] px-5 lg:px-12 pt-[clamp(0.125rem,1vh,0.75rem)] sm:pt-[clamp(0.5rem,2vh,2rem)] pb-2 sm:pb-3 lg:pb-6 flex-1 flex flex-col min-h-0">
           <AnimatePresence mode="wait" custom={direction}>
             <motion.div
               key={currentQuestion?.id}

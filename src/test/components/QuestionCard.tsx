@@ -68,8 +68,8 @@ export default function QuestionCard({ question, onAnswer, currentAnswer, onBack
           ancla abajo (justify-end), así preguntas de 2 o 3 líneas terminan a la
           MISMA altura y las opciones siempre arrancan en el mismo Y, sin saltos
           al cambiar de pregunta. */}
-      <div className="shrink-0 pt-[clamp(0.5rem,5vh,4rem)]">
-        <div className="min-h-[56px] sm:min-h-[80px] lg:min-h-[92px] xl:min-h-[104px] flex flex-col justify-end mb-3 sm:mb-6 lg:mb-8 text-center max-w-[820px] mx-auto">
+      <div className="shrink-0 pt-[clamp(0.25rem,2vh,1.25rem)] sm:pt-[clamp(0.5rem,5vh,4rem)]">
+        <div className="min-h-[40px] sm:min-h-[80px] lg:min-h-[92px] xl:min-h-[104px] flex flex-col justify-end mb-2 sm:mb-6 lg:mb-8 text-center max-w-[820px] mx-auto">
           <h2 className="font-display font-bold text-[20px] sm:text-[26px] lg:text-[34px] xl:text-[38px] text-ink leading-[1.14] tracking-tight text-balance">
             {question.enunciado}
           </h2>
