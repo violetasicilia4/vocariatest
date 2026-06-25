@@ -77,7 +77,10 @@ stack traces) y validadores de input.
 - Normalización de email + límites de longitud antes de insertar en Supabase.
 - Validación de tamaño/forma de payload en los endpoints (`api/_lib.ts`).
 
-**Pendiente (servidor):**
+**Pendiente (servidor) — diferido a propósito hasta tener dominio propio:**
+Decisión: el rate limiting y el captcha server-side se implementan **cuando haya
+dominio** (antes de abrir tráfico real). Hasta entonces la defensa es la del
+lado cliente/validación de arriba. Cuando se retome:
 - Rate limiting por IP en las funciones serverless (p. ej. Upstash Redis) — **no implementado**.
 - Cloudflare Turnstile / captcha en formularios públicos — **no implementado**.
 - Anti-abuso del INSERT anónimo de Supabase (la anon key permite inserts ilimitados).
