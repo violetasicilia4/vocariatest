@@ -35,3 +35,24 @@ Confiable, clara, premium-accesible. Tono directo y honesto, sin exageración. N
 ## Accessibility & Inclusion
 
 WCAG AA. Reduced motion respetado. Texto con contraste adecuado en todos los fondos (especialmente sobre los gradientes del hero y la sección dark). Interactividad accesible por teclado en FAQ y MuestraTest.
+
+## Pendientes
+
+### Mercado Pago (no productivo)
+
+El cobro con Mercado Pago **NO está integrado de forma productiva**. El código está aislado y documentado (`src/services/payments.ts`, `api/create-preference.ts`, `api/verify-payment.ts`, `api/mp-webhook.ts`) pero requiere endurecerse antes de cobrar de verdad. Mantener `VITE_PAYMENTS_ENABLED=false`. Checklist (ver `TODO(mp)` en el código):
+
+- Validación server-side del pago (estado + autenticidad del webhook con `x-signature`).
+- Comparación de `external_reference` contra el pedido pendiente del usuario.
+- Validación de **monto** contra el precio del plan (un pago por menos no debe desbloquear el informe).
+- Validación de **plan** (`metadata.plan_id` conocido y coincidente).
+- Webhook confiable: idempotencia + uso de `SUPABASE_SERVICE_KEY` (no la anon key).
+- Persistencia segura de compras (tabla `purchases` con RLS, sólo server-side).
+- Manejo de estados de pago (pending → approved → refunded/charged_back).
+- El frontend nunca debe aprobar un pago a partir de parámetros de la URL sin verificación server-side (ya endurecido en `PaymentReturn.tsx`).
+
+### Otros
+
+- Anti-abuso del INSERT anónimo de Supabase (rate-limiting / captcha si aparece spam).
+- `noUncheckedIndexedAccess` / `exactOptionalPropertyTypes` en TS (mejora gradual de tipos).
+- Optimización del asset `clear_blue_sky` (~353 KB) si se busca mejorar el LCP.

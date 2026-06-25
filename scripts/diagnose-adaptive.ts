@@ -11,7 +11,11 @@
  *   - RESOLUCIÓN:    brecha top1-top2 y confianza, antes vs después.
  *   - SENSIBILIDAD:  % de cambios de arquetipo al alterar UNA respuesta núcleo.
  *
- * Uso: npx tsx scripts/diagnose-adaptive.ts
+ * Uso: npm run diagnose:adaptive   (o: npx tsx scripts/diagnose-adaptive.ts)
+ *
+ * Terminación: bucles con cota fija (N, restarts, SAMPLE) y selección adaptativa
+ * acotada por MAX_QUESTIONS — sin loops infinitos. Corre en ~14 s. Imprime
+ * progreso por stderr.
  */
 
 import { calcularResultado } from '../src/test/engine/scorer';
@@ -163,7 +167,11 @@ out();
 
 const setupRng = mulberry32(777);
 const ideals: Record<string, Record<string, string>> = Object.create(null);
-for (const arq of ARQUETIPOS) ideals[arq.id] = idealAnswersFor(arq.id, setupRng);
+let setupIdx = 0;
+for (const arq of ARQUETIPOS) {
+  console.error(`  [progreso] patrón ideal ${++setupIdx}/${ARQUETIPOS.length} (${arq.id})…`);
+  ideals[arq.id] = idealAnswersFor(arq.id, setupRng);
+}
 
 function noisyAnswers(ideal: Record<string, string>, fidelity: number, rng: () => number) {
   const answers: Record<string, string> = {};
@@ -188,6 +196,7 @@ let primaryChangedByAdaptive = 0;
 const users: Array<{ core: Record<string, string>; trueArq: string | null }> = [];
 
 for (let i = 0; i < N; i++) {
+  if (i % 2500 === 0) console.error(`  [progreso] simulación ${i}/${N}…`);
   const isTyped = i < N * 0.6;
   const trueArq = isTyped ? arqIds[i % arqIds.length] : null;
   const core = isTyped ? noisyAnswers(ideals[trueArq!], 0.6, rng) : randomCoreAnswers(rng);

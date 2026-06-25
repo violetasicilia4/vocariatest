@@ -8,7 +8,11 @@
  *   4. CONFIANZA          — distribución real del % de confianza.
  *   5. SENSIBILIDAD       — cambiar UNA respuesta al azar: ¿con qué frecuencia cambia el arquetipo primario?
  *
- * Uso: npx tsx scripts/diagnose.ts
+ * Uso: npm run diagnose   (o: npx tsx scripts/diagnose.ts)
+ *
+ * Terminación: todos los bucles tienen cota fija (N_RANDOM, N_MIX, restarts) —
+ * no hay recursión sin fondo ni `while(true)`. Corre en ~20 s en una laptop.
+ * Imprime progreso por stderr para que se note que avanza (no está colgado).
  */
 
 import { calcularResultado, type ScoringResult } from '../src/test/engine/scorer';
@@ -201,7 +205,9 @@ out('─────────────────────────
 
 const ideals: Record<string, Record<string, string>> = Object.create(null);
 const idealRng = mulberry32(777);
+let idealIdx = 0;
 for (const arq of ARQUETIPOS) {
+  console.error(`  [progreso] búsqueda ideal ${++idealIdx}/${ARQUETIPOS.length} (${arq.id})…`);
   const { answers, result } = idealAnswersFor(arq.id, idealRng);
   ideals[arq.id] = answers;
   const rank = result.ranking.findIndex(r => r.id === arq.id) + 1;
@@ -235,6 +241,7 @@ const mixResults: { answers: Record<string, string>; result: ScoringResult }[] =
   const rng = mulberry32(5678);
   const arqIds = ARQUETIPOS.map(a => a.id);
   for (let i = 0; i < N_MIX; i++) {
+    if (i % 2500 === 0) console.error(`  [progreso] población mixta ${i}/${N_MIX}…`);
     const answers =
       i < N_MIX * 0.6
         ? noisyAnswers(ideals[arqIds[i % arqIds.length]], 0.6, rng)

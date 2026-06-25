@@ -21,6 +21,23 @@
       ]
     },
     "allowImportingTsExtensions": true,
-    "noEmit": true
+    "noEmit": true,
+
+    // ── Seguridad de tipos ──────────────────────────────────────────────────
+    // `strict` activa noImplicitAny, strictNullChecks, etc. El proyecto ya
+    // compila limpio con todo esto activado.
+    "strict": true,
+    "noUnusedLocals": true,
+    "noUnusedParameters": true,
+    "noFallthroughCasesInSwitch": true,
+    "forceConsistentCasingInFileNames": true,
+
+    // ── Pendiente (mejora gradual) ──────────────────────────────────────────
+    // `noUncheckedIndexedAccess` agrega ~147 errores: el motor usa mucho acceso
+    // indexado garantizado por construcción (ranking[0], activos[1]). Activarlo
+    // exige guardas reales en todo el engine; se deja como paso futuro.
+    // `exactOptionalPropertyTypes` agrega ~18 errores; también diferido.
+    "noUncheckedIndexedAccess": false,
+    "exactOptionalPropertyTypes": false
   }
 }

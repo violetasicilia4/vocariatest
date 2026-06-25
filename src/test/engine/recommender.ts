@@ -25,24 +25,6 @@ export interface CarreraRecomendada {
 // Helpers
 // ---------------------------------------------------------------------------
 
-function parseDuracionAnios(duracion: string | undefined | null): number | null {
-  if (!duracion) return null;
-  const m = duracion.match(/^(\d+(?:\.\d+)?)\s*años?/i);
-  return m ? parseFloat(m[1]) : null;
-}
-
-function duracionCompatible(entry: CarreraEntry, preferencia?: string): boolean {
-  if (!preferencia || preferencia === 'nose') return true;
-  const anios = entry.universidades
-    .map(u => parseDuracionAnios(u.duracion))
-    .find((a): a is number => a !== null);
-  if (anios == null) return true;
-  if (preferencia === 'corta') return anios <= 3;
-  if (preferencia === 'media') return anios > 3 && anios <= 5;
-  if (preferencia === 'larga') return anios >= 5;
-  return true;
-}
-
 function filtrarUniversidadesPorProvincia(
   entry: CarreraEntry,
   provinciasDisponibles: string[],

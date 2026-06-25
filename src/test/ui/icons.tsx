@@ -9,7 +9,7 @@
 import type { LucideIcon } from 'lucide-react';
 import {
   Microscope, Handshake, Pencil, DraftingCompass, Leaf, Mic, Map, Wrench,
-  MessagesSquare, Search, Palette, Sprout, UserRound, TrendingUp, Cog,
+  MessagesSquare, Search, Palette, Sprout, UserRound, TrendingUp,
   Lightbulb, Drama, Scale, Telescope, Globe, Settings2, Plane, House,
   HelpCircle, Target, BarChart3, Stethoscope, Building2, PenLine, Compass,
   Hammer, ShieldCheck,

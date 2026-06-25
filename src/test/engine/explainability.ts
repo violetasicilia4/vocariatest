@@ -11,7 +11,9 @@ export interface CarreraExplicacion {
 
 interface ExplicacionTemplate {
   razon: (primario: string, secundario: string | null) => string;
-  alerta?: (antipatrones: string[], preferences: CareerPreferences, provinceAvailable: boolean) => string | null;
+  // Algunos templates no tienen alerta: aceptamos `null` además de la función
+  // y de `undefined` para no obligar a escribir una función que siempre devuelve null.
+  alerta?: ((antipatrones: string[], preferences: CareerPreferences, provinceAvailable: boolean) => string | null) | null;
 }
 
 const TEMPLATES: Record<string, ExplicacionTemplate> = {
@@ -34,7 +36,7 @@ const TEMPLATES: Record<string, ExplicacionTemplate> = {
   },
 
   "Psicología": {
-    razon: (p) =>
+    razon: () =>
       `Aparece porque combinás orientación genuina hacia el bienestar de personas con tu capacidad de escucha — dos pilares centrales de la práctica clínica.`,
     alerta: (anti, prefs) =>
       anti.includes('soledad') && prefs.personas < 50
@@ -63,7 +65,7 @@ const TEMPLATES: Record<string, ExplicacionTemplate> = {
   },
 
   "Educación física y deporte": {
-    razon: (p) =>
+    razon: () =>
       `Aparece porque combinás energía interpersonal con motivación por el bienestar físico — el corazón de las carreras deportivas y de actividad física.`,
     alerta: (anti) =>
       anti.includes('exposicion')
@@ -121,7 +123,7 @@ const TEMPLATES: Record<string, ExplicacionTemplate> = {
   "Arte música teatro y audiovisual": {
     razon: (p) =>
       `Aparece porque tu perfil de ${p} prioriza la expresión personal y la creación de obra con sello propio — lo que define las carreras artísticas.`,
-    alerta: (anti, prefs) =>
+    alerta: (_anti, prefs) =>
       prefs.ingresos > 70
         ? 'Las carreras artísticas tienen trayectorias económicas más variables. El informe completo te muestra qué especializaciones tienen mayor empleabilidad.'
         : null,
@@ -255,7 +257,7 @@ const TEMPLATES: Record<string, ExplicacionTemplate> = {
   "Filosofía historia y humanidades": {
     razon: (p) =>
       `Aparece porque tu perfil de ${p} tiene una orientación profunda hacia el pensamiento crítico y la comprensión de los sistemas culturales e históricos.`,
-    alerta: (anti, prefs) =>
+    alerta: (_anti, prefs) =>
       prefs.ingresos > 65
         ? 'Las humanidades tienen salidas laborales menos directas que otras áreas. El informe completo muestra cómo se combinan con especializaciones de mayor empleabilidad.'
         : null,

@@ -7,6 +7,17 @@
  *
  * Configurar la URL en: Mercado Pago → Tus integraciones → Webhooks
  *   https://<tu-dominio>/api/mp-webhook   (evento: "payments")
+ *
+ * ⚠️ MERCADO PAGO — INTEGRACIÓN PENDIENTE (NO PRODUCTIVA)
+ * El webhook registra la compra pero NO es confiable todavía. Antes de producción:
+ *   TODO(mp): validar la firma `x-signature` de Mercado Pago (autenticidad del
+ *             webhook); hoy cualquiera podría hacer POST a esta URL.
+ *   TODO(mp): usar SUPABASE_SERVICE_KEY (no la anon key) para escribir `purchases`
+ *             con RLS que impida inserts desde el cliente.
+ *   TODO(mp): idempotencia — no duplicar la compra si MP reintenta el webhook.
+ *   TODO(mp): validar monto/plan/external_reference igual que en verify-payment.
+ *   TODO(mp): definir y manejar transiciones de estado (pending → approved →
+ *             refunded/charged_back), no sólo "approved".
  */
 export default async function handler(req: any, res: any): Promise<void> {
   const token = process.env.MP_ACCESS_TOKEN;

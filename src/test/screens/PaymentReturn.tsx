@@ -23,14 +23,19 @@ export default function PaymentReturn({ onClose }: { onClose: () => void }) {
   useEffect(() => {
     const params = new URLSearchParams(window.location.search);
     const paymentId = params.get('payment_id') || params.get('collection_id') || '';
-    const status = params.get('status') || params.get('collection_status');
     // Limpiamos la URL para que un refresh no vuelva a disparar el retorno.
     window.history.replaceState({}, '', window.location.pathname);
 
     let active = true;
     (async () => {
+      // SEGURIDAD: nunca aprobamos un pago a partir del parámetro `status` de la
+      // URL (es falsificable). Sin un `payment_id` verificable server-side no se
+      // puede confirmar el cobro → no se entrega el informe.
+      // TODO(mp): al integrar Mercado Pago de verdad, sumar la comparación de
+      // external_reference y monto/plan (ver api/verify-payment.ts) antes de
+      // marcar 'approved'.
       if (!paymentId) {
-        if (active) setEstado(status === 'approved' ? 'approved' : 'rejected');
+        if (active) setEstado('rejected');
         return;
       }
       const { approved, planId: verifiedPlan } = await verifyPayment(paymentId);

@@ -8,6 +8,16 @@
  * Variables de entorno (Vercel → Settings → Environment Variables):
  *   MP_ACCESS_TOKEN  — Access Token de tu cuenta de Mercado Pago (TEST o PROD).
  *   APP_URL          — (opcional) URL pública del sitio; si falta se deriva del request.
+ *
+ * ⚠️ MERCADO PAGO — INTEGRACIÓN PENDIENTE (NO PRODUCTIVA)
+ * Este handler es un ESQUELETO funcional pero NO endurecido para cobrar de verdad.
+ * Antes de activar pagos reales (VITE_PAYMENTS_ENABLED=true) hay que resolver:
+ *   TODO(mp): validar/normalizar `email` (formato) antes de mandarlo a MP.
+ *   TODO(mp): generar `external_reference` server-side y persistirlo asociado al
+ *             pedido, para poder comparar al verificar (hoy llega del cliente).
+ *   TODO(mp): firmar/whitelistear el origen del request (anti-abuso).
+ *   TODO(mp): rate-limiting básico para no exponer el token a flood.
+ * Ver también: api/verify-payment.ts, api/mp-webhook.ts y src/services/payments.ts.
  */
 
 // Precios server-side, alineados con src/test/data/profile.ts (sin decimales, ARS).

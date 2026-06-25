@@ -9,3 +9,13 @@ coverage/
 
 # Backups / artefactos pesados — no versionar
 *.zip
+
+# Testing
+test-results/
+playwright-report/
+.playwright/
+.last-run.json
+
+# Salidas de los scripts de diagnóstico (se regeneran con npm run diagnose)
+scripts/diagnostic-results.txt
+scripts/adaptive-results.txt

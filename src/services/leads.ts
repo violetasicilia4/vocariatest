@@ -13,6 +13,8 @@
  * vivía en useState y se evaporaba al refrescar).
  */
 
+import { readJSON, writeJSON } from './storage';
+
 const SUPABASE_URL = import.meta.env.VITE_SUPABASE_URL as string | undefined;
 const SUPABASE_ANON_KEY = import.meta.env.VITE_SUPABASE_ANON_KEY as string | undefined;
 
@@ -36,23 +38,17 @@ export function isConfigured(): boolean {
 }
 
 function readQueue(): PendingInsert[] {
-  try {
-    const items: PendingInsert[] = JSON.parse(localStorage.getItem(QUEUE_KEY) || '[]');
-    const cutoff = Date.now() - QUEUE_MAX_AGE_MS;
-    // Descarta entradas vencidas. Los callers reescriben la cola, así que la
-    // purga queda persistida (flushQueue corre en cada carga de la app).
-    return items.filter(it => typeof it?.ts === 'number' && it.ts >= cutoff);
-  } catch {
-    return [];
-  }
+  const items = readJSON<PendingInsert[]>(QUEUE_KEY, []);
+  if (!Array.isArray(items)) return [];
+  const cutoff = Date.now() - QUEUE_MAX_AGE_MS;
+  // Descarta entradas vencidas. Los callers reescriben la cola, así que la
+  // purga queda persistida (flushQueue corre en cada carga de la app).
+  return items.filter(it => typeof it?.ts === 'number' && it.ts >= cutoff);
 }
 
 function writeQueue(items: PendingInsert[]): void {
-  try {
-    localStorage.setItem(QUEUE_KEY, JSON.stringify(items.slice(-50)));
-  } catch {
-    /* localStorage lleno o no disponible: nada que hacer */
-  }
+  // Tope de 50 entradas para no llenar la cuota del dispositivo.
+  writeJSON(QUEUE_KEY, items.slice(-50));
 }
 
 function enqueue(table: string, row: Record<string, unknown>): void {

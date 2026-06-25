@@ -454,7 +454,6 @@ out('');
 out('ARQUETIPOS MÁS FRECUENTES COMO SECUNDARIO');
 out('─────────────────────────────────────────');
 const secondarySorted = Object.entries(secondaryCounts).sort((a, b) => b[1] - a[1]);
-const totalWithSec = Object.values(secondaryCounts).reduce((a, b) => a + b, 0);
 for (const [id, cnt] of secondarySorted) {
   const pct = ((cnt / TOTAL) * 100).toFixed(1);
   out(`${pad(id, 14)}  ${rpad(String(cnt), 5)}   (${pct}%)`);

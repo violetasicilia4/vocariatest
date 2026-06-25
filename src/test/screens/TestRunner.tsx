@@ -68,7 +68,6 @@ export default function TestRunner({ nombre, profile, onComplete }: TestRunnerPr
   // 33% y crecía con ease-out (rápido al inicio, lento después), lo que se sentía
   // "ya arriba" desde la primera pregunta. El valor real y exacto de confianza
   // del perfil se calcula y se muestra recién en el resultado final.
-  const confidence = pct;
   // "Última pregunta" solo es cierto en la fase adaptativa cuando es su última
   // pregunta. Durante el núcleo NO lo sabemos: todavía pueden aparecer hasta 5
   // preguntas de validación, así que no prometemos que sea la última (evita el
