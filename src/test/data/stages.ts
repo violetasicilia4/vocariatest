@@ -62,13 +62,13 @@ export const CHECKPOINTS: Checkpoint[] = [
   {
     at: 58,
     value: 59,
-    title: 'Progreso sólido',
-    text: 'Señales cada vez más claras',
+    title: 'Tu patrón se define',
+    text: 'Las señales empiezan a separarse',
   },
   {
     at: 82,
     value: 83,
-    title: 'Casi completo',
-    text: 'La tendencia se afianza',
+    title: 'Mapa casi listo',
+    text: 'Estamos afinando el resultado final',
   },
 ];

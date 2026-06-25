@@ -8,23 +8,30 @@ interface ProcessingScreenProps {
   onDone: () => void;
 }
 
-// Etapas del descubrimiento (checklist) y su mensaje vivo (debajo de la esfera).
+// Etapas del descubrimiento (checklist) — mismo texto abajo del checklist y
+// como mensaje vivo bajo la esfera (una sola fuente de verdad: antes vivían
+// desfasados un paso entre sí, así que un ítem podía leerse "completado" en la
+// lista y "en curso" en el mensaje vivo al mismo tiempo).
 const STEPS = [
-  { item: 'Detectando patrones de personalidad', live: 'Analizando tus intereses' },
-  { item: 'Identificando fortalezas dominantes', live: 'Detectando patrones de personalidad' },
-  { item: 'Comparando carreras', live: 'Identificando fortalezas dominantes' },
-  { item: 'Construyendo tu mapa profesional', live: 'Comparando caminos profesionales' },
-  { item: 'Preparando resultados', live: 'Preparando tus resultados' },
+  'Ordenando tus respuestas',
+  'Detectando patrones de pensamiento',
+  'Cruzando intereses y carreras',
+  'Construyendo tu mapa profesional',
+  'Preparando tu resultado',
 ];
 
-// Descubrimiento sin prisa: tiempo para que la esfera respire y los mensajes
-// cambien con calma. No es una barra de carga.
-const TOTAL_MS = 8200;
+/** Cierre del checklist — reemplaza el mensaje vivo cuando todo terminó. */
+const FINAL_MESSAGE = 'Tu resultado está listo';
+
+// Descubrimiento breve pero con cuerpo: alcanza para que la esfera respire y
+// los mensajes cambien con calma, sin sentirse una espera artificial.
+const TOTAL_MS = 5800;
 
 // ── Gradiente líquido (tinta en agua) ─────────────────────────────────────────
 // Manchas de color que se desplazan y "respiran" lentamente dentro de la esfera.
-// Sin rotación (nada de planeta): solo deriva y morphing orgánico. Brand: azul/
-// verde/lima con teal de transición.
+// Sin rotación (nada de planeta): solo deriva y morphing orgánico. Brand: azul
+// cielo + soft teal como protagonistas; el lima queda como acento puntual (no
+// domina la paleta — evita el efecto "blob verde de IA").
 interface Blob {
   color: string;
   size: string;
@@ -32,23 +39,34 @@ interface Blob {
   left: string[];
   dur: number;
   delay: number;
+  /** Opacidad pico (0–1). Los acentos (lima) van más bajos que el resto. */
+  peak?: number;
 }
 // Paleta luminosa (brilla desde adentro, no masa oscura). Amplitud amplia y
 // duraciones desfasadas → tinta en agua que nunca repite el mismo "beat".
 const BLOBS: Blob[] = [
-  { color: '#5aa2f7', size: '94%', top: ['-6%', '24%', '0%', '16%'], left: ['4%', '32%', '10%', '26%'], dur: 6.2, delay: 0 },
-  { color: '#2fc2dd', size: '86%', top: ['10%', '-10%', '22%', '2%'], left: ['36%', '10%', '42%', '20%'], dur: 7.1, delay: 0.6 },
-  { color: '#48d85c', size: '102%', top: ['46%', '24%', '56%', '34%'], left: ['0%', '30%', '-4%', '18%'], dur: 5.6, delay: 0.3 },
-  { color: '#bdf062', size: '86%', top: ['54%', '72%', '40%', '62%'], left: ['44%', '16%', '50%', '28%'], dur: 5.1, delay: 1.0 },
-  { color: '#3aa6c4', size: '60%', top: ['28%', '48%', '16%', '40%'], left: ['38%', '18%', '48%', '26%'], dur: 7.6, delay: 0.2 },
+  { color: '#258ef9', size: '96%', top: ['-6%', '24%', '0%', '16%'], left: ['4%', '32%', '10%', '26%'], dur: 6.2, delay: 0 },
+  { color: '#5aa2f7', size: '88%', top: ['10%', '-10%', '22%', '2%'], left: ['36%', '10%', '42%', '20%'], dur: 7.1, delay: 0.6 },
+  { color: '#3fb6c9', size: '92%', top: ['46%', '24%', '56%', '34%'], left: ['0%', '30%', '-4%', '18%'], dur: 5.6, delay: 0.3 },
+  { color: '#bfe3ff', size: '68%', top: ['54%', '72%', '40%', '62%'], left: ['44%', '16%', '50%', '28%'], dur: 5.1, delay: 1.0 },
+  { color: '#d5ff3f', size: '32%', top: ['28%', '48%', '16%', '40%'], left: ['38%', '18%', '48%', '26%'], dur: 7.6, delay: 0.2, peak: 0.55 },
 ];
+
+/** Desplazamiento de cada frame respecto del primero (para animar x/y por
+ *  transform en vez de top/left, que disparan layout en cada frame). */
+function deltas(values: string[]): number[] {
+  const base = parseFloat(values[0]);
+  return values.map((v) => parseFloat(v) - base);
+}
 
 export default function ProcessingScreen({ nombre, onDone }: ProcessingScreenProps) {
   const [pct, setPct] = useState(0);
   const reduceMotion = useReducedMotion();
 
   useEffect(() => {
-    const done = setTimeout(onDone, TOTAL_MS + 300);
+    // +500ms tras llegar a 100%: deja el checklist completo en pantalla un
+    // instante antes de cortar al resultado (cierre visual, no corte abrupto).
+    const done = setTimeout(onDone, TOTAL_MS + 500);
     const controls = reduceMotion
       ? (setPct(100), null)
       : animate(0, 100, {
@@ -63,10 +81,13 @@ export default function ProcessingScreen({ nombre, onDone }: ProcessingScreenPro
   }, [onDone, reduceMotion]);
 
   const stageIndex = Math.min(STEPS.length - 1, Math.floor((pct / 100) * STEPS.length));
+  // Desde 96% todos los pasos se ven completos: el último ítem nunca debe
+  // quedarse "en curso" hasta el corte final.
+  const allDone = pct >= 96;
   const firstName = nombre ? nombre.split(' ')[0] : '';
 
   return (
-    <div className="min-h-[100dvh] bg-paper flex flex-col items-center justify-center px-6 py-12">
+    <div className="h-[100dvh] bg-paper flex flex-col items-center justify-center overflow-hidden px-6 py-[clamp(1.25rem,4vh,3rem)]">
       <div className="w-full max-w-[420px] flex flex-col items-center">
         {/* Encabezado — el nombre cede protagonismo (menor contraste, debajo). */}
         <motion.div
@@ -85,19 +106,22 @@ export default function ProcessingScreen({ nombre, onDone }: ProcessingScreenPro
 
         {/* ── Esfera orgánica (único elemento visual fuerte) ─────────────── */}
         <motion.div
-          className="relative w-[clamp(244px,70vw,332px)] aspect-square mt-12"
+          className="relative w-[clamp(190px,52dvh,332px)] aspect-square mt-[clamp(1.5rem,5vh,3rem)]"
           initial={{ opacity: 0, scale: 0.92 }}
           animate={{ opacity: 1, scale: 1 }}
           transition={{ duration: 1, ease: EASE }}
         >
-          {/* Glow ambiental suave que respira (sin borde duro). */}
+          {/* Glow ambiental suave que respira (sin borde duro). Azul cielo +
+              soft teal de marca — antes tenía una base verde que reforzaba el
+              efecto "IA pensando"; ahora es coherente con el resto del test. */}
           <motion.div
             className="absolute rounded-full"
             style={{
               inset: '-12%',
               background:
-                'radial-gradient(circle, rgba(47,191,63,0.16), rgba(20,82,201,0.12) 50%, transparent 70%)',
+                'radial-gradient(circle, rgba(37,142,249,0.16), rgba(63,182,201,0.10) 55%, transparent 72%)',
               filter: 'blur(26px)',
+              willChange: 'transform, opacity',
             }}
             animate={reduceMotion ? { opacity: 0.6 } : { opacity: [0.4, 0.7, 0.4], scale: [0.97, 1.05, 0.97] }}
             transition={reduceMotion ? { duration: 0.4 } : { duration: 7, repeat: Infinity, ease: 'easeInOut' }}
@@ -106,42 +130,58 @@ export default function ProcessingScreen({ nombre, onDone }: ProcessingScreenPro
           {/* La esfera: respira (escala muy sutil). */}
           <motion.div
             className="absolute inset-0"
+            style={{ willChange: 'transform' }}
             animate={reduceMotion ? {} : { scale: [1, 1.05, 0.99, 1.03, 1] }}
             transition={reduceMotion ? {} : { duration: 8, repeat: Infinity, ease: 'easeInOut' }}
           >
             {/* Capa de color líquido — blur + máscara radial que difumina el
                 borde (orgánico, no bola de cristal). Los blobs derivan, escalan
-                y cambian de brillo, desfasados: tinta moviéndose en agua. */}
+                y cambian de brillo, desfasados: tinta moviéndose en agua.
+                Animan x/y/scale/opacity (transform, sólo composición) en vez de
+                top/left (layout): mismo movimiento, sin reflow por frame. */}
             <div
               className="absolute inset-0"
               style={{
-                filter: 'blur(17px) saturate(1.18) brightness(1.06)',
+                filter: 'blur(15px) saturate(1.1) brightness(1.04)',
                 WebkitMaskImage: 'radial-gradient(circle farthest-side at 50% 50%, #000 58%, rgba(0,0,0,0.5) 78%, transparent 96%)',
                 maskImage: 'radial-gradient(circle farthest-side at 50% 50%, #000 58%, rgba(0,0,0,0.5) 78%, transparent 96%)',
+                contain: 'paint',
               }}
             >
-              {BLOBS.map((b, i) => (
-                <motion.div
-                  key={i}
-                  className="absolute rounded-full"
-                  style={{
-                    width: b.size,
-                    height: b.size,
-                    background: `radial-gradient(circle at 50% 50%, ${b.color} 0%, ${b.color} 42%, ${b.color}99 60%, transparent 75%)`,
-                  }}
-                  initial={{ top: b.top[0], left: b.left[0] }}
-                  animate={
-                    reduceMotion
-                      ? { top: b.top[1], left: b.left[1] }
-                      : { top: b.top, left: b.left, scale: [1, 1.32, 0.9, 1.18, 1], opacity: [0.92, 1, 0.85, 1, 0.92] }
-                  }
-                  transition={
-                    reduceMotion
-                      ? { duration: 0 }
-                      : { duration: b.dur, delay: b.delay, repeat: Infinity, repeatType: 'mirror', ease: 'easeInOut' }
-                  }
-                />
-              ))}
+              {BLOBS.map((b, i) => {
+                const dTop = deltas(b.top);
+                const dLeft = deltas(b.left);
+                const peak = b.peak ?? 1;
+                return (
+                  <motion.div
+                    key={i}
+                    className="absolute rounded-full"
+                    style={{
+                      width: b.size,
+                      height: b.size,
+                      top: b.top[0],
+                      left: b.left[0],
+                      background: `radial-gradient(circle at 50% 50%, ${b.color} 0%, ${b.color} 42%, ${b.color}99 60%, transparent 75%)`,
+                      willChange: 'transform, opacity',
+                    }}
+                    animate={
+                      reduceMotion
+                        ? undefined
+                        : {
+                            x: dLeft.map((v) => `${v}%`),
+                            y: dTop.map((v) => `${v}%`),
+                            scale: [1, 1.32, 0.9, 1.18, 1],
+                            opacity: [0.92, 1, 0.85, 1, 0.92].map((v) => v * peak),
+                          }
+                    }
+                    transition={
+                      reduceMotion
+                        ? undefined
+                        : { duration: b.dur, delay: b.delay, repeat: Infinity, repeatType: 'mirror', ease: 'easeInOut' }
+                    }
+                  />
+                );
+              })}
             </div>
 
             {/* Núcleo de luz interior — la esfera brilla desde adentro (lift del
@@ -152,6 +192,7 @@ export default function ProcessingScreen({ nombre, onDone }: ProcessingScreenPro
                 background: 'radial-gradient(circle at 48% 44%, rgba(255,255,255,0.34) 0%, rgba(255,255,255,0.12) 26%, transparent 50%)',
                 WebkitMaskImage: 'radial-gradient(circle farthest-side at 50% 50%, #000 70%, transparent 92%)',
                 maskImage: 'radial-gradient(circle farthest-side at 50% 50%, #000 70%, transparent 92%)',
+                willChange: 'transform, opacity',
               }}
               animate={reduceMotion ? {} : { opacity: [0.85, 1, 0.85], scale: [0.96, 1.04, 0.96] }}
               transition={reduceMotion ? {} : { duration: 6, repeat: Infinity, ease: 'easeInOut' }}
@@ -170,29 +211,37 @@ export default function ProcessingScreen({ nombre, onDone }: ProcessingScreenPro
         </motion.div>
 
         {/* ── Mensaje vivo (cambia con calma, sin números) ───────────────── */}
-        <div className="mt-12 h-6 flex items-center justify-center">
-          <AnimatePresence mode="wait">
+        <div
+          className="relative mt-[clamp(1.5rem,5vh,3rem)] h-6 flex items-center justify-center"
+          aria-live="polite"
+        >
+          {/* Sin mode="wait": el saliente y el entrante cruzan en simultáneo
+              (crossfade real) en vez de exit→hueco→enter, que dejaba un
+              instante sin texto justo antes del mensaje final. */}
+          <AnimatePresence>
             <motion.p
-              key={stageIndex}
+              key={allDone ? 'done' : stageIndex}
               initial={{ opacity: 0, y: 6 }}
               animate={{ opacity: 1, y: 0 }}
               exit={{ opacity: 0, y: -6 }}
               transition={{ duration: 0.6, ease: EASE }}
-              className="text-ink/55 text-[14px] sm:text-[15px] font-medium tracking-wide text-center"
+              className="absolute inset-0 flex items-center justify-center text-ink/55 text-[14px] sm:text-[15px] font-medium tracking-wide text-center"
             >
-              {STEPS[stageIndex].live}…
+              {allDone ? FINAL_MESSAGE : `${STEPS[stageIndex]}…`}
             </motion.p>
           </AnimatePresence>
         </div>
 
         {/* ── Checklist (aire generoso, jerarquía suave) ─────────────────── */}
-        <div className="mt-10 w-full max-w-[290px] flex flex-col gap-5">
-          {STEPS.map((s, i) => {
-            const done = i < stageIndex;
-            const current = i === stageIndex;
+        <div className="mt-[clamp(1.5rem,4vh,2.5rem)] w-full max-w-[290px] flex flex-col gap-[clamp(0.75rem,2vh,1.25rem)]">
+          {STEPS.map((label, i) => {
+            // Desde allDone, todos los ítems quedan marcados como completos —
+            // el último paso no se queda pulsando "en curso" hasta el corte.
+            const done = allDone || i < stageIndex;
+            const current = !allDone && i === stageIndex;
             return (
               <motion.div
-                key={s.item}
+                key={label}
                 className="flex items-center gap-3.5"
                 animate={{ opacity: done ? 0.9 : current ? 1 : 0.4 }}
                 transition={{ duration: 0.5, ease: EASE }}
@@ -238,7 +287,7 @@ export default function ProcessingScreen({ nombre, onDone }: ProcessingScreenPro
                     current ? 'text-ink font-semibold' : done ? 'text-ink/70 font-medium' : 'text-ink/45 font-medium'
                   }`}
                 >
-                  {s.item}
+                  {label}
                 </span>
               </motion.div>
             );

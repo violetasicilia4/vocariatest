@@ -14,8 +14,14 @@ interface CheckpointCardProps {
   onContinue: () => void;
 }
 
-/** Tiempo total en pantalla — suficiente para leer el hito sin demorar el flujo. */
-const HOLD_MS = 3100;
+/** Tiempo total en pantalla por hito — el primero es rápido, el último sostiene
+ *  un poco más de expectativa (suficiente para leer, sin demorar el flujo). */
+const HOLD_BY_VALUE: Record<number, number> = {
+  31: 2200,
+  59: 2400,
+  83: 2700,
+};
+const DEFAULT_HOLD_MS = 2400;
 
 // Geometría del anillo — protagonista de la escena.
 const SIZE = 116;
@@ -30,17 +36,18 @@ function previousValue(at: number): number {
 }
 
 /**
- * Hito de avance del test — reinterpretado como una pieza premium: una tarjeta
- * flotante de cristal (bottom-right en desktop, bottom-center en mobile) con un
- * anillo de progreso dimensional como héroe.
+ * Hito de avance del test — un modal central breve (overlay fullscreen +
+ * tarjeta de cristal) con un anillo de progreso dimensional como héroe.
  *
  * Inspiración: Apple Fitness Rings + visionOS (cristal, profundidad, luz),
  * Stripe/Linear (sobriedad), Emil Kowalski (springs suaves). El anillo viaja
  * del hito anterior al actual, el número cuenta en sync, el mensaje aparece y
  * la pieza se retira sola — sin gamificación, sin trofeos, sin confeti.
  *
- * No bloquea el flujo: flota en una esquina y se va. GPU-friendly (solo
- * transform/opacity) y respeta prefers-reduced-motion.
+ * Es un hito central, no una notificación pasiva: sí intercepta brevemente la
+ * interacción (por diseño, para que el avance sea imposible de ignorar), pero
+ * se autodestruye solo y se puede adelantar tocando el fondo, Escape o Enter.
+ * GPU-friendly (solo transform/opacity) y respeta prefers-reduced-motion.
  */
 export default function CheckpointCard({ checkpoint, onContinue }: CheckpointCardProps) {
   const reduceMotion = useReducedMotion();
@@ -86,10 +93,11 @@ export default function CheckpointCard({ checkpoint, onContinue }: CheckpointCar
   }, [mv, to, reduceMotion]);
 
   // Se retira sola tras el hold. El usuario no toca nada.
+  const holdMs = HOLD_BY_VALUE[checkpoint.value] ?? DEFAULT_HOLD_MS;
   useEffect(() => {
-    const t = setTimeout(onContinue, HOLD_MS);
+    const t = setTimeout(onContinue, holdMs);
     return () => clearTimeout(t);
-  }, [onContinue]);
+  }, [onContinue, holdMs]);
 
   // …pero puede adelantarse con teclado.
   useEffect(() => {
@@ -105,7 +113,9 @@ export default function CheckpointCard({ checkpoint, onContinue }: CheckpointCar
     : { type: 'spring' as const, stiffness: 380, damping: 30, mass: 0.9 };
 
   return (
-    // Overlay que tapa la pantalla y se desvanece — la pieza vuelve al centro.
+    // Overlay que tapa la pantalla y se desvanece — tocar el fondo adelanta el
+    // cierre. La card corta la propagación para que tocarla (leerla) en mobile
+    // no la cierre por accidente.
     <motion.div
       onClick={onContinue}
       initial={{ opacity: 0 }}
@@ -120,6 +130,7 @@ export default function CheckpointCard({ checkpoint, onContinue }: CheckpointCar
         role="status"
         aria-live="polite"
         aria-label={`${checkpoint.title}. ${to}% completado.`}
+        onClick={(e) => e.stopPropagation()}
         initial={{ opacity: 0, y: reduceMotion ? 0 : 18, scale: reduceMotion ? 1 : 0.9 }}
         animate={{ opacity: 1, y: 0, scale: 1 }}
         exit={{ opacity: 0, y: reduceMotion ? 0 : 8, scale: reduceMotion ? 1 : 0.96 }}
@@ -259,17 +270,18 @@ export default function CheckpointCard({ checkpoint, onContinue }: CheckpointCar
           </div>
         </div>
 
-        {/* ── Mensaje — aparece después del anillo, en un solo renglón ── */}
+        {/* ── Mensaje — aparece después del anillo; puede pasar a 2 líneas en
+            pantallas chicas, nunca se corta ni desborda la card ── */}
         <motion.div
           initial={{ opacity: 0, y: reduceMotion ? 0 : 8 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: reduceMotion ? 0 : 0.4, duration: 0.45, ease: EASE }}
           className="mt-5"
         >
-          <h3 className="font-display font-bold text-[16px] text-ink tracking-tight leading-tight whitespace-nowrap">
+          <h3 className="font-display font-bold text-[16px] text-ink tracking-tight leading-tight max-w-[230px]">
             {checkpoint.title}
           </h3>
-          <p className="mt-1.5 text-[12.5px] text-ink/55 font-medium leading-snug whitespace-nowrap">
+          <p className="mt-1.5 text-[12.5px] text-ink/55 font-medium leading-snug max-w-[230px]">
             {checkpoint.text}
           </p>
         </motion.div>
