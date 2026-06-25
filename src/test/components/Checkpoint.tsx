@@ -7,7 +7,7 @@ import {
   useReducedMotion,
 } from 'motion/react';
 import { CHECKPOINTS, type Checkpoint } from '../data/stages';
-import { EASE } from '../ui/theme';
+import { EASE, SKY } from '../ui/theme';
 
 interface CheckpointCardProps {
   checkpoint: Checkpoint;
@@ -142,32 +142,31 @@ export default function CheckpointCard({ checkpoint, onContinue }: CheckpointCar
       >
         {/* ── Anillo (héroe) ─────────────────────────────────────────── */}
         <div className="relative" style={{ width: SIZE, height: SIZE }}>
-          {/* Halo circular detrás del anillo — respira mientras "procesa".
-              Es un círculo difuso (no la sombra del SVG), así nunca se recorta
-              en cuadrado. Al aterrizar el valor, se calma. */}
+          {/* Halo circular detrás del anillo — azul cielo de marca, MUY sutil.
+              Respira despacio mientras "procesa" (no es un glow neón, es la misma
+              luz fría sky-soft de la landing). Es un círculo difuso, así nunca se
+              recorta en cuadrado. Al aterrizar el valor, se calma. */}
           <motion.div
             aria-hidden
             className="pointer-events-none absolute rounded-full"
             style={{
-              inset: -10,
+              inset: -6,
               background:
-                'radial-gradient(circle at 50% 50%, rgba(143,196,15,0.45) 0%, rgba(143,196,15,0.18) 42%, transparent 70%)',
-              filter: 'blur(8px)',
+                'radial-gradient(circle at 50% 50%, rgba(37,142,249,0.16) 0%, rgba(37,142,249,0.06) 48%, transparent 72%)',
+              filter: 'blur(6px)',
             }}
             animate={
               reduceMotion || settled
-                ? { opacity: 0.45, scale: 1 }
-                : { opacity: [0.35, 0.7, 0.45, 0.62, 0.35], scale: [0.96, 1.04, 0.99, 1.03, 0.96] }
+                ? { opacity: 0.5, scale: 1 }
+                : { opacity: [0.45, 0.75, 0.55, 0.7, 0.45], scale: [0.99, 1.03, 1.0, 1.02, 0.99] }
             }
             transition={
               reduceMotion || settled
-                ? { duration: 0.5, ease: EASE }
-                : { duration: 1.9, times: [0, 0.3, 0.55, 0.78, 1], repeat: Infinity, ease: 'easeInOut' }
+                ? { duration: 0.6, ease: EASE }
+                : { duration: 2.4, times: [0, 0.3, 0.55, 0.78, 1], repeat: Infinity, ease: 'easeInOut' }
             }
           />
 
-          {/* overflow-visible: el resplandor del arco sigue la forma del trazo
-              en vez de recortarse contra la caja cuadrada del SVG. */}
           <svg
             width={SIZE}
             height={SIZE}
@@ -184,42 +183,35 @@ export default function CheckpointCard({ checkpoint, onContinue }: CheckpointCar
               strokeWidth={STROKE}
             />
 
-            {/* Arco de progreso — verde Vocaria. Mientras "piensa", la luz del
-                trazo late de forma irregular; al aterrizar, queda firme. */}
+            {/* Arco de progreso — azul cielo de marca (#258ef9): el mismo color
+                "vivo" del progreso/foco en toda la web. Sombra fría y suave, sin
+                neón. Una respiración mínima de opacidad insinúa el cálculo sin
+                gritar. */}
             <motion.circle
               cx={SIZE / 2}
               cy={SIZE / 2}
               r={R}
               fill="none"
-              stroke="#8fc40f"
+              stroke={SKY}
               strokeWidth={STROKE}
               strokeLinecap="round"
               strokeDasharray={CIRC}
-              style={{ strokeDashoffset: dashOffset }}
-              animate={
-                reduceMotion || settled
-                  ? { opacity: 1, filter: 'drop-shadow(0 0 4px rgba(143,196,15,0.5))' }
-                  : {
-                      opacity: [1, 0.85, 0.97, 0.88, 1],
-                      filter: [
-                        'drop-shadow(0 0 3px rgba(143,196,15,0.4))',
-                        'drop-shadow(0 0 8px rgba(143,196,15,0.85))',
-                        'drop-shadow(0 0 5px rgba(143,196,15,0.55))',
-                        'drop-shadow(0 0 7px rgba(143,196,15,0.78))',
-                        'drop-shadow(0 0 3px rgba(143,196,15,0.4))',
-                      ],
-                    }
-              }
+              style={{
+                strokeDashoffset: dashOffset,
+                filter: 'drop-shadow(0 1px 3px rgba(37,142,249,0.30))',
+              }}
+              animate={reduceMotion || settled ? { opacity: 1 } : { opacity: [1, 0.9, 1] }}
               transition={
                 reduceMotion || settled
                   ? { duration: 0.4, ease: EASE }
-                  : { duration: 1.3, times: [0, 0.28, 0.52, 0.76, 1], repeat: Infinity, ease: 'easeInOut' }
+                  : { duration: 1.6, repeat: Infinity, ease: 'easeInOut' }
               }
             />
           </svg>
 
-          {/* Punto líder en la punta del arco — viaja con el progreso y palpita,
-              como un cabezal de lectura. Se desvanece cuando el valor se fija. */}
+          {/* Punto líder en la punta del arco — viaja con el progreso como un
+              cabezal de lectura. Blanco con borde sky y una sombra fría discreta
+              (coherente con los checks/acentos de marca). Se desvanece al fijar. */}
           <svg
             width={SIZE}
             height={SIZE}
@@ -229,37 +221,37 @@ export default function CheckpointCard({ checkpoint, onContinue }: CheckpointCar
             <motion.circle
               cx={dotX}
               cy={dotY}
-              r={STROKE / 2 + 1}
+              r={STROKE / 2 - 0.5}
               fill="#ffffff"
-              stroke="#8fc40f"
-              strokeWidth={2}
+              stroke={SKY}
+              strokeWidth={2.5}
               style={{
-                filter: 'drop-shadow(0 0 6px rgba(143,196,15,0.95))',
+                filter: 'drop-shadow(0 1px 4px rgba(37,142,249,0.45))',
                 transformBox: 'fill-box',
                 transformOrigin: 'center',
               }}
               animate={
-                reduceMotion ? { opacity: 0 } : settled ? { opacity: 0, scale: 0.6 } : { opacity: [0.9, 1, 0.9], scale: [0.85, 1.15, 0.85] }
+                reduceMotion ? { opacity: 0 } : settled ? { opacity: 0, scale: 0.6 } : { opacity: 1, scale: [0.92, 1.08, 0.92] }
               }
               transition={
                 reduceMotion || settled
-                  ? { duration: 0.4, ease: EASE }
-                  : { duration: 0.7, repeat: Infinity, ease: 'easeInOut' }
+                  ? { duration: 0.45, ease: EASE }
+                  : { duration: 1.1, repeat: Infinity, ease: 'easeInOut' }
               }
             />
           </svg>
 
           {/* Número — cuenta en sync con el anillo (tipografía del test).
-              Mientras calcula, titila como un lector en vivo; al fijar el valor
-              deja de parpadear. */}
+              Mientras calcula, respira suave en opacidad; al fijar el valor,
+              queda firme. Sobrio, sin parpadeo brusco. */}
           <div className="absolute inset-0 flex items-center justify-center">
             <motion.span
               className="font-display font-bold text-ink text-[30px] leading-none tracking-tight tabular-nums"
-              animate={reduceMotion || settled ? { opacity: 1 } : { opacity: [1, 0.55, 0.92, 0.68, 1] }}
+              animate={reduceMotion || settled ? { opacity: 1 } : { opacity: [1, 0.72, 1] }}
               transition={
                 reduceMotion || settled
                   ? { duration: 0.3, ease: EASE }
-                  : { duration: 0.78, times: [0, 0.25, 0.5, 0.74, 1], repeat: Infinity, ease: 'easeInOut' }
+                  : { duration: 1.1, repeat: Infinity, ease: 'easeInOut' }
               }
             >
               {display}%
