@@ -119,16 +119,30 @@ export interface LeadInput {
   consent: boolean;
 }
 
+// Límites de longitud (anti-abuso): recortan strings antes de mandarlos a
+// Supabase para que un payload inflado no engorde la tabla. La validación fuerte
+// vive en RLS/servidor; esto es defensa en profundidad del lado del cliente.
+const MAX_EMAIL = 254;
+const MAX_NOMBRE = 80;
+const MAX_FIELD = 40;
+const MAX_UA = 400;
+
+function cap(value: string | null | undefined, max: number): string | null {
+  if (typeof value !== 'string') return null;
+  const t = value.trim();
+  return t === '' ? null : t.slice(0, max);
+}
+
 export function captureLead(input: LeadInput) {
   return insert('leads', {
-    email: input.email,
-    nombre: input.nombre ?? null,
+    email: cap(input.email, MAX_EMAIL)?.toLowerCase() ?? null,
+    nombre: cap(input.nombre, MAX_NOMBRE),
     source: input.source,
-    edad: input.edad ?? null,
-    provincia_id: input.provincia_id ?? null,
+    edad: cap(input.edad, MAX_FIELD),
+    provincia_id: cap(input.provincia_id, MAX_FIELD),
     consent: input.consent,
-    referrer: typeof document !== 'undefined' ? document.referrer || null : null,
-    user_agent: typeof navigator !== 'undefined' ? navigator.userAgent : null,
+    referrer: typeof document !== 'undefined' ? cap(document.referrer, MAX_FIELD * 4) : null,
+    user_agent: typeof navigator !== 'undefined' ? cap(navigator.userAgent, MAX_UA) : null,
   });
 }
 
@@ -144,8 +158,8 @@ export interface TestResultInput {
 
 export function saveTestResult(input: TestResultInput) {
   return insert('test_results', {
-    email: input.email,
-    nombre: input.nombre ?? null,
+    email: cap(input.email, MAX_EMAIL)?.toLowerCase() ?? null,
+    nombre: cap(input.nombre, MAX_NOMBRE),
     arquetipo_primario: input.arquetipo_primario,
     arquetipo_secundario: input.arquetipo_secundario ?? null,
     confianza: input.confianza,

@@ -27,43 +27,62 @@ const PLANS: Record<string, { title: string; price: number }> = {
   profesional:   { title: 'Vocaria · Informe Profesional',   price: 7990 },
 };
 
-export default async function handler(req: any, res: any): Promise<void> {
-  if (req.method !== 'POST') {
-    res.status(405).json({ error: 'method_not_allowed' });
-    return;
-  }
+import {
+  type ApiRequest,
+  type ApiResponse,
+  assertMethod,
+  parseJsonBody,
+  errorResponse,
+  jsonResponse,
+  isValidEmail,
+  normalizeEmail,
+  clampString,
+} from './_lib';
+
+export default async function handler(req: ApiRequest, res: ApiResponse): Promise<void> {
+  if (!assertMethod(req, res, 'POST')) return;
 
   const token = process.env.MP_ACCESS_TOKEN;
   if (!token) {
-    res.status(503).json({ error: 'mp_not_configured' });
+    errorResponse(res, 503, 'mp_not_configured');
     return;
   }
 
-  const body = typeof req.body === 'string' ? safeParse(req.body) : (req.body || {});
-  const planId: string = body.planId;
-  const email: string | undefined = body.email;
-  const ref: string = body.ref || `vocaria-${Date.now()}`;
+  const body = parseJsonBody(req);
+  if (!body) {
+    errorResponse(res, 400, 'invalid_body');
+    return;
+  }
 
+  const planId = typeof body.planId === 'string' ? body.planId : '';
   const plan = PLANS[planId];
   if (!plan) {
-    res.status(400).json({ error: 'invalid_plan' });
+    errorResponse(res, 400, 'invalid_plan');
     return;
   }
 
-  const proto = (req.headers['x-forwarded-proto'] as string) || 'https';
-  const host = (req.headers['x-forwarded-host'] as string) || req.headers.host;
+  // Email opcional, pero si viene debe ser válido (lo mandamos a MP).
+  const rawEmail = body.email;
+  let email: string | undefined;
+  if (rawEmail != null && rawEmail !== '') {
+    if (!isValidEmail(rawEmail)) {
+      errorResponse(res, 400, 'invalid_email');
+      return;
+    }
+    email = normalizeEmail(rawEmail);
+  }
+
+  // `ref` (external_reference) acotado; si no viene, generamos uno.
+  const ref = clampString(body.ref, 120) ?? `vocaria-${Date.now()}`;
+
+  const proto = headerValue(req.headers['x-forwarded-proto']) || 'https';
+  const host = headerValue(req.headers['x-forwarded-host']) || headerValue(req.headers.host) || '';
   const appUrl = (process.env.APP_URL || `${proto}://${host}`).replace(/\/$/, '');
   const backUrl = `${appUrl}/?mp=return`;
 
   const preference = {
     items: [
-      {
-        id: planId,
-        title: plan.title,
-        quantity: 1,
-        unit_price: plan.price,
-        currency_id: 'ARS',
-      },
+      { id: planId, title: plan.title, quantity: 1, unit_price: plan.price, currency_id: 'ARS' },
     ],
     payer: email ? { email } : undefined,
     external_reference: ref,
@@ -76,27 +95,22 @@ export default async function handler(req: any, res: any): Promise<void> {
   try {
     const mpRes = await fetch('https://api.mercadopago.com/checkout/preferences', {
       method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-        Authorization: `Bearer ${token}`,
-      },
+      headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${token}` },
       body: JSON.stringify(preference),
     });
-    const data = await mpRes.json();
+    const data = (await mpRes.json()) as { id?: string; init_point?: string };
     if (!mpRes.ok) {
-      res.status(502).json({ error: 'mp_error', detail: data });
+      // No filtramos el detalle de MP al cliente (puede traer datos internos).
+      errorResponse(res, 502, 'mp_error');
       return;
     }
-    res.status(200).json({ id: data.id, init_point: data.init_point });
+    jsonResponse(res, 200, { id: data.id, init_point: data.init_point });
   } catch {
-    res.status(502).json({ error: 'mp_unreachable' });
+    errorResponse(res, 502, 'mp_unreachable');
   }
 }
 
-function safeParse(s: string): any {
-  try {
-    return JSON.parse(s || '{}');
-  } catch {
-    return {};
-  }
+/** Toma el primer valor si el header viene como array. */
+function headerValue(v: string | string[] | undefined): string | undefined {
+  return Array.isArray(v) ? v[0] : v;
 }

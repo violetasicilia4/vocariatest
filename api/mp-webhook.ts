@@ -19,30 +19,48 @@
  *   TODO(mp): definir y manejar transiciones de estado (pending → approved →
  *             refunded/charged_back), no sólo "approved".
  */
-export default async function handler(req: any, res: any): Promise<void> {
+import { type ApiRequest, type ApiResponse, parseJsonBody, isPlainObject } from './_lib';
+
+interface MpPayment {
+  id?: string | number;
+  status?: string;
+  metadata?: { plan_id?: string };
+  payer?: { email?: string };
+  transaction_amount?: number;
+  external_reference?: string;
+}
+
+export default async function handler(req: ApiRequest, res: ApiResponse): Promise<void> {
   const token = process.env.MP_ACCESS_TOKEN;
   try {
-    const body = typeof req.body === 'string' ? safeParse(req.body) : (req.body || {});
-    const type = body.type || (req.query && req.query.type);
-    const paymentId = body?.data?.id || (req.query && (req.query['data.id'] || req.query.id));
+    const body = parseJsonBody(req) ?? {};
+    const type = body.type ?? queryValue(req, 'type');
+    const dataId = isPlainObject(body.data) ? body.data.id : undefined;
+    const paymentId = dataId ?? queryValue(req, 'data.id') ?? queryValue(req, 'id');
 
     if (token && type === 'payment' && paymentId) {
       const mpRes = await fetch(`https://api.mercadopago.com/v1/payments/${paymentId}`, {
         headers: { Authorization: `Bearer ${token}` },
       });
       if (mpRes.ok) {
-        const pay = await mpRes.json();
+        const pay = (await mpRes.json()) as MpPayment;
         if (pay.status === 'approved') await recordPurchase(pay);
       }
     }
   } catch {
     /* nunca fallar el webhook */
   }
+  // SIEMPRE 200 para que MP no reintente en loop.
   res.status(200).json({ received: true });
 }
 
+function queryValue(req: ApiRequest, key: string): string | undefined {
+  const v = req.query?.[key];
+  return Array.isArray(v) ? v[0] : v;
+}
+
 /** Registra la compra en Supabase (best-effort). Requiere la tabla `purchases`. */
-async function recordPurchase(pay: any): Promise<void> {
+async function recordPurchase(pay: MpPayment): Promise<void> {
   const url = process.env.SUPABASE_URL || process.env.VITE_SUPABASE_URL;
   const key = process.env.SUPABASE_SERVICE_KEY || process.env.VITE_SUPABASE_ANON_KEY;
   if (!url || !key) return;
@@ -66,13 +84,5 @@ async function recordPurchase(pay: any): Promise<void> {
     });
   } catch {
     /* best-effort */
-  }
-}
-
-function safeParse(s: string): any {
-  try {
-    return JSON.parse(s || '{}');
-  } catch {
-    return {};
   }
 }

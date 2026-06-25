@@ -67,8 +67,12 @@ export default function ProfileCapture({ onStart }: ProfileCaptureProps) {
   const [provinciaId, setProvinciaId] = useState('');
   const [consent, setConsent] = useState(false);
   const [error, setError] = useState('');
+  // Honeypot anti-bot: campo oculto que un humano nunca completa. Si llega con
+  // valor, es casi seguro un bot → cortamos sin capturar el lead.
+  const [website, setWebsite] = useState('');
 
   const handleDatosNext = () => {
+    if (website) return; // bot detectado (honeypot)
     if (!nombre.trim()) { setError('Escribí tu nombre para continuar.'); return; }
     if (!EMAIL_RE.test(email.trim())) { setError('Ingresá un email válido.'); return; }
     if (!edad) { setError('Seleccioná tu edad.'); return; }
@@ -226,6 +230,19 @@ export default function ProfileCapture({ onStart }: ProfileCaptureProps) {
                     </a>.
                   </span>
                 </label>
+
+                {/* Honeypot: oculto para humanos (aria-hidden + fuera de tab),
+                    visible para bots que completan todo el formulario. */}
+                <input
+                  type="text"
+                  name="website"
+                  value={website}
+                  onChange={e => setWebsite(e.target.value)}
+                  tabIndex={-1}
+                  autoComplete="off"
+                  aria-hidden="true"
+                  className="absolute -left-[9999px] w-px h-px opacity-0"
+                />
 
                 {error && <p className="text-red-500 text-[13px] font-semibold">{error}</p>}
 

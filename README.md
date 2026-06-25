@@ -109,6 +109,8 @@ Ver [`.env.example`](.env.example) para el detalle. Resumen:
 
 ```
 api/                      Funciones serverless de Vercel (Mercado Pago — pendiente)
+  _lib.ts                Helpers de las funciones (validación, errores, parseo)
+docs/security.md          Modelo de datos, RLS, secrets y pendientes de seguridad
 public/                   Assets estáticos y páginas estáticas
 scripts/                  Diagnóstico estadístico del motor (no se deployan)
 src/
@@ -150,6 +152,30 @@ vercel.json              Configuración de deploy (único target)
 
 El progreso y el resultado se guardan en `localStorage` mediante helpers tipados
 ([`src/services/storage.ts`](src/services/storage.ts)) para sobrevivir a un refresh.
+
+## Arquitectura e infraestructura
+
+```
+Usuario ──HTTPS──► Vercel
+                    ├─ Frontend (SPA Vite/React, build estático servido por Vercel)
+                    │   • Vercel maneja dominio + HTTPS + headers (vercel.json)
+                    └─ /api/* (Vercel Serverless Functions, Node)
+                        • create-preference / verify-payment / mp-webhook (MP — pendiente)
+                        • helpers comunes en api/_lib.ts (validación, errores)
+                                   │
+                                   ▼
+                              Supabase (Postgres + REST)
+                              • leads, test_results, purchases
+                              • anon key pública; la seguridad la da RLS
+```
+
+- **Frontend:** Vercel sirve la SPA y gestiona el dominio y el HTTPS.
+- **Backend:** las rutas de `api/` corren como **Vercel Serverless Functions** (no hay server propio).
+- **Base de datos:** Supabase guarda leads/resultados. La **anon key es pública por diseño**; lo que protege los datos es **RLS** (ver más abajo y `docs/security.md`).
+
+**Pendiente de infraestructura:** dominio propio, URLs finales de SEO, integración
+de Mercado Pago, y rate limiting / captcha server-side. Detalle en
+[`docs/security.md`](docs/security.md).
 
 ## Supabase
 

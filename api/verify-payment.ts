@@ -17,19 +17,28 @@
  *   TODO(mp): no confiar nunca en el `planId` que devuelve el cliente para
  *             entregar contenido; derivarlo de la verificación server-side.
  */
-export default async function handler(req: any, res: any): Promise<void> {
+import { type ApiRequest, type ApiResponse, assertMethod, jsonResponse, errorResponse } from './_lib';
+
+interface MpPayment {
+  status?: string;
+  metadata?: { plan_id?: string };
+  external_reference?: string;
+}
+
+export default async function handler(req: ApiRequest, res: ApiResponse): Promise<void> {
+  if (!assertMethod(req, res, 'GET')) return;
+
   const token = process.env.MP_ACCESS_TOKEN;
   if (!token) {
-    res.status(503).json({ approved: false, error: 'mp_not_configured' });
+    errorResponse(res, 503, 'mp_not_configured');
     return;
   }
 
-  const paymentId =
-    (req.query && (req.query.payment_id || req.query.collection_id)) ||
-    new URL(req.url, 'http://localhost').searchParams.get('payment_id');
-
-  if (!paymentId) {
-    res.status(400).json({ approved: false, error: 'missing_payment_id' });
+  const rawId = req.query?.payment_id ?? req.query?.collection_id;
+  const paymentId = Array.isArray(rawId) ? rawId[0] : rawId;
+  // Sólo dígitos: los payment_id de MP son numéricos. Evita inyección en la URL.
+  if (!paymentId || !/^\d{1,32}$/.test(paymentId)) {
+    errorResponse(res, 400, 'missing_payment_id');
     return;
   }
 
@@ -38,17 +47,18 @@ export default async function handler(req: any, res: any): Promise<void> {
       headers: { Authorization: `Bearer ${token}` },
     });
     if (!mpRes.ok) {
-      res.status(200).json({ approved: false });
+      jsonResponse(res, 200, { approved: false });
       return;
     }
-    const pay = await mpRes.json();
-    res.status(200).json({
+    const pay = (await mpRes.json()) as MpPayment;
+    // Sólo devolvemos lo mínimo necesario para el frontend (no el pago entero).
+    jsonResponse(res, 200, {
       approved: pay.status === 'approved',
-      status: pay.status,
+      status: pay.status ?? null,
       planId: pay.metadata?.plan_id ?? null,
       externalReference: pay.external_reference ?? null,
     });
   } catch {
-    res.status(200).json({ approved: false });
+    jsonResponse(res, 200, { approved: false });
   }
 }
