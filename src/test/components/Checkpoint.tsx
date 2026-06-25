@@ -53,20 +53,26 @@ export default function CheckpointCard({ checkpoint, onContinue }: CheckpointCar
   const dashOffset = useTransform(mv, (v) => CIRC * (1 - v / 100));
   const [display, setDisplay] = useState(from);
 
+  // Mientras el anillo "calcula" titila; cuando el valor aterriza, se aquieta.
+  const [settled, setSettled] = useState(reduceMotion);
+
   // Avance del anillo + conteo (spring suave, "físico").
   useEffect(() => {
     const unsub = mv.on('change', (v) => setDisplay(Math.round(v)));
     if (reduceMotion) {
       mv.set(to);
       setDisplay(to);
+      setSettled(true);
       return unsub;
     }
+    setSettled(false);
     const controls = animate(mv, to, {
       type: 'spring',
       stiffness: 70,
       damping: 20,
       mass: 1,
       delay: 0.15,
+      onComplete: () => setSettled(true),
     });
     return () => {
       controls.stop();
@@ -143,7 +149,9 @@ export default function CheckpointCard({ checkpoint, onContinue }: CheckpointCar
             />
 
             {/* Arco de progreso — verde Vocaria, un punto más profundo para que
-                resalte sobre el blanco, con luz propia. */}
+                resalte sobre el blanco, con luz propia. Mientras "piensa", el
+                brillo titila de forma irregular (no rítmica → se lee orgánico);
+                al aterrizar el valor, queda firme. */}
             <motion.circle
               cx={SIZE / 2}
               cy={SIZE / 2}
@@ -153,18 +161,47 @@ export default function CheckpointCard({ checkpoint, onContinue }: CheckpointCar
               strokeWidth={STROKE}
               strokeLinecap="round"
               strokeDasharray={CIRC}
-              style={{
-                strokeDashoffset: dashOffset,
-                filter: 'drop-shadow(0 1px 6px rgba(120,170,15,0.55))',
-              }}
+              style={{ strokeDashoffset: dashOffset }}
+              animate={
+                reduceMotion || settled
+                  ? {
+                      opacity: 1,
+                      filter: 'drop-shadow(0 1px 6px rgba(120,170,15,0.55))',
+                    }
+                  : {
+                      opacity: [1, 0.78, 0.95, 0.82, 1],
+                      filter: [
+                        'drop-shadow(0 1px 6px rgba(120,170,15,0.45))',
+                        'drop-shadow(0 1px 11px rgba(120,170,15,0.85))',
+                        'drop-shadow(0 1px 7px rgba(120,170,15,0.55))',
+                        'drop-shadow(0 1px 10px rgba(120,170,15,0.78))',
+                        'drop-shadow(0 1px 6px rgba(120,170,15,0.45))',
+                      ],
+                    }
+              }
+              transition={
+                reduceMotion || settled
+                  ? { duration: 0.4, ease: EASE }
+                  : { duration: 1.3, times: [0, 0.28, 0.52, 0.76, 1], repeat: Infinity, ease: 'easeInOut' }
+              }
             />
           </svg>
 
-          {/* Número — cuenta en sync con el anillo (tipografía del test). */}
+          {/* Número — cuenta en sync con el anillo (tipografía del test).
+              Mientras calcula, titila como un lector en vivo; al fijar el valor
+              deja de parpadear. */}
           <div className="absolute inset-0 flex items-center justify-center">
-            <span className="font-display font-bold text-ink text-[30px] leading-none tracking-tight tabular-nums">
+            <motion.span
+              className="font-display font-bold text-ink text-[30px] leading-none tracking-tight tabular-nums"
+              animate={reduceMotion || settled ? { opacity: 1 } : { opacity: [1, 0.55, 0.92, 0.68, 1] }}
+              transition={
+                reduceMotion || settled
+                  ? { duration: 0.3, ease: EASE }
+                  : { duration: 0.78, times: [0, 0.25, 0.5, 0.74, 1], repeat: Infinity, ease: 'easeInOut' }
+              }
+            >
               {display}%
-            </span>
+            </motion.span>
           </div>
         </div>
 

@@ -49,23 +49,25 @@ export interface Checkpoint {
 
 /** Tres momentos que interrumpen brevemente el flujo. Copy corto, sofisticado.
  *  Son pocos a propósito: cada interrupción tiene que pesar. El anillo del hito
- *  aterriza en una cifra redonda (30 → 60 → 80) para que se lea intencional. */
+ *  aterriza en cifras NO redondas (31 → 59 → 83) a propósito: una medición exacta
+ *  se lee como un cálculo real, no como un número de marketing. La credibilidad
+ *  está en el decimal que no termina en cero. */
 export const CHECKPOINTS: Checkpoint[] = [
   {
     at: 30,
-    value: 30,
+    value: 31,
     title: 'Perfil tomando forma',
     text: 'Ya se marca una dirección',
   },
   {
     at: 58,
-    value: 60,
+    value: 59,
     title: 'Progreso sólido',
     text: 'Señales cada vez más claras',
   },
   {
     at: 82,
-    value: 80,
+    value: 83,
     title: 'Casi completo',
     text: 'La tendencia se afianza',
   },
