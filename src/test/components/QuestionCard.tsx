@@ -64,26 +64,30 @@ export default function QuestionCard({ question, onAnswer, currentAnswer, onBack
     // para ocupar el ancho en desktop sin romper la continuidad de lectura.
     // Es el patrón que mejor lee en quizzes de escritorio (Typeform / 16personalities).
     <div className="w-full flex flex-col flex-1 min-h-0">
-      {/* Bloque enunciado + opciones, anclado hacia arriba con un margen
-          superior proporcional al alto (no centrado): así la pregunta arranca
-          cerca de la barra de avance y no queda flotando en el medio con mucho
-          aire arriba. El botón sigue anclado abajo en posición estable. */}
-      <div className="flex-1 min-h-0 flex flex-col justify-start pt-[clamp(0.5rem,6vh,4rem)] pb-4">
-        {/* Banda de enunciado de alto fijo: el texto se ancla abajo (justify-end),
-            así preguntas de 2 o 3 líneas terminan a la MISMA altura y las opciones
-            siempre arrancan en el mismo Y, sin saltos al cambiar de pregunta. */}
-        <div className="shrink-0 min-h-[68px] sm:min-h-[80px] lg:min-h-[92px] xl:min-h-[104px] flex flex-col justify-end mb-5 sm:mb-6 lg:mb-8 text-center max-w-[820px] mx-auto">
-          <h2 className="font-display font-bold text-[22px] sm:text-[26px] lg:text-[34px] xl:text-[38px] text-ink leading-[1.14] tracking-tight text-balance">
+      {/* Banda de enunciado de alto fijo y SIN encoger (shrink-0): el texto se
+          ancla abajo (justify-end), así preguntas de 2 o 3 líneas terminan a la
+          MISMA altura y las opciones siempre arrancan en el mismo Y, sin saltos
+          al cambiar de pregunta. */}
+      <div className="shrink-0 pt-[clamp(0.5rem,5vh,4rem)]">
+        <div className="min-h-[56px] sm:min-h-[80px] lg:min-h-[92px] xl:min-h-[104px] flex flex-col justify-end mb-3 sm:mb-6 lg:mb-8 text-center max-w-[820px] mx-auto">
+          <h2 className="font-display font-bold text-[20px] sm:text-[26px] lg:text-[34px] xl:text-[38px] text-ink leading-[1.14] tracking-tight text-balance">
             {question.enunciado}
           </h2>
           {question.subtext && (
-            <p className="mt-2.5 lg:mt-3 text-[12.5px] lg:text-[14.5px] text-ink/55 font-medium leading-relaxed">
+            <p className="mt-2 lg:mt-3 text-[12px] lg:text-[14.5px] text-ink/55 font-medium leading-relaxed">
               {question.subtext}
             </p>
           )}
         </div>
+      </div>
 
-        <div className="w-full shrink-0">
+      {/* Única zona que puede generar scroll: acotada entre el enunciado y la
+          barra de navegación, nunca por detrás de ella. Si las opciones no
+          entran (p. ej. un multiselect de 7-8 ítems en mobile), esta franja
+          scrollea internamente — pero "Siguiente" queda SIEMPRE visible y
+          nunca se pisa con el contenido. */}
+      <div className="flex-1 min-h-0 overflow-y-auto overflow-x-hidden">
+        <div className="w-full py-0.5">
           {question.tipo === 'scale' && (
             <ScaleOptions opciones={question.opciones} selected={selected} onSelect={setSelected} />
           )}
@@ -112,9 +116,10 @@ export default function QuestionCard({ question, onAnswer, currentAnswer, onBack
       </div>
 
       {/* Navegación unificada en una fila: "Anterior" a la izquierda, "Siguiente"
-          siempre a la derecha (posición estable, anclada abajo). "Siguiente" se
-          activa recién cuando hay una elección válida. */}
-      <div className="pt-5 lg:pt-6 w-full flex items-center justify-between gap-3 shrink-0">
+          siempre a la derecha. shrink-0 + fuera de la zona con scroll: queda
+          SIEMPRE visible, sin que haga falta scrollear para presionarla.
+          "Siguiente" se activa recién cuando hay una elección válida. */}
+      <div className="pt-3 lg:pt-6 w-full flex items-center justify-between gap-3 shrink-0">
         <div className="shrink-0">
           {canGoBack && (
             <button
@@ -155,7 +160,7 @@ function NextButton({
       disabled={disabled}
       aria-disabled={disabled}
       whileTap={disabled ? undefined : { scale: 0.98 }}
-      className={`flex items-center justify-center gap-2 py-3.5 text-[15px] lg:text-[16px] ${CTA_PRIMARY} ${
+      className={`flex items-center justify-center gap-2 py-3 lg:py-3.5 text-[15px] lg:text-[16px] ${CTA_PRIMARY} ${
         disabled ? 'opacity-40 pointer-events-none' : ''
       } ${className}`}
     >
@@ -249,7 +254,7 @@ function VisualOptions({
       variants={LIST_VARIANTS}
       initial="hidden"
       animate="visible"
-      className="grid grid-cols-2 lg:grid-cols-3 gap-2.5 lg:gap-3.5 w-full"
+      className="grid grid-cols-2 lg:grid-cols-3 gap-2 lg:gap-3.5 w-full"
     >
       {opciones.map(op => {
         const active = selected === op.id;
@@ -262,7 +267,7 @@ function VisualOptions({
             onClick={() => onSelect(op.id)}
             aria-pressed={active}
             whileTap={{ scale: 0.97 }}
-            className={`relative flex flex-col items-start gap-2 lg:gap-2.5 p-3 lg:p-4 min-h-[84px] lg:min-h-[100px] xl:min-h-[108px] rounded-2xl border transition-[border-color,background-color,box-shadow,transform] duration-200 text-left
+            className={`relative flex flex-col items-start gap-1.5 lg:gap-2.5 p-2.5 lg:p-4 min-h-[72px] lg:min-h-[100px] xl:min-h-[108px] rounded-2xl border transition-[border-color,background-color,box-shadow,transform] duration-200 text-left
               ${active ? OPTION_ACTIVE + ' scale-[1.02]' : OPTION_IDLE}`}
           >
             <span
@@ -306,7 +311,7 @@ function PairsOptions({
       variants={LIST_VARIANTS}
       initial="hidden"
       animate="visible"
-      className="grid grid-cols-1 sm:grid-cols-2 gap-2.5 lg:gap-3.5 xl:gap-4 w-full"
+      className="grid grid-cols-1 sm:grid-cols-2 gap-2 lg:gap-3.5 xl:gap-4 w-full"
     >
       {opciones.map(op => {
         const active = selected === op.id;
@@ -319,7 +324,7 @@ function PairsOptions({
             onClick={() => onSelect(op.id)}
             aria-pressed={active}
             whileTap={{ scale: 0.99 }}
-            className={`w-full flex items-center gap-3.5 lg:gap-4 px-4 lg:px-5 py-3.5 lg:py-5 rounded-2xl border transition-[border-color,background-color,box-shadow,transform] duration-200 text-left
+            className={`w-full flex items-center gap-3 lg:gap-4 px-4 lg:px-5 py-3 lg:py-5 rounded-2xl border transition-[border-color,background-color,box-shadow,transform] duration-200 text-left
               ${active ? OPTION_ACTIVE + ' scale-[1.01]' : OPTION_IDLE}`}
           >
             <span
@@ -356,7 +361,7 @@ function MultiSelectOptions({
       variants={LIST_VARIANTS}
       initial="hidden"
       animate="visible"
-      className="grid grid-cols-1 sm:grid-cols-2 gap-2 lg:gap-2.5 xl:gap-3 w-full"
+      className="grid grid-cols-1 sm:grid-cols-2 gap-1.5 lg:gap-2.5 xl:gap-3 w-full"
     >
       {opciones.map(op => {
         const active = selected.includes(op.id);
@@ -370,7 +375,7 @@ function MultiSelectOptions({
             disabled={disabled}
             whileTap={disabled ? undefined : { scale: 0.99 }}
             aria-pressed={active}
-            className={`w-full flex items-center gap-2.5 px-3.5 lg:px-4 py-2.5 lg:py-3 rounded-2xl font-display text-[13.5px] lg:text-[15px] font-semibold transition-all duration-200 text-left border ${
+            className={`w-full flex items-center gap-2.5 px-3.5 lg:px-4 py-2 lg:py-3 rounded-2xl font-display text-[13px] lg:text-[15px] font-semibold transition-all duration-200 text-left border ${
               active ? OPTION_ACTIVE : disabled ? OPTION_DISABLED : OPTION_IDLE
             }`}
           >
@@ -402,7 +407,7 @@ function ChoiceOptions({
       variants={LIST_VARIANTS}
       initial="hidden"
       animate="visible"
-      className="grid grid-cols-1 lg:grid-cols-2 gap-2.5 lg:gap-3.5 xl:gap-4 w-full"
+      className="grid grid-cols-1 lg:grid-cols-2 gap-2 lg:gap-3.5 xl:gap-4 w-full"
     >
       {opciones.map(op => {
         const active = selected === op.id;
@@ -414,7 +419,7 @@ function ChoiceOptions({
             onClick={() => onSelect(op.id)}
             aria-pressed={active}
             whileTap={{ scale: 0.99 }}
-            className={`w-full h-full min-h-[60px] lg:min-h-[80px] text-left px-3.5 lg:px-5 xl:px-6 py-3 lg:py-4 xl:py-[18px] rounded-2xl border font-display text-[14px] lg:text-[15.5px] xl:text-[16px] font-medium transition-[border-color,background-color,box-shadow,transform] duration-200 flex items-start gap-2.5 lg:gap-3.5
+            className={`w-full h-full min-h-[52px] lg:min-h-[80px] text-left px-3.5 lg:px-5 xl:px-6 py-2.5 lg:py-4 xl:py-[18px] rounded-2xl border font-display text-[13.5px] lg:text-[15.5px] xl:text-[16px] font-medium transition-[border-color,background-color,box-shadow,transform] duration-200 flex items-start gap-2.5 lg:gap-3.5
               ${active ? OPTION_ACTIVE : OPTION_IDLE}`}
           >
             <span
