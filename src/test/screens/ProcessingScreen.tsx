@@ -12,7 +12,7 @@ interface ProcessingScreenProps {
 const STEPS = [
   { item: 'Detectando patrones de personalidad', live: 'Analizando tus intereses' },
   { item: 'Identificando fortalezas dominantes', live: 'Detectando patrones de personalidad' },
-  { item: 'Comparando con 130+ carreras', live: 'Identificando fortalezas dominantes' },
+  { item: 'Comparando carreras', live: 'Identificando fortalezas dominantes' },
   { item: 'Construyendo tu mapa profesional', live: 'Comparando caminos profesionales' },
   { item: 'Preparando resultados', live: 'Preparando tus resultados' },
 ];
@@ -31,13 +31,16 @@ interface Blob {
   top: string[];
   left: string[];
   dur: number;
+  delay: number;
 }
+// Paleta luminosa (brilla desde adentro, no masa oscura). Amplitud amplia y
+// duraciones desfasadas → tinta en agua que nunca repite el mismo "beat".
 const BLOBS: Blob[] = [
-  { color: '#1452c9', size: '88%', top: ['-2%', '18%', '6%'], left: ['8%', '30%', '14%'], dur: 7.5 },
-  { color: '#0b6f86', size: '80%', top: ['8%', '-6%', '16%'], left: ['32%', '14%', '36%'], dur: 8.5 },
-  { color: '#2fbf3f', size: '98%', top: ['44%', '28%', '50%'], left: ['4%', '26%', '0%'], dur: 7 },
-  { color: '#9bd84a', size: '82%', top: ['50%', '66%', '42%'], left: ['40%', '20%', '46%'], dur: 6.5 },
-  { color: '#0a4f63', size: '56%', top: ['26%', '42%', '20%'], left: ['34%', '22%', '44%'], dur: 9 },
+  { color: '#5aa2f7', size: '94%', top: ['-6%', '24%', '0%', '16%'], left: ['4%', '32%', '10%', '26%'], dur: 6.2, delay: 0 },
+  { color: '#2fc2dd', size: '86%', top: ['10%', '-10%', '22%', '2%'], left: ['36%', '10%', '42%', '20%'], dur: 7.1, delay: 0.6 },
+  { color: '#48d85c', size: '102%', top: ['46%', '24%', '56%', '34%'], left: ['0%', '30%', '-4%', '18%'], dur: 5.6, delay: 0.3 },
+  { color: '#bdf062', size: '86%', top: ['54%', '72%', '40%', '62%'], left: ['44%', '16%', '50%', '28%'], dur: 5.1, delay: 1.0 },
+  { color: '#3aa6c4', size: '60%', top: ['28%', '48%', '16%', '40%'], left: ['38%', '18%', '48%', '26%'], dur: 7.6, delay: 0.2 },
 ];
 
 export default function ProcessingScreen({ nombre, onDone }: ProcessingScreenProps) {
@@ -103,16 +106,16 @@ export default function ProcessingScreen({ nombre, onDone }: ProcessingScreenPro
           {/* La esfera: respira (escala muy sutil). */}
           <motion.div
             className="absolute inset-0"
-            animate={reduceMotion ? {} : { scale: [1, 1.035, 1] }}
-            transition={reduceMotion ? {} : { duration: 7.5, repeat: Infinity, ease: 'easeInOut' }}
+            animate={reduceMotion ? {} : { scale: [1, 1.05, 0.99, 1.03, 1] }}
+            transition={reduceMotion ? {} : { duration: 8, repeat: Infinity, ease: 'easeInOut' }}
           >
-            {/* Capa de color líquido — blur fuerte + máscara radial que difumina
-                el borde (orgánico, no bola de cristal). Los blobs derivan y
-                cambian de tamaño: tinta moviéndose en agua. */}
+            {/* Capa de color líquido — blur + máscara radial que difumina el
+                borde (orgánico, no bola de cristal). Los blobs derivan, escalan
+                y cambian de brillo, desfasados: tinta moviéndose en agua. */}
             <div
               className="absolute inset-0"
               style={{
-                filter: 'blur(20px) saturate(1.25)',
+                filter: 'blur(17px) saturate(1.18) brightness(1.06)',
                 WebkitMaskImage: 'radial-gradient(circle farthest-side at 50% 50%, #000 58%, rgba(0,0,0,0.5) 78%, transparent 96%)',
                 maskImage: 'radial-gradient(circle farthest-side at 50% 50%, #000 58%, rgba(0,0,0,0.5) 78%, transparent 96%)',
               }}
@@ -124,28 +127,41 @@ export default function ProcessingScreen({ nombre, onDone }: ProcessingScreenPro
                   style={{
                     width: b.size,
                     height: b.size,
-                    background: `radial-gradient(circle at 50% 50%, ${b.color} 0%, ${b.color} 44%, ${b.color}99 62%, transparent 76%)`,
+                    background: `radial-gradient(circle at 50% 50%, ${b.color} 0%, ${b.color} 42%, ${b.color}99 60%, transparent 75%)`,
                   }}
                   initial={{ top: b.top[0], left: b.left[0] }}
                   animate={
                     reduceMotion
                       ? { top: b.top[1], left: b.left[1] }
-                      : { top: b.top, left: b.left, scale: [1, 1.28, 0.92, 1] }
+                      : { top: b.top, left: b.left, scale: [1, 1.32, 0.9, 1.18, 1], opacity: [0.92, 1, 0.85, 1, 0.92] }
                   }
                   transition={
                     reduceMotion
                       ? { duration: 0 }
-                      : { duration: b.dur, repeat: Infinity, repeatType: 'mirror', ease: 'easeInOut' }
+                      : { duration: b.dur, delay: b.delay, repeat: Infinity, repeatType: 'mirror', ease: 'easeInOut' }
                   }
                 />
               ))}
             </div>
 
+            {/* Núcleo de luz interior — la esfera brilla desde adentro (lift del
+                centro para que no se lea como masa oscura). Late muy suave. */}
+            <motion.div
+              className="absolute inset-0 rounded-full"
+              style={{
+                background: 'radial-gradient(circle at 48% 44%, rgba(255,255,255,0.34) 0%, rgba(255,255,255,0.12) 26%, transparent 50%)',
+                WebkitMaskImage: 'radial-gradient(circle farthest-side at 50% 50%, #000 70%, transparent 92%)',
+                maskImage: 'radial-gradient(circle farthest-side at 50% 50%, #000 70%, transparent 92%)',
+              }}
+              animate={reduceMotion ? {} : { opacity: [0.85, 1, 0.85], scale: [0.96, 1.04, 0.96] }}
+              transition={reduceMotion ? {} : { duration: 6, repeat: Infinity, ease: 'easeInOut' }}
+            />
+
             {/* Luz orgánica superior (volumen sin reflejo de cristal). */}
             <div
               className="absolute inset-0 rounded-full"
               style={{
-                background: 'radial-gradient(circle at 42% 30%, rgba(255,255,255,0.28) 0%, transparent 46%)',
+                background: 'radial-gradient(circle at 42% 28%, rgba(255,255,255,0.32) 0%, transparent 44%)',
                 WebkitMaskImage: 'radial-gradient(circle farthest-side at 50% 50%, #000 66%, transparent 92%)',
                 maskImage: 'radial-gradient(circle farthest-side at 50% 50%, #000 66%, transparent 92%)',
               }}
