@@ -64,35 +64,31 @@ export default function QuestionCard({ question, onAnswer, currentAnswer, onBack
     // para ocupar el ancho en desktop sin romper la continuidad de lectura.
     // Es el patrón que mejor lee en quizzes de escritorio (Typeform / 16personalities).
     <div className="w-full flex flex-col flex-1 min-h-0">
-      {/* Banda de enunciado de alto fijo y SIN encoger (shrink-0): el texto se
-          ancla abajo (justify-end), así preguntas de 2 o 3 líneas terminan a la
-          MISMA altura y las opciones siempre arrancan en el mismo Y, sin saltos
-          al cambiar de pregunta. */}
-      <div className="shrink-0 pt-[clamp(0.25rem,2vh,1.25rem)] sm:pt-[clamp(0.5rem,5vh,4rem)]">
-        <div className="min-h-[40px] sm:min-h-[80px] lg:min-h-[92px] xl:min-h-[104px] flex flex-col justify-end mb-2 sm:mb-6 lg:mb-8 text-center max-w-[820px] mx-auto">
-          <h2 className="font-display font-bold text-[20px] sm:text-[26px] lg:text-[34px] xl:text-[38px] text-ink leading-[1.14] tracking-tight text-balance">
-            {question.enunciado}
-          </h2>
-          {question.subtext && (
-            <p className="mt-2 lg:mt-3 text-[12px] lg:text-[14.5px] text-ink/55 font-medium leading-relaxed">
-              {question.subtext}
-            </p>
-          )}
-        </div>
-      </div>
-
-      {/* Única zona que puede generar scroll: acotada entre el enunciado y la
-          barra de navegación, nunca por detrás de ella. Si las opciones no
-          entran (p. ej. un multiselect de 7-8 ítems en mobile), esta franja
+      {/* Única zona que puede generar scroll: acotada entre el header fijo y la
+          barra de navegación, nunca por detrás de ella. Si el contenido no
+          entra (p. ej. un multiselect de 7-8 ítems en mobile), esta franja
           scrollea internamente — pero "Siguiente" queda SIEMPRE visible y
           nunca se pisa con el contenido.
-          En mobile centramos las opciones dentro de esta franja (en vez de
-          dejarlas ancladas arriba, pegadas al enunciado): así caen en la
-          zona cómoda para el pulgar y no fuerzan a estirar la mano hacia
-          arriba. "-safe" hace fallback a top-aligned si el contenido no
-          entra, para no perder el scroll. En sm+/desktop se mantiene el
-          anclado arriba de siempre. */}
+          En mobile, enunciado + opciones viajan juntos como UN solo bloque
+          centrado en esta franja ("-safe" cae a top-aligned si no entran, para
+          no perder el scroll): así no queda el título pegado arriba con las
+          opciones flotando solas más abajo, sino todo agrupado a media altura.
+          En sm+/desktop se mantiene el enunciado con alto fijo y ancla arriba
+          de siempre (el patrón Typeform / 16personalities). */}
       <div className="flex-1 min-h-0 overflow-y-auto overflow-x-hidden flex flex-col justify-center-safe sm:justify-start">
+        <div className="shrink-0 sm:pt-[clamp(0.5rem,5vh,4rem)]">
+          <div className="sm:min-h-[80px] lg:min-h-[92px] xl:min-h-[104px] flex flex-col sm:justify-end mb-2 sm:mb-6 lg:mb-8 text-center max-w-[820px] mx-auto">
+            <h2 className="font-display font-bold text-[20px] sm:text-[26px] lg:text-[34px] xl:text-[38px] text-ink leading-[1.14] tracking-tight text-balance">
+              {question.enunciado}
+            </h2>
+            {question.subtext && (
+              <p className="mt-2 lg:mt-3 text-[12px] lg:text-[14.5px] text-ink/55 font-medium leading-relaxed">
+                {question.subtext}
+              </p>
+            )}
+          </div>
+        </div>
+
         <div className="w-full py-0.5">
           {question.tipo === 'scale' && (
             <ScaleOptions opciones={question.opciones} selected={selected} onSelect={setSelected} />
