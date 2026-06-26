@@ -17,7 +17,14 @@
  *   TODO(mp): no confiar nunca en el `planId` que devuelve el cliente para
  *             entregar contenido; derivarlo de la verificación server-side.
  */
-import { type ApiRequest, type ApiResponse, assertMethod, jsonResponse, errorResponse } from './_lib';
+import {
+  type ApiRequest,
+  type ApiResponse,
+  assertMethod,
+  jsonResponse,
+  errorResponse,
+  paymentsEnabledServer,
+} from './_lib';
 
 interface MpPayment {
   status?: string;
@@ -27,6 +34,15 @@ interface MpPayment {
 
 export default async function handler(req: ApiRequest, res: ApiResponse): Promise<void> {
   if (!assertMethod(req, res, 'GET')) return;
+
+  // GUARD (NO PRODUCTIVO): con el cobro deshabilitado, este endpoint no debe
+  // poder usarse para "aprobar" un pago y desbloquear el informe. Devolvemos
+  // siempre `approved:false` para que ningún flujo entregue contenido pago
+  // mientras la integración no esté endurecida. Ver paymentsEnabledServer().
+  if (!paymentsEnabledServer()) {
+    jsonResponse(res, 200, { approved: false });
+    return;
+  }
 
   const token = process.env.MP_ACCESS_TOKEN;
   if (!token) {

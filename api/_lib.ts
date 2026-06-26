@@ -109,3 +109,28 @@ export function clampString(value: unknown, max: number): string | null {
   const trimmed = value.trim();
   return trimmed.length === 0 ? null : trimmed.slice(0, max);
 }
+
+/**
+ * Kill switch server-side de pagos (Mercado Pago) — NO PRODUCTIVO todavía.
+ *
+ * La integración de pagos es un ESQUELETO: faltan validaciones server-side
+ * críticas antes de poder cobrar dinero real con seguridad (ver TODO(mp) en
+ * create-preference.ts, verify-payment.ts y mp-webhook.ts):
+ *   - validación de la firma del webhook (x-signature) — autenticidad
+ *   - external_reference generado y persistido server-side (no del cliente)
+ *   - persistencia server-side de la orden pendiente
+ *   - validación de monto y plan contra el pago aprobado
+ *   - idempotencia del webhook (no duplicar compras en reintentos de MP)
+ *   - uso EXCLUSIVO de SUPABASE_SERVICE_KEY en endpoints server-side
+ *   - nunca confiar en datos del frontend para desbloquear acceso premium
+ *
+ * Hasta resolver TODO eso, el cobro queda DESHABILITADO por defecto. Para
+ * habilitarlo hay que setear `PAYMENTS_ENABLED='true'` server-side (sin prefijo
+ * VITE_, a propósito: así NO se activa con una sola variable de build del
+ * frontend, y el flujo de cobro real exige una decisión explícita en el server).
+ * Mientras esté en `false`/ausente, los endpoints de pago responden de forma
+ * inerte y no inician cobros ni persisten compras.
+ */
+export function paymentsEnabledServer(): boolean {
+  return process.env.PAYMENTS_ENABLED === 'true';
+}

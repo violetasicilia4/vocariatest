@@ -105,6 +105,22 @@ Ver [`.env.example`](.env.example) para el detalle. Resumen:
 | `npm run diagnose` | Diagnóstico estadístico del motor (sesgo, identificabilidad, diversidad) |
 | `npm run diagnose:adaptive` | Validación de la fase adaptativa (desempates) |
 
+### E2E (Playwright)
+
+La primera vez hay que instalar el browser:
+
+```bash
+npx playwright install chromium
+npm run test:e2e
+```
+
+Si el entorno ya trae un Chromium preinstalado (CI/containers) y la revisión no
+coincide con la que espera Playwright, apuntá al binario con `PW_CHROMIUM_PATH`:
+
+```bash
+PW_CHROMIUM_PATH=/ruta/al/chrome npm run test:e2e
+```
+
 ## Estructura del proyecto
 
 ```
