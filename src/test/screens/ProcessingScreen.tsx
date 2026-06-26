@@ -1,5 +1,5 @@
-import { useEffect, useState } from 'react';
-import { motion, AnimatePresence, animate, useReducedMotion } from 'motion/react';
+import { useEffect, useRef, useState } from 'react';
+import { motion, AnimatePresence, animate, useAnimationControls, useReducedMotion } from 'motion/react';
 import { Check } from 'lucide-react';
 import { SKY, EASE } from '../ui/theme';
 
@@ -42,14 +42,16 @@ interface Blob {
   /** Opacidad pico (0–1). Los acentos (lima) van más bajos que el resto. */
   peak?: number;
 }
-// Paleta luminosa (brilla desde adentro, no masa oscura). Amplitud amplia y
-// duraciones desfasadas → tinta en agua que nunca repite el mismo "beat".
+// Paleta luminosa (brilla desde adentro, no masa oscura). Duraciones en razones
+// NO armónicas (6.2 / 7.3 / 5.3 / 8.1 / 9.4) y SIN 'mirror': cada blob completa
+// su ciclo hacia adelante, así la composición nunca repite el mismo "beat" ni se
+// siente reversible/mecánica — tinta moviéndose en agua de verdad.
 const BLOBS: Blob[] = [
-  { color: '#258ef9', size: '96%', top: ['-6%', '24%', '0%', '16%'], left: ['4%', '32%', '10%', '26%'], dur: 6.2, delay: 0 },
-  { color: '#5aa2f7', size: '88%', top: ['10%', '-10%', '22%', '2%'], left: ['36%', '10%', '42%', '20%'], dur: 7.1, delay: 0.6 },
-  { color: '#3fb6c9', size: '92%', top: ['46%', '24%', '56%', '34%'], left: ['0%', '30%', '-4%', '18%'], dur: 5.6, delay: 0.3 },
-  { color: '#bfe3ff', size: '68%', top: ['54%', '72%', '40%', '62%'], left: ['44%', '16%', '50%', '28%'], dur: 5.1, delay: 1.0 },
-  { color: '#d5ff3f', size: '32%', top: ['28%', '48%', '16%', '40%'], left: ['38%', '18%', '48%', '26%'], dur: 7.6, delay: 0.2, peak: 0.55 },
+  { color: '#258ef9', size: '96%', top: ['-6%', '24%', '0%', '16%', '-6%'], left: ['4%', '32%', '10%', '26%', '4%'], dur: 6.2, delay: 0 },
+  { color: '#5aa2f7', size: '88%', top: ['10%', '-10%', '22%', '2%', '10%'], left: ['36%', '10%', '42%', '20%', '36%'], dur: 7.3, delay: 0.6 },
+  { color: '#3fb6c9', size: '92%', top: ['46%', '24%', '56%', '34%', '46%'], left: ['0%', '30%', '-4%', '18%', '0%'], dur: 5.3, delay: 0.3 },
+  { color: '#bfe3ff', size: '68%', top: ['54%', '72%', '40%', '62%', '54%'], left: ['44%', '16%', '50%', '28%', '44%'], dur: 8.1, delay: 1.0 },
+  { color: '#d5ff3f', size: '32%', top: ['28%', '48%', '16%', '40%', '28%'], left: ['38%', '18%', '48%', '26%', '38%'], dur: 9.4, delay: 0.2, peak: 0.5 },
 ];
 
 /** Desplazamiento de cada frame respecto del primero (para animar x/y por
@@ -62,6 +64,14 @@ function deltas(values: string[]): number[] {
 export default function ProcessingScreen({ nombre, onDone }: ProcessingScreenProps) {
   const [pct, setPct] = useState(0);
   const reduceMotion = useReducedMotion();
+
+  // Florecimiento de "insight": la esfera reacciona MUY sutilmente cada vez que
+  // se completa un paso. Es lo que liga la animación con el proceso —
+  // la esfera deja de ser decorado y se lee como la causa del progreso:
+  // "el sistema acaba de descubrir algo". Disparado por efecto, no en loop.
+  const bloom = useAnimationControls();
+  const prevStage = useRef(0);
+  const finalBloomed = useRef(false);
 
   useEffect(() => {
     // +500ms tras llegar a 100%: deja el checklist completo en pantalla un
@@ -85,6 +95,38 @@ export default function ProcessingScreen({ nombre, onDone }: ProcessingScreenPro
   // quedarse "en curso" hasta el corte final.
   const allDone = pct >= 96;
   const firstName = nombre ? nombre.split(' ')[0] : '';
+
+  // Avance continuo del hilo (spine) del checklist. Mapeado para que la punta
+  // llegue a cada nodo EXACTAMENTE cuando ese paso se vuelve activo: el factor
+  // n/(n-1) hace que en pct=20% el hilo toque el nodo 1, en 40% el nodo 2, etc.
+  // Resultado: progreso real, sin números, siempre avanzando.
+  const fill = Math.min(1, (pct / 100) * (STEPS.length / (STEPS.length - 1)));
+
+  // Insight bloom al completar cada paso (no en el montaje: prevStage arranca en 0).
+  useEffect(() => {
+    if (reduceMotion) return;
+    if (stageIndex !== prevStage.current) {
+      prevStage.current = stageIndex;
+      void bloom.start({
+        opacity: [0, 0.5, 0],
+        scale: [0.82, 1.16, 1.06],
+        transition: { duration: 1.3, ease: 'easeOut', times: [0, 0.28, 1] },
+      });
+    }
+  }, [stageIndex, reduceMotion, bloom]);
+
+  // Florecimiento final, un poco más amplio: el "ya está" de la esfera.
+  useEffect(() => {
+    if (reduceMotion) return;
+    if (allDone && !finalBloomed.current) {
+      finalBloomed.current = true;
+      void bloom.start({
+        opacity: [0, 0.66, 0],
+        scale: [0.88, 1.24, 1.1],
+        transition: { duration: 1.7, ease: 'easeOut', times: [0, 0.24, 1] },
+      });
+    }
+  }, [allDone, reduceMotion, bloom]);
 
   return (
     <div className="relative h-[100dvh] bg-paper flex flex-col items-center justify-center overflow-y-auto overflow-x-hidden px-6 py-[clamp(1rem,3vh,2rem)]">
@@ -123,24 +165,25 @@ export default function ProcessingScreen({ nombre, onDone }: ProcessingScreenPro
       </div>
 
       <div className="w-full max-w-[420px] lg:max-w-[480px] flex flex-col items-center">
-        {/* Encabezado — el nombre cede protagonismo (menor contraste, debajo). */}
+        {/* Encabezado — acompaña: el nombre cede protagonismo (menor contraste,
+            debajo). El título no compite con el estado vivo. */}
         <motion.div
           initial={{ opacity: 0, y: 8 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.5, ease: EASE }}
           className="text-center"
         >
-          <h2 className="font-display font-semibold text-[19px] sm:text-[21px] lg:text-[26px] text-ink/85 tracking-tight leading-tight">
+          <h2 className="font-display font-semibold text-[18px] sm:text-[20px] lg:text-[24px] text-ink/80 tracking-tight leading-tight">
             Construyendo tu perfil
           </h2>
           {firstName && (
-            <p className="mt-1 font-display text-[14px] lg:text-[15px] text-ink/35 font-medium tracking-wide">{firstName}</p>
+            <p className="mt-1 font-display text-[13.5px] lg:text-[15px] text-ink/35 font-medium tracking-wide">{firstName}</p>
           )}
         </motion.div>
 
         {/* ── Esfera orgánica (único elemento visual fuerte) ─────────────── */}
         <motion.div
-          className="relative w-[clamp(150px,32dvh,230px)] lg:w-[280px] aspect-square mt-[clamp(1.25rem,3.5vh,2.25rem)] lg:mt-10"
+          className="relative w-[clamp(150px,32dvh,230px)] lg:w-[280px] aspect-square mt-[clamp(1.5rem,4vh,2.5rem)] lg:mt-11"
           initial={{ opacity: 0, scale: 0.92 }}
           animate={{ opacity: 1, scale: 1 }}
           transition={{ duration: 0.7, ease: EASE }}
@@ -204,14 +247,14 @@ export default function ProcessingScreen({ nombre, onDone }: ProcessingScreenPro
                         : {
                             x: dLeft.map((v) => `${v}%`),
                             y: dTop.map((v) => `${v}%`),
-                            scale: [1, 1.32, 0.9, 1.18, 1],
+                            scale: [1, 1.3, 0.9, 1.18, 1],
                             opacity: [0.92, 1, 0.85, 1, 0.92].map((v) => v * peak),
                           }
                     }
                     transition={
                       reduceMotion
                         ? undefined
-                        : { duration: b.dur, delay: b.delay, repeat: Infinity, repeatType: 'mirror', ease: 'easeInOut' }
+                        : { duration: b.dur, delay: b.delay, repeat: Infinity, ease: 'easeInOut' }
                     }
                   />
                 );
@@ -232,6 +275,23 @@ export default function ProcessingScreen({ nombre, onDone }: ProcessingScreenPro
               transition={reduceMotion ? {} : { duration: 6, repeat: Infinity, ease: 'easeInOut' }}
             />
 
+            {/* Insight bloom — florecimiento puntual al completar cada paso.
+                Empieza invisible (opacity 0) y sólo se enciende cuando bloom.start
+                lo dispara: un destello cálido (centro blanco → halo cielo) que
+                bloomea y se apaga. Es la reacción "encontré algo" de la esfera. */}
+            <motion.div
+              className="absolute inset-0 rounded-full"
+              style={{
+                background:
+                  'radial-gradient(circle at 50% 47%, rgba(255,255,255,0.6) 0%, rgba(120,190,255,0.4) 32%, rgba(37,142,249,0.12) 58%, transparent 76%)',
+                WebkitMaskImage: 'radial-gradient(circle farthest-side at 50% 50%, #000 72%, transparent 94%)',
+                maskImage: 'radial-gradient(circle farthest-side at 50% 50%, #000 72%, transparent 94%)',
+                willChange: 'transform, opacity',
+                opacity: 0,
+              }}
+              animate={bloom}
+            />
+
             {/* Luz orgánica superior (volumen sin reflejo de cristal). */}
             <div
               className="absolute inset-0 rounded-full"
@@ -244,9 +304,9 @@ export default function ProcessingScreen({ nombre, onDone }: ProcessingScreenPro
           </motion.div>
         </motion.div>
 
-        {/* ── Mensaje vivo (cambia con calma, sin números) ───────────────── */}
+        {/* ── Estado actual (segundo en la jerarquía, tras la esfera) ─────── */}
         <div
-          className="relative w-full mt-[clamp(1rem,3vh,1.75rem)] lg:mt-8 h-6 lg:h-7 flex items-center justify-center"
+          className="relative w-full mt-[clamp(1.25rem,3.5vh,2rem)] lg:mt-9 h-7 lg:h-8 flex items-center justify-center"
           aria-live="polite"
         >
           {/* Sin mode="wait": el saliente y el entrante cruzan en simultáneo
@@ -257,87 +317,135 @@ export default function ProcessingScreen({ nombre, onDone }: ProcessingScreenPro
           <AnimatePresence>
             <motion.p
               key={allDone ? 'done' : stageIndex}
-              initial={{ opacity: 0, y: 6 }}
+              initial={{ opacity: 0, y: 7 }}
               animate={{ opacity: 1, y: 0 }}
-              exit={{ opacity: 0, y: -6 }}
-              transition={{ duration: 0.45, ease: EASE }}
-              className="absolute inset-0 flex items-center justify-center text-ink/55 text-[14px] sm:text-[15px] lg:text-[17px] font-medium tracking-wide text-center"
+              exit={{ opacity: 0, y: -7 }}
+              transition={{ duration: 0.5, ease: EASE }}
+              className="absolute inset-0 flex items-center justify-center text-ink/75 text-[15px] sm:text-[16px] lg:text-[18px] font-semibold tracking-[-0.01em] text-center"
             >
               {allDone ? FINAL_MESSAGE : `${STEPS[stageIndex]}…`}
             </motion.p>
           </AnimatePresence>
         </div>
 
-        {/* ── Checklist (aire generoso, jerarquía suave) ─────────────────── */}
-        <div className="mt-[clamp(1rem,3vh,1.75rem)] lg:mt-8 w-full max-w-[320px] lg:max-w-[360px] flex flex-col gap-[clamp(0.625rem,1.75vh,1.125rem)] lg:gap-4">
-          {STEPS.map((label, i) => {
-            // Desde allDone, todos los ítems quedan marcados como completos —
-            // el último paso no se queda pulsando "en curso" hasta el corte.
-            const done = allDone || i < stageIndex;
-            const current = !allDone && i === stageIndex;
-            return (
-              // Entrada escalonada (una sola vez, al montar) en el wrapper
-              // externo; el estado done/current vive en el interno con una
-              // transición corta y sin delay — así marcar un paso se siente
-              // inmediato sin importar cuántas veces se re-renderice.
-              <motion.div
-                key={label}
-                initial={{ opacity: 0, y: 10 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.45, ease: EASE, delay: i * 0.06 }}
-              >
-                <motion.div
-                  className="flex items-center gap-3.5"
-                  animate={{ opacity: done ? 0.9 : current ? 1 : 0.4 }}
-                  transition={{ duration: 0.3, ease: EASE }}
-                >
-                  <span className="relative shrink-0 w-[22px] h-[22px] lg:w-[24px] lg:h-[24px] flex items-center justify-center">
-                    {/* Pulso discreto del paso activo (vivo, no tech). */}
-                    {current && !reduceMotion && (
-                      <motion.span
-                        className="absolute inset-0 rounded-full"
-                        style={{ border: `1.5px solid ${SKY}` }}
-                        animate={{ scale: [1, 1.6], opacity: [0.5, 0] }}
-                        transition={{ duration: 1.8, repeat: Infinity, ease: 'easeOut' }}
-                      />
-                    )}
-                    <span
-                      className="relative w-[22px] h-[22px] lg:w-[24px] lg:h-[24px] rounded-full flex items-center justify-center transition-colors duration-500"
-                      style={{
-                        background: done ? SKY : '#fff',
-                        border: done ? `1px solid ${SKY}` : current ? `1.5px solid ${SKY}` : '1.5px solid var(--color-line-strong)',
-                      }}
-                    >
-                      {done ? (
-                        <motion.span
-                          initial={{ scale: 0 }}
-                          animate={{ scale: 1 }}
-                          transition={{ type: 'spring', stiffness: 480, damping: 20 }}
-                        >
-                          <Check size={12} strokeWidth={3} className="text-white" />
-                        </motion.span>
-                      ) : current && !reduceMotion ? (
-                        <motion.span
-                          className="w-[7px] h-[7px] lg:w-[8px] lg:h-[8px] rounded-full"
-                          style={{ background: SKY }}
-                          animate={{ opacity: [1, 0.4, 1], scale: [1, 0.82, 1] }}
-                          transition={{ duration: 1.8, repeat: Infinity, ease: 'easeInOut' }}
-                        />
-                      ) : null}
-                    </span>
-                  </span>
+        {/* ── Checklist con spine continuo (un solo recorrido, no 5 estados) ─ */}
+        <div className="relative mt-[clamp(1.25rem,3.5vh,2rem)] lg:mt-9 w-full max-w-[320px] lg:max-w-[360px]">
+          {/* Hilo conductor — conecta todos los nodos como una sola línea.
+              Inset vertical = medio nodo (los nodos miden 22/24px) para que la
+              línea arranque/termine EXACTO en el centro del primer y último
+              marcador. Va detrás de los nodos (z-0); los nodos son opacos, así
+              que el hilo sólo asoma en los huecos: un recorrido, no piezas
+              sueltas. aria-hidden: es puramente decorativo. */}
+          <div
+            className="pointer-events-none absolute top-[11px] bottom-[11px] lg:top-[12px] lg:bottom-[12px] left-[10px] lg:left-[11px] w-[2px] z-0"
+            aria-hidden="true"
+          >
+            {/* Riel base (tenue). */}
+            <div className="absolute inset-0 rounded-full" style={{ background: 'var(--color-line-strong)' }} />
+            {/* Relleno que se dibuja hacia abajo, sincronizado con el avance.
+                scaleY (compositor) en vez de height (layout) → 60fps. El
+                degradé aclara hacia la punta: la cabeza del hilo "está viva". */}
+            <div
+              className="absolute inset-x-0 top-0 h-full rounded-full origin-top"
+              style={{
+                transform: `scaleY(${fill})`,
+                background: `linear-gradient(to bottom, ${SKY} 0%, ${SKY} 62%, #5aa6ff 100%)`,
+                willChange: 'transform',
+              }}
+            />
+            {/* Luz que viaja en la punta del hilo — descubrimiento en tiempo
+                real. Soft, con un beso de lima (acento de marca = "precisión").
+                Se desvanece al completar para no quedar parpadeando al final. */}
+            <motion.div
+              className="absolute left-1/2 rounded-full"
+              style={{
+                top: `${fill * 100}%`,
+                width: 16,
+                height: 16,
+                marginLeft: -8,
+                marginTop: -8,
+                background:
+                  'radial-gradient(circle, rgba(213,255,63,0.55) 0%, rgba(37,142,249,0.45) 38%, transparent 70%)',
+                filter: 'blur(1px)',
+                willChange: 'transform, opacity',
+                opacity: !reduceMotion && fill > 0.02 && fill < 0.985 ? 1 : 0,
+                transition: 'opacity 0.5s ease',
+              }}
+              animate={reduceMotion ? {} : { scale: [1, 1.25, 1], opacity: [0.85, 1, 0.85] }}
+              transition={reduceMotion ? {} : { duration: 1.6, repeat: Infinity, ease: 'easeInOut' }}
+            />
+          </div>
 
-                  <span
-                    className={`font-display text-[14px] sm:text-[14.5px] lg:text-[16px] leading-snug transition-colors duration-500 ${
-                      current ? 'text-ink font-semibold' : done ? 'text-ink/70 font-medium' : 'text-ink/45 font-medium'
-                    }`}
+          <div className="relative z-10 flex flex-col gap-[clamp(0.75rem,2vh,1.125rem)] lg:gap-[18px]">
+            {STEPS.map((label, i) => {
+              // Desde allDone, todos los ítems quedan marcados como completos —
+              // el último paso no se queda pulsando "en curso" hasta el corte.
+              const done = allDone || i < stageIndex;
+              const current = !allDone && i === stageIndex;
+              return (
+                // Entrada escalonada (una sola vez, al montar) en el wrapper
+                // externo; el estado done/current vive en el interno con una
+                // transición corta y sin delay — así marcar un paso se siente
+                // inmediato sin importar cuántas veces se re-renderice.
+                <motion.div
+                  key={label}
+                  initial={{ opacity: 0, y: 10 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ duration: 0.45, ease: EASE, delay: i * 0.06 }}
+                >
+                  <motion.div
+                    className="flex items-center gap-3.5"
+                    animate={{ opacity: done ? 0.92 : current ? 1 : 0.42 }}
+                    transition={{ duration: 0.3, ease: EASE }}
                   >
-                    {label}
-                  </span>
+                    <span className="relative shrink-0 w-[22px] h-[22px] lg:w-[24px] lg:h-[24px] flex items-center justify-center">
+                      {/* Pulso discreto del paso activo (vivo, no tech). */}
+                      {current && !reduceMotion && (
+                        <motion.span
+                          className="absolute inset-0 rounded-full"
+                          style={{ border: `1.5px solid ${SKY}` }}
+                          animate={{ scale: [1, 1.6], opacity: [0.5, 0] }}
+                          transition={{ duration: 1.8, repeat: Infinity, ease: 'easeOut' }}
+                        />
+                      )}
+                      <span
+                        className="relative w-[22px] h-[22px] lg:w-[24px] lg:h-[24px] rounded-full flex items-center justify-center transition-colors duration-500"
+                        style={{
+                          background: done ? SKY : '#fff',
+                          border: done ? `1px solid ${SKY}` : current ? `1.5px solid ${SKY}` : '1.5px solid var(--color-line-strong)',
+                        }}
+                      >
+                        {done ? (
+                          <motion.span
+                            initial={{ scale: 0 }}
+                            animate={{ scale: 1 }}
+                            transition={{ type: 'spring', stiffness: 480, damping: 20 }}
+                          >
+                            <Check size={12} strokeWidth={3} className="text-white" />
+                          </motion.span>
+                        ) : current && !reduceMotion ? (
+                          <motion.span
+                            className="w-[7px] h-[7px] lg:w-[8px] lg:h-[8px] rounded-full"
+                            style={{ background: SKY }}
+                            animate={{ opacity: [1, 0.4, 1], scale: [1, 0.82, 1] }}
+                            transition={{ duration: 1.8, repeat: Infinity, ease: 'easeInOut' }}
+                          />
+                        ) : null}
+                      </span>
+                    </span>
+
+                    <span
+                      className={`font-display text-[14px] sm:text-[14.5px] lg:text-[16px] leading-snug transition-colors duration-500 ${
+                        current ? 'text-ink font-semibold' : done ? 'text-ink/70 font-medium' : 'text-ink/45 font-medium'
+                      }`}
+                    >
+                      {label}
+                    </span>
+                  </motion.div>
                 </motion.div>
-              </motion.div>
-            );
-          })}
+              );
+            })}
+          </div>
         </div>
       </div>
     </div>
