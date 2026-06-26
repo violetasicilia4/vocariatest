@@ -106,7 +106,7 @@ export default function ProcessingScreen({ nombre, onDone }: ProcessingScreenPro
 
         {/* ── Esfera orgánica (único elemento visual fuerte) ─────────────── */}
         <motion.div
-          className="relative w-[clamp(170px,42dvh,290px)] aspect-square mt-[clamp(1.25rem,3.5vh,2.25rem)]"
+          className="relative w-[clamp(150px,32dvh,230px)] aspect-square mt-[clamp(1.25rem,3.5vh,2.25rem)]"
           initial={{ opacity: 0, scale: 0.92 }}
           animate={{ opacity: 1, scale: 1 }}
           transition={{ duration: 1, ease: EASE }}
