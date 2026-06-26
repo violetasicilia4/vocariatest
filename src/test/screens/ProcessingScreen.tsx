@@ -87,7 +87,7 @@ export default function ProcessingScreen({ nombre, onDone }: ProcessingScreenPro
   const firstName = nombre ? nombre.split(' ')[0] : '';
 
   return (
-    <div className="h-[100dvh] bg-paper flex flex-col items-center justify-center overflow-hidden px-6 py-[clamp(1.25rem,4vh,3rem)]">
+    <div className="h-[100dvh] bg-paper flex flex-col items-center justify-center overflow-y-auto overflow-x-hidden px-6 py-[clamp(1rem,3vh,2rem)]">
       <div className="w-full max-w-[420px] flex flex-col items-center">
         {/* Encabezado — el nombre cede protagonismo (menor contraste, debajo). */}
         <motion.div
@@ -106,7 +106,7 @@ export default function ProcessingScreen({ nombre, onDone }: ProcessingScreenPro
 
         {/* ── Esfera orgánica (único elemento visual fuerte) ─────────────── */}
         <motion.div
-          className="relative w-[clamp(190px,52dvh,332px)] aspect-square mt-[clamp(1.5rem,5vh,3rem)]"
+          className="relative w-[clamp(170px,42dvh,290px)] aspect-square mt-[clamp(1.25rem,3.5vh,2.25rem)]"
           initial={{ opacity: 0, scale: 0.92 }}
           animate={{ opacity: 1, scale: 1 }}
           transition={{ duration: 1, ease: EASE }}
@@ -212,7 +212,7 @@ export default function ProcessingScreen({ nombre, onDone }: ProcessingScreenPro
 
         {/* ── Mensaje vivo (cambia con calma, sin números) ───────────────── */}
         <div
-          className="relative w-full mt-[clamp(1.5rem,5vh,3rem)] h-6 flex items-center justify-center"
+          className="relative w-full mt-[clamp(1rem,3vh,1.75rem)] h-6 flex items-center justify-center"
           aria-live="polite"
         >
           {/* Sin mode="wait": el saliente y el entrante cruzan en simultáneo
@@ -233,7 +233,7 @@ export default function ProcessingScreen({ nombre, onDone }: ProcessingScreenPro
         </div>
 
         {/* ── Checklist (aire generoso, jerarquía suave) ─────────────────── */}
-        <div className="mt-[clamp(1.5rem,4vh,2.5rem)] w-full max-w-[290px] flex flex-col gap-[clamp(0.75rem,2vh,1.25rem)]">
+        <div className="mt-[clamp(1rem,3vh,1.75rem)] w-full max-w-[320px] flex flex-col gap-[clamp(0.625rem,1.75vh,1.125rem)]">
           {STEPS.map((label, i) => {
             // Desde allDone, todos los ítems quedan marcados como completos —
             // el último paso no se queda pulsando "en curso" hasta el corte.
