@@ -36,9 +36,14 @@ export default function HeroSection({ onGetStartedClick }: HeroSectionProps) {
   return (
     <section
       id="home"
-      className="relative pt-20 pb-12 lg:pt-24 lg:pb-20 overflow-hidden rounded-b-[56px] md:rounded-b-[80px] flex flex-col justify-start lg:justify-center text-slate-900 bg-sky-50"
+      className="hero-bg relative pt-20 pb-12 lg:pt-24 lg:pb-20 overflow-hidden rounded-b-[56px] md:rounded-b-[80px] flex flex-col justify-start lg:justify-center text-slate-900 bg-sky-50"
+      // El fondo (gradiente + imagen) vive en `.hero-bg` (index.css) para poder
+      // servir WebP con fallback PNG/JPEG vía image-set()+@supports sin perder el
+      // gradiente en navegadores viejos. Las URLs hasheadas por Vite se pasan como
+      // custom properties para no perder el procesamiento de assets.
       style={{
-        backgroundImage: `linear-gradient(to bottom, rgba(111,159,202,0.97) 0%, rgba(159,210,241,0.93) 52%, rgba(221,247,255,0.90) 100%), url(${IMAGES.heroClouds})`,
+        ['--hero-jpg' as string]: `url(${IMAGES.heroClouds})`,
+        ['--hero-webp' as string]: `url(${IMAGES.heroCloudsWebp})`,
         backgroundSize: 'cover',
         backgroundPosition: 'center',
       }}

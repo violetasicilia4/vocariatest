@@ -13,6 +13,7 @@ import type { ScoringResult } from '../engine/scorer';
 import { calcularResultado } from '../engine/scorer';
 import { selectAdaptiveQuestions } from '../engine/adaptive';
 import type { UserProfile } from '../data/profile';
+import { track } from '../../services/analytics';
 
 interface TestRunnerProps {
   nombre: string;
@@ -82,6 +83,7 @@ export default function TestRunner({ nombre, profile, onComplete }: TestRunnerPr
   useEffect(() => {
     const crossed = CHECKPOINTS.filter(c => pct >= c.at && !shownCheckpoints.has(c.at));
     if (crossed.length > 0) {
+      track('checkpoint_seen', { index: crossed[crossed.length - 1].at });
       setCheckpoint(crossed[crossed.length - 1]);
       setShownCheckpoints(prev => {
         const next = new Set(prev);
@@ -92,6 +94,7 @@ export default function TestRunner({ nombre, profile, onComplete }: TestRunnerPr
   }, [currentIndex]); // eslint-disable-line react-hooks/exhaustive-deps
 
   const handleAnswer = useCallback((value: string) => {
+    track('question_answered', { index: currentIndex, phase: isAdaptive ? 'adaptive' : 'core' });
     const newAnswers = { ...answers, [currentQuestion.id]: value };
     setAnswers(newAnswers);
 

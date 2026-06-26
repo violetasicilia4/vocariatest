@@ -82,18 +82,57 @@ stack traces) y validadores de input.
 
 ## Rate limiting / anti-abuso
 
-**Implementado ahora (cliente / validación):**
-- Honeypot anti-bot en el formulario de perfil (`ProfileCapture`).
-- Normalización de email + límites de longitud antes de insertar en Supabase.
-- Validación de tamaño/forma de payload en los endpoints (`api/_lib.ts`).
+### Arquitectura actual (importante para entender qué se puede y qué no)
 
-**Pendiente (servidor) — diferido a propósito hasta tener dominio propio:**
-Decisión: el rate limiting y el captcha server-side se implementan **cuando haya
-dominio** (antes de abrir tráfico real). Hasta entonces la defensa es la del
-lado cliente/validación de arriba. Cuando se retome:
-- Rate limiting por IP en las funciones serverless (p. ej. Upstash Redis) — **no implementado**.
-- Cloudflare Turnstile / captcha en formularios públicos — **no implementado**.
-- Anti-abuso del INSERT anónimo de Supabase (la anon key permite inserts ilimitados).
+Los leads/resultados se insertan **directo desde el frontend** a la API REST de
+Supabase con la **anon key** (`src/services/leads.ts`). **No existe** un endpoint
+server-side (`/api/leads`). Consecuencia clave: **un rate limit real NO se puede
+lograr sólo en React** — el cliente es controlado por el usuario y cualquiera
+puede pegarle directo al endpoint de Supabase con la anon key (que es pública).
+No hay que fingir lo contrario.
+
+### Qué protege HOY (cliente + RLS)
+- **Honeypot** anti-bot en `ProfileCapture` (descarta bots que completan todo).
+- **Dedup de cliente** (en memoria, por sesión) contra doble submit / doble click
+  (`src/services/leads.ts`). No es anti-abuso real: es idempotencia de UX.
+- **Normalización + límites de longitud** antes de insertar (defensa contra payloads inflados).
+- **Whitelist de tablas** (`ALLOWED_TABLES`): la cola offline no puede insertar en tablas arbitrarias.
+- **RLS**: el rol `anon` sólo puede INSERT (no leer/editar/borrar); `purchases` cerrada al cliente.
+- **Validación de forma/tamaño** en los endpoints `api/` (`api/_lib.ts`).
+
+### Qué NO protege hoy
+- **Volumen / flood**: la policy `with check (true)` permite inserts anónimos
+  **ilimitados**. No hay rate limit por IP ni ventana temporal.
+- **Dedup cross-device / cross-reload**: la dedup es sólo de cliente; un refresh o
+  un POST directo pueden duplicar (ver migración `submission_id` en `schema.sql`).
+- **Bots sofisticados** que ignoran el honeypot y pegan directo a Supabase.
+
+### Qué falta para producción con tráfico alto (opciones reales)
+
+Ninguna se implementa ahora (no se agregan vendors ni CAPTCHA todavía). En orden
+de menor a mayor esfuerzo:
+
+1. **Rate limit en Postgres (Supabase), sin nuevo servicio.** Tabla `lead_rate`
+   (ip_hash, window_start, count) + función `before insert` que cuenta inserts
+   por IP/ventana y rechaza si excede. Requiere capturar la IP (header) — hoy el
+   cliente no la tiene, así que esto **implica** mover el insert a un endpoint.
+2. **Endpoint server-side `/api/leads`** (Vercel function) — arquitectura objetivo:
+   - validar payload server-side (reusar `api/_lib.ts`),
+   - **rate limit por IP + ventana** (store persistente: Vercel KV / Upstash, o
+     una tabla/RPC en Supabase; un Map en memoria es **best-effort dev/poco
+     tráfico**: se resetea y es por-instancia, **no** sirve como límite real),
+   - insertar con **service role** desde el server,
+   - **cerrar RLS** para inserts anónimos directos (quitar la policy `anon insert`)
+     una vez migrado el cliente, para que el único camino sea el endpoint.
+   ⚠️ Esto cambia el contrato de captura (frontend → `/api/leads` en vez de
+   Supabase directo). Es un cambio de flujo: **coordinar y avisar antes** de
+   migrarlo; no se hace en este PR.
+3. **CAPTCHA / Turnstile** (Cloudflare) en el formulario — diferido a propósito
+   hasta tener dominio y evidencia de abuso real.
+
+**Decisión actual:** mantener la defensa cliente/RLS + dedup, **documentar** la
+arquitectura objetivo, y **no** introducir un rate limit en memoria disfrazado de
+protección real ni migrar el flujo sin acuerdo previo.
 
 ## Mercado Pago — pendiente (no productivo)
 

@@ -1,9 +1,15 @@
-# Analytics — plan de eventos (propuesta)
+# Analytics — plan de eventos
 
-**Estado: NO implementado.** Hoy la app no tiene analytics ni capa de tracking
-(no hay `gtag`, Plausible, PostHog, etc.). Este documento define el plan mínimo
-para cuando se decida instrumentar el funnel — **sin** comprometer todavía un
-proveedor.
+**Estado: capa interna NO-OP implementada** en `src/services/analytics.ts`
+(`track(event, props?)`). **No** hay vendor, **no** hay llamadas de red y en
+producción es no-op. En desarrollo, con `VITE_ANALYTICS_DEBUG=true`, loguea los
+eventos por consola (sólo datos técnicos/agregados, sin PII) para verificar el
+funnel. Cuando se decida un proveedor cookieless, se enchufa en un único lugar
+(el `TODO(analytics)` dentro de `track`), idealmente gateado por el consentimiento
+que ya pide `ProfileCapture`.
+
+Los eventos ya están conectados en puntos de bajo riesgo (ver "Puntos conectados"
+más abajo). La tabla siguiente es el contrato de nombres/propiedades.
 
 ## Principios
 
@@ -18,35 +24,38 @@ proveedor.
   Vercel Web Analytics) para minimizar fricción legal. Evaluar antes de sumar
   dependencia (la restricción actual es no agregar vendors todavía).
 
-## Eventos recomendados (funnel)
+## Eventos (funnel) — contrato actual
 
-| Evento | Cuándo dispara | Propiedades mínimas | Métrica que habilita |
+Nombres definidos como union type `AnalyticsEvent` en `src/services/analytics.ts`.
+Propiedades acotadas por `AnalyticsProps` (sólo datos técnicos/agregados, sin PII).
+
+| Evento | Cuándo dispara | Propiedades | Métrica que habilita |
 |---|---|---|---|
-| `landing_view` | Carga la landing | `referrer_kind` (direct/social/search) | Tráfico, fuentes |
-| `cta_start_click` | Click en cualquier CTA "Empezar mi test" | `cta_location` (hero/narrativa/cierre/header) | Qué CTA convierte |
-| `test_open` | Se abre el flujo del test (`TestFlow` montado) | — | Landing → test |
-| `profile_submitted` | Se completa el paso de datos del perfil | `provincia_id`, `edad_band` | Fricción del formulario |
-| `test_question_answered` | Se responde una pregunta | `index`, `phase` (core/adaptive) | Dónde se abandona |
-| `test_completed` | Termina el cálculo y se muestra el resultado | `arquetipo_primario`, `confianza_band` | Tasa de finalización |
-| `result_viewed` | Render de la pantalla de resultado | `arquetipo_primario` | Demanda por arquetipo |
-| `checkout_view` | Se abre la pantalla de planes (`CheckoutScreen`) | `plan` | Intención de compra |
-| `reserva_submitted` | Se registra la "reserva" (pagos OFF) | `plan` | Demanda con pagos desactivados |
-| `payment_blocked` | Se intentó un cobro con pagos desactivados | `reason` (`payments_disabled`) | Detectar intentos prematuros |
+| `landing_viewed` | Carga la landing | `viewport` | Tráfico, mobile/desktop |
+| `cta_clicked` | Click en un CTA "Empezar mi test" | `viewport` | Landing → test |
+| `test_started` | Se completa el perfil y arranca el test | — | Inicio efectivo del test |
+| `profile_completed` | Se completa el paso de perfil | — | Fricción del formulario |
+| `question_answered` | Se responde una pregunta | `index`, `phase` (core/adaptive) | Dónde se abandona |
+| `checkpoint_seen` | Se cruza un checkpoint del test | `index` (umbral %) | Progreso por hitos |
+| `test_completed` | Termina el cálculo del resultado | `archetype` (id, no PII) | Tasa de finalización |
+| `result_preview_seen` | Se muestra el preview del resultado | — | Demanda por resultado |
+| `payment_attempt_blocked` | Reserva con pagos OFF (intento de compra) | `plan`, `reason` | Demanda con pagos desactivados |
+| `error_boundary_shown` | Un ErrorBoundary mostró su fallback | — | Salud / errores de UI |
 
-`*_band` = valor agrupado (p. ej. `edad_band` = `16-18`/`19-24`/`25+`,
-`confianza_band` = `alta`/`media`/`baja`) para no exponer datos finos.
+Propiedades permitidas (ver `AnalyticsProps`): `index`, `phase`, `archetype`,
+`viewport`, `source`, `plan`, `reason`, `flags`. **Nunca** email, nombre ni edad
+exacta. Antes de loguear, `track` filtra a estas claves (defensa en profundidad).
 
-## Cómo se implementaría (sketch, futuro)
+## Puntos conectados (estado actual)
 
-```ts
-// src/services/analytics.ts (propuesto)
-type Props = Record<string, string | number | boolean>;
-export function track(event: string, props?: Props): void {
-  if (import.meta.env.DEV) console.debug('[track]', event, props ?? {});
-  // TODO: enchufar proveedor cookieless cuando se decida (gateado por consent).
-}
-```
+| Evento | Archivo |
+|---|---|
+| `landing_viewed`, `cta_clicked` | `src/App.tsx` |
+| `profile_completed`, `test_started`, `test_completed`, `result_preview_seen` | `src/test/TestFlow.tsx` |
+| `question_answered`, `checkpoint_seen` | `src/test/screens/TestRunner.tsx` |
+| `payment_attempt_blocked` | `src/test/screens/CheckoutScreen.tsx` |
+| `error_boundary_shown` | `src/components/ErrorBoundary.tsx` |
 
-Mapear cada fila de la tabla a un único `track(...)` en el punto del código
-indicado en la columna "Cuándo dispara". Mantener los nombres de evento estables
-(son contrato con el dashboard).
+Todas las llamadas son fire-and-forget (con `try/catch` interno en `track`): si
+el tracking falla, la navegación no se interrumpe. Para conectar un proveedor,
+completar el `TODO(analytics)` dentro de `track` — un solo lugar.

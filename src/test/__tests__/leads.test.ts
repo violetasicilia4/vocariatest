@@ -20,6 +20,7 @@ async function loadLeads() {
 
 beforeEach(() => {
   localStorage.clear();
+  sessionStorage.clear();
 });
 
 afterEach(() => {
@@ -79,5 +80,44 @@ describe('whitelist de tablas en la cola offline', () => {
     const q = JSON.parse(localStorage.getItem(QUEUE_KEY) ?? '[]') as { table: string }[];
     expect(q).toHaveLength(1);
     expect(q[0].table).toBe('leads');
+  });
+});
+
+describe('dedup de cliente (doble submit inmediato)', () => {
+  it('un mismo source no se inserta dos veces en la misma sesión', async () => {
+    const { captureLead } = await loadLeads();
+    const fetchMock = vi.fn().mockResolvedValue({ ok: true } as Response);
+    vi.stubGlobal('fetch', fetchMock);
+
+    const first = await captureLead({ email: 'a@b.com', source: 'test_start', consent: true });
+    const second = await captureLead({ email: 'a@b.com', source: 'test_start', consent: true });
+
+    // Sólo el primer insert llega a la red; el segundo se deduplica.
+    expect(fetchMock).toHaveBeenCalledTimes(1);
+    expect(first.deduped).toBe(false);
+    expect(second.deduped).toBe(true);
+    expect(second.ok).toBe(true); // la UX no se rompe
+  });
+
+  it('sources distintos NO se deduplican entre sí', async () => {
+    const { captureLead } = await loadLeads();
+    const fetchMock = vi.fn().mockResolvedValue({ ok: true } as Response);
+    vi.stubGlobal('fetch', fetchMock);
+
+    await captureLead({ email: 'a@b.com', source: 'test_start', consent: true });
+    await captureLead({ email: 'a@b.com', source: 'purchase_intent', consent: true });
+
+    expect(fetchMock).toHaveBeenCalledTimes(2);
+  });
+
+  it('un duplicado deduplicado NO pierde el lead original (ya quedó encolado al fallar)', async () => {
+    const { captureLead } = await loadLeads();
+    vi.stubGlobal('fetch', vi.fn().mockRejectedValue(new Error('offline')));
+
+    await captureLead({ email: 'a@b.com', source: 'test_start', consent: true }); // encola
+    await captureLead({ email: 'a@b.com', source: 'test_start', consent: true }); // deduped
+
+    const q = JSON.parse(localStorage.getItem(QUEUE_KEY) ?? '[]') as { table: string }[];
+    expect(q).toHaveLength(1); // el original está, sin duplicar
   });
 });

@@ -17,7 +17,8 @@
     "check:full": "npm run lint && npm run test && npm run build && npm run test:e2e",
     "diagnose": "tsx scripts/diagnose.ts",
     "diagnose:adaptive": "tsx scripts/diagnose-adaptive.ts",
-    "og": "npm i -D --no-save @resvg/resvg-js && node scripts/generate-og.mjs"
+    "og": "npm i -D --no-save @resvg/resvg-js && node scripts/generate-og.mjs",
+    "hero:webp": "npm i -D --no-save sharp && node scripts/generate-hero-webp.mjs"
   },
   "dependencies": {
     "lucide-react": "^0.546.0",
