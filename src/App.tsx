@@ -3,6 +3,7 @@ import Header from './components/Header';
 import HeroSection from './components/HeroSection';
 import LogoBanner from './components/LogoBanner';
 import Footer from './components/Footer';
+import ErrorBoundary from './components/ErrorBoundary';
 import NarrativaSection from './components/NarrativaSection';
 import MuestraTest from './components/MuestraTest';
 import ComoFunciona from './components/ComoFunciona';
@@ -68,27 +69,33 @@ export default function App() {
       <Footer />
 
       {testOpen && (
-        <Suspense
-          fallback={
-            <div className="fixed inset-0 z-[100] bg-paper flex items-center justify-center">
-              <div className="w-7 h-7 border-2 border-brand-sky/30 border-t-brand-sky rounded-full animate-spin" />
-            </div>
-          }
-        >
-          <TestFlow onExit={() => setTestOpen(false)} />
-        </Suspense>
+        // Si el chunk lazy del test falla al cargar (red intermitente), el
+        // ErrorBoundary muestra un fallback y vuelve al inicio, sin pantalla en blanco.
+        <ErrorBoundary resetLabel="Volver al inicio" onReset={() => setTestOpen(false)}>
+          <Suspense
+            fallback={
+              <div className="fixed inset-0 z-[100] bg-paper flex items-center justify-center">
+                <div className="w-7 h-7 border-2 border-brand-sky/30 border-t-brand-sky rounded-full animate-spin" />
+              </div>
+            }
+          >
+            <TestFlow onExit={() => setTestOpen(false)} />
+          </Suspense>
+        </ErrorBoundary>
       )}
 
       {paymentReturn && (
-        <Suspense
-          fallback={
-            <div className="fixed inset-0 z-[120] bg-paper flex items-center justify-center">
-              <div className="w-7 h-7 border-2 border-brand-sky/30 border-t-brand-sky rounded-full animate-spin" />
-            </div>
-          }
-        >
-          <PaymentReturn onClose={() => setPaymentReturn(false)} />
-        </Suspense>
+        <ErrorBoundary resetLabel="Volver al inicio" onReset={() => setPaymentReturn(false)}>
+          <Suspense
+            fallback={
+              <div className="fixed inset-0 z-[120] bg-paper flex items-center justify-center">
+                <div className="w-7 h-7 border-2 border-brand-sky/30 border-t-brand-sky rounded-full animate-spin" />
+              </div>
+            }
+          >
+            <PaymentReturn onClose={() => setPaymentReturn(false)} />
+          </Suspense>
+        </ErrorBoundary>
       )}
     </div>
   );

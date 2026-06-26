@@ -66,4 +66,18 @@ describe('whitelist de tablas en la cola offline', () => {
     expect(q).toHaveLength(1);
     expect(q[0].table).toBe('leads');
   });
+
+  it('no pierde el lead si Supabase rechaza el insert (HTTP no-ok): lo encola y no rompe', async () => {
+    const { captureLead } = await loadLeads();
+    vi.stubGlobal('fetch', vi.fn().mockResolvedValue({ ok: false, status: 500 } as Response));
+
+    // No debe lanzar: el flujo de UI nunca se rompe por un insert fallido.
+    const res = await captureLead({ email: 'z@y.com', source: 'test_start', consent: true });
+    expect(res.ok).toBe(true);
+    expect(res.persisted).toBe(false);
+
+    const q = JSON.parse(localStorage.getItem(QUEUE_KEY) ?? '[]') as { table: string }[];
+    expect(q).toHaveLength(1);
+    expect(q[0].table).toBe('leads');
+  });
 });

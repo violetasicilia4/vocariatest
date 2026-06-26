@@ -127,10 +127,12 @@ PW_CHROMIUM_PATH=/ruta/al/chrome npm run test:e2e
 api/                      Funciones serverless de Vercel (Mercado Pago — pendiente)
   _lib.ts                Helpers de las funciones (validación, errores, parseo)
 docs/security.md          Modelo de datos, RLS, secrets y pendientes de seguridad
+docs/analytics-plan.md    Plan de eventos del funnel (propuesta, sin implementar)
 public/                   Assets estáticos y páginas estáticas
 scripts/                  Diagnóstico estadístico del motor (no se deployan)
 src/
   components/             Landing (Hero, FAQ, Testimonios, etc.)
+    ErrorBoundary.tsx    Fallback ante errores de render / fallo de chunk lazy (evita pantalla en blanco)
   services/
     leads.ts             Captura de leads/resultados → Supabase (con cola offline)
     payments.ts          Cobro con Mercado Pago (aislado — pendiente)
