@@ -19,7 +19,7 @@
  *   TODO(mp): definir y manejar transiciones de estado (pending → approved →
  *             refunded/charged_back), no sólo "approved".
  */
-import { type ApiRequest, type ApiResponse, parseJsonBody, isPlainObject } from './_lib';
+import { type ApiRequest, type ApiResponse, parseJsonBody, isPlainObject, paymentsEnabledServer } from './_lib';
 
 interface MpPayment {
   id?: string | number;
@@ -31,6 +31,15 @@ interface MpPayment {
 }
 
 export default async function handler(req: ApiRequest, res: ApiResponse): Promise<void> {
+  // GUARD (NO PRODUCTIVO): con el cobro deshabilitado no procesamos ni
+  // persistimos compras (el webhook todavía no valida firma ni idempotencia).
+  // Respondemos 200 igual para que MP no reintente en loop. Ver
+  // paymentsEnabledServer() y los TODO(mp) de este archivo.
+  if (!paymentsEnabledServer()) {
+    res.status(200).json({ received: true });
+    return;
+  }
+
   const token = process.env.MP_ACCESS_TOKEN;
   try {
     const body = parseJsonBody(req) ?? {};

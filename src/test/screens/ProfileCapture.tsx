@@ -159,8 +159,9 @@ export default function ProfileCapture({ onStart }: ProfileCaptureProps) {
                 {/* Nombre y email comparten fila en pantallas medianas+ para acortar el recorrido vertical */}
                 <div className="grid sm:grid-cols-2 gap-4">
                   <div>
-                    <label className={LABEL}>Nombre</label>
+                    <label htmlFor="pc-nombre" className={LABEL}>Nombre</label>
                     <input
+                      id="pc-nombre"
                       type="text"
                       placeholder="Ej: Martina"
                       value={nombre}
@@ -170,8 +171,9 @@ export default function ProfileCapture({ onStart }: ProfileCaptureProps) {
                     />
                   </div>
                   <div>
-                    <label className={LABEL}>Email</label>
+                    <label htmlFor="pc-email" className={LABEL}>Email</label>
                     <input
+                      id="pc-email"
                       type="email"
                       placeholder="tucorreo@email.com"
                       value={email}
@@ -183,9 +185,10 @@ export default function ProfileCapture({ onStart }: ProfileCaptureProps) {
 
                 <div className="grid grid-cols-2 gap-4">
                   <div>
-                    <label className={LABEL}>Edad</label>
+                    <label htmlFor="pc-edad" className={LABEL}>Edad</label>
                     <div className="relative">
                       <select
+                        id="pc-edad"
                         value={edad}
                         onChange={e => setEdad(e.target.value)}
                         className={`${INPUT} pr-9 appearance-none cursor-pointer`}
@@ -199,9 +202,10 @@ export default function ProfileCapture({ onStart }: ProfileCaptureProps) {
                   </div>
 
                   <div>
-                    <label className={LABEL}>Provincia</label>
+                    <label htmlFor="pc-provincia" className={LABEL}>Provincia</label>
                     <div className="relative">
                       <select
+                        id="pc-provincia"
                         value={provinciaId}
                         onChange={e => setProvinciaId(e.target.value)}
                         className={`${INPUT} pr-9 appearance-none cursor-pointer`}
@@ -245,7 +249,11 @@ export default function ProfileCapture({ onStart }: ProfileCaptureProps) {
                   className="absolute -left-[9999px] w-px h-px opacity-0"
                 />
 
-                {error && <p className="text-red-500 text-[13px] font-semibold">{error}</p>}
+                {/* Mensaje de validación compartido: role="alert" lo anuncia a
+                    lectores de pantalla sin importar el campo enfocado. */}
+                {error && (
+                  <p role="alert" className="text-red-500 text-[13px] font-semibold">{error}</p>
+                )}
 
                 <button
                   onClick={handleDatosNext}

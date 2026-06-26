@@ -1,4 +1,4 @@
-import { describe, it, expect } from 'vitest';
+import { describe, it, expect, afterEach } from 'vitest';
 import {
   parseJsonBody,
   isPlainObject,
@@ -6,6 +6,7 @@ import {
   isValidEmail,
   normalizeEmail,
   clampString,
+  paymentsEnabledServer,
   MAX_BODY_BYTES,
   type ApiRequest,
 } from '../../../api/_lib';
@@ -71,5 +72,29 @@ describe('validadores', () => {
     expect(clampString('abcdef', 3)).toBe('abc');
     expect(clampString('   ', 10)).toBeNull();
     expect(clampString(42, 10)).toBeNull();
+  });
+});
+
+describe('paymentsEnabledServer (kill switch de pagos — NO PRODUCTIVO)', () => {
+  const original = process.env.PAYMENTS_ENABLED;
+  afterEach(() => {
+    if (original === undefined) delete process.env.PAYMENTS_ENABLED;
+    else process.env.PAYMENTS_ENABLED = original;
+  });
+
+  it('está deshabilitado por defecto (sin la variable)', () => {
+    delete process.env.PAYMENTS_ENABLED;
+    expect(paymentsEnabledServer()).toBe(false);
+  });
+
+  it('sólo se habilita con el valor exacto "true"', () => {
+    process.env.PAYMENTS_ENABLED = 'false';
+    expect(paymentsEnabledServer()).toBe(false);
+    process.env.PAYMENTS_ENABLED = '1';
+    expect(paymentsEnabledServer()).toBe(false);
+    process.env.PAYMENTS_ENABLED = 'TRUE';
+    expect(paymentsEnabledServer()).toBe(false);
+    process.env.PAYMENTS_ENABLED = 'true';
+    expect(paymentsEnabledServer()).toBe(true);
   });
 });

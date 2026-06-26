@@ -37,10 +37,21 @@ import {
   isValidEmail,
   normalizeEmail,
   clampString,
+  paymentsEnabledServer,
 } from './_lib';
 
 export default async function handler(req: ApiRequest, res: ApiResponse): Promise<void> {
   if (!assertMethod(req, res, 'POST')) return;
+
+  // GUARD (NO PRODUCTIVO): este endpoint es el punto de entrada del cobro real
+  // (crea la preferencia de Checkout Pro). Mientras la integración no esté
+  // endurecida server-side, el cobro está DESHABILITADO por defecto y no se crea
+  // ninguna preferencia. Requiere PAYMENTS_ENABLED='true' explícito en el server.
+  // Ver paymentsEnabledServer() y los TODO(mp) de este archivo.
+  if (!paymentsEnabledServer()) {
+    errorResponse(res, 503, 'payments_disabled');
+    return;
+  }
 
   const token = process.env.MP_ACCESS_TOKEN;
   if (!token) {

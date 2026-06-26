@@ -1,0 +1,47 @@
+name: CI
+
+# Checks de PR (y de la rama principal). NO despliega, NO usa secrets y NO activa
+# pagos: PAYMENTS_ENABLED queda ausente (cobro desactivado por defecto).
+on:
+  pull_request:
+  push:
+    branches: [main]
+
+# Cancela corridas viejas de la misma rama/PR cuando llega un push nuevo.
+concurrency:
+  group: ci-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  checks:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Lint (typecheck)
+        run: npm run lint
+
+      - name: Unit tests
+        run: npm run test
+
+      - name: Build
+        run: npm run build
+
+      # Camino normal de E2E: Playwright instala el Chromium de la revisión que le
+      # corresponde a esta versión. (--with-deps suma las libs del SO en el runner.)
+      # El workaround PW_CHROMIUM_PATH es SÓLO para entornos con un Chromium
+      # preinstalado y desfasado; en CI no se usa.
+      - name: Install Playwright Chromium
+        run: npx playwright install --with-deps chromium
+
+      - name: E2E tests
+        run: npm run test:e2e

@@ -27,6 +27,18 @@ const QUEUE_MAX_AGE_MS = 7 * 24 * 60 * 60 * 1000;
 
 export type LeadSource = 'waitlist' | 'test_start' | 'purchase_intent';
 
+// Whitelist estricta de tablas en las que este servicio puede insertar. La cola
+// offline guarda el nombre de la tabla en localStorage, que es manipulable por el
+// usuario: sin esta validación, un atacante podría editar la cola para hacer que
+// `flushQueue` haga POST a una tabla arbitraria de Supabase. Sólo se permiten las
+// tablas que el servicio escribe legítimamente (captureLead / saveTestResult).
+type AllowedTable = 'leads' | 'test_results';
+const ALLOWED_TABLES = new Set<AllowedTable>(['leads', 'test_results']);
+
+function isAllowedTable(table: unknown): table is AllowedTable {
+  return typeof table === 'string' && ALLOWED_TABLES.has(table as AllowedTable);
+}
+
 interface PendingInsert {
   table: string;
   row: Record<string, unknown>;
@@ -41,9 +53,13 @@ function readQueue(): PendingInsert[] {
   const items = readJSON<PendingInsert[]>(QUEUE_KEY, []);
   if (!Array.isArray(items)) return [];
   const cutoff = Date.now() - QUEUE_MAX_AGE_MS;
-  // Descarta entradas vencidas. Los callers reescriben la cola, así que la
-  // purga queda persistida (flushQueue corre en cada carga de la app).
-  return items.filter(it => typeof it?.ts === 'number' && it.ts >= cutoff);
+  // Descarta entradas vencidas y las que apunten a una tabla NO permitida (la cola
+  // vive en localStorage y es manipulable: una entrada con `table` arbitraria se
+  // descarta acá). Los callers reescriben la cola, así que la purga queda
+  // persistida (flushQueue corre en cada carga de la app).
+  return items.filter(
+    it => typeof it?.ts === 'number' && it.ts >= cutoff && isAllowedTable(it?.table),
+  );
 }
 
 function writeQueue(items: PendingInsert[]): void {
@@ -52,12 +68,30 @@ function writeQueue(items: PendingInsert[]): void {
 }
 
 function enqueue(table: string, row: Record<string, unknown>): void {
+  // Defensa en profundidad: nunca encolamos una tabla fuera de la whitelist.
+  if (!isAllowedTable(table)) {
+    warnDisallowedTable(table);
+    return;
+  }
   const q = readQueue();
   q.push({ table, row, ts: Date.now() });
   writeQueue(q);
 }
 
+/** Aviso seguro sólo en desarrollo (no expone datos; no rompe la UX). */
+function warnDisallowedTable(table: unknown): void {
+  if (import.meta.env.DEV) {
+    console.warn('[leads] insert descartado: tabla no permitida', { table: String(table) });
+  }
+}
+
 async function rawInsert(table: string, row: Record<string, unknown>): Promise<boolean> {
+  // Guard de seguridad: jamás hacemos POST a una tabla fuera de la whitelist,
+  // aunque el nombre venga de la cola persistida (potencialmente manipulada).
+  if (!isAllowedTable(table)) {
+    warnDisallowedTable(table);
+    return false;
+  }
   if (!isConfigured()) return false;
   try {
     const res = await fetch(`${SUPABASE_URL}/rest/v1/${table}`, {
