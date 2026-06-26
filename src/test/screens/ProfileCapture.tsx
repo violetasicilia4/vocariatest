@@ -192,6 +192,7 @@ export default function ProfileCapture({ onStart }: ProfileCaptureProps) {
                       >
                         <option value="">--</option>
                         {AGES.map(a => <option key={a} value={a}>{a} años</option>)}
+                        <option value="50+">Más de 50 años</option>
                       </select>
                       <ChevronDown size={15} className="absolute right-3 top-1/2 -translate-y-1/2 text-ink/40 pointer-events-none" />
                     </div>

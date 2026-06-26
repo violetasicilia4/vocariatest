@@ -74,6 +74,10 @@ export const PROVINCIAS = [
   { id: 'CHU',    label: 'Chubut',                       dbName: 'Chubut' },
   { id: 'SC',     label: 'Santa Cruz',                   dbName: 'Santa Cruz' },
   { id: 'TDF',    label: 'Tierra del Fuego',             dbName: 'Tierra del Fuego' },
+  // Fuera de Argentina: sin provincia local. dbName vacío → getProvinciasDisponibles
+  // devuelve [] (igual que "me mudaría"), así el recomendador muestra todas las
+  // universidades en vez de filtrar por una provincia que no aplica.
+  { id: 'EXT',    label: 'No vivo en Argentina',          dbName: '' },
 ];
 
 export function getProvinciasDisponibles(profile: UserProfile): string[] {
