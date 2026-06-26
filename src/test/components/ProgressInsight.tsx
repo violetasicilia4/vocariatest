@@ -26,16 +26,16 @@ export default function ProgressInsight({ insight }: { insight: Insight | null }
             animate={{ opacity: 1, y: 0, height: 'auto' }}
             exit={{ opacity: 0, y: -8, height: 0 }}
             transition={{ duration: 0.45, ease: EASE }}
-            className="pt-2.5"
+            className="pt-2"
           >
-            <div className="inline-flex items-center gap-2 rounded-full bg-ink/[0.035] border border-line pl-1.5 pr-3 py-1">
-              <span className="w-5 h-5 rounded-full bg-brand-lime flex items-center justify-center shrink-0">
+            <div className="inline-flex items-center gap-1.5 rounded-full bg-ink/[0.03] border border-line/80 pl-1 pr-2.5 py-[3px]">
+              <span className="w-[18px] h-[18px] rounded-full bg-brand-lime flex items-center justify-center shrink-0">
                 {(() => {
                   const Icon = ICON[insight.tone];
-                  return <Icon size={11} strokeWidth={2.6} className="text-slate-950" />;
+                  return <Icon size={10} strokeWidth={2.6} className="text-slate-950" />;
                 })()}
               </span>
-              <span className="text-[12px] font-semibold text-ink/75 leading-none">
+              <span className="text-[11.5px] font-medium text-ink/60 leading-none">
                 {insight.text}
               </span>
             </div>

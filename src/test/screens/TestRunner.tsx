@@ -147,14 +147,14 @@ export default function TestRunner({ nombre, profile, onComplete }: TestRunnerPr
 
       {/* Progreso arriba: identidad + barra narrativa + confianza + carteles de
           avance. Mismo bloque en mobile y desktop, solo escala el tamaño. */}
-      <header className="shrink-0 sticky top-0 z-10 bg-paper/90 backdrop-blur-xl border-b border-line/70">
-        <div className="max-w-xl lg:max-w-[860px] xl:max-w-[980px] mx-auto w-full px-5 lg:px-12 pt-2.5 lg:pt-4 pb-2.5 lg:pb-3.5">
-          <div className="flex items-center justify-between mb-2 lg:mb-2.5">
-            <div className="flex items-center gap-1.5 text-ink">
-              <LogoIcon size={16} />
-              <span className="font-display font-bold text-[11.5px] lg:text-[13px] tracking-tight">Vocaria</span>
+      <header className="shrink-0 sticky top-0 z-10 bg-paper/85 backdrop-blur-xl border-b border-line/60 pt-[env(safe-area-inset-top)]">
+        <div className="max-w-xl lg:max-w-[860px] xl:max-w-[980px] mx-auto w-full px-5 lg:px-12 pt-2.5 lg:pt-4 pb-2 lg:pb-3">
+          <div className="flex items-center justify-between mb-1.5 lg:mb-2">
+            <div className="flex items-center gap-1.5 text-ink/80">
+              <LogoIcon size={15} />
+              <span className="font-display font-semibold text-[11px] lg:text-[12px] tracking-tight">Vocaria</span>
             </div>
-            <div className="flex items-center gap-1.5 font-display text-[10.5px] lg:text-[12px]">
+            <div className="flex items-center gap-1.5 font-display text-[11px] lg:text-[12px]">
               <span className="text-ink/55 font-semibold tabular-nums">
                 {isAdaptive
                   ? 'Últimas preguntas de refinamiento'

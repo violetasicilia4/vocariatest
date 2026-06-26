@@ -32,14 +32,16 @@ export const CARD_SHADOW = '0 1px 2px rgba(11,22,40,0.04), 0 10px 30px rgba(11,2
 /** Sombra elevada (cards destacadas / overlays). */
 export const CARD_SHADOW_LG = '0 16px 48px rgba(11,22,40,0.14)';
 
-/** CTA primario: pill navy que en hover vira a lima (idéntico al hero). */
+/** CTA primario: pill navy que en hover vira a lima (idéntico al hero).
+ *  La elevación (sombra que crece + lift) y el press viven en el componente
+ *  (motion whileHover/whileTap) para un feedback táctil premium y consistente. */
 export const CTA_PRIMARY =
   'bg-ink text-white font-display font-black tracking-wide rounded-full ' +
-  'hover:bg-brand-lime hover:text-slate-950 active:scale-[0.97] ' +
-  'transition-[transform,background-color,color,box-shadow] duration-200 ' +
+  'hover:bg-brand-lime hover:text-slate-950 ' +
+  'transition-[background-color,color,box-shadow] duration-200 ' +
   '[transition-timing-function:cubic-bezier(0.16,1,0.3,1)] ' +
-  'shadow-[0_8px_24px_rgba(5,8,22,0.16)] ' +
-  'focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-sky/40 focus-visible:ring-offset-2 focus-visible:ring-offset-paper';
+  'shadow-[0_8px_24px_rgba(5,8,22,0.16)] hover:shadow-[0_14px_34px_rgba(5,8,22,0.24)] ' +
+  'focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-sky/45 focus-visible:ring-offset-2 focus-visible:ring-offset-paper';
 
 /** CTA secundario (outline frío sobre blanco). */
 export const CTA_DARK =
@@ -52,14 +54,21 @@ export const CTA_DARK =
 export const CARD =
   'bg-paper-raised border border-line rounded-[22px]';
 
-/** Opción NO seleccionada (card interactiva). */
+/** Opción NO seleccionada (card interactiva).
+ *  Lleva una sombra de reposo MUY sutil para que la tarjeta se lea como un
+ *  objeto elevado y no como un campo de formulario plano — clave en mobile,
+ *  donde no hay hover que la "despierte". El foco visible es accesible por
+ *  teclado. La elevación/press fino se animan con motion en el componente. */
 export const OPTION_IDLE =
   'bg-paper-raised border border-line text-ink/85 ' +
-  'hover:border-sky/45 hover:bg-sky-soft/40 hover:shadow-[0_8px_24px_rgba(37,142,249,0.08)]';
+  'shadow-[0_1px_2px_rgba(11,22,40,0.04),0_4px_14px_rgba(11,22,40,0.05)] ' +
+  'hover:border-sky/45 hover:bg-sky-soft/30 hover:shadow-[0_10px_30px_rgba(37,142,249,0.13)] ' +
+  'focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-sky/45 focus-visible:ring-offset-2 focus-visible:ring-offset-paper';
 
 /** Opción seleccionada (fill navy, check lima). */
 export const OPTION_ACTIVE =
-  'bg-ink border-ink text-white shadow-[0_10px_28px_rgba(7,17,31,0.22)]';
+  'bg-ink border-ink text-white shadow-[0_12px_30px_rgba(7,17,31,0.26)] ' +
+  'focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-sky/55 focus-visible:ring-offset-2 focus-visible:ring-offset-paper';
 
 /** Opción deshabilitada. */
 export const OPTION_DISABLED =

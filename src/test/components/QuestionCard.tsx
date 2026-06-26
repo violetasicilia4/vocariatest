@@ -75,14 +75,14 @@ export default function QuestionCard({ question, onAnswer, currentAnswer, onBack
           opciones flotando solas más abajo, sino todo agrupado a media altura.
           En sm+/desktop se mantiene el enunciado con alto fijo y ancla arriba
           de siempre (el patrón Typeform / 16personalities). */}
-      <div className="flex-1 min-h-0 overflow-y-auto overflow-x-hidden flex flex-col justify-center-safe sm:justify-start">
+      <div className="flex-1 min-h-0 overflow-y-auto overflow-x-hidden flex flex-col justify-center-safe sm:justify-start pb-[9vh] sm:pb-0">
         <div className="shrink-0 sm:pt-[clamp(0.5rem,5vh,4rem)]">
-          <div className="sm:min-h-[80px] lg:min-h-[92px] xl:min-h-[104px] flex flex-col sm:justify-end mb-2 sm:mb-6 lg:mb-8 text-center max-w-[820px] mx-auto">
-            <h2 className="font-display font-bold text-[20px] sm:text-[26px] lg:text-[34px] xl:text-[38px] text-ink leading-[1.14] tracking-tight text-balance">
+          <div className="sm:min-h-[80px] lg:min-h-[92px] xl:min-h-[104px] flex flex-col sm:justify-end mb-4 sm:mb-6 lg:mb-8 text-center max-w-[820px] mx-auto">
+            <h2 className="font-display font-bold text-[22px] sm:text-[26px] lg:text-[34px] xl:text-[38px] text-ink leading-[1.12] tracking-tight text-balance">
               {question.enunciado}
             </h2>
             {question.subtext && (
-              <p className="mt-2 lg:mt-3 text-[12px] lg:text-[14.5px] text-ink/55 font-medium leading-relaxed">
+              <p className="mt-2 lg:mt-3 text-[12.5px] lg:text-[14.5px] text-ink/50 font-medium leading-relaxed">
                 {question.subtext}
               </p>
             )}
@@ -121,17 +121,18 @@ export default function QuestionCard({ question, onAnswer, currentAnswer, onBack
           siempre a la derecha. shrink-0 + fuera de la zona con scroll: queda
           SIEMPRE visible, sin que haga falta scrollear para presionarla.
           "Siguiente" se activa recién cuando hay una elección válida. */}
-      <div className="pt-3 lg:pt-6 w-full flex items-center justify-between gap-3 shrink-0">
+      <div className="pt-3 lg:pt-6 pb-[env(safe-area-inset-bottom)] w-full flex items-center justify-between gap-3 shrink-0">
         <div className="shrink-0">
           {canGoBack && (
-            <button
+            <motion.button
               type="button"
               onClick={onBack}
-              className="-ml-1.5 px-1.5 py-1 rounded-lg text-ink/40 hover:text-ink text-[13px] font-medium font-display transition-colors flex items-center gap-1"
+              whileTap={{ scale: 0.96 }}
+              className="-ml-2 px-2.5 py-2 rounded-full text-ink/55 hover:text-ink hover:bg-ink/[0.05] text-[13.5px] font-semibold font-display transition-colors flex items-center gap-1 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-sky/45 focus-visible:ring-offset-2 focus-visible:ring-offset-paper"
             >
-              <ChevronLeft size={15} strokeWidth={2.4} />
+              <ChevronLeft size={16} strokeWidth={2.5} />
               Anterior
-            </button>
+            </motion.button>
           )}
         </div>
         <div className="flex items-center gap-3 flex-1 sm:flex-none justify-end">
@@ -161,9 +162,10 @@ function NextButton({
       onClick={onClick}
       disabled={disabled}
       aria-disabled={disabled}
-      whileTap={disabled ? undefined : { scale: 0.98 }}
-      className={`flex items-center justify-center gap-2 py-3 lg:py-3.5 text-[15px] lg:text-[16px] ${CTA_PRIMARY} ${
-        disabled ? 'opacity-40 pointer-events-none' : ''
+      whileHover={disabled ? undefined : { y: -2 }}
+      whileTap={disabled ? undefined : { scale: 0.97, y: 0 }}
+      className={`flex items-center justify-center gap-2 py-3.5 lg:py-4 text-[15px] lg:text-[16px] ${CTA_PRIMARY} ${
+        disabled ? 'opacity-40 saturate-[0.85] pointer-events-none' : ''
       } ${className}`}
     >
       Siguiente
@@ -207,13 +209,14 @@ function ScaleOptions({
               type="button"
               variants={ITEM_VARIANTS}
               onClick={() => onSelect(op.id)}
-              whileTap={{ scale: 0.95 }}
+              whileHover={{ y: -2 }}
+              whileTap={{ scale: 0.95, y: 0 }}
               aria-pressed={active}
               aria-label={op.texto}
-              className={`flex-1 max-w-[72px] lg:max-w-[112px] min-h-[56px] aspect-square rounded-2xl lg:rounded-[20px] font-display font-bold text-[17px] lg:text-[26px] transition-all duration-200 flex items-center justify-center border
+              className={`flex-1 max-w-[72px] lg:max-w-[112px] min-h-[56px] aspect-square rounded-2xl lg:rounded-[20px] font-display font-bold text-[17px] lg:text-[26px] transition-[border-color,background-color,box-shadow,color] duration-200 ease-[cubic-bezier(0.16,1,0.3,1)] flex items-center justify-center border focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-sky/45 focus-visible:ring-offset-2 focus-visible:ring-offset-paper
                 ${active
-                  ? 'bg-ink text-white border-ink scale-[1.04] shadow-[0_10px_26px_rgba(7,17,31,0.22)]'
-                  : 'bg-paper-raised text-ink/55 border-line-strong hover:border-sky/45 hover:text-ink/80'
+                  ? 'bg-ink text-white border-ink shadow-[0_12px_30px_rgba(7,17,31,0.26)]'
+                  : 'bg-paper-raised text-ink/55 border-line-strong shadow-[0_1px_2px_rgba(11,22,40,0.04),0_4px_14px_rgba(11,22,40,0.05)] hover:border-sky/45 hover:text-ink/80'
                 }`}
             >
               {op.id}
@@ -268,9 +271,10 @@ function VisualOptions({
             variants={ITEM_VARIANTS}
             onClick={() => onSelect(op.id)}
             aria-pressed={active}
-            whileTap={{ scale: 0.97 }}
-            className={`relative flex flex-col items-start gap-1.5 lg:gap-2.5 p-2.5 lg:p-4 min-h-[72px] lg:min-h-[100px] xl:min-h-[108px] rounded-2xl border transition-[border-color,background-color,box-shadow,transform] duration-200 text-left
-              ${active ? OPTION_ACTIVE + ' scale-[1.02]' : OPTION_IDLE}`}
+            whileHover={{ y: -2 }}
+            whileTap={{ scale: 0.97, y: 0 }}
+            className={`relative flex flex-col items-start gap-1.5 lg:gap-2.5 p-3 lg:p-4 min-h-[76px] lg:min-h-[100px] xl:min-h-[108px] rounded-[20px] border transition-[border-color,background-color,box-shadow] duration-200 ease-[cubic-bezier(0.16,1,0.3,1)] text-left
+              ${active ? OPTION_ACTIVE : OPTION_IDLE}`}
           >
             <span
               className={`w-8 h-8 lg:w-10 lg:h-10 rounded-xl flex items-center justify-center transition-colors
@@ -325,9 +329,10 @@ function PairsOptions({
             variants={ITEM_VARIANTS}
             onClick={() => onSelect(op.id)}
             aria-pressed={active}
-            whileTap={{ scale: 0.99 }}
-            className={`w-full flex items-center gap-3 lg:gap-4 px-4 lg:px-5 py-3 lg:py-5 rounded-2xl border transition-[border-color,background-color,box-shadow,transform] duration-200 text-left
-              ${active ? OPTION_ACTIVE + ' scale-[1.01]' : OPTION_IDLE}`}
+            whileHover={{ y: -2 }}
+            whileTap={{ scale: 0.985, y: 0 }}
+            className={`w-full flex items-center gap-3 lg:gap-4 px-4 lg:px-5 py-3.5 lg:py-5 rounded-[20px] border transition-[border-color,background-color,box-shadow] duration-200 ease-[cubic-bezier(0.16,1,0.3,1)] text-left
+              ${active ? OPTION_ACTIVE : OPTION_IDLE}`}
           >
             <span
               className={`shrink-0 w-10 h-10 lg:w-12 lg:h-12 rounded-2xl flex items-center justify-center transition-colors
@@ -375,9 +380,10 @@ function MultiSelectOptions({
             variants={ITEM_VARIANTS}
             onClick={() => onToggle(op.id)}
             disabled={disabled}
-            whileTap={disabled ? undefined : { scale: 0.99 }}
+            whileHover={disabled ? undefined : { y: -1.5 }}
+            whileTap={disabled ? undefined : { scale: 0.985, y: 0 }}
             aria-pressed={active}
-            className={`w-full flex items-center gap-2.5 px-3.5 lg:px-4 py-2 lg:py-3 rounded-2xl font-display text-[13px] lg:text-[15px] font-semibold transition-all duration-200 text-left border ${
+            className={`w-full flex items-center gap-2.5 px-3.5 lg:px-4 py-2 lg:py-3 rounded-2xl font-display text-[13px] lg:text-[15px] font-semibold transition-[border-color,background-color,box-shadow,color] duration-200 ease-[cubic-bezier(0.16,1,0.3,1)] text-left border ${
               active ? OPTION_ACTIVE : disabled ? OPTION_DISABLED : OPTION_IDLE
             }`}
           >
@@ -420,17 +426,18 @@ function ChoiceOptions({
             variants={ITEM_VARIANTS}
             onClick={() => onSelect(op.id)}
             aria-pressed={active}
-            whileTap={{ scale: 0.99 }}
-            className={`w-full h-full min-h-[52px] lg:min-h-[80px] text-left px-3.5 lg:px-5 xl:px-6 py-2.5 lg:py-4 xl:py-[18px] rounded-2xl border font-display text-[13.5px] lg:text-[15.5px] xl:text-[16px] font-medium transition-[border-color,background-color,box-shadow,transform] duration-200 flex items-start gap-2.5 lg:gap-3.5
+            whileHover={{ y: -2 }}
+            whileTap={{ scale: 0.985, y: 0 }}
+            className={`w-full h-full min-h-[56px] lg:min-h-[80px] text-left px-4 lg:px-5 xl:px-6 py-3 lg:py-4 xl:py-[18px] rounded-[20px] border font-display text-[14px] lg:text-[15.5px] xl:text-[16px] font-medium transition-[border-color,background-color,box-shadow] duration-200 ease-[cubic-bezier(0.16,1,0.3,1)] flex items-center gap-3 lg:gap-3.5
               ${active ? OPTION_ACTIVE : OPTION_IDLE}`}
           >
             <span
-              className={`shrink-0 w-[26px] h-[26px] lg:w-8 lg:h-8 rounded-full flex items-center justify-center font-display text-[11.5px] lg:text-[13px] font-bold transition-colors
-                ${active ? 'bg-brand-lime text-slate-950' : 'bg-sky-soft text-sky-deep'}`}
+              className={`shrink-0 w-[26px] h-[26px] lg:w-8 lg:h-8 rounded-full flex items-center justify-center font-display text-[11.5px] lg:text-[13px] font-semibold border transition-colors
+                ${active ? 'bg-brand-lime text-slate-950 border-transparent' : 'bg-transparent text-ink/45 border-line-strong'}`}
             >
               {op.id.toUpperCase()}
             </span>
-            <span className="leading-[1.35] pt-0.5">{op.texto}</span>
+            <span className="leading-[1.35]">{op.texto}</span>
           </motion.button>
         );
       })}
