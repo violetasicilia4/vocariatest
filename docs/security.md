@@ -11,9 +11,16 @@ legal; es la base técnica.
 | `VITE_SUPABASE_URL` | Cliente (build) | No — pública por diseño |
 | `VITE_SUPABASE_ANON_KEY` | Cliente (build) | **No — pública por diseño.** Sólo puede INSERT vía RLS |
 | `APP_URL` | Server | No |
-| `VITE_PAYMENTS_ENABLED` | Cliente (build) | No |
+| `VITE_PAYMENTS_ENABLED` | Cliente (build) | No — sólo afecta la UI (build-time) |
+| `PAYMENTS_ENABLED` | Server | No — **kill switch real del cobro** (sin prefijo `VITE_`) |
 | `MP_ACCESS_TOKEN` | Server | **SÍ — secreta. Jamás al frontend ni con prefijo `VITE_`** |
 | `SUPABASE_SERVICE_KEY` | Server | **SÍ — secreta. Jamás al frontend** |
+
+> **Doble switch de pagos.** El cobro real exige *dos* decisiones explícitas:
+> `VITE_PAYMENTS_ENABLED` (UI) **y** `PAYMENTS_ENABLED` (server). Una variable de
+> frontend nunca alcanza para cobrar: los endpoints de `api/` validan
+> `PAYMENTS_ENABLED` server-side (`paymentsEnabledServer()` en `api/_lib.ts`).
+> Ambas deben quedar en `false` hasta cerrar el checklist de Mercado Pago.
 
 > Toda variable con prefijo `VITE_` se **incluye en el bundle** y es visible para
 > cualquiera. Nunca pongas un secreto en una `VITE_*`.
@@ -66,9 +73,12 @@ stack traces) y validadores de input.
 
 | Endpoint | Método | Estado |
 |---|---|---|
-| `POST /api/create-preference` | POST | Valida método, body, plan y email; precio server-side. **MP pendiente.** |
-| `GET /api/verify-payment` | GET | Valida método y `payment_id` numérico; devuelve sólo lo mínimo. **MP pendiente.** |
-| `POST /api/mp-webhook` | POST | Parseo seguro; siempre responde 200. **Webhook NO confiable aún (sin firma).** |
+| `POST /api/create-preference` | POST | Con `PAYMENTS_ENABLED≠true` → `503 payments_disabled` (no crea preferencia). Habilitado: valida método, body, plan y email; precio server-side. **MP pendiente.** |
+| `GET /api/verify-payment` | GET | Con `PAYMENTS_ENABLED≠true` → `{ approved:false }` (no desbloquea informe). Habilitado: valida `payment_id` numérico; devuelve sólo lo mínimo. **MP pendiente.** |
+| `POST /api/mp-webhook` | POST | Con `PAYMENTS_ENABLED≠true` → responde 200 sin procesar ni persistir. **Webhook NO confiable aún (sin firma).** |
+
+> Los tres endpoints están gateados por `paymentsEnabledServer()`: con el cobro
+> desactivado (default) quedan inertes y no inician cobros ni escriben `purchases`.
 
 ## Rate limiting / anti-abuso
 
