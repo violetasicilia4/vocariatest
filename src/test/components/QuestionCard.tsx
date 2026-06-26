@@ -85,8 +85,14 @@ export default function QuestionCard({ question, onAnswer, currentAnswer, onBack
           barra de navegación, nunca por detrás de ella. Si las opciones no
           entran (p. ej. un multiselect de 7-8 ítems en mobile), esta franja
           scrollea internamente — pero "Siguiente" queda SIEMPRE visible y
-          nunca se pisa con el contenido. */}
-      <div className="flex-1 min-h-0 overflow-y-auto overflow-x-hidden">
+          nunca se pisa con el contenido.
+          En mobile centramos las opciones dentro de esta franja (en vez de
+          dejarlas ancladas arriba, pegadas al enunciado): así caen en la
+          zona cómoda para el pulgar y no fuerzan a estirar la mano hacia
+          arriba. "-safe" hace fallback a top-aligned si el contenido no
+          entra, para no perder el scroll. En sm+/desktop se mantiene el
+          anclado arriba de siempre. */}
+      <div className="flex-1 min-h-0 overflow-y-auto overflow-x-hidden flex flex-col justify-center-safe sm:justify-start">
         <div className="w-full py-0.5">
           {question.tipo === 'scale' && (
             <ScaleOptions opciones={question.opciones} selected={selected} onSelect={setSelected} />
