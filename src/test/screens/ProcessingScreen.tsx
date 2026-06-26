@@ -87,29 +87,63 @@ export default function ProcessingScreen({ nombre, onDone }: ProcessingScreenPro
   const firstName = nombre ? nombre.split(' ')[0] : '';
 
   return (
-    <div className="h-[100dvh] bg-paper flex flex-col items-center justify-center overflow-y-auto overflow-x-hidden px-6 py-[clamp(1rem,3vh,2rem)]">
-      <div className="w-full max-w-[420px] flex flex-col items-center">
+    <div className="relative h-[100dvh] bg-paper flex flex-col items-center justify-center overflow-y-auto overflow-x-hidden px-6 py-[clamp(1rem,3vh,2rem)]">
+      {/* Ambient de escritorio — ahí el lienzo es mucho más ancho que alto y
+          sin esto el contenido se lee como "tarjeta flotando en el vacío".
+          Sólo desde lg: para no tocar el mobile (ya resuelto aparte). Respira
+          muy lento (14-16s): es atmósfera de fondo, no protagonista — la
+          esfera sigue siendo el único elemento "vivo" en primer plano. */}
+      <div className="hidden lg:block absolute inset-0 -z-10 overflow-hidden pointer-events-none" aria-hidden="true">
+        <motion.div
+          className="absolute rounded-full"
+          style={{
+            width: '58vmax',
+            height: '58vmax',
+            top: '-18%',
+            left: '-14%',
+            background: 'radial-gradient(circle, rgba(37,142,249,0.10), transparent 70%)',
+            filter: 'blur(70px)',
+          }}
+          animate={reduceMotion ? { opacity: 0.5 } : { opacity: [0.45, 0.75, 0.45] }}
+          transition={reduceMotion ? { duration: 0.4 } : { duration: 14, repeat: Infinity, ease: 'easeInOut' }}
+        />
+        <motion.div
+          className="absolute rounded-full"
+          style={{
+            width: '52vmax',
+            height: '52vmax',
+            bottom: '-22%',
+            right: '-10%',
+            background: 'radial-gradient(circle, rgba(63,182,201,0.09), transparent 70%)',
+            filter: 'blur(70px)',
+          }}
+          animate={reduceMotion ? { opacity: 0.4 } : { opacity: [0.35, 0.65, 0.35] }}
+          transition={reduceMotion ? { duration: 0.4 } : { duration: 16, repeat: Infinity, ease: 'easeInOut', delay: 2 }}
+        />
+      </div>
+
+      <div className="w-full max-w-[420px] lg:max-w-[480px] flex flex-col items-center">
         {/* Encabezado — el nombre cede protagonismo (menor contraste, debajo). */}
         <motion.div
           initial={{ opacity: 0, y: 8 }}
           animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.6, ease: EASE }}
+          transition={{ duration: 0.5, ease: EASE }}
           className="text-center"
         >
-          <h2 className="font-display font-semibold text-[19px] sm:text-[21px] text-ink/85 tracking-tight leading-tight">
+          <h2 className="font-display font-semibold text-[19px] sm:text-[21px] lg:text-[26px] text-ink/85 tracking-tight leading-tight">
             Construyendo tu perfil
           </h2>
           {firstName && (
-            <p className="mt-1 font-display text-[14px] text-ink/35 font-medium tracking-wide">{firstName}</p>
+            <p className="mt-1 font-display text-[14px] lg:text-[15px] text-ink/35 font-medium tracking-wide">{firstName}</p>
           )}
         </motion.div>
 
         {/* ── Esfera orgánica (único elemento visual fuerte) ─────────────── */}
         <motion.div
-          className="relative w-[clamp(150px,32dvh,230px)] aspect-square mt-[clamp(1.25rem,3.5vh,2.25rem)]"
+          className="relative w-[clamp(150px,32dvh,230px)] lg:w-[280px] aspect-square mt-[clamp(1.25rem,3.5vh,2.25rem)] lg:mt-10"
           initial={{ opacity: 0, scale: 0.92 }}
           animate={{ opacity: 1, scale: 1 }}
-          transition={{ duration: 1, ease: EASE }}
+          transition={{ duration: 0.7, ease: EASE }}
         >
           {/* Glow ambiental suave que respira (sin borde duro). Azul cielo +
               soft teal de marca — antes tenía una base verde que reforzaba el
@@ -212,20 +246,22 @@ export default function ProcessingScreen({ nombre, onDone }: ProcessingScreenPro
 
         {/* ── Mensaje vivo (cambia con calma, sin números) ───────────────── */}
         <div
-          className="relative w-full mt-[clamp(1rem,3vh,1.75rem)] h-6 flex items-center justify-center"
+          className="relative w-full mt-[clamp(1rem,3vh,1.75rem)] lg:mt-8 h-6 lg:h-7 flex items-center justify-center"
           aria-live="polite"
         >
           {/* Sin mode="wait": el saliente y el entrante cruzan en simultáneo
               (crossfade real) en vez de exit→hueco→enter, que dejaba un
-              instante sin texto justo antes del mensaje final. */}
+              instante sin texto justo antes del mensaje final. Crossfade
+              corto (no los 0.6s de las entradas de escena): es feedback que
+              se repite 5 veces y tiene que sentirse vivo, no lento. */}
           <AnimatePresence>
             <motion.p
               key={allDone ? 'done' : stageIndex}
               initial={{ opacity: 0, y: 6 }}
               animate={{ opacity: 1, y: 0 }}
               exit={{ opacity: 0, y: -6 }}
-              transition={{ duration: 0.6, ease: EASE }}
-              className="absolute inset-0 flex items-center justify-center text-ink/55 text-[14px] sm:text-[15px] font-medium tracking-wide text-center"
+              transition={{ duration: 0.45, ease: EASE }}
+              className="absolute inset-0 flex items-center justify-center text-ink/55 text-[14px] sm:text-[15px] lg:text-[17px] font-medium tracking-wide text-center"
             >
               {allDone ? FINAL_MESSAGE : `${STEPS[stageIndex]}…`}
             </motion.p>
@@ -233,62 +269,72 @@ export default function ProcessingScreen({ nombre, onDone }: ProcessingScreenPro
         </div>
 
         {/* ── Checklist (aire generoso, jerarquía suave) ─────────────────── */}
-        <div className="mt-[clamp(1rem,3vh,1.75rem)] w-full max-w-[320px] flex flex-col gap-[clamp(0.625rem,1.75vh,1.125rem)]">
+        <div className="mt-[clamp(1rem,3vh,1.75rem)] lg:mt-8 w-full max-w-[320px] lg:max-w-[360px] flex flex-col gap-[clamp(0.625rem,1.75vh,1.125rem)] lg:gap-4">
           {STEPS.map((label, i) => {
             // Desde allDone, todos los ítems quedan marcados como completos —
             // el último paso no se queda pulsando "en curso" hasta el corte.
             const done = allDone || i < stageIndex;
             const current = !allDone && i === stageIndex;
             return (
+              // Entrada escalonada (una sola vez, al montar) en el wrapper
+              // externo; el estado done/current vive en el interno con una
+              // transición corta y sin delay — así marcar un paso se siente
+              // inmediato sin importar cuántas veces se re-renderice.
               <motion.div
                 key={label}
-                className="flex items-center gap-3.5"
-                animate={{ opacity: done ? 0.9 : current ? 1 : 0.4 }}
-                transition={{ duration: 0.5, ease: EASE }}
+                initial={{ opacity: 0, y: 10 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.45, ease: EASE, delay: i * 0.06 }}
               >
-                <span className="relative shrink-0 w-[22px] h-[22px] flex items-center justify-center">
-                  {/* Pulso discreto del paso activo (vivo, no tech). */}
-                  {current && !reduceMotion && (
-                    <motion.span
-                      className="absolute inset-0 rounded-full"
-                      style={{ border: `1.5px solid ${SKY}` }}
-                      animate={{ scale: [1, 1.6], opacity: [0.5, 0] }}
-                      transition={{ duration: 1.8, repeat: Infinity, ease: 'easeOut' }}
-                    />
-                  )}
-                  <span
-                    className="relative w-[22px] h-[22px] rounded-full flex items-center justify-center transition-colors duration-500"
-                    style={{
-                      background: done ? SKY : '#fff',
-                      border: done ? `1px solid ${SKY}` : current ? `1.5px solid ${SKY}` : '1.5px solid var(--color-line-strong)',
-                    }}
-                  >
-                    {done ? (
-                      <motion.span
-                        initial={{ scale: 0 }}
-                        animate={{ scale: 1 }}
-                        transition={{ type: 'spring', stiffness: 480, damping: 20 }}
-                      >
-                        <Check size={12} strokeWidth={3} className="text-white" />
-                      </motion.span>
-                    ) : current && !reduceMotion ? (
-                      <motion.span
-                        className="w-[7px] h-[7px] rounded-full"
-                        style={{ background: SKY }}
-                        animate={{ opacity: [1, 0.4, 1], scale: [1, 0.82, 1] }}
-                        transition={{ duration: 1.8, repeat: Infinity, ease: 'easeInOut' }}
-                      />
-                    ) : null}
-                  </span>
-                </span>
-
-                <span
-                  className={`font-display text-[14px] sm:text-[14.5px] leading-snug transition-colors duration-500 ${
-                    current ? 'text-ink font-semibold' : done ? 'text-ink/70 font-medium' : 'text-ink/45 font-medium'
-                  }`}
+                <motion.div
+                  className="flex items-center gap-3.5"
+                  animate={{ opacity: done ? 0.9 : current ? 1 : 0.4 }}
+                  transition={{ duration: 0.3, ease: EASE }}
                 >
-                  {label}
-                </span>
+                  <span className="relative shrink-0 w-[22px] h-[22px] lg:w-[24px] lg:h-[24px] flex items-center justify-center">
+                    {/* Pulso discreto del paso activo (vivo, no tech). */}
+                    {current && !reduceMotion && (
+                      <motion.span
+                        className="absolute inset-0 rounded-full"
+                        style={{ border: `1.5px solid ${SKY}` }}
+                        animate={{ scale: [1, 1.6], opacity: [0.5, 0] }}
+                        transition={{ duration: 1.8, repeat: Infinity, ease: 'easeOut' }}
+                      />
+                    )}
+                    <span
+                      className="relative w-[22px] h-[22px] lg:w-[24px] lg:h-[24px] rounded-full flex items-center justify-center transition-colors duration-500"
+                      style={{
+                        background: done ? SKY : '#fff',
+                        border: done ? `1px solid ${SKY}` : current ? `1.5px solid ${SKY}` : '1.5px solid var(--color-line-strong)',
+                      }}
+                    >
+                      {done ? (
+                        <motion.span
+                          initial={{ scale: 0 }}
+                          animate={{ scale: 1 }}
+                          transition={{ type: 'spring', stiffness: 480, damping: 20 }}
+                        >
+                          <Check size={12} strokeWidth={3} className="text-white" />
+                        </motion.span>
+                      ) : current && !reduceMotion ? (
+                        <motion.span
+                          className="w-[7px] h-[7px] lg:w-[8px] lg:h-[8px] rounded-full"
+                          style={{ background: SKY }}
+                          animate={{ opacity: [1, 0.4, 1], scale: [1, 0.82, 1] }}
+                          transition={{ duration: 1.8, repeat: Infinity, ease: 'easeInOut' }}
+                        />
+                      ) : null}
+                    </span>
+                  </span>
+
+                  <span
+                    className={`font-display text-[14px] sm:text-[14.5px] lg:text-[16px] leading-snug transition-colors duration-500 ${
+                      current ? 'text-ink font-semibold' : done ? 'text-ink/70 font-medium' : 'text-ink/45 font-medium'
+                    }`}
+                  >
+                    {label}
+                  </span>
+                </motion.div>
               </motion.div>
             );
           })}
