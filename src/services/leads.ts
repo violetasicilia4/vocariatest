@@ -110,20 +110,63 @@ async function rawInsert(table: string, row: Record<string, unknown>): Promise<b
   }
 }
 
+// ── Deduplicación (cliente, ligera) ──────────────────────────────────────────
+// Evita duplicados OBVIOS (doble click en "Continuar", re-render inmediato,
+// doble montaje en StrictMode/dev) sin perder leads válidos. Es dedup en memoria
+// por carga de página: NO impide que una misma persona vuelva a hacer el test en
+// otra sesión/otro día (eso sería un lead nuevo legítimo). La idempotencia real
+// (cross-device / cross-reload) necesita una columna `submission_id` + índice
+// único en Supabase — ver migración recomendada en supabase/schema.sql.
+const submittedKeys = new Set<string>();
+
+const LEAD_SESSION_KEY = 'vocaria_lead_session';
+
+/**
+ * Id estable por pestaña (sessionStorage) para agrupar el intento actual. No es
+ * PII: es un identificador opaco aleatorio. Se usa SÓLO como parte de la clave
+ * de dedup del cliente (no se envía a Supabase mientras no exista la columna).
+ */
+export function leadSessionId(): string {
+  if (typeof sessionStorage === 'undefined') return 'nosession';
+  try {
+    let id = sessionStorage.getItem(LEAD_SESSION_KEY);
+    if (!id) {
+      id = typeof crypto !== 'undefined' && crypto.randomUUID
+        ? crypto.randomUUID()
+        : `s-${Date.now()}-${Math.random().toString(36).slice(2)}`;
+      sessionStorage.setItem(LEAD_SESSION_KEY, id);
+    }
+    return id;
+  } catch {
+    return 'nosession';
+  }
+}
+
 /**
  * Inserta en `table`; si falla (o no hay config), encola para reintento.
  * Devuelve { ok, persisted } — `ok` es true incluso si se encoló (para no romper UX).
+ *
+ * `dedupKey` (opcional): si esa clave ya se insertó en esta carga de página, se
+ * omite el insert (idempotencia de cliente). `deduped` indica que se saltó.
  */
 async function insert(
   table: string,
   row: Record<string, unknown>,
-): Promise<{ ok: boolean; persisted: boolean }> {
+  dedupKey?: string,
+): Promise<{ ok: boolean; persisted: boolean; deduped: boolean }> {
+  if (dedupKey) {
+    if (submittedKeys.has(dedupKey)) {
+      // Duplicado inmediato: el lead original ya se capturó/encoló. No re-insertar.
+      return { ok: true, persisted: false, deduped: true };
+    }
+    submittedKeys.add(dedupKey);
+  }
   const persisted = await rawInsert(table, row);
   if (!persisted) {
     enqueue(table, row);
-    return { ok: true, persisted: false };
+    return { ok: true, persisted: false, deduped: false };
   }
-  return { ok: true, persisted: true };
+  return { ok: true, persisted: true, deduped: false };
 }
 
 /** Reintenta los inserts encolados. Llamar al inicio de la app (best-effort). */
@@ -168,6 +211,9 @@ function cap(value: string | null | undefined, max: number): string | null {
 }
 
 export function captureLead(input: LeadInput) {
+  // Dedup por (sesión + source): un mismo source no se inserta dos veces en la
+  // misma carga/sesión (doble click, re-render). Otra sesión = lead nuevo válido.
+  const dedupKey = `lead:${input.source}:${leadSessionId()}`;
   return insert('leads', {
     email: cap(input.email, MAX_EMAIL)?.toLowerCase() ?? null,
     nombre: cap(input.nombre, MAX_NOMBRE),
@@ -177,7 +223,7 @@ export function captureLead(input: LeadInput) {
     consent: input.consent,
     referrer: typeof document !== 'undefined' ? cap(document.referrer, MAX_FIELD * 4) : null,
     user_agent: typeof navigator !== 'undefined' ? cap(navigator.userAgent, MAX_UA) : null,
-  });
+  }, dedupKey);
 }
 
 export interface TestResultInput {
@@ -191,6 +237,9 @@ export interface TestResultInput {
 }
 
 export function saveTestResult(input: TestResultInput) {
+  // Un resultado por intento de test (sesión): evita el doble insert por el
+  // doble montaje de efectos en StrictMode/dev o un re-render del flujo.
+  const dedupKey = `result:${leadSessionId()}`;
   return insert('test_results', {
     email: cap(input.email, MAX_EMAIL)?.toLowerCase() ?? null,
     nombre: cap(input.nombre, MAX_NOMBRE),
@@ -199,5 +248,5 @@ export function saveTestResult(input: TestResultInput) {
     confianza: input.confianza,
     preferences: input.preferences,
     answers: input.answers,
-  });
+  }, dedupKey);
 }

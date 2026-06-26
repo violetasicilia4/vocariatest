@@ -9,6 +9,7 @@ import CheckoutScreen from './screens/CheckoutScreen';
 import type { ScoringResult } from './engine/scorer';
 import type { UserProfile, PlanId } from './data/profile';
 import { saveTestResult } from '../services/leads';
+import { track } from '../services/analytics';
 
 type Step = 'profile' | 'test' | 'processing' | 'result' | 'checkout';
 
@@ -24,11 +25,14 @@ export default function TestFlow({ onExit }: TestFlowProps) {
   const [selectedPlan, setSelectedPlan] = useState<PlanId>('universitario');
 
   const handleStart = useCallback((p: UserProfile) => {
+    track('profile_completed');
+    track('test_started');
     setProfile(p);
     setStep('test');
   }, []);
 
   const handleTestComplete = useCallback((ans: Record<string, string>, res: ScoringResult) => {
+    track('test_completed', { archetype: res.primario.nombre });
     setAnswers(ans);
     setResult(res);
     setStep('processing');
@@ -52,6 +56,7 @@ export default function TestFlow({ onExit }: TestFlowProps) {
   }, [result, profile]);
 
   const handleProcessingDone = useCallback(() => {
+    track('result_preview_seen');
     setStep('result');
   }, []);
 

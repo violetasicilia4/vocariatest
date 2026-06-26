@@ -11,6 +11,7 @@ import CierreCTA from './components/CierreCTA';
 import FAQSection from './components/FAQSection';
 import TestimonialsSection from './components/TestimonialsSection';
 import { flushQueue } from './services/leads';
+import { track, currentViewport } from './services/analytics';
 
 // Code-splitting: el flujo del test arrastra el motor + la DB de carreras
 // (~varios cientos de KB). Se carga sólo cuando el usuario abre el test,
@@ -29,9 +30,13 @@ export default function App() {
     window.scrollTo({ top: 0, left: 0, behavior: 'instant' as ScrollBehavior });
     // Reintenta enviar leads/resultados que quedaron encolados sin red.
     void flushQueue();
+    track('landing_viewed', { viewport: currentViewport() });
   }, []);
 
-  const openTest = () => setTestOpen(true);
+  const openTest = () => {
+    track('cta_clicked', { viewport: currentViewport() });
+    setTestOpen(true);
+  };
 
   return (
     <div className="relative min-h-screen bg-white overflow-hidden selection:bg-brand-lime selection:text-slate-950 font-sans antialiased text-[#0f172a]">

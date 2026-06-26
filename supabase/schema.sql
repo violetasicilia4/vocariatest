@@ -109,3 +109,23 @@ create policy "anon insert results"
 --     antes de confiar en la tabla `purchases` (ver TODO(mp) en api/).
 --   - Minimización de datos: `answers` y `user_agent` guardan datos personales;
 --     revisar retención/anonimización según la política de privacidad final.
+--
+-- MIGRACIÓN RECOMENDADA (DEDUP / IDEMPOTENCIA SERVER-SIDE) — opcional, manual
+--   Hoy la deduplicación de leads es del lado del cliente (en memoria, por
+--   sesión: evita doble click / doble submit). NO hay idempotencia server-side:
+--   un refresh o el mismo lead desde otro dispositivo pueden duplicar.
+--   Para idempotencia real, agregar una columna `submission_id` y un índice
+--   único. El cliente ya genera un id estable por sesión (ver `leadSessionId()`
+--   en src/services/leads.ts); cuando exista la columna, se puede enviar ahí.
+--   ⚠️ Requiere cambio MANUAL en Supabase y un cambio de cliente coordinado: NO
+--   enviar `submission_id` desde el frontend hasta que la columna exista (un
+--   POST con una columna inexistente lo rechaza PostgREST con 400).
+--
+--     alter table public.leads        add column if not exists submission_id text;
+--     alter table public.test_results add column if not exists submission_id text;
+--     -- Único por (submission_id, source) para no bloquear sources distintos del
+--     -- mismo intento. `nulls not distinct` evita duplicar filas viejas sin id.
+--     create unique index if not exists leads_submission_uidx
+--       on public.leads (submission_id, source);
+--     create unique index if not exists test_results_submission_uidx
+--       on public.test_results (submission_id);

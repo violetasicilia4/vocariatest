@@ -90,3 +90,23 @@ h1, h2, h3 {
     animation: none;
   }
 }
+
+/* Hero background — gradiente + foto del cielo.
+   Base: gradiente + PNG/JPEG (funciona en TODOS los navegadores). Las URLs
+   (hasheadas por Vite) llegan como --hero-jpg / --hero-webp desde HeroSection.
+   Mismo gradiente y crop que antes: sólo cambia el formato del asset. */
+.hero-bg {
+  background-image:
+    linear-gradient(to bottom, rgba(111,159,202,0.97) 0%, rgba(159,210,241,0.93) 52%, rgba(221,247,255,0.90) 100%),
+    var(--hero-jpg);
+}
+
+/* Enhancement: si el navegador soporta image-set() con type(), servimos WebP
+   (~99% más liviano) y dejamos el JPEG como fallback dentro del propio image-set. */
+@supports (background-image: image-set(url("data:image/webp;base64,") type("image/webp"))) {
+  .hero-bg {
+    background-image:
+      linear-gradient(to bottom, rgba(111,159,202,0.97) 0%, rgba(159,210,241,0.93) 52%, rgba(221,247,255,0.90) 100%),
+      image-set(var(--hero-webp) type("image/webp"), var(--hero-jpg) type("image/jpeg"));
+  }
+}

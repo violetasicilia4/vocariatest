@@ -7,6 +7,7 @@ import { PLANES, type PlanId } from '../data/profile';
 import { CARD, CARD_SHADOW, CTA_PRIMARY, EASE } from '../ui/theme';
 import { captureLead } from '../../services/leads';
 import { paymentsEnabled, createPreference, savePendingOrder } from '../../services/payments';
+import { track } from '../../services/analytics';
 
 interface CheckoutScreenProps {
   nombre: string;
@@ -47,6 +48,9 @@ export default function CheckoutScreen({ nombre, email, result, plan, onBack }: 
   // Fallback (sin cobro habilitado): registramos la intención de compra real y
   // mostramos la reserva, sin prometer un entregable que todavía no se cobra.
   const handleReserva = async () => {
+    // El usuario quiso avanzar al pago pero el cobro está desactivado: registramos
+    // el intento bloqueado (sin PII) para medir demanda con pagos OFF.
+    track('payment_attempt_blocked', { plan, reason: 'payments_disabled' });
     setSending(true);
     await captureLead({ email, nombre, source: 'purchase_intent', consent: true });
     setSending(false);

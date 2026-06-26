@@ -1,4 +1,5 @@
 import { Component, type ErrorInfo, type ReactNode } from 'react';
+import { track } from '../services/analytics';
 
 /**
  * Error boundary mínimo (sin dependencias externas).
@@ -35,6 +36,7 @@ export default class ErrorBoundary extends Component<Props, State> {
     // navegador; si más adelante se suma un servicio de errores (p. ej. Sentry),
     // este es el punto de enganche.
     console.error('[ErrorBoundary]', error.message, info.componentStack);
+    track('error_boundary_shown');
   }
 
   private handleReset = (): void => {
