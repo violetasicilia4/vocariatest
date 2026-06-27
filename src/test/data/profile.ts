@@ -11,40 +11,60 @@ export type PlanId = 'esencial' | 'universitario' | 'profesional';
 export const PLANES: Record<PlanId, {
   nombre: string;
   precio: string;
+  /** Promesa corta del plan (verbo en imperativo). */
   tagline: string;
+  /** Para quién es: una línea que ayuda a auto-seleccionarse. */
+  paraQuien: string;
   popular?: boolean;
+  /** Etiqueta del plan destacado. */
+  badge?: string;
+  /** 3 beneficios concretos. */
   incluye: string[];
+  /** Qué desbloquea del preview (se muestra en la card como nivel de unlock). */
+  desbloquea: string;
+  /** Hook grisado: lo que insinúa sin entregar. */
+  hook: string;
 }> = {
   esencial: {
     nombre: 'Esencial',
     precio: '2.990',
-    tagline: 'Tu perfil + carreras',
+    tagline: 'Entendé tu perfil.',
+    paraQuien: 'Para entenderte antes de elegir carrera: quién sos y cómo decidís.',
     incluye: [
-      'Descripción completa de tu arquetipo vocacional',
-      'Fortalezas, motivaciones y áreas de desarrollo',
-      'Tus carreras más afines, con la razón de cada una',
+      'Tu arquetipo vocacional explicado en profundidad',
+      'Tus motivadores y fortalezas, con tus áreas de desarrollo',
+      'Los bloqueos que pueden confundirte al momento de elegir',
     ],
+    desbloquea: 'Tu perfil completo y la lectura de tus señales',
+    hook: 'Incluye el patrón que más condiciona tus decisiones.',
   },
   universitario: {
     nombre: 'Universitario',
     precio: '4.990',
-    tagline: 'Tu camino académico',
+    tagline: 'Elegí mejor con carreras compatibles.',
+    paraQuien: 'Si ya querés pasar del perfil a decidir qué estudiar.',
     popular: true,
+    badge: 'Recomendado para decidir',
     incluye: [
       'Todo lo del plan Esencial',
-      'Universidades de Argentina donde se estudia cada carrera',
-      'Modalidad y duración real de cada una',
+      'Tus carreras más compatibles, con la razón de cada una',
+      'Universidades de Argentina, con modalidad y duración real',
     ],
+    desbloquea: 'Tus carreras afines y dónde estudiarlas',
+    hook: 'Tus 3 carreras con mayor compatibilidad aparecen acá.',
   },
   profesional: {
     nombre: 'Profesional',
     precio: '7.990',
-    tagline: 'Tu futuro laboral',
+    tagline: 'Transformá el resultado en plan de acción.',
+    paraQuien: 'Para pasar a la acción: qué explorar primero, qué descartar y cómo validar opciones.',
     incluye: [
       'Todo lo del plan Universitario',
-      'Salidas laborales concretas por carrera',
-      'Rangos salariales orientativos en Argentina (ARS)',
+      'Salidas laborales concretas y rangos salariales (ARS)',
+      'Un plan de exploración: qué validar y qué descartar primero',
     ],
+    desbloquea: 'El panorama laboral y tu plan de acción',
+    hook: 'Incluye un plan sugerido de exploración para los próximos 30 días.',
   },
 };
 

@@ -26,6 +26,7 @@ export type AnalyticsEvent =
   | 'checkpoint_seen'
   | 'test_completed'
   | 'result_preview_seen'
+  | 'plan_selected'
   | 'payment_attempt_blocked'
   | 'error_boundary_shown';
 
