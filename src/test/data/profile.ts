@@ -8,15 +8,6 @@ export interface UserProfile {
 
 export type PlanId = 'esencial' | 'universitario' | 'profesional';
 
-/** Un módulo premium del informe (lo que desbloquea un nivel). El `titulo` es un
- *  hook marketinero; `porque` explica por qué importa en una línea. */
-export interface PlanModulo {
-  titulo: string;
-  porque: string;
-  /** Si está, el componente reemplaza `porque` por contenido dinámico del motor. */
-  dyn?: 'bloqueo';
-}
-
 export const PLANES: Record<PlanId, {
   /** Nombre del NIVEL de desbloqueo (lo que pasás a poder hacer). */
   nivel: string;
@@ -28,11 +19,11 @@ export const PLANES: Record<PlanId, {
   paraQuien: string;
   /** Por qué vale la pena: una línea de valor. */
   valor: string;
+  /** Gancho del nivel: una línea que resume qué desbloquea (marketinero). */
+  gancho: string;
   popular?: boolean;
   /** Etiqueta del plan destacado. */
   badge?: string;
-  /** Módulos premium que desbloquea este nivel (hooks + por qué importa). */
-  modulos: PlanModulo[];
   /** 3 beneficios concretos (lo usa la pantalla de checkout/reserva). */
   incluye: string[];
   /** Qué desbloquea, en una frase. */
@@ -47,11 +38,7 @@ export const PLANES: Record<PlanId, {
     tagline: 'Entenderme antes de elegir.',
     paraQuien: 'Para entenderte antes de elegir: quién sos y cómo decidís.',
     valor: 'El piso de todo: entender tu forma de decidir antes de mirar carreras.',
-    modulos: [
-      { titulo: 'El patrón que más puede confundirte al elegir', porque: 'Eso que te hace dudar o elegir por las razones equivocadas.', dyn: 'bloqueo' },
-      { titulo: 'Tus motores reales: qué te enciende y qué te apaga', porque: 'Lo que va a sostener —o cansar— tu día a día en una carrera.' },
-      { titulo: 'Tus fortalezas y tus puntos ciegos', porque: 'En qué jugás con ventaja y qué conviene tener en el radar.' },
-    ],
+    gancho: 'Tus motivadores, lo que puede confundirte y tu estilo de decisión.',
     incluye: [
       'Tu arquetipo vocacional explicado en profundidad',
       'Tus motivadores y fortalezas, con tus áreas de desarrollo',
@@ -66,14 +53,10 @@ export const PLANES: Record<PlanId, {
     precio: '4.990',
     tagline: 'Elegir mejor qué estudiar.',
     paraQuien: 'Para pasar del perfil a decidir qué estudiar, con fundamento.',
-    valor: 'El nivel que convierte tu perfil en una decisión concreta.',
+    valor: 'El informe que cruza tu perfil con carreras reales, compatibilidad y opciones para estudiar en Argentina.',
+    gancho: 'Tus 3 carreras con mejor encaje, con el porqué de cada una.',
     popular: true,
     badge: 'Recomendado para decidir',
-    modulos: [
-      { titulo: 'Las 3 carreras donde tu perfil encaja mejor', porque: 'Tu match más alto, no una lista de “carreras populares”.' },
-      { titulo: 'Por qué encajan con vos (no es azar)', porque: 'La razón concreta detrás de cada recomendación.' },
-      { titulo: 'Dónde estudiarlas: universidades, modalidad y duración', porque: 'Opciones reales en Argentina, para ver si es viable para vos.' },
-    ],
     incluye: [
       'Todo lo del plan Esencial',
       'Tus carreras más compatibles, con la razón de cada una',
@@ -89,11 +72,7 @@ export const PLANES: Record<PlanId, {
     tagline: 'Pasar a la acción.',
     paraQuien: 'Para dejar de girar: qué explorar, qué descartar y cómo validar.',
     valor: 'El nivel que transforma el resultado en próximos pasos concretos.',
-    modulos: [
-      { titulo: 'Qué te conviene explorar primero', porque: 'Por dónde empezar para no perder meses probando a ciegas.' },
-      { titulo: 'Qué deberías descartar antes de perder tiempo', porque: 'Lo que parece para vos pero probablemente no lo sea.' },
-      { titulo: 'Tu plan de exploración para los próximos 30 días', porque: 'Salidas laborales, rangos salariales (ARS) y pasos para validar.' },
-    ],
+    gancho: 'Qué explorar, qué descartar y cómo validar — semana a semana.',
     incluye: [
       'Todo lo del plan Universitario',
       'Salidas laborales concretas y rangos salariales (ARS)',

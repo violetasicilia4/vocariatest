@@ -1,14 +1,14 @@
 import { useEffect, useRef, useState } from 'react';
 import { motion, AnimatePresence } from 'motion/react';
 import {
-  Lock, Check, Star, ArrowRight, Sparkles, ShieldCheck, Plus,
+  Lock, Check, Star, ArrowRight, Sparkles, ShieldCheck, Plus, Zap, TriangleAlert,
 } from 'lucide-react';
 import type { ScoringResult } from '../engine/scorer';
 import type { CareerPreferences } from '../engine/preferences';
 import type { Tension } from '../engine/tensions';
 import LogoIcon from '../../components/ui/LogoIcon';
 import { iconForEmoji } from '../ui/icons';
-import { PLANES, type PlanId, type PlanModulo } from '../data/profile';
+import { PLANES, type PlanId } from '../data/profile';
 import { CARD_SHADOW, CTA_PRIMARY, CTA_DARK, EASE } from '../ui/theme';
 import { track } from '../../services/analytics';
 
@@ -23,37 +23,34 @@ const PLAN_ORDER: PlanId[] = ['esencial', 'universitario', 'profesional'];
 const RECOMMENDED_PLAN: PlanId = 'universitario';
 
 // ───────────────────────────── señales reales ──────────────────────────────
-// El motor ya calcula 14 dimensiones (0-100) a partir de las respuestas. En vez
-// de inventar texto, mostramos las dominantes como "señales detectadas" y
-// componemos una frase espejo desde ellas. Nada de promesas: solo lo que las
-// respuestas marcaron con más fuerza.
+// El motor ya calcula 14 dimensiones (0-100). Mostramos las dominantes como
+// señales y componemos desde ellas la frase espejo y el "momento aha". Nada de
+// promesas: solo lo que las respuestas marcaron con más fuerza.
 type DimKey = keyof CareerPreferences;
 
 interface DimCopy {
-  senal: string;
-  frag: string;
-  motiv: string;
+  senal: string;        // chip corto
+  frag: string;         // "tu perfil combina …"
+  mueve: string;        // 2ª persona: "te movés mejor cuando …"
 }
 
 const DIM: Record<DimKey, DimCopy> = {
-  personas:      { senal: 'Orientación a las personas',   frag: 'orientación a las personas',     motiv: 'trabajan con otros' },
-  datos:         { senal: 'Lectura analítica',            frag: 'lectura analítica',              motiv: 'encuentran patrones en los datos' },
-  objetos:       { senal: 'Trabajo con lo concreto',      frag: 'foco en lo concreto',            motiv: 'necesitan resultados tangibles' },
-  ideas:         { senal: 'Pensamiento conceptual',       frag: 'pensamiento conceptual',         motiv: 'conectan ideas' },
-  creatividad:   { senal: 'Necesidad de crear',           frag: 'necesidad de crear',             motiv: 'ponen su sello en lo que hacen' },
-  estructura:    { senal: 'Necesidad de orden',           frag: 'necesidad de orden',             motiv: 'buscan método y claridad' },
-  autonomia:     { senal: 'Autonomía para decidir',       frag: 'autonomía',                      motiv: 'necesitan libertad para decidir' },
-  estabilidad:   { senal: 'Búsqueda de estabilidad',      frag: 'búsqueda de estabilidad',        motiv: 'necesitan un piso sólido' },
-  teoria:        { senal: 'Profundidad teórica',          frag: 'necesidad de entender a fondo',  motiv: 'van al fondo de cada tema' },
-  practica:      { senal: 'Aprender haciendo',            frag: 'orientación a aprender haciendo', motiv: 'pasan a la acción rápido' },
-  liderazgo:     { senal: 'Impulso de liderar',           frag: 'impulso de liderar',             motiv: 'movilizan personas y recursos' },
-  colaboracion:  { senal: 'Trabajo en equipo',            frag: 'trabajo en equipo',              motiv: 'construyen con otros cerca' },
-  impactoSocial: { senal: 'Necesidad de impacto',         frag: 'necesidad de impacto',           motiv: 'quieren dejar una marca' },
-  ingresos:      { senal: 'Foco en el retorno',           frag: 'foco en el retorno',             motiv: 'buscan que su esfuerzo rinda' },
+  personas:      { senal: 'Orientación a las personas',  frag: 'orientación a las personas', mueve: 'estás con gente' },
+  datos:         { senal: 'Lectura analítica',           frag: 'lectura analítica',          mueve: 'analizás y encontrás patrones' },
+  objetos:       { senal: 'Trabajo con lo concreto',     frag: 'foco en lo concreto',        mueve: 'ves resultados concretos' },
+  ideas:         { senal: 'Pensamiento conceptual',      frag: 'pensamiento conceptual',     mueve: 'conectás ideas' },
+  creatividad:   { senal: 'Necesidad de crear',          frag: 'necesidad de crear',         mueve: 'creás algo propio' },
+  estructura:    { senal: 'Necesidad de orden',          frag: 'necesidad de orden',         mueve: 'tenés método y claridad' },
+  autonomia:     { senal: 'Autonomía para decidir',      frag: 'autonomía',                  mueve: 'decidís con libertad' },
+  estabilidad:   { senal: 'Búsqueda de estabilidad',     frag: 'búsqueda de estabilidad',    mueve: 'el terreno es firme' },
+  teoria:        { senal: 'Profundidad teórica',         frag: 'ganas de entender a fondo',  mueve: 'entendés algo a fondo' },
+  practica:      { senal: 'Aprender haciendo',           frag: 'aprender haciendo',          mueve: 'aprendés haciendo' },
+  liderazgo:     { senal: 'Impulso de liderar',          frag: 'liderazgo',                  mueve: 'coordinás y activás ideas' },
+  colaboracion:  { senal: 'Trabajo en equipo',           frag: 'trabajo en equipo',          mueve: 'trabajás en equipo' },
+  impactoSocial: { senal: 'Necesidad de impacto',        frag: 'necesidad de impacto',       mueve: 'tu trabajo deja una marca' },
+  ingresos:      { senal: 'Foco en el retorno',          frag: 'foco en el retorno',         mueve: 'tu esfuerzo rinde' },
 };
 
-/** Dimensiones dominantes (de mayor a menor), con un piso para no mostrar
- *  señales débiles como si definieran a la persona. */
 function topDims(prefs: CareerPreferences, n: number, floor = 35): DimKey[] {
   return (Object.keys(prefs) as DimKey[])
     .map(k => [k, prefs[k]] as const)
@@ -72,21 +69,19 @@ function joinNatural(parts: string[]): string {
   return `${parts.slice(0, -1).join(', ')} y ${parts[parts.length - 1]}`;
 }
 
-/** Frase espejo: compuesta desde las dimensiones dominantes reales del usuario. */
+/** Frase espejo corta, en 2ª persona. */
 function fraseEspejo(prefs: CareerPreferences): string {
   const dims = topDims(prefs, 3, 30);
   if (dims.length === 0) {
-    return 'Tu patrón es amplio y equilibrado: no se inclina por una sola forma de trabajar, sino que combina varias con fuerza pareja.';
+    return 'Tu perfil es amplio: combina varias formas de trabajar con fuerza pareja.';
   }
   const frags = joinNatural(dims.map(d => DIM[d].frag));
-  const motivs = joinNatural(dims.map(d => DIM[d].motiv));
-  return `Tu patrón combina ${frags}. Suele aparecer en personas que ${motivs}.`;
+  const mueve = joinNatural(topDims(prefs, 2, 30).map(d => DIM[d].mueve));
+  return `Tu perfil combina ${frags}. Te movés mejor cuando ${mueve}.`;
 }
 
-const CONF_LABEL = (c: number) =>
-  c >= 85 ? 'muy definido' : c >= 70 ? 'definido' : 'en formación';
-
-/** Mini-explicación sobria de por qué salió este arquetipo. Sin misticismo. */
+/** Mini-explicación sobria de por qué salió este arquetipo (vive en "ya
+ *  detectamos", no en el hero). */
 function porQue(arquetipo: string, prefs: CareerPreferences, result: ScoringResult): string {
   const dims = topDims(prefs, 2, 30);
   const señales = dims.length
@@ -95,72 +90,123 @@ function porQue(arquetipo: string, prefs: CareerPreferences, result: ScoringResu
   const desempate = result.disputaResuelta
     ? ` Estabas entre ${result.disputaResuelta.entre.length} perfiles muy parejos y tus respuestas de desempate inclinaron la balanza.`
     : '';
-  return `${señales}, y ese cruce te acerca a ${arquetipo} más que a cualquier otro perfil.${desempate} Por eso tu resultado quedó ${CONF_LABEL(result.confianza)} al ${result.confianza}%.`;
+  return `${señales}, y ese cruce te acerca a ${arquetipo} más que a cualquier otro perfil.${desempate}`;
 }
 
-// Teaser por tensión: gancho corto (NO el contenido completo del informe).
-const TENSION_TEASER: Record<Tension['tipo'], string> = {
-  creatividad_vs_estructura: 'Tu lado creativo y tu necesidad de orden tiran para lados distintos: el informe te muestra cómo usar esa tensión a favor.',
-  autonomia_vs_dependencia:  'Querés independencia total y a la vez equipos cercanos: hay un rol específico donde esa dualidad juega a tu favor.',
-  impacto_vs_ingresos:       'Buscás impacto real y también seguridad económica: esa tensión es resoluble, y el informe te dice por dónde.',
-  tecnologia_vs_antimatematica: 'Tenés perfil técnico fuerte pero rechazás la matemática pura: hay caminos que priorizan lógica sobre cálculo.',
-  exploracion_vs_seguridad:  'Podés estar confundiendo seguridad con interés real. Vale la pena verlo antes de elegir.',
-  social_vs_soledad:         'Tu orientación a las personas choca con el trabajo solitario: eso define qué ambientes conviene descartar.',
+// Riesgo del "momento aha": sale de la tensión dominante del motor (real).
+const TENSION_RIESGO: Record<Tension['tipo'], string> = {
+  creatividad_vs_estructura: 'que un entorno demasiado rígido te termine apagando',
+  autonomia_vs_dependencia:  'frustrarte si no te dan margen para decidir',
+  impacto_vs_ingresos:       'tener que elegir entre lo que te importa y lo que paga',
+  tecnologia_vs_antimatematica: 'descartar caminos técnicos por miedo a la matemática',
+  exploracion_vs_seguridad:  'elegir algo seguro que termine aburriéndote',
+  social_vs_soledad:         'caer en un rol más solitario de lo que te gustaría',
 };
 
-function bloqueoHook(result: ScoringResult): string {
+function riesgoAha(result: ScoringResult): string {
   const t = [...result.tensiones].sort((a, b) => b.score - a.score)[0];
-  return t
-    ? TENSION_TEASER[t.tipo]
-    : 'Hay un patrón que condiciona tus decisiones más de lo que parece — el informe te muestra cuál y cómo aprovecharlo.';
+  return t ? TENSION_RIESGO[t.tipo] : 'elegir por descarte, en vez de por lo que de verdad te mueve';
 }
 
 // ───────────────────────────── componentes UI ──────────────────────────────
 
 function ConfianzaBadge({ confianza }: { confianza: number }) {
-  const label = confianza >= 85 ? 'Perfil muy definido' : confianza >= 70 ? 'Perfil definido' : 'Perfil en formación';
+  // Reframe: confianza baja/media no suena "débil". Siempre en clave de
+  // "% de definición", con etiqueta que acompaña.
+  const label =
+    confianza >= 85 ? 'Perfil muy definido' :
+    confianza >= 70 ? 'Perfil definido' :
+    confianza >= 55 ? 'Lectura inicial' :
+    'Señales mixtas';
   return (
     <span className="inline-flex items-center gap-1.5 rounded-full border border-brand-lime/40 bg-brand-lime/15 text-ink text-[11px] font-bold px-2.5 py-1 tracking-wide">
       <span className="w-1.5 h-1.5 rounded-full bg-brand-lime shrink-0" />
-      {label} · {confianza}%
+      {label} · {confianza}% de definición
     </span>
   );
 }
 
-/** Módulo premium bloqueado dentro de un nivel: hook marketinero (qué revela) +
- *  por qué importa + dos barras borrosas (análisis oculto, sin filtrar dato). */
-function LockedModule({ titulo, porque }: { titulo: string; porque: string }) {
+/** Barra borrosa (valor oculto, sin filtrar dato). */
+function Ghost({ className = 'flex-1' }: { className?: string }) {
+  return <span className={`h-2.5 rounded-full bg-ink/12 blur-[3px] ${className}`} aria-hidden="true" />;
+}
+
+/** Nivel 1 — filas etiquetadas (estructura del análisis). */
+function LockedRows({ labels }: { labels: string[] }) {
   return (
-    <div className="flex gap-3">
-      <span className="mt-0.5 w-6 h-6 rounded-md bg-ink/[0.05] flex items-center justify-center shrink-0">
-        <Lock size={11} className="text-ink/35" />
-      </span>
-      <div className="min-w-0 flex-1">
-        <p className="text-[13px] font-bold text-ink/85 leading-snug">{titulo}</p>
-        <p className="text-[11.5px] text-ink/55 leading-snug mt-0.5">{porque}</p>
-        <div className="mt-2 space-y-1.5" aria-hidden="true">
-          <div className="h-2 rounded-full bg-ink/10 blur-[2.5px] w-[92%]" />
-          <div className="h-2 rounded-full bg-ink/10 blur-[2.5px] w-[64%]" />
+    <div className="space-y-2.5">
+      {labels.map(l => (
+        <div key={l} className="flex items-center gap-3">
+          <span className="text-[11px] font-bold text-ink/55 w-[124px] shrink-0">{l}</span>
+          <Ghost />
+          <Lock size={11} className="text-ink/25 shrink-0" />
         </div>
+      ))}
+    </div>
+  );
+}
+
+/** Nivel 2 — ranking bloqueado de carreras. */
+function LockedRanking() {
+  return (
+    <div className="space-y-2.5">
+      {[1, 2, 3].map(n => (
+        <div key={n} className="flex items-center gap-2.5">
+          <span className="w-6 h-6 rounded-lg bg-sky text-white text-[11px] font-black flex items-center justify-center shrink-0">{n}</span>
+          <span className="text-[11.5px] font-semibold text-ink/55 shrink-0">Carrera compatible</span>
+          <Ghost />
+          <Lock size={11} className="text-ink/25 shrink-0" />
+        </div>
+      ))}
+    </div>
+  );
+}
+
+/** Nivel 3 — mini timeline bloqueado (plan semana a semana). */
+function LockedTimeline() {
+  const weeks: [string, string][] = [
+    ['Semana 1', 'Explorar'],
+    ['Semana 2', 'Comparar'],
+    ['Semana 3', 'Validar'],
+    ['Semana 4', 'Decidir'],
+  ];
+  return (
+    <div className="relative">
+      <div className="absolute left-[6px] top-2.5 bottom-2.5 w-px bg-line-strong" aria-hidden="true" />
+      <div className="space-y-3">
+        {weeks.map(([w, act]) => (
+          <div key={w} className="relative flex items-center gap-3">
+            <span className="w-3.5 h-3.5 rounded-full bg-sky/20 border-2 border-sky shrink-0 z-10" />
+            <span className="text-[11px] font-bold text-ink/60 shrink-0 w-[118px]">
+              {w} · <span className="text-ink/45 font-semibold">{act}</span>
+            </span>
+            <Ghost className="flex-1 h-2" />
+            <Lock size={11} className="text-ink/25 shrink-0" />
+          </div>
+        ))}
       </div>
     </div>
   );
 }
 
-/** Un NIVEL del informe = módulos premium + el plan que los desbloquea, fundidos
- *  en un mismo panel. Comunica: qué revela, por qué importa y con qué se abre. */
+function TierVisual({ planId }: { planId: PlanId }) {
+  if (planId === 'esencial') return <LockedRows labels={['Motivadores', 'Bloqueos', 'Estilo de decisión']} />;
+  if (planId === 'universitario') return <LockedRanking />;
+  return <LockedTimeline />;
+}
+
+/** Un NIVEL del informe = el plan que lo desbloquea + una recompensa visual
+ *  propia (filas / ranking / timeline), fundidos en un panel. */
 function TierPanel({
   planId,
   index,
   prevNivel,
-  bloqueo,
   onSelect,
   innerRef,
 }: {
   planId: PlanId;
   index: number;
   prevNivel: string | null;
-  bloqueo: string;
   onSelect: () => void;
   innerRef?: (el: HTMLDivElement | null) => void;
 }) {
@@ -171,9 +217,9 @@ function TierPanel({
     <div
       ref={innerRef}
       className={`relative rounded-[24px] border p-5 lg:p-7 scroll-mt-24 ${
-        reco ? 'border-sky bg-sky-soft/40' : 'border-line bg-paper-raised'
+        reco ? 'border-sky bg-sky-soft/40 lg:shadow-[0_18px_50px_rgba(37,142,249,0.12)]' : 'border-line bg-paper-raised'
       }`}
-      style={{ boxShadow: CARD_SHADOW }}
+      style={reco ? undefined : { boxShadow: CARD_SHADOW }}
     >
       {reco && (
         <div className="absolute -top-3 left-6">
@@ -183,7 +229,7 @@ function TierPanel({
         </div>
       )}
 
-      <div className="lg:grid lg:grid-cols-[minmax(0,1fr)_minmax(0,1.2fr)] lg:gap-8">
+      <div className="lg:grid lg:grid-cols-[minmax(0,1fr)_minmax(0,1.15fr)] lg:gap-8">
         {/* Identidad del nivel */}
         <div>
           <p className="text-[10.5px] font-bold tracking-[0.14em] uppercase text-sky-deep mb-2">
@@ -204,20 +250,11 @@ function TierPanel({
           )}
         </div>
 
-        {/* Qué desbloquea (módulos) */}
+        {/* Qué desbloquea: gancho + recompensa visual propia del nivel */}
         <div className="mt-6 lg:mt-0">
-          <p className="text-[10.5px] font-bold tracking-[0.12em] uppercase text-ink/40 mb-3.5">
-            Qué desbloquea
-          </p>
-          <div className="space-y-4">
-            {plan.modulos.map((m: PlanModulo) => (
-              <LockedModule
-                key={m.titulo}
-                titulo={m.titulo}
-                porque={m.dyn === 'bloqueo' ? bloqueo : m.porque}
-              />
-            ))}
-          </div>
+          <p className="text-[10.5px] font-bold tracking-[0.12em] uppercase text-ink/40 mb-2">Qué desbloquea</p>
+          <p className="text-[12.5px] text-ink/65 font-medium leading-snug mb-4">{plan.gancho}</p>
+          <TierVisual planId={planId} />
         </div>
       </div>
 
@@ -239,7 +276,8 @@ export default function ResultPreview({ nombre, result, onGetFullReport }: Resul
   const arquetipoNombre = combinacion ? combinacion.nombre : primario.nombre;
 
   const señales = topDims(preferences, 3);
-  const bloqueo = bloqueoHook(result);
+  const rinde = señales.length ? DIM[señales[0]].mueve : null;
+  const lowConf = confianza < 70;
 
   const choosePlan = (plan: PlanId) => {
     track('plan_selected', { plan });
@@ -250,9 +288,8 @@ export default function ResultPreview({ nombre, result, onGetFullReport }: Resul
     document.getElementById('niveles')?.scrollIntoView({ behavior: 'smooth', block: 'start' });
   };
 
-  // Sticky CTA (mobile): no aparece de entrada. Se "arma" cuando el usuario llega
-  // a la zona de niveles (ya vio valor) y se oculta cuando el nivel recomendado
-  // está en viewport (ahí su CTA real ya se ve, así no tapa nada).
+  // Sticky CTA (mobile): no aparece de entrada. Se "arma" en la zona de niveles y
+  // se oculta cuando el nivel recomendado está en viewport (su CTA real ya se ve).
   const unlockRef = useRef<HTMLDivElement | null>(null);
   const recoTierRef = useRef<HTMLDivElement | null>(null);
   const [armed, setArmed] = useState(false);
@@ -290,21 +327,21 @@ export default function ResultPreview({ nombre, result, onGetFullReport }: Resul
 
       <div className="max-w-xl lg:max-w-4xl mx-auto px-5 lg:px-8 py-8 lg:py-12 pb-28 lg:pb-16">
 
-        {/* ══════════ A. LO MÁS CLARO DE TU PERFIL (gratis, simplificado) ══════════ */}
+        {/* ══════════ A. LO MÁS CLARO DE TU PERFIL (gratis, corto) ══════════ */}
         <motion.div
           initial={{ opacity: 0, y: 18 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.55, ease: EASE }}
           className="lg:grid lg:grid-cols-2 lg:gap-10 lg:items-start"
         >
-          {/* Arquetipo + frase espejo + microcopy */}
+          {/* Arquetipo + frase espejo corta + momento aha */}
           <div>
             <p className="text-sky-deep text-[12px] font-bold tracking-[0.14em] uppercase mb-4 inline-flex items-center gap-1.5">
               <Sparkles size={13} strokeWidth={2.4} />
               {firstName ? `${firstName}, tu resultado está listo` : 'Tu resultado está listo'}
             </p>
 
-            <div className="flex items-center gap-4 mb-5">
+            <div className="flex items-center gap-4 mb-4">
               <span
                 className="inline-flex w-14 h-14 lg:w-16 lg:h-16 rounded-2xl items-center justify-center shrink-0"
                 style={{ background: `${primario.color}16`, color: primario.color }}
@@ -319,7 +356,7 @@ export default function ResultPreview({ nombre, result, onGetFullReport }: Resul
               </div>
             </div>
 
-            <div className="mb-5">
+            <div className="mb-4">
               <ConfianzaBadge confianza={confianza} />
             </div>
 
@@ -327,13 +364,30 @@ export default function ResultPreview({ nombre, result, onGetFullReport }: Resul
               {cap(fraseEspejo(preferences))}
             </p>
 
-            <p className="text-ink/50 text-[12.5px] leading-relaxed mt-4">
-              No es una etiqueta cerrada: es una lectura inicial de cómo venís decidiendo,
-              qué te atrae y qué puede estar confundiendo tu elección.
-            </p>
+            {/* Momento "aha": dónde rendís + tu riesgo (escaneable, no párrafo). */}
+            {rinde && (
+              <div className="mt-5 rounded-2xl border border-sky/25 bg-sky-soft/40 p-3.5 space-y-2.5">
+                <div className="flex items-start gap-2.5">
+                  <span className="mt-0.5 w-6 h-6 rounded-lg bg-sky/15 flex items-center justify-center shrink-0">
+                    <Zap size={13} className="text-sky-deep" strokeWidth={2.4} />
+                  </span>
+                  <p className="text-[13px] text-ink/80 leading-snug">
+                    <span className="font-bold text-ink">Donde más rendís</span> — {rinde}.
+                  </p>
+                </div>
+                <div className="flex items-start gap-2.5">
+                  <span className="mt-0.5 w-6 h-6 rounded-lg bg-amber-100 flex items-center justify-center shrink-0">
+                    <TriangleAlert size={13} className="text-amber-600" strokeWidth={2.4} />
+                  </span>
+                  <p className="text-[13px] text-ink/80 leading-snug">
+                    <span className="font-bold text-ink">Tu mayor riesgo al elegir</span> — {riesgoAha(result)}.
+                  </p>
+                </div>
+              </div>
+            )}
           </div>
 
-          {/* Esto ya detectamos de vos: chips reales + por qué */}
+          {/* Esto ya detectamos de vos: chips + explicación (la lectura larga vive acá) */}
           <div
             className="mt-7 lg:mt-0 rounded-[20px] border border-line bg-paper-raised p-5 lg:p-6"
             style={{ boxShadow: CARD_SHADOW }}
@@ -357,6 +411,11 @@ export default function ResultPreview({ nombre, result, onGetFullReport }: Resul
             <p className="text-[13px] text-ink/60 leading-relaxed">
               {porQue(arquetipoNombre, preferences, result)}
             </p>
+            {lowConf && (
+              <p className="text-[12px] text-ink/45 leading-relaxed mt-3 pt-3 border-t border-line">
+                El informe completo muestra qué perfiles quedaron cerca y qué respuestas inclinaron el resultado.
+              </p>
+            )}
           </div>
         </motion.div>
 
@@ -373,12 +432,19 @@ export default function ResultPreview({ nombre, result, onGetFullReport }: Resul
               <Lock size={12} strokeWidth={2.4} /> Tu informe, por niveles
             </p>
             <h2 className="font-display font-black text-[24px] lg:text-[30px] text-ink tracking-tight leading-[1.1]">
-              Esto es lo que tu informe puede revelarte
+              Elegí qué parte de tu decisión querés resolver
             </h2>
             <p className="text-[13.5px] text-ink/55 font-medium mt-3 leading-relaxed">
-              Cada nivel abre una parte distinta de <span className="text-ink/75 font-semibold">tu</span> informe.
-              Son niveles del mismo informe, no productos sueltos. Elegí hasta dónde querés llegar.
+              Tu resultado ya muestra una dirección. El informe completo abre lo que más ayuda a decidir:
+              qué te mueve, qué puede confundirte y qué caminos encajan mejor con vos.
             </p>
+            <div className="mt-4 inline-flex flex-wrap items-center justify-center gap-x-3 gap-y-1 text-[11px] font-semibold text-ink/50">
+              <span className="inline-flex items-center gap-1"><ShieldCheck size={12} className="text-sky-deep" /> Pago único</span>
+              <span className="text-ink/25">·</span>
+              <span>Sin suscripción</span>
+              <span className="text-ink/25">·</span>
+              <span>Acceso inmediato</span>
+            </div>
           </motion.div>
 
           <div className="space-y-5 lg:space-y-6">
@@ -394,7 +460,6 @@ export default function ResultPreview({ nombre, result, onGetFullReport }: Resul
                   planId={planId}
                   index={i + 1}
                   prevNivel={i > 0 ? PLANES[PLAN_ORDER[i - 1]].nivel : null}
-                  bloqueo={bloqueo}
                   onSelect={() => choosePlan(planId)}
                   innerRef={planId === RECOMMENDED_PLAN ? (el => { recoTierRef.current = el; }) : undefined}
                 />
@@ -402,9 +467,8 @@ export default function ResultPreview({ nombre, result, onGetFullReport }: Resul
             ))}
           </div>
 
-          {/* Tira de confianza */}
           <div className="mt-7 flex flex-wrap items-center justify-center gap-x-5 gap-y-2 text-[11.5px] text-ink/45 font-medium">
-            <span className="inline-flex items-center gap-1.5"><ShieldCheck size={13} className="text-sky-deep" /> Un pago, sin suscripción</span>
+            <span className="inline-flex items-center gap-1.5"><ShieldCheck size={13} className="text-sky-deep" /> Pago único, sin suscripción</span>
             <span className="inline-flex items-center gap-1.5"><Check size={13} className="text-sky-deep" /> Acceso inmediato</span>
             <span className="inline-flex items-center gap-1.5"><Lock size={13} className="text-sky-deep" /> Tus datos protegidos</span>
           </div>
@@ -434,7 +498,7 @@ export default function ResultPreview({ nombre, result, onGetFullReport }: Resul
               onClick={scrollToNiveles}
               className="w-full text-center text-[11.5px] text-ink/45 font-medium mt-2 hover:text-ink transition-colors"
             >
-              Ver los 3 niveles
+              Comparar opciones
             </button>
           </motion.div>
         )}
