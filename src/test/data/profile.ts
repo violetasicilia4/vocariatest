@@ -9,77 +9,75 @@ export interface UserProfile {
 export type PlanId = 'esencial' | 'universitario' | 'profesional';
 
 export const PLANES: Record<PlanId, {
-  /** Nombre del NIVEL de desbloqueo (lo que pasás a poder hacer). */
+  /** Nombre del NIVEL del informe (la parte de tu decisión que abre). */
   nivel: string;
   nombre: string;
   precio: string;
-  /** Promesa corta del plan (verbo en imperativo). */
+  /** Promesa corta del plan (verbo en imperativo). Lo usan checkout y el PDF. */
   tagline: string;
-  /** Para quién es: una línea que ayuda a auto-seleccionarse. */
-  paraQuien: string;
-  /** Por qué vale la pena: una línea de valor. */
-  valor: string;
-  /** Gancho del nivel: una línea que resume qué desbloquea (marketinero). */
-  gancho: string;
+  /** Para quién / qué dolor resuelve — humano, con una tensión real. */
+  para: string;
+  /** Qué te da, en clave de transformación (editorial, no lista de features). */
+  promesa: string;
+  /** El "después": qué cambia una vez que lo leés. */
+  cambio: string;
+  /** CTA orientado a deseo (sin precio; la pantalla concatena el monto). */
+  cta: string;
   popular?: boolean;
   /** Etiqueta del plan destacado. */
   badge?: string;
-  /** 3 beneficios concretos (lo usa la pantalla de checkout/reserva). */
+  /** Solo en el recomendado: refuerzo anti-genérico. */
+  noEs?: string;
+  /** 3 beneficios concretos (lo usa la pantalla de checkout/reserva y el PDF). */
   incluye: string[];
-  /** Qué desbloquea, en una frase. */
-  desbloquea: string;
-  /** Hook grisado: lo que insinúa sin entregar. */
-  hook: string;
 }> = {
   esencial: {
     nivel: 'Entenderte',
     nombre: 'Esencial',
     precio: '2.990',
     tagline: 'Entenderme antes de elegir.',
-    paraQuien: 'Para entenderte antes de elegir: quién sos y cómo decidís.',
-    valor: 'El piso de todo: entender tu forma de decidir antes de mirar carreras.',
-    gancho: 'Tus motivadores, lo que puede confundirte y tu estilo de decisión.',
+    para: 'Para dejar de sentir que elegís a ciegas.',
+    promesa: 'Poné en palabras qué te mueve, qué te traba y cómo decidís cuando algo sí encaja con vos.',
+    cambio: 'Salís entendiendo tu forma de decidir, antes de mirar una sola carrera.',
+    cta: 'Quiero entenderme mejor',
     incluye: [
       'Tu arquetipo vocacional explicado en profundidad',
       'Tus motivadores y fortalezas, con tus áreas de desarrollo',
       'Los bloqueos que pueden confundirte al momento de elegir',
     ],
-    desbloquea: 'Tu perfil completo y la lectura de tus señales',
-    hook: 'Incluye el patrón que más condiciona tus decisiones.',
   },
   universitario: {
     nivel: 'Elegir carrera',
     nombre: 'Universitario',
     precio: '4.990',
     tagline: 'Elegir mejor qué estudiar.',
-    paraQuien: 'Para pasar del perfil a decidir qué estudiar, con fundamento.',
-    valor: 'El informe que cruza tu perfil con carreras reales, compatibilidad y opciones para estudiar en Argentina.',
-    gancho: 'Tus 3 carreras con mejor encaje, con el porqué de cada una.',
+    para: 'Para bajar tu perfil a opciones reales y dejar de dudar entre mil caminos.',
+    promesa: 'Cruzamos tu perfil con carreras compatibles, te mostramos el porqué de cada coincidencia y dónde podrías estudiarlas en Argentina.',
+    cambio: 'Pasás de “no sé qué estudiar” a una lista corta de opciones que tienen sentido para vos.',
+    cta: 'Quiero ver mis carreras compatibles',
     popular: true,
-    badge: 'Recomendado para decidir',
+    badge: 'El que más ayuda a decidir',
+    noEs: 'No es una lista de carreras populares: es un cruce entre tus respuestas, tu perfil y opciones reales.',
     incluye: [
       'Todo lo del plan Esencial',
       'Tus carreras más compatibles, con la razón de cada una',
       'Universidades de Argentina, con modalidad y duración real',
     ],
-    desbloquea: 'Tus carreras afines y dónde estudiarlas',
-    hook: 'Tus 3 carreras con mayor compatibilidad aparecen acá.',
   },
   profesional: {
     nivel: 'Pasar a la acción',
     nombre: 'Profesional',
     precio: '7.990',
     tagline: 'Pasar a la acción.',
-    paraQuien: 'Para dejar de girar: qué explorar, qué descartar y cómo validar.',
-    valor: 'El nivel que transforma el resultado en próximos pasos concretos.',
-    gancho: 'Qué explorar, qué descartar y cómo validar — semana a semana.',
+    para: 'Para cuando entenderte no alcanza y necesitás saber cuál es el próximo paso.',
+    promesa: 'Qué explorar primero, qué descartar antes de perder tiempo y cómo validar tus opciones en los próximos 30 días.',
+    cambio: 'Dejás de dar vueltas: salís con un plan para validar y descartar sin perder meses probando a ciegas.',
+    cta: 'Quiero mi plan de acción',
     incluye: [
       'Todo lo del plan Universitario',
       'Salidas laborales concretas y rangos salariales (ARS)',
       'Un plan de exploración: qué validar y qué descartar primero',
     ],
-    desbloquea: 'El panorama laboral y tu plan de acción',
-    hook: 'Incluye un plan sugerido de exploración para los próximos 30 días.',
   },
 };
 

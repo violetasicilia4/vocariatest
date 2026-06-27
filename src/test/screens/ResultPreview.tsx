@@ -131,57 +131,76 @@ function Ghost({ className = 'flex-1' }: { className?: string }) {
   return <span className={`h-2.5 rounded-full bg-ink/12 blur-[3px] ${className}`} aria-hidden="true" />;
 }
 
-/** Nivel 1 — filas etiquetadas (estructura del análisis). */
-function LockedRows({ labels }: { labels: string[] }) {
+/** Nivel 1 — secciones del análisis de perfil, con su bajada. Se lee como el
+ *  índice de un informe real, no como una grilla de features. */
+function LockedRows() {
+  const secciones: [string, string][] = [
+    ['Motivadores principales', 'qué te empuja a elegir'],
+    ['Bloqueos al elegir', 'qué te frena sin que lo notes'],
+    ['Estilo de decisión', 'cómo decidís cuando algo encaja'],
+  ];
   return (
     <div className="space-y-2.5">
-      {labels.map(l => (
-        <div key={l} className="flex items-center gap-3">
-          <span className="text-[11px] font-bold text-ink/55 w-[124px] shrink-0">{l}</span>
-          <Ghost />
-          <Lock size={11} className="text-ink/25 shrink-0" />
+      {secciones.map(([titulo, bajada]) => (
+        <div key={titulo} className="rounded-xl border border-line bg-paper/60 px-3 py-2.5">
+          <div className="flex items-center justify-between gap-2 mb-1.5">
+            <span className="text-[12px] font-bold text-ink/75">{titulo}</span>
+            <Lock size={11} className="text-ink/25 shrink-0" />
+          </div>
+          <p className="text-[10.5px] text-ink/45 font-medium mb-2 leading-snug">{bajada}</p>
+          <Ghost className="w-full h-2" />
         </div>
       ))}
     </div>
   );
 }
 
-/** Nivel 2 — ranking bloqueado de carreras. */
+/** Nivel 2 — ranking bloqueado de carreras. Cada fila imita una ficha del
+ *  informe: puesto, nombre, el "por qué aparece" y el encaje (oculto). */
 function LockedRanking() {
   return (
     <div className="space-y-2.5">
       {[1, 2, 3].map(n => (
-        <div key={n} className="flex items-center gap-2.5">
-          <span className="w-6 h-6 rounded-lg bg-sky text-white text-[11px] font-black flex items-center justify-center shrink-0">{n}</span>
-          <span className="text-[11.5px] font-semibold text-ink/55 shrink-0">Carrera compatible</span>
-          <Ghost />
-          <Lock size={11} className="text-ink/25 shrink-0" />
+        <div key={n} className="rounded-xl border border-line bg-paper/60 px-3 py-2.5">
+          <div className="flex items-center gap-2.5 mb-1.5">
+            <span className="w-6 h-6 rounded-lg bg-sky text-white text-[11px] font-black flex items-center justify-center shrink-0">{n}</span>
+            <span className="text-[12px] font-bold text-ink/75 shrink-0">Carrera compatible</span>
+            <span className="ml-auto inline-flex items-center gap-1 rounded-full bg-brand-lime/20 px-2 py-0.5 text-[9.5px] font-bold uppercase tracking-wide text-ink/55">
+              <Lock size={9} className="text-ink/35" /> Encaje
+            </span>
+          </div>
+          <p className="text-[10.5px] text-ink/45 font-medium mb-2">por qué aparece en tu perfil</p>
+          <Ghost className="w-full h-2" />
         </div>
       ))}
     </div>
   );
 }
 
-/** Nivel 3 — mini timeline bloqueado (plan semana a semana). */
+/** Nivel 3 — plan de 30 días, semana a semana. Cada hito muestra el foco real
+ *  de la semana; el contenido sigue bloqueado. */
 function LockedTimeline() {
-  const weeks: [string, string][] = [
-    ['Semana 1', 'Explorar'],
-    ['Semana 2', 'Comparar'],
-    ['Semana 3', 'Validar'],
-    ['Semana 4', 'Decidir'],
+  const weeks: [string, string, string][] = [
+    ['Semana 1', 'Explorar', 'qué mirar primero'],
+    ['Semana 2', 'Comparar', 'qué sostiene la duda'],
+    ['Semana 3', 'Validar', 'probar antes de comprometerte'],
+    ['Semana 4', 'Decidir', 'elegir con fundamento'],
   ];
   return (
     <div className="relative">
-      <div className="absolute left-[6px] top-2.5 bottom-2.5 w-px bg-line-strong" aria-hidden="true" />
+      <div className="absolute left-[6px] top-3 bottom-3 w-px bg-line-strong" aria-hidden="true" />
       <div className="space-y-3">
-        {weeks.map(([w, act]) => (
-          <div key={w} className="relative flex items-center gap-3">
-            <span className="w-3.5 h-3.5 rounded-full bg-sky/20 border-2 border-sky shrink-0 z-10" />
-            <span className="text-[11px] font-bold text-ink/60 shrink-0 w-[118px]">
-              {w} · <span className="text-ink/45 font-semibold">{act}</span>
-            </span>
-            <Ghost className="flex-1 h-2" />
-            <Lock size={11} className="text-ink/25 shrink-0" />
+        {weeks.map(([w, act, bajada]) => (
+          <div key={w} className="relative flex items-start gap-3">
+            <span className="mt-1 w-3.5 h-3.5 rounded-full bg-sky/20 border-2 border-sky shrink-0 z-10" />
+            <div className="flex-1 min-w-0">
+              <div className="flex items-center gap-2">
+                <span className="text-[11.5px] font-bold text-ink/75">{w} · {act}</span>
+                <Lock size={10} className="text-ink/25 shrink-0" />
+              </div>
+              <p className="text-[10.5px] text-ink/45 font-medium mb-1.5">{bajada}</p>
+              <Ghost className="w-full h-2" />
+            </div>
           </div>
         ))}
       </div>
@@ -190,13 +209,14 @@ function LockedTimeline() {
 }
 
 function TierVisual({ planId }: { planId: PlanId }) {
-  if (planId === 'esencial') return <LockedRows labels={['Motivadores', 'Bloqueos', 'Estilo de decisión']} />;
+  if (planId === 'esencial') return <LockedRows />;
   if (planId === 'universitario') return <LockedRanking />;
   return <LockedTimeline />;
 }
 
-/** Un NIVEL del informe = el plan que lo desbloquea + una recompensa visual
- *  propia (filas / ranking / timeline), fundidos en un panel. */
+/** Un NIVEL del informe = la parte de tu decisión que abre + una vista previa
+ *  propia (perfil / carreras / plan), leída en clave de transformación: para
+ *  quién es, qué te da y qué cambia. */
 function TierPanel({
   planId,
   index,
@@ -230,18 +250,28 @@ function TierPanel({
       )}
 
       <div className="lg:grid lg:grid-cols-[minmax(0,1fr)_minmax(0,1.15fr)] lg:gap-8">
-        {/* Identidad del nivel */}
+        {/* Identidad del nivel: para quién + qué te da */}
         <div>
           <p className="text-[10.5px] font-bold tracking-[0.14em] uppercase text-sky-deep mb-2">
             Nivel {index} · {plan.nivel}
           </p>
-          <div className="flex items-baseline gap-2.5 mb-2">
+          <div className="flex items-baseline gap-2.5 mb-3">
             <h3 className="font-display font-black text-[20px] lg:text-[22px] text-ink tracking-tight">{plan.nombre}</h3>
             <span className="font-display font-extrabold text-[19px] text-ink tracking-tight">${plan.precio}</span>
             <span className="text-[10px] text-ink/40 font-medium">ARS · único</span>
           </div>
-          <p className="text-[13px] text-ink/70 font-semibold leading-snug mb-2">{plan.valor}</p>
-          <p className="text-[12px] text-ink/50 leading-snug">{plan.paraQuien}</p>
+
+          {/* El dolor que resuelve: la línea con la que el usuario se reconoce. */}
+          <p className="text-[14px] text-ink font-semibold leading-snug mb-2.5">{plan.para}</p>
+          {/* La promesa, editorial. */}
+          <p className="text-[12.5px] text-ink/60 leading-relaxed">{plan.promesa}</p>
+
+          {plan.noEs && (
+            <p className="text-[11.5px] text-ink/55 leading-snug mt-3 border-l-2 border-sky/40 pl-3">
+              {plan.noEs}
+            </p>
+          )}
+
           {prevNivel && (
             <p className="inline-flex items-center gap-1.5 mt-3 text-[11px] font-semibold text-ink/55 bg-ink/[0.04] rounded-full px-2.5 py-1">
               <Plus size={11} strokeWidth={2.6} className="text-sky-deep" />
@@ -250,19 +280,24 @@ function TierPanel({
           )}
         </div>
 
-        {/* Qué desbloquea: gancho + recompensa visual propia del nivel */}
+        {/* En este nivel vas a ver: vista previa real del informe (bloqueada) */}
         <div className="mt-6 lg:mt-0">
-          <p className="text-[10.5px] font-bold tracking-[0.12em] uppercase text-ink/40 mb-2">Qué desbloquea</p>
-          <p className="text-[12.5px] text-ink/65 font-medium leading-snug mb-4">{plan.gancho}</p>
+          <p className="text-[10.5px] font-bold tracking-[0.12em] uppercase text-ink/40 mb-3">En este nivel vas a ver</p>
           <TierVisual planId={planId} />
         </div>
       </div>
 
+      {/* El "después": qué cambia una vez que lo leés. */}
+      <div className="mt-5 flex items-start gap-2 rounded-xl bg-ink/[0.03] px-3.5 py-2.5">
+        <ArrowRight size={13} strokeWidth={2.6} className="text-sky-deep shrink-0 mt-0.5" />
+        <p className="text-[12px] text-ink/70 font-medium leading-snug">{plan.cambio}</p>
+      </div>
+
       <button
         onClick={onSelect}
-        className={`mt-6 w-full flex items-center justify-center gap-2 py-3.5 text-[13.5px] ${reco ? CTA_PRIMARY : CTA_DARK}`}
+        className={`mt-5 w-full flex items-center justify-center gap-2 py-3.5 text-[13.5px] ${reco ? CTA_PRIMARY : CTA_DARK}`}
       >
-        Desbloquear «{plan.nivel}» · ${plan.precio}
+        {plan.cta} · ${plan.precio}
         <ArrowRight size={15} strokeWidth={2.5} />
       </button>
     </div>
@@ -360,7 +395,10 @@ export default function ResultPreview({ nombre, result, onGetFullReport }: Resul
               <ConfianzaBadge confianza={confianza} />
             </div>
 
-            <p className="text-ink/80 text-[15px] lg:text-[16px] font-medium leading-relaxed border-l-2 border-sky/40 pl-4">
+            <p
+              className="text-ink/80 text-[15px] lg:text-[16px] font-medium leading-relaxed border-l-2 pl-4"
+              style={{ borderColor: `${primario.color}66` }}
+            >
               {cap(fraseEspejo(preferences))}
             </p>
 
@@ -419,6 +457,35 @@ export default function ResultPreview({ nombre, result, onGetFullReport }: Resul
           </div>
         </motion.div>
 
+        {/* ══════════ PUENTE: del insight al plan recomendado ══════════ */}
+        <motion.div
+          initial={{ opacity: 0, y: 16 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true, margin: '-60px' }}
+          transition={{ duration: 0.5, ease: EASE }}
+          className="mt-10 lg:mt-12 rounded-[20px] border border-line bg-paper-raised p-5 lg:p-6 lg:flex lg:items-center lg:gap-6"
+          style={{ boxShadow: CARD_SHADOW }}
+        >
+          <div className="flex-1">
+            <p className="text-[10.5px] font-bold tracking-[0.14em] uppercase text-sky-deep mb-2">
+              El siguiente paso para vos
+            </p>
+            <p className="text-[14px] lg:text-[15px] text-ink/85 leading-relaxed">
+              Tu resultado ya marca una dirección. Si querés bajarlo a una decisión concreta, el nivel que
+              más te conviene es{' '}
+              <span className="font-bold text-ink">«Elegir carrera»</span>: ahí ves qué opciones encajan con vos,
+              por qué y dónde podrías estudiarlas.
+            </p>
+          </div>
+          <button
+            onClick={() => choosePlan(RECOMMENDED_PLAN)}
+            className={`hidden lg:flex shrink-0 items-center justify-center gap-2 px-5 py-3 text-[13px] ${CTA_PRIMARY}`}
+          >
+            {PLANES[RECOMMENDED_PLAN].cta} · ${PLANES[RECOMMENDED_PLAN].precio}
+            <ArrowRight size={15} strokeWidth={2.5} />
+          </button>
+        </motion.div>
+
         {/* ══════════ B + C. NIVELES DEL INFORME (módulos + plan fundidos) ══════════ */}
         <div ref={unlockRef} id="niveles" className="mt-14 lg:mt-16 scroll-mt-20">
           <motion.div
@@ -432,11 +499,11 @@ export default function ResultPreview({ nombre, result, onGetFullReport }: Resul
               <Lock size={12} strokeWidth={2.4} /> Tu informe, por niveles
             </p>
             <h2 className="font-display font-black text-[24px] lg:text-[30px] text-ink tracking-tight leading-[1.1]">
-              Elegí qué parte de tu decisión querés resolver
+              Elegí hasta dónde querés profundizar
             </h2>
             <p className="text-[13.5px] text-ink/55 font-medium mt-3 leading-relaxed">
-              Tu resultado ya muestra una dirección. El informe completo abre lo que más ayuda a decidir:
-              qué te mueve, qué puede confundirte y qué caminos encajan mejor con vos.
+              El informe completo abre lo que más ayuda a decidir: qué te mueve, qué puede confundirte y
+              qué caminos encajan mejor con vos.
             </p>
             <div className="mt-4 inline-flex flex-wrap items-center justify-center gap-x-3 gap-y-1 text-[11px] font-semibold text-ink/50">
               <span className="inline-flex items-center gap-1"><ShieldCheck size={12} className="text-sky-deep" /> Pago único</span>
@@ -491,7 +558,7 @@ export default function ResultPreview({ nombre, result, onGetFullReport }: Resul
               onClick={() => choosePlan(RECOMMENDED_PLAN)}
               className={`w-full flex items-center justify-center gap-2 py-3.5 text-[14.5px] ${CTA_PRIMARY}`}
             >
-              Desbloquear «{PLANES[RECOMMENDED_PLAN].nivel}» · ${PLANES[RECOMMENDED_PLAN].precio}
+              {PLANES[RECOMMENDED_PLAN].cta} · ${PLANES[RECOMMENDED_PLAN].precio}
               <ArrowRight size={16} strokeWidth={2.5} />
             </button>
             <button
